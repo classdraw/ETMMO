@@ -56,6 +56,7 @@ namespace ET.Client
                 return null;
             }
 
+            //顺序分配一个router的服务器地址
             string address = self.Info.Routers[self.RouterIndex++ % self.Info.Routers.Count];
             Log.Info($"get router address: {self.RouterIndex - 1} {address}");
             string[] ss = address.Split(':');

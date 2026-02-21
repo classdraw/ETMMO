@@ -23,6 +23,7 @@ namespace ET.Client
             root.SceneType = sceneType;
             
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
+            //await EventSystem.Instance.PublishAsync(root, new TestEventSee());
         }
     }
 }

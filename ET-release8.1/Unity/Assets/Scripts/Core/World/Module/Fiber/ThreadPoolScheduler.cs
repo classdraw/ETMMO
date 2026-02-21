@@ -48,7 +48,7 @@ namespace ET
                 
                 if (!this.idQueue.TryDequeue(out int id))
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(1); 
                     continue;
                 }
 
