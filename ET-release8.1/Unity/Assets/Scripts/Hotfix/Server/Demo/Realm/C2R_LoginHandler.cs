@@ -10,32 +10,35 @@ namespace ET.Server
 	{
 		protected override async ETTask Run(Session session, C2R_Login request, R2C_Login response)
 		{
-			if (CheckLoginValid(session,request,response))
+			if (CheckLoginValid(session,request,response)) 
 			{
-				
-				
-				DBComponent dbComponent = session.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
-				var accountList=await dbComponent.Query<AccountInfo>(accountInfo => accountInfo.Account == request.Account);
-				if (accountList==null||accountList.Count==0)
+				//携程锁
+				using(await session.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.LoginAccount,request.Account.GetLongHashCode()))
 				{
-					AccountInfoComponent accountInfoComponent =
-							session.GetComponent<AccountInfoComponent>() ?? session.AddComponent<AccountInfoComponent>();
-					
-					var accountInfo = accountInfoComponent.AddChild<AccountInfo>();
-					accountInfo.Account = request.Account;
-					accountInfo.Password=request.Password;
-					await dbComponent.Save(accountInfo);
-				}
-				else
-				{
-					if (accountList[0].Password!=request.Password)
+					DBComponent dbComponent = session.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
+					var accountList=await dbComponent.Query<AccountInfo>(accountInfo => accountInfo.Account == request.Account);
+					if (accountList==null||accountList.Count==0)
 					{
-						//密码错误
-						response.Error = ErrorCode.ERR_LoginPwdError;
-						CloseSession(session).Coroutine();
-						return;
+						AccountInfoComponent accountInfoComponent =
+								session.GetComponent<AccountInfoComponent>() ?? session.AddComponent<AccountInfoComponent>();
+					
+						var accountInfo = accountInfoComponent.AddChild<AccountInfo>();
+						accountInfo.Account = request.Account;
+						accountInfo.Password=request.Password;
+						await dbComponent.Save(accountInfo);
+					}
+					else
+					{
+						if (accountList[0].Password!=request.Password)
+						{
+							//密码错误
+							response.Error = ErrorCode.ERR_LoginPwdError;
+							CloseSession(session).Coroutine();
+							return;
+						}
 					}
 				}
+
 				
 				// 随机分配一个Gate(网关)
 				StartSceneConfig config = RealmGateAddressHelper.GetGate(session.Zone(), request.Account);
