@@ -13,7 +13,7 @@ namespace ET.Client
             var response = await clientSenderComponent.LoginAsync(account, password);
             if (response.Error!=ErrorCode.ERR_Success)
             {
-                Log.Info($"登录失败{response.Error}");
+                Log.Error($"登录失败{response.Error}");
                 return;
             }
 
