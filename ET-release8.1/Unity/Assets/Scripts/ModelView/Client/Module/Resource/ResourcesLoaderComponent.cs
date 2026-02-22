@@ -66,6 +66,25 @@ namespace ET.Client
             return (T)((AssetHandle)handler).AssetObject;
         }
 
+
+        /// <summary>
+        /// 这个屌方法少用，只有部分框架性的东西需要用到，游戏内尽量边玩边下
+        /// </summary>
+        public static T LoadAssetSync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
+        {
+            lock (self.handlers)
+            {
+                HandleBase handler;
+                if (!self.handlers.TryGetValue(location, out handler))
+                {
+                    handler = self.package.LoadAssetSync<T>(location);
+                    self.handlers.Add(location, handler);
+                }
+
+                return (T)((AssetHandle)handler).AssetObject;
+            }
+        }
+
         public static async ETTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());

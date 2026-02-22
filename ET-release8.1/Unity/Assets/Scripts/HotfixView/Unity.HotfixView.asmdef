@@ -10,7 +10,9 @@
         "Unity.Model",
         "Unity.Hotfix",
         "Unity.ModelView",
-        "YooAsset"
+        "YooAsset",
+        "Unity.CustomFrame",
+        "Unity.TEngine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

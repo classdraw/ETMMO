@@ -6,7 +6,9 @@
         "YooAsset.Editor",
         "HybridCLR.Editor",
         "Unity.TextMeshPro",
-        "Unity.TEngine"
+        "Unity.TEngine",
+        "Unity.ModelView",
+        "Unity.HotfixView"
     ],
     "includePlatforms": [
         "Editor"

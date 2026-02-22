@@ -5,6 +5,11 @@
 	{
 		protected override async ETTask Run(Scene root, AppStartInitFinish args)
 		{
+			//显示层框架入口
+			var engineComponent=root.AddComponent<TEngineComponent>();
+			await engineComponent.Init();
+
+			//框架好了才能干别的
 			await UIHelper.Create(root, UIType.UILogin, UILayer.Mid);
 			/*
 			var computer1=root.GetComponent<ComputersComponent>().AddChild<Computer>();

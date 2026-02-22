@@ -24,7 +24,7 @@ namespace ET
         private bool isViewLayer = false;
         private bool createSystem = true;
 
-        [MenuItem("Tool/Code/代码创建", false, 1)]
+        [MenuItem("Tools/Code/代码创建", false, 1)]
         public static void ShowWindow()
         {
             GetWindow<CodeEditorWindow>("Code Editor");

@@ -13,7 +13,7 @@
             root.AddComponent<PlayerComponent>();
             root.AddComponent<CurrentScenesComponent>();
             root.AddComponent<ObjectWait>();
-            
+        
             root.SceneType = SceneType.Demo;
 
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
