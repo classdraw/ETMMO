@@ -17,7 +17,7 @@ namespace ET.Client
 			self.account = rc.Get<GameObject>("Account");
 			self.password = rc.Get<GameObject>("Password");
 		}
-
+ 
 		//按钮点击登录流程
 		public static void OnLogin(this UILoginComponent self)
 		{
