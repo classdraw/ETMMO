@@ -13,7 +13,8 @@
         "Unity.ModelView",
         "Unity.Hotfix",
         "Unity.HotfixView",
-        "ToolbarExtension.Editor"
+        "Unity.CustomFrame",
+        "TEngine.Editor"
     ],
     "includePlatforms": [
         "Editor"

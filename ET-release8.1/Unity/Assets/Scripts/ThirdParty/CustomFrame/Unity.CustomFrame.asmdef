@@ -1,23 +1,14 @@
 {
     "name": "Unity.CustomFrame",
     "rootNamespace": "ET",
-    "references": [
-        "Unity.ThirdParty",
-        "Unity.Core",
-        "Unity.Mathematics",
-        "Unity.Loader",
-        "Unity.Model",
-        "YooAsset"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [
-        "UNITY_COMPILE || UNITY_EDITOR"
-    ],
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

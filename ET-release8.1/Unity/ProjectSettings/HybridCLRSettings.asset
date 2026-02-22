@@ -28,6 +28,8 @@ MonoBehaviour:
   - Temp/Bin/Debug
   strippedAOTDllOutputRootDir: HybridCLRData/AssembliesPostIl2CppStrip
   patchAOTAssemblies:
+  - Unity.CustomFrame.dll
+  - Unity.TEngine.dll
   - Unity.ThirdParty.dll
   - Unity.Loader.dll
   - Unity.Core.dll

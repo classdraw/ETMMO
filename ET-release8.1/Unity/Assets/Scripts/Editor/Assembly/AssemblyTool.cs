@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using UnityEditor;
@@ -145,6 +146,36 @@ namespace ET
                 };
                 ScriptCompilationResult result = PlayerBuildInterface.CompilePlayerScripts(scriptCompilationSettings, Define.BuildOutputDir);
                 isCompileOk = result.assemblies.Count > 0;
+                
+                // 检查实际输出目录中的文件
+                if (Directory.Exists(Define.BuildOutputDir))
+                {
+                    string[] actualFiles = Directory.GetFiles(Define.BuildOutputDir, "*.dll");
+                    HashSet<string> actualDllNames = new HashSet<string>();
+                    foreach (string file in actualFiles)
+                    {
+                        actualDllNames.Add(Path.GetFileNameWithoutExtension(file));
+                    }
+                    
+                    // 检查result.assemblies中哪些程序集没有实际文件
+                    foreach (string assemblyName in result.assemblies)
+                    {
+                        if (!actualDllNames.Contains(assemblyName))
+                        {
+                            Debug.LogWarning($"程序集 {assemblyName} 在result.assemblies中，但输出目录中没有对应的dll文件");
+                        }
+                    }
+                    
+                    // 检查是否有额外的dll文件
+                    foreach (string dllName in actualDllNames)
+                    {
+                        if (!result.assemblies.Contains(dllName))
+                        {
+                            Debug.LogWarning($"输出目录中有dll文件 {dllName}.dll，但不在result.assemblies中");
+                        }
+                    }
+                }
+                
                 EditorUtility.ClearProgressBar();
             }
             finally

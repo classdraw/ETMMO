@@ -1,0 +1,22 @@
+{
+    "name": "TEngine.Editor",
+    "rootNamespace": "",
+    "references": [
+        "YooAsset",
+        "YooAsset.Editor",
+        "HybridCLR.Editor",
+        "Unity.TextMeshPro",
+        "Unity.TEngine"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
