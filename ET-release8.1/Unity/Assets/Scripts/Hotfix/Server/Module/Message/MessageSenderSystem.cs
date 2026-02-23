@@ -56,7 +56,7 @@ namespace ET.Server
                 A2NetInner_Request a2NetInner_Request = A2NetInner_Request.Create();
                 a2NetInner_Request.ActorId = actorId;
                 a2NetInner_Request.MessageObject = request;
-            
+            //向当前进程的netInner，进程内通信，发送一个 A2NetInner_Request ，是另外一个进程的request消息
                 using A2NetInner_Response a2NetInnerResponse = await fiber.Root.GetComponent<ProcessInnerSender>().Call(
                     new ActorId(fiber.Process, ConstFiberId.NetInner), a2NetInner_Request) as A2NetInner_Response;
                 response = a2NetInnerResponse.MessageObject;

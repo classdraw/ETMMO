@@ -16,28 +16,36 @@ namespace ET.Server
                 response.Message = "Gate key验证失败!";
                 return;
             }
-            
+            //SessionAcceptTimeoutComponent是防止外挂，链接后不验证也不干别的， 如果通过连接那么移除，否则5秒后这个session会释放
             session.RemoveComponent<SessionAcceptTimeoutComponent>();
 
             PlayerComponent playerComponent = root.GetComponent<PlayerComponent>();
             Player player = playerComponent.GetByAccount(account);
             if (player == null)
             {
+                //通过player找到playerSessionComponent，再找到session 
+                //playerSessionComponent 可以网络消息处理
+                //player也可以网络消息处理 只是处理消息类型不同
                 player = playerComponent.AddChild<Player, string>(account);
                 playerComponent.Add(player);
+                //每个玩家保存一个玩家电话组件 用于通信
                 PlayerSessionComponent playerSessionComponent = player.AddComponent<PlayerSessionComponent>();
+                //playerSession拥有处理网络消息能力
                 playerSessionComponent.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.GateSession);
+                //通知定位服务器我们这个playerSession位置
                 await playerSessionComponent.AddLocation(LocationType.GateSession);
-			
+			    //player这个组件可以处理网络消息的能力
                 player.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
+                //通知location定位服务器 我这个player实体所在具体位置
                 await player.AddLocation(LocationType.Player);
-			
+			    //和这个玩家通信的session
                 session.AddComponent<SessionPlayerComponent>().Player = player;
                 playerSessionComponent.Session = session;
             }
             else
             {
                 // 判断是否在战斗
+                //帧同步 房间匹配
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
                 if (playerRoomComponent.RoomActorId != default)
                 {
@@ -45,6 +53,7 @@ namespace ET.Server
                 }
                 else
                 {
+                    //新的playerSession 挂上
                     PlayerSessionComponent playerSessionComponent = player.GetComponent<PlayerSessionComponent>();
                     playerSessionComponent.Session = session;
                 }

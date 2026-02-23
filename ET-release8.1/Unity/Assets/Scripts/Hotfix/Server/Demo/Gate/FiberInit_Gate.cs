@@ -9,12 +9,12 @@ namespace ET.Server
         {
             Scene root = fiberInit.Fiber.Root;
             root.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
-            root.AddComponent<TimerComponent>();
-            root.AddComponent<CoroutineLockComponent>();
-            root.AddComponent<ProcessInnerSender>();
-            root.AddComponent<MessageSender>();
-            root.AddComponent<PlayerComponent>();
-            root.AddComponent<GateSessionKeyComponent>();
+            root.AddComponent<TimerComponent>();//计时器组件
+            root.AddComponent<CoroutineLockComponent>();//携程锁
+            root.AddComponent<ProcessInnerSender>();//进程内网络通信
+            root.AddComponent<MessageSender>();//
+            root.AddComponent<PlayerComponent>();//登陆玩家数据对象列表
+            root.AddComponent<GateSessionKeyComponent>();//网关的key组件
             root.AddComponent<LocationProxyComponent>();
             root.AddComponent<MessageLocationSenderComponent>();
 
