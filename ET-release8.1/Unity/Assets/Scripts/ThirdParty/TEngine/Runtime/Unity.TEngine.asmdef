@@ -4,7 +4,8 @@
     "references": [
         "YooAsset",
         "UniTask",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

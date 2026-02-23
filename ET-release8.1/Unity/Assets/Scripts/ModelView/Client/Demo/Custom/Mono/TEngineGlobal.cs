@@ -10,18 +10,19 @@ namespace ET
     
     [EnableClass]
     [DisallowMultipleComponent]
-    public sealed class GameGlobal : MonoBehaviour
+    public class TEngineGlobal : MonoBehaviour
     {
+        
         [StaticField]
-        private static GameGlobal _instance = null;
+        private static TEngineGlobal _instance = null;
 
-        public static GameGlobal Instance
+        public static TEngineGlobal Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = Utility.Unity.FindObjectOfType<GameGlobal>();
+                    _instance = Utility.Unity.FindObjectOfType<TEngineGlobal>();
                 }
                 return _instance;
             }
@@ -120,7 +121,9 @@ namespace ET
         /// </summary>
         private void Awake()
         {
+            
             _instance = this;
+           
             InitTextHelper();
             InitLogHelper();
             InitJsonHelper();
@@ -130,7 +133,7 @@ namespace ET
             Application.runInBackground = runInBackground;
             Screen.sleepTimeout = neverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
 
-            GameFrameworkLog.Info("TEngine Init Success!!!");
+            GameFrameworkLog.Info("TEngine Awake Success!!!");
         }
 
         private void InitTextHelper()
@@ -203,6 +206,16 @@ namespace ET
             }
 
             Utility.Json.SetJsonHelper(jsonHelper);
+        }
+
+        private void Update()
+        {
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.LogError("11111111111111");
+                Debug.Log("2222222222222");
+            }
         }
     }
 }
