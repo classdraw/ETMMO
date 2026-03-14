@@ -1137,6 +1137,9 @@ namespace ET
         [MemoryPackOrder(3)]
         public string Key { get; set; }
 
+        [MemoryPackOrder(4)]
+        public string Token { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -1148,6 +1151,7 @@ namespace ET
             this.Error = default;
             this.Message = default;
             this.Key = default;
+            this.Token = default;
 
             ObjectPool.Instance.Recycle(this);
         }

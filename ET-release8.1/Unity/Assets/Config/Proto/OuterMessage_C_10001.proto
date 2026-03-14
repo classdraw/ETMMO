@@ -248,4 +248,5 @@ message R2C_LoginAccount // ISessionResponse
 	int32 Error = 2;
 	string Message = 3;
 	string Key = 4;
+	string Token = 5;
 }
