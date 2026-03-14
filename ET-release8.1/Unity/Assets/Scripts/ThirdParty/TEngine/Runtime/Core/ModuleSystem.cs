@@ -79,7 +79,8 @@ namespace TEngine
             }
 
             string moduleName = Utility.Text.Format("{0}.{1}", interfaceType.Namespace, interfaceType.Name.Substring(1));
-            Type moduleType = Type.GetType(moduleName);
+            
+            Type moduleType = Type.GetType(moduleName);  
             if (moduleType == null)
             {
                 throw new GameFrameworkException(Utility.Text.Format("Can not find Game Framework module type '{0}'.", moduleName));
@@ -106,17 +107,26 @@ namespace TEngine
         /// <returns>要创建的游戏框架模块。</returns>
         private static Module CreateModule(Type moduleType)
         {
-            Module module = (Module)Activator.CreateInstance(moduleType);
-            if (module == null)
+            
+            try
             {
-                throw new GameFrameworkException(Utility.Text.Format("Can not create module '{0}'.", moduleType.FullName));
+                Module module = (Module)Activator.CreateInstance(moduleType);
+                if (module == null)
+                {
+                    throw new GameFrameworkException(Utility.Text.Format("Can not create module '{0}'.", moduleType.FullName));
+                }
+
+                _moduleMaps[moduleType] = module;
+
+                RegisterUpdate(module);
+
+                return module;
+            }
+            catch (Exception e) {
+                Log.Error($"CreateModule {e.ToString()}");
+                return null;
             }
 
-            _moduleMaps[moduleType] = module;
-
-            RegisterUpdate(module);
-
-            return module;
         }
         
         /// <summary>

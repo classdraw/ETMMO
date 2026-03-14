@@ -5,7 +5,8 @@
         "YooAsset",
         "UniTask",
         "Unity.TextMeshPro",
-        "Unity.Core"
+        "Unity.Core",
+        "Unity.ThirdParty"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

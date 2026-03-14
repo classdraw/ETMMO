@@ -10,6 +10,7 @@ namespace TEngine.Editor
     {
         private static readonly string[] RuntimeAssemblyNames =
         {
+            "Unity.Loader",//et
             "TEngine.Runtime",
             "Assembly-CSharp",
             "Launcher",
@@ -17,6 +18,7 @@ namespace TEngine.Editor
 
         private static readonly string[] RuntimeOrEditorAssemblyNames =
         {
+            "Unity.Loader",//et
             "TEngine.Runtime",
             "Assembly-CSharp",
             "TEngine.Editor",

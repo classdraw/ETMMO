@@ -18,6 +18,8 @@ namespace ET.Client
             GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject);
             GameObject.DontDestroyOnLoad(gameObject);
             self.GameEntryObj = gameObject;
+            self.EngineGlobal = gameObject.GetComponent<TEngineGlobal>();
+            await self.EngineGlobal.StartEngine();
         }
 
         [EntitySystem]

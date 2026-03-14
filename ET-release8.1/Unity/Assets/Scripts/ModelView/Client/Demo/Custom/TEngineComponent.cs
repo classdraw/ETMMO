@@ -10,5 +10,6 @@ namespace ET.Client
         public string GameEntryPath = $"Assets/Bundles/Tools/GameEntry.prefab";
 
         public GameObject GameEntryObj;
+        public TEngineGlobal EngineGlobal;
     }
 }

@@ -1,24 +1,25 @@
-ï»¿using System;
-using System.Collections;
 using Cysharp.Threading.Tasks;
+using ET;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TEngine
 {
     [CreateAssetMenu(menuName = "TEngine/ProcedureSetting", fileName = "ProcedureSetting")]
-    public sealed class ProcedureSetting : ScriptableObject
+    public class ProcedureSetting : ScriptableObject
     {
         private IProcedureModule _procedureModule = null;
         private ProcedureBase _entranceProcedure = null;
-
         [SerializeField]
         private string[] availableProcedureTypeNames = null;
-
         [SerializeField]
         private string entranceProcedureTypeName = null;
 
+
         /// <summary>
-        /// è·å–å½“å‰æµç¨‹ã€‚
+        /// »ñÈ¡µ±Ç°Á÷³Ì¡£
         /// </summary>
         public ProcedureBase CurrentProcedure
         {
@@ -34,7 +35,7 @@ namespace TEngine
         }
 
         /// <summary>
-        /// è·å–å½“å‰æµç¨‹æŒç»­æ—¶é—´ã€‚
+        /// »ñÈ¡µ±Ç°Á÷³Ì³ÖĞøÊ±¼ä¡£
         /// </summary>
         public float CurrentProcedureTime
         {
@@ -49,23 +50,19 @@ namespace TEngine
             }
         }
 
-        /// <summary>
-        /// å¯åŠ¨æµç¨‹ã€‚
-        /// </summary>
-        public async UniTaskVoid StartProcedure()
-        {
+        //Ô­ÏÈÁ÷³ÌÊÇÏÂÔØÈÈ¸üĞÂµÈ£¬ÏÔÊ¾ÔÚET¿ò¼ÜÏÂ£¬Ö»ÊÇTEngineÆô¶¯Á÷³Ì
+        public async ETTask StartProcedure() {
             if (_procedureModule == null)
             {
                 _procedureModule = ModuleSystem.GetModule<IProcedureModule>();
             }
-
             if (_procedureModule == null)
             {
                 Log.Fatal("Procedure manager is invalid.");
                 return;
             }
-
             ProcedureBase[] procedures = new ProcedureBase[availableProcedureTypeNames.Length];
+            //ÕÒµ½entrance½øÈë³ÌĞò¼¯
             for (int i = 0; i < availableProcedureTypeNames.Length; i++)
             {
                 Type procedureType = Utility.Assembly.GetType(availableProcedureTypeNames[i]);
@@ -93,12 +90,11 @@ namespace TEngine
                 Log.Error("Entrance procedure is invalid.");
                 return;
             }
-
             _procedureModule.Initialize(ModuleSystem.GetModule<IFsmModule>(), procedures);
-
-            await UniTask.Yield();
+            
 
             _procedureModule.StartProcedure(_entranceProcedure.GetType());
+            await ETTask.CompletedTask;
         }
     }
 }

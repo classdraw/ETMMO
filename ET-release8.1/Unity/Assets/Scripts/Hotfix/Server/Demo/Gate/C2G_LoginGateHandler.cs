@@ -16,6 +16,8 @@ namespace ET.Server
                 response.Message = "Gate key验证失败!";
                 return;
             }
+            //session创建就会添加
+            //持续5秒 必须通过验证的组件 否则session dispose
             //SessionAcceptTimeoutComponent是防止外挂，链接后不验证也不干别的， 如果通过连接那么移除，否则5秒后这个session会释放
             session.RemoveComponent<SessionAcceptTimeoutComponent>();
 

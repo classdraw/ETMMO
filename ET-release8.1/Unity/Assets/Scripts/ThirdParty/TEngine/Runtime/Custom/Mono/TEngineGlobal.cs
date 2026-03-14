@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TEngine;
+using Cysharp.Threading.Tasks;
 
 namespace ET
 {
@@ -8,8 +9,7 @@ namespace ET
     /// 游戏全局配置类，模仿RootModule，只实现部分核心属性
     /// </summary>
     
-    [EnableClass]
-    [DisallowMultipleComponent]
+    //[EnableClass]
     public class TEngineGlobal : MonoBehaviour
     {
         
@@ -117,13 +117,11 @@ namespace ET
         }
 
         /// <summary>
-        /// 游戏全局配置初始化。
+        /// 游戏全局初始化。
         /// </summary>
-        private void Awake()
+        public async ETTask StartEngine()
         {
-            
             _instance = this;
-           
             InitTextHelper();
             InitLogHelper();
             InitJsonHelper();
@@ -133,7 +131,14 @@ namespace ET
             Application.runInBackground = runInBackground;
             Screen.sleepTimeout = neverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
 
-            GameFrameworkLog.Info("TEngine Awake Success!!!");
+            ModuleSystem.GetModule<IUpdateDriver>();
+            ModuleSystem.GetModule<IDebuggerModule>();
+            ModuleSystem.GetModule<IFsmModule>();
+            //ModuleSystem.GetModule<IResourceModule>();
+            //
+            await Settings.ProcedureSetting.StartProcedure();
+            Log.Info("TEngineFramework Success!!!");
+            await UniTask.CompletedTask;
         }
 
         private void InitTextHelper()

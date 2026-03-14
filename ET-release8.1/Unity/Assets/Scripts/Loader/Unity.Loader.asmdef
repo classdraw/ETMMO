@@ -7,7 +7,9 @@
         "HybridCLR.Runtime",
         "MemoryPack",
         "YooAsset",
-        "YooAsset.Editor"
+        "YooAsset.Editor",
+        "UniTask",
+        "Unity.TEngine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

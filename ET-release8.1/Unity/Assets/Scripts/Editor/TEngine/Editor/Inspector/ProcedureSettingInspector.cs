@@ -23,7 +23,7 @@ namespace TEngine.Editor.Inspector
 
             ProcedureSetting t = (ProcedureSetting)target;
 
-            if (string.IsNullOrEmpty(_entranceProcedureTypeName.stringValue))
+            if (_entranceProcedureTypeName != null && string.IsNullOrEmpty(_entranceProcedureTypeName.stringValue))
             {
                 EditorGUILayout.HelpBox("Entrance procedure is invalid.", MessageType.Error);
             }
@@ -31,24 +31,31 @@ namespace TEngine.Editor.Inspector
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
                 GUILayout.Label("Available Procedures", EditorStyles.boldLabel);
-                if (_procedureTypeNames.Length > 0)
+                if (_procedureTypeNames != null && _procedureTypeNames.Length > 0)
                 {
                     EditorGUILayout.BeginVertical("box");
                     {
                         foreach (string procedureTypeName in _procedureTypeNames)
                         {
-                            bool selected = _currentAvailableProcedureTypeNames.Contains(procedureTypeName);
+                            bool selected = _currentAvailableProcedureTypeNames != null && _currentAvailableProcedureTypeNames.Contains(procedureTypeName);
                             if (selected != EditorGUILayout.ToggleLeft(procedureTypeName, selected))
                             {
                                 if (!selected)
                                 {
+                                    if (_currentAvailableProcedureTypeNames == null)
+                                    {
+                                        _currentAvailableProcedureTypeNames = new List<string>();
+                                    }
                                     _currentAvailableProcedureTypeNames.Add(procedureTypeName);
                                     WriteAvailableProcedureTypeNames();
                                 }
-                                else if (procedureTypeName != _entranceProcedureTypeName.stringValue)
+                                else if (_entranceProcedureTypeName != null && procedureTypeName != _entranceProcedureTypeName.stringValue)
                                 {
-                                    _currentAvailableProcedureTypeNames.Remove(procedureTypeName);
-                                    WriteAvailableProcedureTypeNames();
+                                    if (_currentAvailableProcedureTypeNames != null)
+                                    {
+                                        _currentAvailableProcedureTypeNames.Remove(procedureTypeName);
+                                        WriteAvailableProcedureTypeNames();
+                                    }
                                 }
                             }
                         }
@@ -60,7 +67,7 @@ namespace TEngine.Editor.Inspector
                     EditorGUILayout.HelpBox("There is no available procedure.", MessageType.Warning);
                 }
 
-                if (_currentAvailableProcedureTypeNames.Count > 0)
+                if (_currentAvailableProcedureTypeNames != null && _currentAvailableProcedureTypeNames.Count > 0)
                 {
                     EditorGUILayout.Separator();
 
@@ -100,8 +107,23 @@ namespace TEngine.Editor.Inspector
 
         private void RefreshTypeNames()
         {
+            if (_availableProcedureTypeNames == null || _entranceProcedureTypeName == null)
+            {
+                return;
+            }
+
             _procedureTypeNames = Type.GetRuntimeTypeNames(typeof(ProcedureBase));
+            if (_procedureTypeNames == null)
+            {
+                _procedureTypeNames = new string[0];
+            }
+
             ReadAvailableProcedureTypeNames();
+            if (_currentAvailableProcedureTypeNames == null)
+            {
+                _currentAvailableProcedureTypeNames = new List<string>();
+            }
+
             int oldCount = _currentAvailableProcedureTypeNames.Count;
             _currentAvailableProcedureTypeNames = _currentAvailableProcedureTypeNames.Where(x => _procedureTypeNames.Contains(x)).ToList();
             if (_currentAvailableProcedureTypeNames.Count != oldCount)
@@ -123,6 +145,11 @@ namespace TEngine.Editor.Inspector
         private void ReadAvailableProcedureTypeNames()
         {
             _currentAvailableProcedureTypeNames = new List<string>();
+            if (_availableProcedureTypeNames == null)
+            {
+                return;
+            }
+
             int count = _availableProcedureTypeNames.arraySize;
             for (int i = 0; i < count; i++)
             {
@@ -132,6 +159,11 @@ namespace TEngine.Editor.Inspector
 
         private void WriteAvailableProcedureTypeNames()
         {
+            if (_availableProcedureTypeNames == null)
+            {
+                return;
+            }
+
             _availableProcedureTypeNames.ClearArray();
             if (_currentAvailableProcedureTypeNames == null)
             {
@@ -146,7 +178,7 @@ namespace TEngine.Editor.Inspector
                 _availableProcedureTypeNames.GetArrayElementAtIndex(i).stringValue = _currentAvailableProcedureTypeNames[i];
             }
 
-            if (!string.IsNullOrEmpty(_entranceProcedureTypeName.stringValue))
+            if (_entranceProcedureTypeName != null && !string.IsNullOrEmpty(_entranceProcedureTypeName.stringValue))
             {
                 _entranceProcedureIndex = _currentAvailableProcedureTypeNames.IndexOf(_entranceProcedureTypeName.stringValue);
                 if (_entranceProcedureIndex < 0)

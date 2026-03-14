@@ -20,7 +20,7 @@
         {
             self.sessionKey.Remove(key);
         }
-
+        //每一个登陆都有一个延迟20秒的key，超时就返回error
         private static async ETTask TimeoutRemoveKey(this GateSessionKeyComponent self, long key)
         {
             await self.Root().GetComponent<TimerComponent>().WaitAsync(20000);

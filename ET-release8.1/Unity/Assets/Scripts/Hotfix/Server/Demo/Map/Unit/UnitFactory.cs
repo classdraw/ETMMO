@@ -5,7 +5,7 @@ namespace ET.Server
 {
     public static partial class UnitFactory
     {
-        public static Unit Create(Scene scene, long id, UnitType unitType)
+        public static Unit  Create(Scene scene, long id, UnitType unitType)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             switch (unitType)
