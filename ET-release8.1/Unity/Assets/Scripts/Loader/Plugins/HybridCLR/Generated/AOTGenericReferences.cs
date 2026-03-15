@@ -11,6 +11,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		"System.Runtime.CompilerServices.Unsafe.dll",
 		"System.dll",
 		"Unity.Core.dll",
+		"Unity.TEngine.dll",
 		"Unity.ThirdParty.dll",
 		"UnityEngine.CoreModule.dll",
 		"YooAsset.dll",
@@ -187,6 +188,12 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// ET.StateMachineWrap<ET.SessionSystem.<>c__DisplayClass4_0.<<Call>g__Timeout|0>d>
 	// ET.StateMachineWrap<ET.SessionSystem.<Call>d__3>
 	// ET.StateMachineWrap<ET.SessionSystem.<Call>d__4>
+	// ET.StateMachineWrap<TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>>
+	// ET.StateMachineWrap<TEngine.ResourceAgent.<LoadAsset>d__20<object>>
+	// ET.StateMachineWrap<TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>>
+	// ET.StateMachineWrap<TEngine.ResourceAgent.<LoadAssetAsync>d__22>
+	// ET.StateMachineWrap<TEngine.ResourceAgent.<LoadGameObjectAsync>d__23>
+	// ET.StateMachineWrap<TEngine.ResourceAgent.<LoadSceneAsync>d__28>
 	// ET.StructBsonSerialize<ET.LSInput>
 	// ET.StructBsonSerialize<TrueSync.FP>
 	// ET.StructBsonSerialize<TrueSync.TSQuaternion>
@@ -633,7 +640,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.NumericChangeEvent_NotifyWatcher.<Run>d__0>(ET.ETTaskCompleted&,ET.NumericChangeEvent_NotifyWatcher.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.ReloadConfigConsoleHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.ReloadConfigConsoleHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.ReloadDllConsoleHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.ReloadDllConsoleHandler.<Run>d__0&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,ET.Client.ResourcesLoaderComponentSystem.<LoadSceneAsync>d__6>(System.Runtime.CompilerServices.TaskAwaiter&,ET.Client.ResourcesLoaderComponentSystem.<LoadSceneAsync>d__6&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,TEngine.ResourceAgent.<LoadAsset>d__20<object>>(System.Runtime.CompilerServices.TaskAwaiter&,TEngine.ResourceAgent.<LoadAsset>d__20<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,TEngine.ResourceAgent.<LoadSceneAsync>d__28>(System.Runtime.CompilerServices.TaskAwaiter&,TEngine.ResourceAgent.<LoadSceneAsync>d__28&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter<object>,ET.ConsoleComponentSystem.<Start>d__1>(System.Runtime.CompilerServices.TaskAwaiter<object>&,ET.ConsoleComponentSystem.<Start>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.A2NetClient_RequestHandler.<Run>d__0>(object&,ET.Client.A2NetClient_RequestHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.AI_Attack.<Execute>d__1>(object&,ET.Client.AI_Attack.<Execute>d__1&)
@@ -691,13 +699,17 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.ObjectWaitSystem.<>c__DisplayClass5_0.<<Wait>g__WaitTimeout|0>d<object>>(object&,ET.ObjectWaitSystem.<>c__DisplayClass5_0.<<Wait>g__WaitTimeout|0>d<object>&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.ReloadConfigConsoleHandler.<Run>d__0>(object&,ET.ReloadConfigConsoleHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.SessionSystem.<>c__DisplayClass4_0.<<Call>g__Timeout|0>d>(object&,ET.SessionSystem.<>c__DisplayClass4_0.<<Call>g__Timeout|0>d&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadAsset>d__20<object>>(object&,TEngine.ResourceAgent.<LoadAsset>d__20<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadSceneAsync>d__28>(object&,TEngine.ResourceAgent.<LoadSceneAsync>d__28&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<System.ValueTuple<uint,object>>.AwaitUnsafeOnCompleted<object,ET.Client.RouterHelper.<GetRouterAddress>d__1>(object&,ET.Client.RouterHelper.<GetRouterAddress>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<byte>.AwaitUnsafeOnCompleted<object,ET.MoveComponentSystem.<MoveToAsync>d__5>(object&,ET.MoveComponentSystem.<MoveToAsync>d__5&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<int>.AwaitUnsafeOnCompleted<object,ET.Client.MoveHelper.<MoveToAsync>d__0>(object&,ET.Client.MoveHelper.<MoveToAsync>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<int>.AwaitUnsafeOnCompleted<object,ET.Client.TestEventSee_Debug.<Test2>d__2>(object&,ET.Client.TestEventSee_Debug.<Test2>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.UILobbyEvent.<OnCreate>d__0>(ET.ETTaskCompleted&,ET.Client.UILobbyEvent.<OnCreate>d__0&)
-		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,ET.Client.ResourcesLoaderComponentSystem.<LoadAllAssetsAsync>d__5<object>>(System.Runtime.CompilerServices.TaskAwaiter&,ET.Client.ResourcesLoaderComponentSystem.<LoadAllAssetsAsync>d__5<object>&)
-		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,ET.Client.ResourcesLoaderComponentSystem.<LoadAssetAsync>d__3<object>>(System.Runtime.CompilerServices.TaskAwaiter&,ET.Client.ResourcesLoaderComponentSystem.<LoadAssetAsync>d__3<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>>(System.Runtime.CompilerServices.TaskAwaiter&,TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>>(System.Runtime.CompilerServices.TaskAwaiter&,TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,TEngine.ResourceAgent.<LoadAssetAsync>d__22>(System.Runtime.CompilerServices.TaskAwaiter&,TEngine.ResourceAgent.<LoadAssetAsync>d__22&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter,TEngine.ResourceAgent.<LoadGameObjectAsync>d__23>(System.Runtime.CompilerServices.TaskAwaiter&,TEngine.ResourceAgent.<LoadGameObjectAsync>d__23&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter<object>,ET.Client.HttpClientHelper.<Get>d__0>(System.Runtime.CompilerServices.TaskAwaiter<object>&,ET.Client.HttpClientHelper.<Get>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,ET.Client.ClientSenderComponentSystem.<Call>d__6>(object&,ET.Client.ClientSenderComponentSystem.<Call>d__6&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,ET.Client.ClientSenderComponentSystem.<LoginAsync>d__4>(object&,ET.Client.ClientSenderComponentSystem.<LoginAsync>d__4&)
@@ -718,6 +730,10 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,ET.RpcInfo.<Wait>d__7>(object&,ET.RpcInfo.<Wait>d__7&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,ET.SessionSystem.<Call>d__3>(object&,ET.SessionSystem.<Call>d__3&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,ET.SessionSystem.<Call>d__4>(object&,ET.SessionSystem.<Call>d__4&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>>(object&,TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>>(object&,TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadAssetAsync>d__22>(object&,TEngine.ResourceAgent.<LoadAssetAsync>d__22&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadGameObjectAsync>d__23>(object&,TEngine.ResourceAgent.<LoadGameObjectAsync>d__23&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<uint>.AwaitUnsafeOnCompleted<object,ET.Client.RouterHelper.<Connect>d__2>(object&,ET.Client.RouterHelper.<Connect>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.A2NetClient_MessageHandler.<Run>d__0>(ET.Client.A2NetClient_MessageHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.A2NetClient_RequestHandler.<Run>d__0>(ET.Client.A2NetClient_RequestHandler.<Run>d__0&)
@@ -801,6 +817,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.ReloadConfigConsoleHandler.<Run>d__0>(ET.ReloadConfigConsoleHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.ReloadDllConsoleHandler.<Run>d__0>(ET.ReloadDllConsoleHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.SessionSystem.<>c__DisplayClass4_0.<<Call>g__Timeout|0>d>(ET.SessionSystem.<>c__DisplayClass4_0.<<Call>g__Timeout|0>d&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<TEngine.ResourceAgent.<LoadAsset>d__20<object>>(TEngine.ResourceAgent.<LoadAsset>d__20<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<TEngine.ResourceAgent.<LoadSceneAsync>d__28>(TEngine.ResourceAgent.<LoadSceneAsync>d__28&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<ET.Client.WaitType.Wait_Room2C_Start>.Start<ET.ObjectWaitSystem.<Wait>d__4<ET.Client.WaitType.Wait_Room2C_Start>>(ET.ObjectWaitSystem.<Wait>d__4<ET.Client.WaitType.Wait_Room2C_Start>&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<ET.Client.Wait_CreateMyUnit>.Start<ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_CreateMyUnit>>(ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_CreateMyUnit>&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<ET.Client.Wait_SceneChangeFinish>.Start<ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_SceneChangeFinish>>(ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_SceneChangeFinish>&)
@@ -829,6 +847,10 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<ET.RpcInfo.<Wait>d__7>(ET.RpcInfo.<Wait>d__7&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<ET.SessionSystem.<Call>d__3>(ET.SessionSystem.<Call>d__3&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<ET.SessionSystem.<Call>d__4>(ET.SessionSystem.<Call>d__4&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>>(TEngine.ResourceAgent.<LoadAllAssetsAsync>d__27<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>>(TEngine.ResourceAgent.<LoadAssetAsync>d__21<object>&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<TEngine.ResourceAgent.<LoadAssetAsync>d__22>(TEngine.ResourceAgent.<LoadAssetAsync>d__22&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<object>.Start<TEngine.ResourceAgent.<LoadGameObjectAsync>d__23>(TEngine.ResourceAgent.<LoadGameObjectAsync>d__23&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<uint>.Start<ET.Client.RouterHelper.<Connect>d__2>(ET.Client.RouterHelper.<Connect>d__2&)
 		// object ET.Entity.AddChild<object,object,object>(object,object,bool)
 		// object ET.Entity.AddChildWithId<object,int>(long,int,bool)
@@ -1011,6 +1033,9 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void System.Runtime.CompilerServices.Unsafe.WriteUnaligned<uint>(byte&,uint)
 		// byte& System.Runtime.InteropServices.MemoryMarshal.GetReference<byte>(System.Span<byte>)
 		// System.Threading.Tasks.Task<object> System.Threading.Tasks.TaskFactory.StartNew<object>(System.Func<object>,System.Threading.CancellationToken)
+		// ET.ETTask<System.Collections.Generic.Dictionary<string,object>> TEngine.IResourceModuleET.LoadAllAssetsAsync<object>(string,System.Threading.CancellationToken,string)
+		// object TEngine.IResourceModuleET.LoadAsset<object>(string,string)
+		// ET.ETTask<object> TEngine.IResourceModuleET.LoadAssetAsync<object>(string,System.Threading.CancellationToken,string)
 		// object UnityEngine.GameObject.GetComponent<object>()
 		// object UnityEngine.Object.Instantiate<object>(object)
 		// object UnityEngine.Object.Instantiate<object>(object,UnityEngine.Transform)
