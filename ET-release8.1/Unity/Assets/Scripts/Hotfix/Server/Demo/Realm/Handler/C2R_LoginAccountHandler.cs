@@ -52,7 +52,10 @@ namespace ET.Server
                     if (accountList!=null&&accountList.Count>0)
                     {
                         account = accountList[0];
-                        session.AddChild(account);//每个元素可控 保证session释放 account也释放
+                        if (session.IScene!=null)
+                        {
+                            session.AddChild(account);//每个元素可控 保证session释放 account也释放
+                        }
                         if (account.AccountType==(int)AccountType.BlackList)//黑名单
                         {
                             response.Error = ErrorCode.ERR_AccountInBlackListError;
@@ -83,6 +86,15 @@ namespace ET.Server
                         account.LastLoginTime=TimeInfo.Instance.ServerNow();
                         await dbComponent.Save<Account>(account);
                     }
+                    
+                    
+                    if (session.IScene==null)
+                    {
+                        response.Error = ErrorCode.ERR_RequestRepeatedly;
+                        session?.Disconnect().Coroutine();
+                        account?.Dispose();
+                        return;
+                    }
                     //开始向登录服正式登录LoginCenter
                     R2L_LoginAccountRequest r2LLoginAccountRequest = R2L_LoginAccountRequest.Create();
                     r2LLoginAccountRequest.AccountName = request.AccountName;
@@ -96,6 +108,7 @@ namespace ET.Server
                         account?.Dispose();
                         return;
                     }*/
+
 
                     var loginAccountResponse = await session.Fiber().Root.GetComponent<MessageSender>().
                             Call(loginCenterConfig.ActorId,r2LLoginAccountRequest)as L2R_LoginAccountResponse;
