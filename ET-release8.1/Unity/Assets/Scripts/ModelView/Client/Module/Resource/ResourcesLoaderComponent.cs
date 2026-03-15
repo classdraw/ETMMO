@@ -32,26 +32,29 @@ namespace ET.Client
         {
             foreach (var kv in self.handlers)
             {
-                switch (kv.Value)
+                if (kv.Value != null && kv.Value.IsValid)
                 {
-                    case AssetHandle handle:
-                        handle.Release();
-                        break;
-                    case AllAssetsHandle handle:
-                        handle.Release();
-                        break;
-                    case SubAssetsHandle handle:
-                        handle.Release();
-                        break;
-                    case RawFileHandle handle:
-                        handle.Release();
-                        break;
-                    case SceneHandle handle:
-                        if (!handle.IsMainScene())
-                        {
-                            handle.UnloadAsync();
-                        }
-                        break;
+                    switch (kv.Value)
+                    {
+                        case AssetHandle handle:
+                            handle.Release();
+                            break;
+                        case AllAssetsHandle handle:
+                            handle.Release();
+                            break;
+                        case SubAssetsHandle handle:
+                            handle.Release();
+                            break;
+                        case RawFileHandle handle:
+                            handle.Release();
+                            break;
+                        case SceneHandle handle:
+                            if (!handle.IsMainScene())
+                            {
+                                handle.UnloadAsync();
+                            }
+                            break;
+                    }
                 }
             }
             if (self.ResourceAgent!=null) { 
