@@ -249,3 +249,10 @@ message R2C_LoginAccount // ISessionResponse
 	string Message = 3;
 	string Token = 4;
 }
+
+message A2C_Disconnet // ISessionMessage
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}

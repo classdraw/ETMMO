@@ -797,6 +797,69 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(InnerMessage.R2L_LoginAccountRequest)]
+    [ResponseType(nameof(L2R_LoginAccountResponse))]
+    public partial class R2L_LoginAccountRequest : MessageObject, IRequest
+    {
+        public static R2L_LoginAccountRequest Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(R2L_LoginAccountRequest), isFromPool) as R2L_LoginAccountRequest;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string AccountName { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.AccountName = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.L2R_LoginAccountResponse)]
+    public partial class L2R_LoginAccountResponse : MessageObject, IResponse
+    {
+        public static L2R_LoginAccountResponse Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(L2R_LoginAccountResponse), isFromPool) as L2R_LoginAccountResponse;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class InnerMessage
     {
         public const ushort ObjectQueryRequest = 20002;
@@ -822,5 +885,7 @@ namespace ET
         public const ushort ObjectQueryResponse = 20022;
         public const ushort M2M_UnitTransferRequest = 20023;
         public const ushort M2M_UnitTransferResponse = 20024;
+        public const ushort R2L_LoginAccountRequest = 20025;
+        public const ushort L2R_LoginAccountResponse = 20026;
     }
 }

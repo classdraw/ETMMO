@@ -18,6 +18,10 @@ namespace ET.Server
 
             //数据库操作
             root.AddComponent<DBManagerComponent>();
+            //账号session映射
+            root.AddComponent<AccountSessionsComponent>();
+            //token
+            root.AddComponent<TokenComponent>();
             await ETTask.CompletedTask;
         }
     }

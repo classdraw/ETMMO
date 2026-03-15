@@ -5,7 +5,7 @@ namespace ET.Server
     public enum AccountType
     {
         General=0,//一般
-        BlackList//黑名单
+        BlackList=9//黑名单
     }
 
     //账号类
