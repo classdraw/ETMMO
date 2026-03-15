@@ -52,7 +52,7 @@ namespace ET.Server
                     if (accountList!=null&&accountList.Count>0)
                     {
                         account = accountList[0];
-                        session?.AddChild(account);//每个元素可控 保证session释放 account也释放
+                        session.AddChild(account);//每个元素可控 保证session释放 account也释放
                         if (account.AccountType==(int)AccountType.BlackList)//黑名单
                         {
                             response.Error = ErrorCode.ERR_AccountInBlackListError;
@@ -75,7 +75,7 @@ namespace ET.Server
                     else
                     {
                         //注册逻辑
-                        account=session?.AddChild<Account>();
+                        account=session.AddChild<Account>();
                         account.AccountName = request.AccountName.Trim();
                         account.Password = request.Password;
                         account.AccountType = (int)AccountType.General;
