@@ -58,14 +58,14 @@ namespace TEngine
         /// </summary>
         public Language SystemLanguage => LocalizationUtility.SystemLanguage;
 
-        private IResourceModule _resourceModule;
+        private IResourceModuleET _resourceModule;
 
         /// <summary>
         /// 游戏框架组件初始化。
         /// </summary>
         private void Awake()
         {
-            _resourceModule = ModuleSystem.GetModule<IResourceModule>();
+            _resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
             if (_resourceModule == null)
             {
                 Log.Fatal("Resource component is invalid.");

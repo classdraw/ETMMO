@@ -6,6 +6,7 @@ using YooAsset;
 
 namespace TEngine
 {
+    /*
     /// <summary>
     /// 资源管理器接口。
     /// </summary>
@@ -351,5 +352,5 @@ namespace TEngine
         /// </summary>
         /// <param name="action">低内存行为。</param>
         void SetForceUnloadUnusedAssetsAction(Action<bool> action);
-    }
+    }*/
 }

@@ -5,6 +5,7 @@ using YooAsset;
 
 namespace TEngine
 {
+    /*
     /// <summary>
     /// 资源组件。
     /// </summary>
@@ -316,5 +317,5 @@ namespace TEngine
         }
 
         #endregion
-    }
+    }*/
 }

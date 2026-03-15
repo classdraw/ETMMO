@@ -7,10 +7,10 @@ namespace TEngine
 {
     internal partial class ResourceExtComponent
     {
-        private static IResourceModule _resourceModule;
+        private static IResourceModuleET _resourceModule;
         private LoadAssetCallbacks _loadAssetCallbacks;
 
-        public static IResourceModule ResourceModule => _resourceModule;
+        public static IResourceModuleET ResourceModule => _resourceModule;
 
         private class LoadingState : IMemory
         {
@@ -34,7 +34,7 @@ namespace TEngine
 
         private void InitializedResources()
         {
-            _resourceModule = ModuleSystem.GetModule<IResourceModule>();
+            _resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
             _loadAssetCallbacks = new LoadAssetCallbacks(OnLoadAssetSuccess, OnLoadAssetFailure);
         }
 

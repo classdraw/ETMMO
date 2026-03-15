@@ -28,7 +28,7 @@ namespace TEngine
         [SerializeField]
         private List<AssetsRefInfo> refAssetInfoList;
 
-        private static IResourceModule _resourceModule;
+        private static IResourceModuleET _resourceModule;
 
         private static Dictionary<GameObject, AssetsReference> _originalRefs = new();
 
@@ -41,7 +41,7 @@ namespace TEngine
             }
             else
             {
-                _resourceModule = ModuleSystem.GetModule<IResourceModule>();
+                _resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
             }
 
             if (_resourceModule == null)
@@ -108,7 +108,7 @@ namespace TEngine
             }
         }
 
-        public AssetsReference Ref(GameObject source, IResourceModule resourceModule = null)
+        public AssetsReference Ref(GameObject source, IResourceModuleET resourceModule = null)
         {
             if (source == null)
             {
@@ -131,7 +131,7 @@ namespace TEngine
             return this;
         }
 
-        public AssetsReference Ref<T>(T source, IResourceModule resourceModule = null) where T : Object
+        public AssetsReference Ref<T>(T source, IResourceModuleET resourceModule = null) where T : Object
         {
             if (source == null)
             {
@@ -148,7 +148,7 @@ namespace TEngine
             return this;
         }
 
-        internal static AssetsReference Instantiate(GameObject source, Transform parent = null, IResourceModule resourceModule = null)
+        internal static AssetsReference Instantiate(GameObject source, Transform parent = null, IResourceModuleET resourceModule = null)
         {
             if (source == null)
             {
@@ -164,7 +164,7 @@ namespace TEngine
             return instance.AddComponent<AssetsReference>().Ref(source, resourceModule);
         }
 
-        public static AssetsReference Ref(GameObject source, GameObject instance, IResourceModule resourceModule = null)
+        public static AssetsReference Ref(GameObject source, GameObject instance, IResourceModuleET resourceModule = null)
         {
             if (source == null)
             {
@@ -180,7 +180,7 @@ namespace TEngine
             return comp ? comp.Ref(source, resourceModule) : instance.AddComponent<AssetsReference>().Ref(source, resourceModule);
         }
 
-        public static AssetsReference Ref<T>(T source, GameObject instance, IResourceModule resourceModule = null) where T : Object
+        public static AssetsReference Ref<T>(T source, GameObject instance, IResourceModuleET resourceModule = null) where T : Object
         {
             if (source == null)
             {

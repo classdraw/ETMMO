@@ -5,13 +5,13 @@ namespace TEngine
 {
     public static class AssetsSetHelper
     {
-        private static IResourceModule _resourceManager;
+        private static IResourceModuleET _resourceManager;
 
         private static void CheckResourceManager()
         {
             if (_resourceManager == null)
             {
-                _resourceManager = ModuleSystem.GetModule<IResourceModule>();
+                _resourceManager = ModuleSystem.GetModule<IResourceModuleET>();
             }
         }
 

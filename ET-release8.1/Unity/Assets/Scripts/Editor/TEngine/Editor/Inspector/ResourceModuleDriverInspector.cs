@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using YooAsset.Editor;
-
+/*
 namespace TEngine.Editor.Inspector
 {
     [CustomEditor(typeof(ResourceModuleDriver))]
@@ -632,4 +632,4 @@ namespace TEngine.Editor.Inspector
             m_encryptionNameIndex = m_encryptionType.enumValueIndex > 0 ? m_encryptionType.enumValueIndex : 0;
         }
     }
-}
+}*/

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
 
@@ -11,13 +12,19 @@ namespace ET.Client
         [EntitySystem]
         private static void Awake(this ResourcesLoaderComponent self)
         {
-            self.package = YooAssets.GetPackage("DefaultPackage");
+            self.package = YooAssets.TryGetPackage("DefaultPackage");
+            var resAgent=new ResourceAgent();
+            resAgent.Init("DefaultPackage",self);
+            self.ResourceAgent = resAgent;
         }
 
         [EntitySystem]
         private static void Awake(this ResourcesLoaderComponent self, string packageName)
         {
-            self.package = YooAssets.GetPackage(packageName);
+            self.package = YooAssets.TryGetPackage(packageName);
+            var resAgent = new ResourceAgent();
+            resAgent.Init(packageName,self);
+            self.ResourceAgent = resAgent;
         }
 
         [EntitySystem]
@@ -47,10 +54,22 @@ namespace ET.Client
                         break;
                 }
             }
+            if (self.ResourceAgent!=null) { 
+                ((ResourceAgent)self.ResourceAgent).Shutdown();
+            }
+            self.ResourceAgent = null;
+            
         }
 
         public static async ETTask<T> LoadAssetAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
+            if (self.ResourceAgent != null)
+            {
+                return await self.ResourceAgent.LoadAssetAsync<T>(location);
+            }
+
+            // 原实现（已注释）
+            /*
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
             HandleBase handler;
@@ -64,6 +83,8 @@ namespace ET.Client
             }
 
             return (T)((AssetHandle)handler).AssetObject;
+            */
+            return null;
         }
 
 
@@ -72,6 +93,13 @@ namespace ET.Client
         /// </summary>
         public static T LoadAssetSync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
+            if (self.ResourceAgent != null)
+            {
+                return self.ResourceAgent.LoadAsset<T>(location);
+            }
+
+            // 原实现（已注释）
+            /*
             lock (self.handlers)
             {
                 HandleBase handler;
@@ -83,10 +111,19 @@ namespace ET.Client
 
                 return (T)((AssetHandle)handler).AssetObject;
             }
+            */
+            return null;
         }
 
         public static async ETTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
+            if (self.ResourceAgent != null)
+            {
+                return await self.ResourceAgent.LoadAllAssetsAsync<T>(location);
+            }
+
+            // 原实现（已注释）
+            /*
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
             HandleBase handler;
@@ -105,10 +142,20 @@ namespace ET.Client
             }
 
             return dictionary;
+            */
+            return new Dictionary<string, T>();
         }
 
         public static async ETTask LoadSceneAsync(this ResourcesLoaderComponent self, string location, LoadSceneMode loadSceneMode)
         {
+            if (self.ResourceAgent != null)
+            {
+                await self.ResourceAgent.LoadSceneAsync(location, loadSceneMode);
+                return;
+            }
+
+            // 原实现（已注释）
+            /*
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
             HandleBase handler;
@@ -121,6 +168,7 @@ namespace ET.Client
 
             await handler.Task;
             self.handlers.Add(location, handler);
+            */
         }
     }
 
@@ -133,5 +181,6 @@ namespace ET.Client
     {
         public ResourcePackage package;
         public Dictionary<string, HandleBase> handlers = new();
+        public IResourceModuleET ResourceAgent;//代理
     }
 }

@@ -13,6 +13,6 @@ namespace ET
         /// </summary>
         public abstract bool UseNativeDialog { get; }
 
-        protected readonly IResourceModule _resourceModule = ModuleSystem.GetModule<IResourceModule>();
+        protected readonly IResourceModuleET _resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
     }
 }

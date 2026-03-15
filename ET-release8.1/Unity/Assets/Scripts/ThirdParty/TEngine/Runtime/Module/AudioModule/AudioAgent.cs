@@ -13,7 +13,7 @@ namespace TEngine
         private AudioSource _source;
         private AudioData _audioData;
         private IAudioModule _audioModule;
-        private IResourceModule _resourceModule;
+        private IResourceModuleET _resourceModule;
         private Transform _transform;
         private float _volume = 1.0f;
         private float _duration;
@@ -202,7 +202,7 @@ namespace TEngine
         public void Init(AudioCategory audioCategory, int index = 0)
         {
             _audioModule = ModuleSystem.GetModule<IAudioModule>();
-            _resourceModule = ModuleSystem.GetModule<IResourceModule>();
+            _resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
             GameObject host = new GameObject(Utility.Text.Format("Audio Agent Helper - {0} - {1}", audioCategory.AudioMixerGroup.name, index));
             host.transform.SetParent(audioCategory.InstanceRoot);
             host.transform.localPosition = Vector3.zero;

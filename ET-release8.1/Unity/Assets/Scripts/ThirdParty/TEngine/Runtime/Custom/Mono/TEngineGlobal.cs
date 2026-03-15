@@ -131,14 +131,19 @@ namespace ET
             Application.runInBackground = runInBackground;
             Screen.sleepTimeout = neverSleep ? SleepTimeout.NeverSleep : SleepTimeout.SystemSetting;
 
+            await UniTask.Yield();
             ModuleSystem.GetModule<IUpdateDriver>();
             ModuleSystem.GetModule<IDebuggerModule>();
             ModuleSystem.GetModule<IFsmModule>();
-            //ModuleSystem.GetModule<IResourceModule>();
+            ModuleSystem.GetModule<IResourceModuleET>();
             //
             await Settings.ProcedureSetting.StartProcedure();
             Log.Info("TEngineFramework Success!!!");
             await UniTask.CompletedTask;
+        }
+
+        public void SetResAgent(IResourceModuleET resourceModuleET) {
+            ModuleSystem.GetModule<IResourceModuleET>().ResAgent = resourceModuleET;
         }
 
         private void InitTextHelper()

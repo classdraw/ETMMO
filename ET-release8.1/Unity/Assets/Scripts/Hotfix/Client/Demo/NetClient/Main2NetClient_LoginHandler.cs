@@ -24,7 +24,30 @@ namespace ET.Client
             NetComponent netComponent = root.GetComponent<NetComponent>();
             //realm负载均衡服务器的ip地址
             IPEndPoint realmAddress = routerAddressComponent.GetRealmAddress(account);
+            
+            
+            //新逻辑 登录 保存和过载均衡服务器连接
+            Session session = await netComponent.CreateRouterSession(realmAddress, account, password);
+            C2R_LoginAccount c2RLogin = C2R_LoginAccount.Create();
+            c2RLogin.Account = account;
+            c2RLogin.Password = password;
 
+            R2C_LoginAccount r2CLogin;
+            r2CLogin = (R2C_LoginAccount)await session.Call(c2RLogin);
+            if (r2CLogin.Error==ErrorCode.ERR_Success)
+            {
+                root.AddComponent<SessionComponent>().Session = session;//保存和过载均衡服务器连接
+
+            }
+            else
+            {
+                session?.Dispose();
+            }
+
+            response.Token = r2CLogin.Token;
+            response.Error = r2CLogin.Error;
+
+            /* 旧的逻辑 网关服务器分配 然后在gate完成登录
             R2C_Login r2CLogin;
             //得到随机router的Session对象
             using (Session session = await netComponent.CreateRouterSession(realmAddress, account, password))
@@ -56,6 +79,8 @@ namespace ET.Client
             Log.Debug("登陆gate成功!");
 
             response.PlayerId = g2CLoginGate.PlayerId;
+
+            */
         }
     }
 }

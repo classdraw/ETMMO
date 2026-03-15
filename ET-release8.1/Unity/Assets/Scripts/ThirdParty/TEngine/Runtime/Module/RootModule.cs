@@ -294,7 +294,7 @@ namespace TEngine
                 objectPoolModule.ReleaseAllUnused();
             }
 
-            IResourceModule resourceModule = ModuleSystem.GetModule<IResourceModule>();
+            IResourceModuleET resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
             if (resourceModule != null)
             {
                 resourceModule.OnLowMemory();

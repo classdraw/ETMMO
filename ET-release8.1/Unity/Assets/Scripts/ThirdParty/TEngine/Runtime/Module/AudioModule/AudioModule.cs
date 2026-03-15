@@ -317,11 +317,11 @@ namespace TEngine
 
         #endregion
 
-        private IResourceModule _resourceModule;
+        private IResourceModuleET _resourceModule;
 
         public override void OnInit()
         {
-            _resourceModule = ModuleSystem.GetModule<IResourceModule>();
+            _resourceModule = ModuleSystem.GetModule<IResourceModuleET>();
             Initialize(Settings.AudioSetting.audioGroupConfigs);
         }
 
