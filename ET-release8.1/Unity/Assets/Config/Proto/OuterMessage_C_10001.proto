@@ -238,7 +238,7 @@ message G2C_Benchmark // ISessionResponse
 message C2R_LoginAccount // ISessionRequest
 {
 	int32 RpcId = 1;
-	string Account = 2;
+	string AccountName = 2;
 	string Password = 3;
 }
 

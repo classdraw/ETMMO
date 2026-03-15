@@ -4,6 +4,7 @@ using System.Net;
 
 namespace ET.Server
 {
+	//以前DEMO的  废弃
 	[FriendOf(typeof(AccountInfo))]
 	[MessageSessionHandler(SceneType.Realm)]
 	public class C2R_LoginHandler : MessageSessionHandler<C2R_Login, R2C_Login>

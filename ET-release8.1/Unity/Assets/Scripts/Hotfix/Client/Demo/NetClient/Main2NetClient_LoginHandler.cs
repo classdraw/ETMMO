@@ -29,7 +29,7 @@ namespace ET.Client
             //新逻辑 登录 保存和过载均衡服务器连接
             Session session = await netComponent.CreateRouterSession(realmAddress, account, password);
             C2R_LoginAccount c2RLogin = C2R_LoginAccount.Create();
-            c2RLogin.Account = account;
+            c2RLogin.AccountName = account;
             c2RLogin.Password = password;
 
             R2C_LoginAccount r2CLogin;

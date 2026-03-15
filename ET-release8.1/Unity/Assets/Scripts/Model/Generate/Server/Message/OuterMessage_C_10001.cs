@@ -1096,7 +1096,7 @@ namespace ET
         public int RpcId { get; set; }
 
         [MemoryPackOrder(1)]
-        public string Account { get; set; }
+        public string AccountName { get; set; }
 
         [MemoryPackOrder(2)]
         public string Password { get; set; }
@@ -1109,7 +1109,7 @@ namespace ET
             }
 
             this.RpcId = default;
-            this.Account = default;
+            this.AccountName = default;
             this.Password = default;
 
             ObjectPool.Instance.Recycle(this);
