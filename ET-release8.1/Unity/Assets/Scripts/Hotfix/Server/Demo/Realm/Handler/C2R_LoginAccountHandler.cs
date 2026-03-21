@@ -45,95 +45,97 @@ namespace ET.Server
             {
                 using (await coroutineLockComponent.Wait(CoroutineLockType.LoginAccount,request.AccountName.GetLongHashCode()))
                 {
-                    //数据库操作
-                    DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
-                    var accountList=await dbComponent.Query<Account>(accountInfo => accountInfo.AccountName == request.AccountName);
-                    Account account = null;
-                    if (accountList!=null&&accountList.Count>0)
+                    if (session.IScene==null)
                     {
-                        account = accountList[0];
-                        if (session.IScene!=null)
+                        response.Error = ErrorCode.ERR_RequestRepeatedly;
+                        session.Disconnect().Coroutine();
+                        return;
+                    }
+                    else
+                    {
+                        
+                        //数据库操作
+                        DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
+                        var accountList=await dbComponent.Query<Account>(accountInfo => accountInfo.AccountName == request.AccountName);
+                        Account account = null;
+                        if (accountList!=null&&accountList.Count>0)
                         {
+                            account = accountList[0];
                             session.AddChild(account);//每个元素可控 保证session释放 account也释放
-                        }
-                        if (account.AccountType==(int)AccountType.BlackList)//黑名单
-                        {
-                            response.Error = ErrorCode.ERR_AccountInBlackListError;
-                            session?.Disconnect().Coroutine();
-                            account?.Dispose();//习惯 可以不写 等session释放
-                            return;
-                        }
+                            if (account.AccountType==(int)AccountType.BlackList)//黑名单
+                            {
+                                response.Error = ErrorCode.ERR_AccountInBlackListError;
+                                session?.Disconnect().Coroutine();
+                                account?.Dispose();//习惯 可以不写 等session释放
+                                return;
+                            }
 
-                        if (!account.Password.Equals(request.Password))//密码不对
+                            if (!account.Password.Equals(request.Password))//密码不对
+                            {
+                                response.Error = ErrorCode.ERR_LoginPasswordError;
+                                session?.Disconnect().Coroutine();
+                                account?.Dispose();
+                                return;
+                            }
+                            
+                            account.LastLoginTime=TimeInfo.Instance.ServerNow();//保存最后一次登录时间
+                            await dbComponent.Save<Account>(account);
+                        }
+                        else
                         {
-                            response.Error = ErrorCode.ERR_LoginPasswordError;
+                            //注册逻辑
+                            account=session.AddChild<Account>();
+                            account.AccountName = request.AccountName.Trim();
+                            account.Password = request.Password;
+                            account.AccountType = (int)AccountType.General;
+                            long nowTime= TimeInfo.Instance.ServerNow();
+                            account.CreateTime = nowTime;
+                            account.LastLoginTime = nowTime;
+                            await dbComponent.Save<Account>(account);
+                            
+                        }
+                        if (session.IScene==null)
+                        {
+                            response.Error = ErrorCode.ERR_RequestRepeatedly;
+                            session?.Disconnect().Coroutine();
+                            account?.Dispose();
+                            return;
+                        } 
+                        //开始向登录服正式登录LoginCenter
+                        R2L_LoginAccountRequest r2LLoginAccountRequest = R2L_LoginAccountRequest.Create();
+                        r2LLoginAccountRequest.AccountName = request.AccountName;
+
+                        StartSceneConfig loginCenterConfig = StartSceneConfigCategory.Instance.LoginCenterConfig;
+
+                        var loginAccountResponse = await session.Fiber().Root.GetComponent<MessageSender>().
+                                Call(loginCenterConfig.ActorId,r2LLoginAccountRequest)as L2R_LoginAccountResponse;
+                        if (loginAccountResponse.Error!=ErrorCode.ERR_Success)//登录服连接失败
+                        {
+                            response.Error = loginAccountResponse.Error;
                             session?.Disconnect().Coroutine();
                             account?.Dispose();
                             return;
                         }
+
+                        Session otherSession = session.Root().GetComponent<AccountSessionsComponent>().Get(request.AccountName);
+                        otherSession?.Send(A2C_Disconnet.Create());//存在旧的session断开连接 //0踢下线 1超时
+                        otherSession?.Disconnect().Coroutine();
+                        //新的session添加
+                        session.Root().GetComponent<AccountSessionsComponent>().Add(request.AccountName, session);
+                        //10分钟自动断开
+                        session.AddComponent<AccountChectOutTimeComponent, string>(request.AccountName);
                         
-                        account.LastLoginTime=TimeInfo.Instance.ServerNow();//保存最后一次登录时间
-                        await dbComponent.Save<Account>(account);
-                    }
-                    else
-                    {
-                        //注册逻辑
-                        account=session.AddChild<Account>();
-                        account.AccountName = request.AccountName.Trim();
-                        account.Password = request.Password;
-                        account.AccountType = (int)AccountType.General;
-                        account.CreateTime = TimeInfo.Instance.ServerNow();
-                        account.LastLoginTime=TimeInfo.Instance.ServerNow();
-                        await dbComponent.Save<Account>(account);
-                    }
-                    
-                    
-                    if (session.IScene==null)
-                    {
-                        response.Error = ErrorCode.ERR_RequestRepeatedly;
-                        session?.Disconnect().Coroutine();
+                        //一个新的token
+                        string token = TimeInfo.Instance.ServerNow() + RandomGenerator.RandomNumber(int.MinValue, int.MaxValue).ToString();
+                        session.Root().GetComponent<TokenComponent>().Remove(request.AccountName);
+                        session.Root().GetComponent<TokenComponent>().Add(request.AccountName, token);
+
+                        response.Token = token;
                         account?.Dispose();
-                        return;
-                    }
-                    //开始向登录服正式登录LoginCenter
-                    R2L_LoginAccountRequest r2LLoginAccountRequest = R2L_LoginAccountRequest.Create();
-                    r2LLoginAccountRequest.AccountName = request.AccountName;
+                        
+                    }//else
 
 
-                    StartSceneConfig loginCenterConfig = StartSceneConfigCategory.Instance.LoginCenterConfig;
-                    /*if (session.IScene==null||session.Fiber()==null||session.Fiber().Root==null)
-                    {
-                        response.Error = ErrorCode.ERR_RequestRepeatedly;
-                        session?.Disconnect().Coroutine();
-                        account?.Dispose();
-                        return;
-                    }*/
-
-
-                    var loginAccountResponse = await session.Fiber().Root.GetComponent<MessageSender>().
-                            Call(loginCenterConfig.ActorId,r2LLoginAccountRequest)as L2R_LoginAccountResponse;
-                    if (loginAccountResponse.Error!=ErrorCode.ERR_Success)//登录服连接失败
-                    {
-                        response.Error = loginAccountResponse.Error;
-                        session?.Disconnect().Coroutine();
-                        account?.Dispose();
-                        return;
-                    }
-
-                    Session otherSession = session.Root().GetComponent<AccountSessionsComponent>().Get(request.AccountName);
-                    otherSession?.Send(A2C_Disconnet.Create());//存在旧的session断开连接
-                    otherSession?.Disconnect().Coroutine();
-                    //新的session添加
-                    session.Root().GetComponent<AccountSessionsComponent>().Add(request.AccountName, session);
-                    session.AddComponent<AccountChectOutTimeComponent, string>(request.AccountName);
-                    
-                    //一个新的token
-                    string token = TimeInfo.Instance.ServerNow() + RandomGenerator.RandomNumber(int.MinValue, int.MaxValue).ToString();
-                    session.Root().GetComponent<TokenComponent>().Remove(request.AccountName);
-                    session.Root().GetComponent<TokenComponent>().Add(request.AccountName, token);
-
-                    response.Token = token;
-                    account?.Dispose();
 
                 }//using
             }//using

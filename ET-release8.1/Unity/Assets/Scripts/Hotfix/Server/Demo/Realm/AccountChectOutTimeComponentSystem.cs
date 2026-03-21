@@ -47,7 +47,7 @@ namespace ET.Server
 
             //断开连接 太久没有操作
             var a2CDisconnet= A2C_Disconnet.Create();
-            a2CDisconnet.Error = 1;
+            a2CDisconnet.Error = 1;//0踢下线 1超时
             session?.Send(a2CDisconnet);
             session?.Disconnect().Coroutine();
         }

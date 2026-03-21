@@ -39,18 +39,24 @@ namespace ET.Client
         public static async ETTask<NetClient2Main_Login> LoginAsync(this ClientSenderComponent self, string account, string password)
         {
             self.fiberId = await FiberManager.Instance.Create(SchedulerType.ThreadPool, 0, SceneType.NetClient, "");
-            //指向netClient的fiberId instanceId默认是1
-            self.netClientActorId = new ActorId(self.Fiber().Process, self.fiberId);
+            if (self.IScene!=null)
+            {
+                
+                //指向netClient的fiberId instanceId默认是1
+                self.netClientActorId = new ActorId(self.Fiber().Process, self.fiberId);
 
-            Main2NetClient_Login main2NetClientLogin = Main2NetClient_Login.Create();
-            main2NetClientLogin.OwnerFiberId = self.Fiber().Id;
-            main2NetClientLogin.Account = account;
-            main2NetClientLogin.Password = password;
-            //两个迁程通信 Main与NetClient 通信 用ProcessInnerSender
-            NetClient2Main_Login response = await self.Root().GetComponent<ProcessInnerSender>().Call(
-                self.netClientActorId, main2NetClientLogin) as NetClient2Main_Login;
+                Main2NetClient_Login main2NetClientLogin = Main2NetClient_Login.Create();
+                main2NetClientLogin.OwnerFiberId = self.Fiber().Id;
+                main2NetClientLogin.Account = account;
+                main2NetClientLogin.Password = password;
+                //两个迁程通信 Main与NetClient 通信 用ProcessInnerSender
+                NetClient2Main_Login response = await self.Root().GetComponent<ProcessInnerSender>().Call(
+                    self.netClientActorId, main2NetClientLogin) as NetClient2Main_Login;
             
-            return response;
+                return response;
+            }
+
+            return null;
         }
 
         public static void Send(this ClientSenderComponent self, IMessage message)

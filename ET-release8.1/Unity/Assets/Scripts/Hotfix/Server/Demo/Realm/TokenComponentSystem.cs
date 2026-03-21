@@ -28,7 +28,7 @@ namespace ET.Server
         public static bool Add(this TokenComponent self,string accountName,string token)
         {
             self.AccountTokenDictionary.Add(accountName,token);
-            self.TimeOueRemoveKey(accountName,token).Coroutine();
+            self.TimeOutRemoveKey(accountName,token).Coroutine();
             return true;
         }
         
@@ -44,7 +44,7 @@ namespace ET.Server
         }
         
         //token超时 每加一个token启动一个携程
-        private static async ETTask TimeOueRemoveKey(this TokenComponent self, string key, string tokenKey)
+        private static async ETTask TimeOutRemoveKey(this TokenComponent self, string key, string tokenKey)
         {
             await self.Root().GetComponent<TimerComponent>().WaitAsync(600000);
             string onlineToken = self.Get(key);
