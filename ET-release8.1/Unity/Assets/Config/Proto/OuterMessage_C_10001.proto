@@ -237,6 +237,7 @@ message G2C_Benchmark // ISessionResponse
 // ResponseType R2C_LoginAccount
 message C2R_LoginAccount // ISessionRequest
 {
+	//登录并且获取token
 	int32 RpcId = 1;
 	string AccountName = 2;
 	string Password = 3;
@@ -252,7 +253,34 @@ message R2C_LoginAccount // ISessionResponse
 
 message A2C_Disconnet // ISessionMessage
 {
+	//强制客户端session离线 0踢人 1超时
 	int32 RpcId = 1;
 	int32 Error = 2;
 	string Message = 3;
 }
+
+message ServerInfoProto 
+{
+	//服务器列表数据
+	int32 Id = 1;
+	int32 Status = 2;
+	string ServerName = 3;
+}
+
+// ResponseType R2C_GetServerInfos
+message C2R_GetServerInfos // ISessionRequest
+{	
+	//获得服务器列表
+	int32 RpcId = 1; 
+	string Token = 2;
+	string Account = 3;
+}
+
+message R2C_GetServerInfos // ISessionResponse
+{	
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	repeated ServerInfoProto ServerInfoList = 4;
+}
+

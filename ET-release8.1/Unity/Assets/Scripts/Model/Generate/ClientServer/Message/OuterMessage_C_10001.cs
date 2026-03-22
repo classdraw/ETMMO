@@ -1092,6 +1092,9 @@ namespace ET
             return ObjectPool.Instance.Fetch(typeof(C2R_LoginAccount), isFromPool) as C2R_LoginAccount;
         }
 
+        /// <summary>
+        /// 登录并且获取token
+        /// </summary>
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
 
@@ -1162,6 +1165,9 @@ namespace ET
             return ObjectPool.Instance.Fetch(typeof(A2C_Disconnet), isFromPool) as A2C_Disconnet;
         }
 
+        /// <summary>
+        /// 强制客户端session离线 0踢人 1超时
+        /// </summary>
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
 
@@ -1181,6 +1187,116 @@ namespace ET
             this.RpcId = default;
             this.Error = default;
             this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.ServerInfoProto)]
+    public partial class ServerInfoProto : MessageObject
+    {
+        public static ServerInfoProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(ServerInfoProto), isFromPool) as ServerInfoProto;
+        }
+
+        /// <summary>
+        /// 服务器列表数据
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int Id { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Status { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string ServerName { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Id = default;
+            this.Status = default;
+            this.ServerName = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2R_GetServerInfos)]
+    [ResponseType(nameof(R2C_GetServerInfos))]
+    public partial class C2R_GetServerInfos : MessageObject, ISessionRequest
+    {
+        public static C2R_GetServerInfos Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2R_GetServerInfos), isFromPool) as C2R_GetServerInfos;
+        }
+
+        /// <summary>
+        /// 获得服务器列表
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string Token { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Account { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Token = default;
+            this.Account = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.R2C_GetServerInfos)]
+    public partial class R2C_GetServerInfos : MessageObject, ISessionResponse
+    {
+        public static R2C_GetServerInfos Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(R2C_GetServerInfos), isFromPool) as R2C_GetServerInfos;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public List<ServerInfoProto> ServerInfoList { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ServerInfoList.Clear();
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1225,5 +1341,8 @@ namespace ET
         public const ushort C2R_LoginAccount = 10036;
         public const ushort R2C_LoginAccount = 10037;
         public const ushort A2C_Disconnet = 10038;
+        public const ushort ServerInfoProto = 10039;
+        public const ushort C2R_GetServerInfos = 10040;
+        public const ushort R2C_GetServerInfos = 10041;
     }
 }
