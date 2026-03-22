@@ -21,6 +21,7 @@ namespace ET
         public const int ERR_LoginPasswordError = 200007;//账号密码错误
         public const int ERR_AccountInBlackListError = 200008;//黑名单
         public const int ERR_TokenError = 200009;//token异常
-        
+        public const int ERR_RoleNameNull = 200010;//创建角色null 
+        public const int ERR_RoleNameSame = 200011;//创建角色same 
     }
 }

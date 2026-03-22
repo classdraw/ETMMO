@@ -1,3 +1,5 @@
+using CommandLine;
+
 namespace ET.Client
 {
     public static class LoginHelper
@@ -45,8 +47,33 @@ namespace ET.Client
                 Log.Error("请求区服角色列表失败");
                 return;
             }
+
+            RoleInfoProto roleInfoProto = default;
+            if (r2CGetRoles.RoleInfoList.Count<=0)
+            {
+                //无角色那么创建角色
+                C2R_CreateRole c2RCreateRole = C2R_CreateRole.Create();
+                c2RCreateRole.Token = token;
+                c2RCreateRole.ServerId = serverInfoProto.Id;
+                c2RCreateRole.AccountName = account;
+                c2RCreateRole.Name = account;
+                R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
+                if (r2CCreateRole.Error!=ErrorCode.ERR_Success)
+                {
+                    Log.Error("创建区服角色失败");
+                    return;
+                }
+
+                roleInfoProto = r2CCreateRole.RoleInfo;
+            }
+            else
+            {
+                roleInfoProto = r2CGetRoles.RoleInfoList[0];
+            }
             
-            Log.Info(">>>>>>>"+r2CGetRoles.RoleInfoList.Count);
+            
+
+            Log.Info(">>>>>>>"+roleInfoProto.Name);
 
 
             /*

@@ -305,7 +305,6 @@ message C2R_GetRoles // ISessionRequest
 	int32 ServerId = 4;
 }
 
-
 message R2C_GetRoles // ISessionResponse
 {	
 	int32 RpcId = 1;
@@ -313,3 +312,23 @@ message R2C_GetRoles // ISessionResponse
 	string Message = 3;
 	repeated RoleInfoProto RoleInfoList = 4;
 }
+
+// ResponseType R2C_CreateRole
+message C2R_CreateRole // ISessionRequest
+{	
+	//获得某个服务器的角色列表
+	int32 RpcId = 1; 
+	string Token = 2;
+	string AccountName = 3;
+	string Name = 4;
+	int32 ServerId = 5;
+}
+
+message R2C_CreateRole // ISessionResponse
+{	
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	RoleInfoProto RoleInfo = 4;
+}
+
