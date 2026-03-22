@@ -9,7 +9,7 @@ namespace ET.Server
     {
         protected override async ETTask Run(Session session, C2R_GetServerInfos request, R2C_GetServerInfos response)
         {
-            string token = session.Root().GetComponent<TokenComponent>().Get(request.Account);
+            string token = session.Root().GetComponent<TokenComponent>().Get(request.AccountName);
             if (token==null||token!=request.Token)
             {
                 response.Error = ErrorCode.ERR_TokenError;

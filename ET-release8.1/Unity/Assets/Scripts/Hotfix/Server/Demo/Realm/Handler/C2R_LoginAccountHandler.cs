@@ -45,7 +45,7 @@ namespace ET.Server
             {
                 using (await coroutineLockComponent.Wait(CoroutineLockType.LoginAccount,request.AccountName.GetLongHashCode()))
                 {
-                    if (session.IScene==null)
+                    if (session.IScene==null)//登录这个session可能清空 但是其他不用加这个
                     {
                         response.Error = ErrorCode.ERR_RequestRepeatedly;
                         session.Disconnect().Coroutine();

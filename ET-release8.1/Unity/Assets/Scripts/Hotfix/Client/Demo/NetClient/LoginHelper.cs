@@ -22,7 +22,7 @@ namespace ET.Client
             //C2R_GET
             C2R_GetServerInfos c2RGetServerInfos = C2R_GetServerInfos.Create();
             c2RGetServerInfos.Token = token;
-            c2RGetServerInfos.Account = account;
+            c2RGetServerInfos.AccountName = account;
             
             R2C_GetServerInfos r2CGetServerInfos = await clientSenderComponent.Call(c2RGetServerInfos) as R2C_GetServerInfos;
             if (r2CGetServerInfos.Error!=ErrorCode.ERR_Success)
@@ -35,8 +35,18 @@ namespace ET.Client
 
             ServerInfoProto serverInfoProto = r2CGetServerInfos.ServerInfoList[0];
             //获得区服角色列表
+            C2R_GetRoles c2RGetRoles = C2R_GetRoles.Create();
+            c2RGetRoles.Token = token;
+            c2RGetRoles.AccountName = account;
+            c2RGetRoles.ServerId = serverInfoProto.Id;
+            R2C_GetRoles r2CGetRoles=await clientSenderComponent.Call(c2RGetRoles) as R2C_GetRoles;
+            if (r2CGetRoles.Error!=ErrorCode.ERR_Success)
+            {
+                Log.Error("请求区服角色列表失败");
+                return;
+            }
             
-
+            Log.Info(">>>>>>>"+r2CGetRoles.RoleInfoList.Count);
 
 
             /*

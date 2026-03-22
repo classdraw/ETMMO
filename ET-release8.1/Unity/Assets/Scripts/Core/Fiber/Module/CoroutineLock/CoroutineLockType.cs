@@ -12,6 +12,7 @@ namespace ET
         public const int ResourcesLoader = 7;
 
         public const int LoginAccount = 8;//登录携程锁
+        public const int CreateRole = 9;//创建角色
 
         public const int Max = 100; // 这个必须最大
     }
