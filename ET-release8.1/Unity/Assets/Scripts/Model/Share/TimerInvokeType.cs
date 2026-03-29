@@ -14,6 +14,7 @@
         public const int AITimer = 202;
         public const int SessionAcceptTimeout = 203;
         public const int AccountChectOutTime = 204;//账号超时
+        public const int PlayerOfflineOutTime = 205;//玩家超时
         
         public const int RoomUpdate = 301;
     }

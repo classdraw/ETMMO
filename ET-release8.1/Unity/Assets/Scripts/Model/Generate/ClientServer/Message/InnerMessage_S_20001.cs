@@ -798,13 +798,13 @@ namespace ET
     }
 
     [MemoryPackable]
-    [Message(InnerMessage.R2L_LoginAccountRequest)]
-    [ResponseType(nameof(L2R_LoginAccountResponse))]
-    public partial class R2L_LoginAccountRequest : MessageObject, IRequest
+    [Message(InnerMessage.R2L_LoginAccount)]
+    [ResponseType(nameof(L2R_LoginAccount))]
+    public partial class R2L_LoginAccount : MessageObject, IRequest
     {
-        public static R2L_LoginAccountRequest Create(bool isFromPool = false)
+        public static R2L_LoginAccount Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(R2L_LoginAccountRequest), isFromPool) as R2L_LoginAccountRequest;
+            return ObjectPool.Instance.Fetch(typeof(R2L_LoginAccount), isFromPool) as R2L_LoginAccount;
         }
 
         [MemoryPackOrder(0)]
@@ -828,12 +828,12 @@ namespace ET
     }
 
     [MemoryPackable]
-    [Message(InnerMessage.L2R_LoginAccountResponse)]
-    public partial class L2R_LoginAccountResponse : MessageObject, IResponse
+    [Message(InnerMessage.L2R_LoginAccount)]
+    public partial class L2R_LoginAccount : MessageObject, IResponse
     {
-        public static L2R_LoginAccountResponse Create(bool isFromPool = false)
+        public static L2R_LoginAccount Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(L2R_LoginAccountResponse), isFromPool) as L2R_LoginAccountResponse;
+            return ObjectPool.Instance.Fetch(typeof(L2R_LoginAccount), isFromPool) as L2R_LoginAccount;
         }
 
         [MemoryPackOrder(0)]
@@ -861,13 +861,13 @@ namespace ET
     }
 
     [MemoryPackable]
-    [Message(InnerMessage.L2G_DisConnectGateUnitRequest)]
-    [ResponseType(nameof(G2L_DisConnectGateUnitResponse))]
-    public partial class L2G_DisConnectGateUnitRequest : MessageObject, IRequest
+    [Message(InnerMessage.L2G_DisConnectGateUnit)]
+    [ResponseType(nameof(G2L_DisConnectGateUnit))]
+    public partial class L2G_DisConnectGateUnit : MessageObject, IRequest
     {
-        public static L2G_DisConnectGateUnitRequest Create(bool isFromPool = false)
+        public static L2G_DisConnectGateUnit Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(L2G_DisConnectGateUnitRequest), isFromPool) as L2G_DisConnectGateUnitRequest;
+            return ObjectPool.Instance.Fetch(typeof(L2G_DisConnectGateUnit), isFromPool) as L2G_DisConnectGateUnit;
         }
 
         [MemoryPackOrder(0)]
@@ -891,12 +891,214 @@ namespace ET
     }
 
     [MemoryPackable]
-    [Message(InnerMessage.G2L_DisConnectGateUnitResponse)]
-    public partial class G2L_DisConnectGateUnitResponse : MessageObject, IResponse
+    [Message(InnerMessage.G2L_DisConnectGateUnit)]
+    public partial class G2L_DisConnectGateUnit : MessageObject, IResponse
     {
-        public static G2L_DisConnectGateUnitResponse Create(bool isFromPool = false)
+        public static G2L_DisConnectGateUnit Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(G2L_DisConnectGateUnitResponse), isFromPool) as G2L_DisConnectGateUnitResponse;
+            return ObjectPool.Instance.Fetch(typeof(G2L_DisConnectGateUnit), isFromPool) as G2L_DisConnectGateUnit;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2L_AddLoginRecord)]
+    [ResponseType(nameof(L2G_AddLoginRecord))]
+    public partial class G2L_AddLoginRecord : MessageObject, IRequest
+    {
+        public static G2L_AddLoginRecord Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2L_AddLoginRecord), isFromPool) as G2L_AddLoginRecord;
+        }
+
+        /// <summary>
+        /// 登录gate
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string AccountName { get; set; }
+
+        [MemoryPackOrder(2)]
+        public int ServerId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.AccountName = default;
+            this.ServerId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.L2G_AddLoginRecord)]
+    public partial class L2G_AddLoginRecord : MessageObject, IResponse
+    {
+        public static L2G_AddLoginRecord Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(L2G_AddLoginRecord), isFromPool) as L2G_AddLoginRecord;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2L_RemoveLoginRecord)]
+    [ResponseType(nameof(L2G_RemoveLoginRecord))]
+    public partial class G2L_RemoveLoginRecord : MessageObject, IRequest
+    {
+        public static G2L_RemoveLoginRecord Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2L_RemoveLoginRecord), isFromPool) as G2L_RemoveLoginRecord;
+        }
+
+        /// <summary>
+        /// 登录gate
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string AccountName { get; set; }
+
+        [MemoryPackOrder(2)]
+        public int ServerId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.AccountName = default;
+            this.ServerId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.L2G_RemoveLoginRecord)]
+    public partial class L2G_RemoveLoginRecord : MessageObject, IResponse
+    {
+        public static L2G_RemoveLoginRecord Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(L2G_RemoveLoginRecord), isFromPool) as L2G_RemoveLoginRecord;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2M_RequestExitGame)]
+    [ResponseType(nameof(M2G_RequestExitGame))]
+    public partial class G2M_RequestExitGame : MessageObject, ILocationRequest
+    {
+        public static G2M_RequestExitGame Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2M_RequestExitGame), isFromPool) as G2M_RequestExitGame;
+        }
+
+        /// <summary>
+        /// 登录gate
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2G_RequestExitGame)]
+    public partial class M2G_RequestExitGame : MessageObject, ILocationResponse
+    {
+        public static M2G_RequestExitGame Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2G_RequestExitGame), isFromPool) as M2G_RequestExitGame;
         }
 
         [MemoryPackOrder(0)]
@@ -948,9 +1150,15 @@ namespace ET
         public const ushort ObjectQueryResponse = 20022;
         public const ushort M2M_UnitTransferRequest = 20023;
         public const ushort M2M_UnitTransferResponse = 20024;
-        public const ushort R2L_LoginAccountRequest = 20025;
-        public const ushort L2R_LoginAccountResponse = 20026;
-        public const ushort L2G_DisConnectGateUnitRequest = 20027;
-        public const ushort G2L_DisConnectGateUnitResponse = 20028;
+        public const ushort R2L_LoginAccount = 20025;
+        public const ushort L2R_LoginAccount = 20026;
+        public const ushort L2G_DisConnectGateUnit = 20027;
+        public const ushort G2L_DisConnectGateUnit = 20028;
+        public const ushort G2L_AddLoginRecord = 20029;
+        public const ushort L2G_AddLoginRecord = 20030;
+        public const ushort G2L_RemoveLoginRecord = 20031;
+        public const ushort L2G_RemoveLoginRecord = 20032;
+        public const ushort G2M_RequestExitGame = 20033;
+        public const ushort M2G_RequestExitGame = 20034;
     }
 }

@@ -6,12 +6,13 @@ namespace ET.Server
 	[MessageHandler(SceneType.Gate)]
 	public class R2G_GetLoginKeyHandler : MessageHandler<Scene, R2G_GetLoginKey, G2R_GetLoginKey>
 	{
-		protected override async ETTask Run(Scene scene, R2G_GetLoginKey request, G2R_GetLoginKey response)
+		protected override async ETTask Run(Scene root, R2G_GetLoginKey request, G2R_GetLoginKey response)
 		{
-			long key = RandomGenerator.RandInt64();
-			scene.GetComponent<GateSessionKeyComponent>().Add(key, request.Account);
+			string keyStr = RandomGenerator.RandInt64().ToString() + TimeInfo.Instance.ServerNow().ToString();
+			long key =keyStr.GetLongHashCode();
+			root.GetComponent<GateSessionKeyComponent>().Add(key, request.Account);
 			response.Key = key;
-			response.GateId = scene.Id;
+			response.GateId = root.Id;
 			await ETTask.CompletedTask;
 		}
 	}

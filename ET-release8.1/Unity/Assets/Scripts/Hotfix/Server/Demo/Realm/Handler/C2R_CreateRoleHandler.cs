@@ -31,33 +31,31 @@ namespace ET.Server
             //携程锁 锁住这个account账号
             var coroutineLockComponent = session?.Root().GetComponent<CoroutineLockComponent>();
             using (session.AddComponent<SessionLockingComponent>()) //using 自动释放
+            using (await coroutineLockComponent.Wait(CoroutineLockType.CreateRole, request.AccountName.GetLongHashCode()))
             {
-                using (await coroutineLockComponent.Wait(CoroutineLockType.CreateRole, request.AccountName.GetLongHashCode()))
+                DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
+                var roleInfos = await dbComponent.Query<RoleInfo>(
+                    d=>
+                            d.Name==request.Name);
+                if (roleInfos!=null&&roleInfos.Count>0)
                 {
-                    DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
-                    var roleInfos = await dbComponent.Query<RoleInfo>(
-                        d=>
-                                d.Name==request.Name);
-                    if (roleInfos!=null&&roleInfos.Count>0)
-                    {
-                        response.Error = ErrorCode.ERR_RoleNameSame;
-                        //这里不需要断开
-                        return;
-                    }
+                    response.Error = ErrorCode.ERR_RoleNameSame;
+                    //这里不需要断开
+                    return;
+                }
 
-                    RoleInfo roleInfo = session.AddChild<RoleInfo>();
-                    roleInfo.ServerId = request.ServerId;
-                    roleInfo.AccountName = request.AccountName;
-                    roleInfo.State = (int)RoleInfoState.Normal;
-                    long nowTime= TimeInfo.Instance.ServerNow();
-                    roleInfo.CreateTime = nowTime;
-                    roleInfo.LastLoginTime = 0;//创建角色登录时间是0
-                    roleInfo.Name = request.Name;
-                    await dbComponent.Save<RoleInfo>(roleInfo);
+                RoleInfo roleInfo = session.AddChild<RoleInfo>();
+                roleInfo.ServerId = request.ServerId;
+                roleInfo.AccountName = request.AccountName;
+                roleInfo.State = (int)RoleInfoState.Normal;
+                long nowTime= TimeInfo.Instance.ServerNow();
+                roleInfo.CreateTime = nowTime;
+                roleInfo.LastLoginTime = 0;//创建角色登录时间是0
+                roleInfo.Name = request.Name;
+                await dbComponent.Save<RoleInfo>(roleInfo);
                     
-                    response.RoleInfo = roleInfo.ToMessage();
-                    roleInfo?.Dispose();
-                }//using
+                response.RoleInfo = roleInfo.ToMessage();
+                roleInfo?.Dispose();
             }
         }
     }

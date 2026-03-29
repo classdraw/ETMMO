@@ -7,7 +7,7 @@
         [EntitySystem]
         private static void Awake(this Player self, string a)
         {
-            self.Account = a;
+            self.AccountName = a;
         }
     }
 }

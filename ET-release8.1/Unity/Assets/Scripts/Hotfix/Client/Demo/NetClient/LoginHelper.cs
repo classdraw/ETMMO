@@ -33,7 +33,7 @@ namespace ET.Client
                 return;
             }
 
-            //Log.Info("   "+r2CGetServerInfos.ServerInfoList.Count);
+            Log.Info("服务器列表有:"+r2CGetServerInfos.ServerInfoList.Count);
 
             ServerInfoProto serverInfoProto = r2CGetServerInfos.ServerInfoList[0];
             //获得区服角色列表
@@ -60,7 +60,7 @@ namespace ET.Client
                 R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
                 if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
                 {
-                    Log.Error("创建区服角色失败");
+                    Log.Error($"创建区服角色失败{r2CCreateRole.Error}");
                     return;
                 }
 
@@ -71,10 +71,29 @@ namespace ET.Client
                 roleInfoProto = r2CGetRoles.RoleInfoList[0];
             }
             
+            //请求获得realmkey
+            C2R_GetRealmKey c2RGetRealmKey = C2R_GetRealmKey.Create();
+            c2RGetRealmKey.Token = token;
+            c2RGetRealmKey.AccountName = account;
+            c2RGetRealmKey.ServerId = serverInfoProto.Id;
+            R2C_GetRealmKey r2CGetRealmKey=await clientSenderComponent.Call(c2RGetRealmKey) as R2C_GetRealmKey;
+            if (r2CGetRealmKey==null||r2CGetRealmKey.Error!=ErrorCode.ERR_Success)
+            {
+                Log.Error("获取RealmKey失败");
+                return;
+            }
+            //r2CGetRealmKey.Key 是随机64位+时间的hashcode
+            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address);
+            if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
+            {
+                Log.Error($"进入游戏失败;{netClient2MainLoginGame.Error}");
+                return;
+            }
             
-
-            Log.Info(">>>>>>>"+roleInfoProto.Name);
-
+            Log.Info("进入游戏成功");
+            await EventSystem.Instance.PublishAsync(root, new LoginFinish());
+            //请求角色进入map地图
+            //Log.Info(r2CGetRealmKey.GateId+"______________________");
 
             /*
             root.GetComponent<PlayerComponent>().MyId = response.PlayerId;

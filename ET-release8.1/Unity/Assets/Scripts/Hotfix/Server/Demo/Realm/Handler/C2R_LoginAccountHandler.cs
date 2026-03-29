@@ -36,15 +36,14 @@ namespace ET.Server
                 return;
             }
             //密码正则
-            string passwordRegex = @"^[A-Za-z0-9]+$";
+            //string passwordRegex = @"^[A-Za-z0-9]+$";
             
             
             //携程锁 锁住这个account账号
             var coroutineLockComponent = session?.Root().GetComponent<CoroutineLockComponent>();
             using (session.AddComponent<SessionLockingComponent>())//using 自动释放
+            using (await coroutineLockComponent.Wait(CoroutineLockType.LoginAccount,request.AccountName.GetLongHashCode()))
             {
-                using (await coroutineLockComponent.Wait(CoroutineLockType.LoginAccount,request.AccountName.GetLongHashCode()))
-                {
                     if (session.IScene==null)//登录这个session可能清空 但是其他不用加这个
                     {
                         response.Error = ErrorCode.ERR_RequestRepeatedly;
@@ -105,13 +104,14 @@ namespace ET.Server
                             return;
                         } 
                         //开始向登录服正式登录LoginCenter
-                        R2L_LoginAccountRequest r2LLoginAccountRequest = R2L_LoginAccountRequest.Create();
+                        R2L_LoginAccount r2LLoginAccountRequest = R2L_LoginAccount.Create();
                         r2LLoginAccountRequest.AccountName = request.AccountName;
+                        
 
                         StartSceneConfig loginCenterConfig = StartSceneConfigCategory.Instance.LoginCenterConfig;
 
                         var loginAccountResponse = await session.Fiber().Root.GetComponent<MessageSender>().
-                                Call(loginCenterConfig.ActorId,r2LLoginAccountRequest)as L2R_LoginAccountResponse;
+                                Call(loginCenterConfig.ActorId,r2LLoginAccountRequest)as L2R_LoginAccount;
                         if (loginAccountResponse.Error!=ErrorCode.ERR_Success)//登录服连接失败
                         {
                             response.Error = loginAccountResponse.Error;
@@ -137,10 +137,6 @@ namespace ET.Server
                         account?.Dispose();
                         
                     }//else
-
-
-
-                }//using
             }//using
 
 

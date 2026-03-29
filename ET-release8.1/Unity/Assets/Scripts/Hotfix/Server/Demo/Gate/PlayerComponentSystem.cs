@@ -7,12 +7,12 @@ namespace ET.Server
     {
         public static void Add(this PlayerComponent self, Player player)
         {
-            self.dictionary.Add(player.Account, player);
+            self.dictionary.Add(player.AccountName, player);
         }
         
         public static void Remove(this PlayerComponent self, Player player)
         {
-            self.dictionary.Remove(player.Account);
+            self.dictionary.Remove(player.AccountName);
             player.Dispose();
         }
         

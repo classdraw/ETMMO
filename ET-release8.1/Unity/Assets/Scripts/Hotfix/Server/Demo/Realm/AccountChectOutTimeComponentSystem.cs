@@ -26,7 +26,10 @@ namespace ET.Server
         private static void Awake(this AccountChectOutTimeComponent self,string accountName)
         {
             self.AccountName = accountName;
-            self.Root().GetComponent<TimerComponent>()?.Remove(ref self.Timer);
+            
+            if(self.Timer!=0)
+                self.Root().GetComponent<TimerComponent>()?.Remove(ref self.Timer);
+            
             self.Timer = self.Root().GetComponent<TimerComponent>().NewOnceTimer(TimeInfo.Instance.ServerNow() + 600000, TimerInvokeType.AccountChectOutTime, self);
         }
         
@@ -47,7 +50,7 @@ namespace ET.Server
 
             //断开连接 太久没有操作
             var a2CDisconnet= A2C_Disconnet.Create();
-            a2CDisconnet.Error = 1;//0踢下线 1超时
+            a2CDisconnet.Error = 1;//0重复登陆 1超时 2顶号
             session?.Send(a2CDisconnet);
             session?.Disconnect().Coroutine();
         }

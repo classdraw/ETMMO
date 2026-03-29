@@ -20,6 +20,24 @@
         {
             self.sessionKey.Remove(key);
         }
+        
+        public static void Remove(this GateSessionKeyComponent self, string account)
+        {
+            long key = 0;
+            foreach (var kvp in self.sessionKey)
+            {
+                if (kvp.Value.Equals(account))
+                {
+                    key = kvp.Key;
+                    break;
+                }
+            }
+
+            if (key>0)
+            {
+                self.Remove(key);
+            }
+        }
         //每一个登陆都有一个延迟20秒的key，超时就返回error
         private static async ETTask TimeoutRemoveKey(this GateSessionKeyComponent self, long key)
         {
