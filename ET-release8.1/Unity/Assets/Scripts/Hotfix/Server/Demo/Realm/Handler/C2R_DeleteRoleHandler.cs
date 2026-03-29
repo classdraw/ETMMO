@@ -2,9 +2,9 @@ namespace ET.Server
 {
     [MessageSessionHandler(SceneType.Realm)]
     [FriendOf(typeof(RoleInfo))]
-    public class C2R_CreateRoleHandler:MessageSessionHandler<C2R_CreateRole,R2C_CreateRole>
+    public class C2R_DeleteRoleHandler:MessageSessionHandler<C2R_DeleteRole,R2C_DeleteRole>
     {
-        protected override async ETTask Run(Session session, C2R_CreateRole request, R2C_CreateRole response)
+        protected override async ETTask Run(Session session, C2R_DeleteRole request, R2C_DeleteRole response)
         {
             if (session.GetComponent<SessionLockingComponent>()!=null)
             {
@@ -20,14 +20,6 @@ namespace ET.Server
                 session?.Disconnect().Coroutine();
                 return;
             }
-
-            if (string.IsNullOrEmpty(request.Name))
-            {
-                response.Error = ErrorCode.ERR_RoleNameNull;
-                //这里不需要断开
-                return;
-            }
-
             //携程锁 锁住这个account账号
             var coroutineLockComponent = session?.Root().GetComponent<CoroutineLockComponent>();
             using (session.AddComponent<SessionLockingComponent>()) //using 自动释放
@@ -36,29 +28,25 @@ namespace ET.Server
                 {
                     DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
                     var roleInfos = await dbComponent.Query<RoleInfo>(
-                        d=>
-                                d.Name==request.Name);
-                    if (roleInfos!=null&&roleInfos.Count>0)
+                        d=>d.Id==request.RoleInfoId&&
+                                d.ServerId==request.ServerId);
+                    if (roleInfos==null||roleInfos.Count<=0)
                     {
-                        response.Error = ErrorCode.ERR_RoleNameSame;
-                        //这里不需要断开
+                        response.Error = ErrorCode.ERR_RoleNotExist;
                         return;
                     }
-
-                    RoleInfo roleInfo = session.AddChild<RoleInfo>();
-                    roleInfo.ServerId = request.ServerId;
-                    roleInfo.AccountName = request.AccountName;
-                    roleInfo.State = (int)RoleInfoState.Normal;
-                    long nowTime= TimeInfo.Instance.ServerNow();
-                    roleInfo.CreateTime = nowTime;
-                    roleInfo.LastLoginTime = 0;//创建角色登录时间是0
-                    roleInfo.Name = request.Name;
-                    await dbComponent.Save<RoleInfo>(roleInfo);
+                    //理论上就一个，多个不用考虑
+                    var roleInfo = roleInfos[0];
+                    session.AddChild(roleInfo);
                     
-                    response.RoleInfo = roleInfo.ToMessage();
+                    roleInfo.State = (int)RoleInfoState.Freeze;
+                    await dbComponent.Save<RoleInfo>(roleInfo);
+                    response.DeleteRoleInfoId = roleInfo.Id;
                     roleInfo?.Dispose();
-                }//using
+                }
             }
+
+
         }
     }
 }

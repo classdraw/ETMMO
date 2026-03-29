@@ -4,8 +4,8 @@ namespace ET
 {
     public enum RoleInfoState
     {
-        Normal=0,
-        Freeze,
+        Normal=0,//正常状态
+        Freeze=1,//冻结状态
     }
 
     //角色

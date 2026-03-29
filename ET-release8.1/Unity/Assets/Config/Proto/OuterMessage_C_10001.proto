@@ -316,7 +316,7 @@ message R2C_GetRoles // ISessionResponse
 // ResponseType R2C_CreateRole
 message C2R_CreateRole // ISessionRequest
 {	
-	//获得某个服务器的角色列表
+	//根据服务器id创建角色
 	int32 RpcId = 1; 
 	string Token = 2;
 	string AccountName = 3;
@@ -332,3 +332,21 @@ message R2C_CreateRole // ISessionResponse
 	RoleInfoProto RoleInfo = 4;
 }
 
+// ResponseType R2C_DeleteRole
+message C2R_DeleteRole // ISessionRequest
+{	
+	//根据服务器id删除角色
+	int32 RpcId = 1; 
+	string Token = 2;
+	string AccountName = 3;
+	int64 RoleInfoId = 4;
+	int32 ServerId = 5;
+}
+
+message R2C_DeleteRole // ISessionResponse
+{	
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 DeleteRoleInfoId = 4;
+}

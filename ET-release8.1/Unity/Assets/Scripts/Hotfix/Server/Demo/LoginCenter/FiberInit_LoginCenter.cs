@@ -13,11 +13,8 @@ namespace ET.Server
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ProcessInnerSender>();
             root.AddComponent<MessageSender>();
-            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get(root.Fiber.Id);
-            root.AddComponent<NetComponent, IPEndPoint, NetworkProtocol>(startSceneConfig.InnerIPPort, NetworkProtocol.UDP);
-
-            //数据库操作
-            root.AddComponent<DBManagerComponent>();
+            //记录登录数据组件
+            root.AddComponent<LoginInfoRecordComponent>();
             await ETTask.CompletedTask;
         }
     }

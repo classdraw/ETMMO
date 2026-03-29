@@ -1440,7 +1440,7 @@ namespace ET
         }
 
         /// <summary>
-        /// 获得某个服务器的角色列表
+        /// 根据服务器id创建角色
         /// </summary>
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
@@ -1511,6 +1511,88 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(OuterMessage.C2R_DeleteRole)]
+    [ResponseType(nameof(R2C_DeleteRole))]
+    public partial class C2R_DeleteRole : MessageObject, ISessionRequest
+    {
+        public static C2R_DeleteRole Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2R_DeleteRole), isFromPool) as C2R_DeleteRole;
+        }
+
+        /// <summary>
+        /// 根据服务器id删除角色
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string Token { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string AccountName { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long RoleInfoId { get; set; }
+
+        [MemoryPackOrder(4)]
+        public int ServerId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Token = default;
+            this.AccountName = default;
+            this.RoleInfoId = default;
+            this.ServerId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.R2C_DeleteRole)]
+    public partial class R2C_DeleteRole : MessageObject, ISessionResponse
+    {
+        public static R2C_DeleteRole Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(R2C_DeleteRole), isFromPool) as R2C_DeleteRole;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long DeleteRoleInfoId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.DeleteRoleInfoId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -1558,5 +1640,7 @@ namespace ET
         public const ushort R2C_GetRoles = 10044;
         public const ushort C2R_CreateRole = 10045;
         public const ushort R2C_CreateRole = 10046;
+        public const ushort C2R_DeleteRole = 10047;
+        public const ushort R2C_DeleteRole = 10048;
     }
 }

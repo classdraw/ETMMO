@@ -23,5 +23,6 @@ namespace ET
         public const int ERR_TokenError = 200009;//token异常
         public const int ERR_RoleNameNull = 200010;//创建角色null 
         public const int ERR_RoleNameSame = 200011;//创建角色same 
+        public const int ERR_RoleNotExist = 200012;//角色不存在
     }
 }
