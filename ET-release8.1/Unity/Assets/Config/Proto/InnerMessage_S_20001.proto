@@ -190,3 +190,17 @@ message L2R_LoginAccountResponse // IResponse
 	int32 Error = 2;
 	string Message = 3;
 }
+
+// ResponseType G2L_DisConnectGateUnitResponse
+message L2G_DisConnectGateUnitRequest // IRequest
+{
+	int32 RpcId = 1;
+	string AccountName = 2;
+}
+
+message G2L_DisConnectGateUnitResponse // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}

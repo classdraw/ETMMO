@@ -13,7 +13,7 @@ namespace ET.Client
             ClientSenderComponent clientSenderComponent = root.AddComponent<ClientSenderComponent>();
             //请求服务器 或者gate服务器分配的一个映射player实体id
             var response = await clientSenderComponent.LoginAsync(account, password);
-            if (response.Error!=ErrorCode.ERR_Success)
+            if (response==null||response.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error($"登录失败{response.Error}");
                 return;
@@ -27,7 +27,7 @@ namespace ET.Client
             c2RGetServerInfos.AccountName = account;
             
             R2C_GetServerInfos r2CGetServerInfos = await clientSenderComponent.Call(c2RGetServerInfos) as R2C_GetServerInfos;
-            if (r2CGetServerInfos.Error!=ErrorCode.ERR_Success)
+            if (r2CGetServerInfos==null||r2CGetServerInfos.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error("请求服务器列表失败");
                 return;
@@ -42,7 +42,7 @@ namespace ET.Client
             c2RGetRoles.AccountName = account;
             c2RGetRoles.ServerId = serverInfoProto.Id;
             R2C_GetRoles r2CGetRoles=await clientSenderComponent.Call(c2RGetRoles) as R2C_GetRoles;
-            if (r2CGetRoles.Error!=ErrorCode.ERR_Success)
+            if (r2CGetRoles==null||r2CGetRoles.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error("请求区服角色列表失败");
                 return;
@@ -58,7 +58,7 @@ namespace ET.Client
                 c2RCreateRole.AccountName = account;
                 c2RCreateRole.Name = account;
                 R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
-                if (r2CCreateRole.Error!=ErrorCode.ERR_Success)
+                if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
                 {
                     Log.Error("创建区服角色失败");
                     return;

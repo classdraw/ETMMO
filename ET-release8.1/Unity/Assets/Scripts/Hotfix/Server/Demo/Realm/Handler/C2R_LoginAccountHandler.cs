@@ -61,7 +61,10 @@ namespace ET.Server
                         if (accountList!=null&&accountList.Count>0)
                         {
                             account = accountList[0];
-                            session.AddChild(account);//每个元素可控 保证session释放 account也释放
+                            if (session.IScene!=null)
+                            {
+                                session.AddChild(account);//每个元素可控 保证session释放 account也释放
+                            }
                             if (account.AccountType==(int)AccountType.BlackList)//黑名单
                             {
                                 response.Error = ErrorCode.ERR_AccountInBlackListError;

@@ -68,6 +68,11 @@ namespace ET.Client
 
         public static async ETTask<IResponse> Call(this ClientSenderComponent self, IRequest request, bool needException = true)
         {
+            if (self.IScene==null)
+            {
+                return null;
+            }
+
             A2NetClient_Request a2NetClientRequest = A2NetClient_Request.Create();
             a2NetClientRequest.MessageObject = request;
             using A2NetClient_Response a2NetClientResponse = await self.Root().GetComponent<ProcessInnerSender>().Call(self.netClientActorId, a2NetClientRequest) as A2NetClient_Response;
