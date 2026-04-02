@@ -5,15 +5,15 @@ namespace ET.Server
 {
     public static partial class TransferHelper
     {
-        public static async ETTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName)
+        public static async ETTask TransferAtFrameFinish(Unit unit, ActorId sceneInstanceId, string sceneName, bool isEnterGame = false)
         {
             await unit.Fiber().WaitFrameFinish();
 
-            await TransferHelper.Transfer(unit, sceneInstanceId, sceneName);
+            await TransferHelper.Transfer(unit, sceneInstanceId, sceneName,isEnterGame);
         }
         
 
-        public static async ETTask Transfer(Unit unit, ActorId sceneInstanceId, string sceneName)
+        public static async ETTask Transfer(Unit unit, ActorId sceneInstanceId, string sceneName, bool isEnterGame = false)
         {
             Scene root = unit.Root();
             
@@ -21,6 +21,8 @@ namespace ET.Server
             long unitId = unit.Id;
             
             M2M_UnitTransferRequest request = M2M_UnitTransferRequest.Create();
+            request.IsEnterGame = isEnterGame;
+            request.MapId = 0;//测试 后面读表
             request.OldActorId = unit.GetActorId();
             request.Unit = unit.ToBson();
             foreach (Entity entity in unit.Components.Values)

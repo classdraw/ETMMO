@@ -11,14 +11,14 @@ namespace ET.Server
         {
             M2C_CreateUnits createUnits = M2C_CreateUnits.Create();
             createUnits.Units.Add(UnitHelper.CreateUnitInfo(sendUnit));
-            MapMessageHelper.SendToClient(unit, createUnits);
+            MapMessageHelper.SendToClient(unit, createUnits).Coroutine();
         }
         
         public static void NoticeUnitRemove(Unit unit, Unit sendUnit)
         {
             M2C_RemoveUnits removeUnits = M2C_RemoveUnits.Create();
             removeUnits.Units.Add(sendUnit.Id);
-            MapMessageHelper.SendToClient(unit, removeUnits);
+            MapMessageHelper.SendToClient(unit, removeUnits).Coroutine();
         }
         
         public static void Broadcast(Unit unit, IMessage message)
@@ -29,14 +29,26 @@ namespace ET.Server
             MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
             foreach (AOIEntity u in dict.Values)
             {
-                oneTypeMessageLocationType.Send(u.Unit.Id, message);
+                if (!u.Unit.IsPlayer())
+                {
+                    return;                    
+                }
+
+                oneTypeMessageLocationType.Send(u.Unit.Id, message).Coroutine();
             }
         }
         
-        public static void SendToClient(Unit unit, IMessage message)
+        public static async ETTask SendToClient(this Unit unit, IMessage message)
         {
-            unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(unit.Id, message);
+            if (!unit.IsPlayer())
+            {
+                return;
+            }
+
+            await unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(unit.Id, message);
         }
+        
+        
         
         /// <summary>
         /// 发送协议给Actor

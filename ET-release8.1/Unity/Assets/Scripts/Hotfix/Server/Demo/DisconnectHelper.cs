@@ -38,13 +38,43 @@ namespace ET.Server
                     //通知游戏逻辑层下线unit角色，并将数据存入数据库
                     var m2GRequestExitGame = (M2G_RequestExitGame)await player.Root().GetComponent<MessageLocationSenderComponent>()
                             .Get(LocationType.Unit).Call(player.UnitId,G2M_RequestExitGame.Create());
+                    if (m2GRequestExitGame.Error != ErrorCode.ERR_Success)
+                    {
+                        Log.Error($"离开Map游戏逻辑服时发生错误 : {m2GRequestExitGame.Error}");
+                    }
                     
+                    /**
+            //通知邮件服下线MailUnit
+                    Mail2G_ExitMailServer mail2GExitMailServer = (Mail2G_ExitMailServer)await player.Root().GetComponent<MessageLocationSenderComponent>()
+                                                                            .Get(LocationType.Mail).Call(player.UnitId,  G2Mail_ExitMailServer.Create());
+                    if (mail2GExitMailServer.Error != ErrorCode.ERR_Success)
+                    {
+                        Log.Error($"离开邮件中心服时发生错误 : {mail2GExitMailServer.Error}");
+                    }
+                    player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Mail)?.Remove(player.UnitId);
+                    
+                    player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Trade)?.Remove(player.UnitId);
+                    
+                    //通知聊天服下线ChatUnit
+                    Chat2G_RequestExitChat chat2GRequestExitChat = (Chat2G_RequestExitChat)await player.Root().GetComponent<MessageLocationSenderComponent>()
+                            .Get(LocationType.Chat).Call(player.UnitId,  G2Chat_RequestExitChat.Create());
+                    if (chat2GRequestExitChat.Error != ErrorCode.ERR_Success)
+                    {
+                        Log.Error($"离开聊天中心服时发生错误 : {chat2GRequestExitChat.Error}");
+                    }
+                    player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Chat)?.Remove(player.UnitId);
+
+                     */
                     //通知移除账号角色登陆信息
                     G2L_RemoveLoginRecord g2LRemoveLoginRecord = G2L_RemoveLoginRecord.Create();
                     g2LRemoveLoginRecord.AccountName = player.AccountName;
                     g2LRemoveLoginRecord.ServerId = player.Zone();
                     L2G_RemoveLoginRecord l2GRemoveLoginRecord=(L2G_RemoveLoginRecord)await player.Root().GetComponent<MessageSender>()
                             .Call(ET.StartSceneConfigCategory.Instance.LoginCenterConfig.ActorId, g2LRemoveLoginRecord);
+                    if (l2GRemoveLoginRecord.Error != ErrorCode.ERR_Success)
+                    {
+                        Log.Error($"通知登陆中心服时发生错误 : {l2GRemoveLoginRecord.Error}");
+                    }
                 } break;
             }
 
@@ -52,6 +82,10 @@ namespace ET.Server
             player.PlayerState = PlayerState.Disconnect;
             await player.GetComponent<PlayerSessionComponent>().RemoveLocation(LocationType.GateSession);
             await player.RemoveLocation(LocationType.Player);
+            
+            player?.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.GateSession)?.Remove(player.UnitId);
+            player?.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Unit)?.Remove(player.UnitId);
+
             player?.Root().GetComponent<PlayerComponent>()?.Remove(player);
             player?.Dispose();
             await timerComponent.WaitAsync(300);

@@ -38,7 +38,7 @@ namespace ET.Server
                     response.Error = ErrorCode.ERR_PlayerSessionError;
                     return;
                 }
-
+                
                 if (player.PlayerState==PlayerState.Game)
                 {
                     //二次登陆
@@ -49,7 +49,7 @@ namespace ET.Server
                                 .Call(player.UnitId, g2MSecondLogin);
                         if (m2GSecondLogin.Error==ErrorCode.ERR_Success)
                         {
-                            Log.Console("二次登陆逻辑，补发切换场景消息");
+                            response.MyUnitId = player.UnitId;
                             return;
                         }
 
@@ -69,6 +69,7 @@ namespace ET.Server
                 }
                 else
                 {
+                    Unit unit = null;
                     try
                     {
 
@@ -79,13 +80,13 @@ namespace ET.Server
                         Scene scene = gateMapComponent.Scene;
 
                         // 这里可以从DB中加载Unit
-                        Unit unit = UnitFactory.Create(scene, player.Id, UnitType.Player);
+                        unit = UnitFactory.Create(scene, player.Id, UnitType.Player);
                         long unitId = unit.Id;
                         StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
                         response.MyUnitId = player.Id;
 
                         // 等到一帧的最后面再传送，先让G2C_EnterMap返回，否则传送消息可能比G2C_EnterMap还早
-                        TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name).Coroutine();
+                        TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name,true).Coroutine();
 
                         player.UnitId = unitId;
                         response.MyUnitId = unitId;
@@ -94,6 +95,7 @@ namespace ET.Server
                     catch (Exception ex)
                     {
                         Log.Error($"角色进入游戏逻辑出现问题 账号:{player.AccountName} 角色Id:{player.Id} 异常信息{ex}");
+                        unit?.Dispose();
                         response.Error = ErrorCode.ERR_ErrorEnterGame;
                         await DisconnectHelper.KickPlayerNoLock(player);
                         session.Disconnect().Coroutine();

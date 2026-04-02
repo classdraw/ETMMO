@@ -18,5 +18,42 @@ namespace ET
         {
             return (UnitType)self.Config().Type;
         }
+        /// <summary>
+        /// 是否是玩家
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static bool IsPlayer(this Unit self)
+        {
+            return self.Type() == UnitType.Player;
+        }
+        /// <summary>
+        /// 是否是怪物
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static bool IsMonster(this Unit self)
+        {
+            return self.Type() == UnitType.Monster;
+        }
+        /// <summary>
+        /// 是否是npc
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static bool IsNpc(this Unit self)
+        {
+            return self.Type() == UnitType.NPC;
+        }
+        
+        /// <summary>
+        /// 是否是宠物
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        public static bool IsPet(this Unit self)
+        {
+            return self.Type() == UnitType.Pet;
+        }
     }
 }

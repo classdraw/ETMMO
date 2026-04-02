@@ -746,6 +746,12 @@ namespace ET
         public byte[] Unit { get; set; }
 
         [MemoryPackOrder(3)]
+        public int MapId { get; set; }
+
+        [MemoryPackOrder(4)]
+        public bool IsEnterGame { get; set; }
+
+        [MemoryPackOrder(5)]
         public List<byte[]> Entitys { get; set; } = new();
 
         public override void Dispose()
@@ -758,6 +764,8 @@ namespace ET
             this.RpcId = default;
             this.OldActorId = default;
             this.Unit = default;
+            this.MapId = default;
+            this.IsEnterGame = default;
             this.Entitys.Clear();
 
             ObjectPool.Instance.Recycle(this);
