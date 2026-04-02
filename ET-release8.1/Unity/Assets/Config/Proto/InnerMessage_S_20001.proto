@@ -253,3 +253,16 @@ message M2G_RequestExitGame // ILocationResponse
 	string Message = 3;
 }
 
+// ResponseType M2G_SecondLogin
+message G2M_SecondLogin // ILocationRequest
+{
+	//玩家二次登陆
+	int32 RpcId = 1;
+}
+
+message M2G_SecondLogin // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}

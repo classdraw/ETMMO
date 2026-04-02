@@ -1125,6 +1125,68 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(InnerMessage.G2M_SecondLogin)]
+    [ResponseType(nameof(M2G_SecondLogin))]
+    public partial class G2M_SecondLogin : MessageObject, ILocationRequest
+    {
+        public static G2M_SecondLogin Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2M_SecondLogin), isFromPool) as G2M_SecondLogin;
+        }
+
+        /// <summary>
+        /// 玩家二次登陆
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2G_SecondLogin)]
+    public partial class M2G_SecondLogin : MessageObject, ILocationResponse
+    {
+        public static M2G_SecondLogin Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2G_SecondLogin), isFromPool) as M2G_SecondLogin;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class InnerMessage
     {
         public const ushort ObjectQueryRequest = 20002;
@@ -1160,5 +1222,7 @@ namespace ET
         public const ushort L2G_RemoveLoginRecord = 20032;
         public const ushort G2M_RequestExitGame = 20033;
         public const ushort M2G_RequestExitGame = 20034;
+        public const ushort G2M_SecondLogin = 20035;
+        public const ushort M2G_SecondLogin = 20036;
     }
 }

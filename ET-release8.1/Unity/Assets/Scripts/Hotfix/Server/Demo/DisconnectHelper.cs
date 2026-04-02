@@ -20,7 +20,7 @@ namespace ET.Server
             self.Dispose();
         }
 
-        private static async ETTask KickPlayerNoLock(Player player)
+        public static async ETTask KickPlayerNoLock(Player player)
         {
             if (player==null||player.IsDisposed)
             {

@@ -23,7 +23,7 @@
         
         public static void Remove(this GateSessionKeyComponent self, string account)
         {
-            long key = 0;
+            long key = -1;
             foreach (var kvp in self.sessionKey)
             {
                 if (kvp.Value.Equals(account))
@@ -33,7 +33,7 @@
                 }
             }
 
-            if (key>0)
+            if (key!=-1)
             {
                 self.Remove(key);
             }

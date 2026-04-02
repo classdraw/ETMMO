@@ -25,6 +25,11 @@ namespace ET
         public const int ERR_RoleNameSame = 200011;//创建角色same 
         public const int ERR_RoleNotExist = 200012;//角色不存在
         public const int ERR_LoginGameGateError01 = 200013;//gateInstanceId不一致
-        
+        public const int ERR_SessionPlayerError = 200014;//SessionPlayer组件丢失 没有正常登陆  没有走正常的loginGameGate逻辑
+        public const int ERR_NonePlayerError = 200015;//玩家对象丢失 或者释放  和200014一样问题
+        public const int ERR_PlayerSessionError = 200016;//玩家session释放
+        public const int ERR_RepeatedEnterGameError1 = 200017;//玩家重复登陆失败
+        public const int ERR_RepeatedEnterGameError2 = 200018;//玩家进入游戏逻辑服异常
+        public const int ERR_ErrorEnterGame = 200019;//玩家进入游戏逻辑服异常
     }
 }
