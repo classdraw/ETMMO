@@ -13,6 +13,9 @@ namespace ET
         public Dictionary<long, Dictionary<string, StartSceneConfig>> ClientScenesByName = new();
 
         public StartSceneConfig LocationConfig;
+        
+        public StartSceneConfig MailConfig;//邮箱服务器
+        public StartSceneConfig UnitCacheConfig;//角色缓存服
         public StartSceneConfig LoginCenterConfig;//登录服配置
         public List<StartSceneConfig> Realms = new();
         
@@ -72,6 +75,12 @@ namespace ET
                         break;
                     case SceneType.LoginCenter:
                         this.LoginCenterConfig = startSceneConfig;
+                        break;
+                    case SceneType.UnitCache:
+                        this.UnitCacheConfig = startSceneConfig;
+                        break;
+                    case SceneType.Mail:
+                        this.MailConfig = startSceneConfig;
                         break;
                 }
             }
