@@ -14,7 +14,9 @@
         "Unity.Hotfix",
         "Unity.HotfixView",
         "Unity.CustomFrame",
-        "TEngine.Editor"
+        "TEngine.Editor",
+        "UniTask",
+        "Unity.TEngine"
     ],
     "includePlatforms": [
         "Editor"

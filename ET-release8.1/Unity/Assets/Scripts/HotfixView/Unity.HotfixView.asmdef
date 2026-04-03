@@ -12,7 +12,8 @@
         "Unity.ModelView",
         "YooAsset",
         "Unity.CustomFrame",
-        "Unity.TEngine"
+        "Unity.TEngine",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

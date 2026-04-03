@@ -20,7 +20,7 @@ namespace ET.Server
                     continue;
                 }
                 
-                messageLocationSenderComponent.Get(LocationType.GateSession).Send(roomPlayer.Id, message);
+                messageLocationSenderComponent.Get(LocationType.GateSession).Send(roomPlayer.Id, message).Coroutine();
             }
         }
     }

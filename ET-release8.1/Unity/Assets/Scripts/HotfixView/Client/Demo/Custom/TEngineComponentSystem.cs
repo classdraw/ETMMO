@@ -14,17 +14,19 @@ namespace ET.Client
 
         }
 
-        public static async ETTask Init(this TEngineComponent self)
+        public static async ETTask Init(this TEngineComponent self,ResourcesLoaderComponent resourcesLoaderComponent)
         {
-            var resLoader = self.Scene().GetComponent<ResourcesLoaderComponent>();
+            var resLoader = self.Root().GetComponent<ResourcesLoaderComponent>();
             var bundleGameObject = await resLoader.LoadAssetAsync<GameObject>(self.GameEntryPath);
             GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject);
             GameObject.DontDestroyOnLoad(gameObject);
             self.GameEntryObj = gameObject;
             self.EngineGlobal = gameObject.GetComponent<TEngineGlobal>();
-            await self.EngineGlobal.StartEngine();
-            self.EngineGlobal.SetResAgent(resLoader.ResourceAgent);
-
+            await self.EngineGlobal.StartEngine();//框架初始化
+            
+            self.EngineGlobal.SetResAgent(resLoader.ResourceAgent);//绑定资源加载器
+            
+            //ModuleSystem.GetModule<IResourceModuleET>()
 
         }
 

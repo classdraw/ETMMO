@@ -11,5 +11,7 @@ namespace ET.Client
 
         public GameObject GameEntryObj;
         public TEngineGlobal EngineGlobal;
+        
+        //UIModule
     }
 }
