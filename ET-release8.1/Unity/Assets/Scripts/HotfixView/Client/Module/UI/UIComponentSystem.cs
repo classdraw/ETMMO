@@ -54,6 +54,22 @@ namespace ET.Client
 			
 		}
 
+		public static void Hide(this UIComponent self, string uiType)
+		{
+			if (!self.UIs.TryGetValue(uiType, out EntityRef<UI> uiRef))
+			{
+				return;
+			}
+			UI ui = uiRef;
+			ui.Visible(false);
+			ui.IsHide = true;
+			if (ui.FullScreen)
+			{
+				RefreshUIStackVisibility(self);
+			}
+
+		}
+
 		public static void RefreshUIStackVisibility(UIComponent self)
 		{
 			bool isHideNext = false;

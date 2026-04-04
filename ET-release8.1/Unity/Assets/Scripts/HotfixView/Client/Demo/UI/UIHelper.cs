@@ -15,5 +15,14 @@
             scene.GetComponent<UIComponent>().Remove(uiType);
             await ETTask.CompletedTask;
         }
+        
+        [EnableAccessEntiyChild]
+        public static async ETTask Hide(Entity scene, string uiType)
+        {
+            scene.GetComponent<UIComponent>().Hide(uiType);
+            await ETTask.CompletedTask;
+        }
+        
+
     }
 }
