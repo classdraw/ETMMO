@@ -16,17 +16,31 @@ namespace ET.Client
 
         public static async ETTask Init(this TEngineComponent self,ResourcesLoaderComponent resourcesLoaderComponent)
         {
+            //框架必须要加载的东西丢这里
             var resLoader = self.Root().GetComponent<ResourcesLoaderComponent>();
-            var bundleGameObject = await resLoader.LoadAssetAsync<GameObject>(self.GameEntryPath);
-            GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject);
-            GameObject.DontDestroyOnLoad(gameObject);
-            self.GameEntryObj = gameObject;
-            self.EngineGlobal = gameObject.GetComponent<TEngineGlobal>();
+            
+            GameObject gameEntry = await LoadGameObjectInstance(resLoader, self.GameEntryPath);
+            GameObject.DontDestroyOnLoad(gameEntry);
+            self.GameEntryObj = gameEntry;
+            self.EngineGlobal = gameEntry.GetComponent<TEngineGlobal>();
             await self.EngineGlobal.StartEngine();//框架初始化
+            
+            //uiRoot初始化
+            GameObject uiRoot = await LoadGameObjectInstance(resLoader, self.UIRootPath);
+            GameObject.DontDestroyOnLoad(uiRoot);
+            self.UIRootObj = uiRoot;
             
             self.EngineGlobal.SetResAgent(resLoader.ResourceAgent);//绑定资源加载器
             
             //ModuleSystem.GetModule<IResourceModuleET>()
+
+        }
+
+        private static async ETTask<GameObject> LoadGameObjectInstance(ResourcesLoaderComponent resLoader,string location)
+        {
+            var bundleGameObject = await resLoader.LoadAssetAsync<GameObject>(location);
+            GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject) as GameObject;
+            return gameObject;
 
         }
 
@@ -37,6 +51,12 @@ namespace ET.Client
             {
                 GameObject.Destroy(self.GameEntryObj);
                 self.GameEntryObj = null;
+            }
+            
+            if (self.UIRootObj != null)
+            {
+                GameObject.Destroy(self.UIRootObj);
+                self.UIRootObj = null;
             }
         }
 

@@ -15,9 +15,9 @@ namespace ET.Client
 			self.UIGlobalComponent = self.Root().GetComponent<UIGlobalComponent>();
 		}
 		
-		public static async ETTask<UI> Create(this UIComponent self, string uiType, UILayer uiLayer)
+		public static async ETTask<UI> Create(this UIComponent self, string uiType)
 		{
-			UI ui = await self.UIGlobalComponent.OnCreate(self, uiType, uiLayer);
+			UI ui = await self.UIGlobalComponent.OnCreate(self, uiType);
 			self.UIs.Add(uiType, ui);
 			return ui;
 		}

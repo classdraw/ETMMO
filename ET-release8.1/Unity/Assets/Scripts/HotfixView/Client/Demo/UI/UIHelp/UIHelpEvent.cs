@@ -3,27 +3,22 @@ using UnityEngine;
 
 namespace ET.Client
 {
-	[UIEvent(UIType.UIHelp)]
-    public class UIHelpEvent: AUIEvent
+    [UIEvent(UIType.UIHelp)]
+    [FriendOfAttribute(typeof(ET.Client.TEngineComponent))]
+    public class UIHelpEvent : AUIEvent
     {
-        public override async ETTask<UI> OnCreate(UIComponent uiComponent, UILayer uiLayer)
+        public override async ETTask<UI> OnCreate(UIComponent uiComponent)
         {
-	        try
-	        {
-		        string assetsName = $"Assets/Bundles/UI/Demo/{UIType.UIHelp}.prefab";
-		        GameObject bundleGameObject = await uiComponent.Scene().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
-		        GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject, uiComponent.UIGlobalComponent.GetLayer((int)uiLayer));
-		        UI ui = uiComponent.AddChild<UI, string, GameObject>(UIType.UIHelp, gameObject);
+            var uiRoot = uiComponent.Root().GetComponent<TEngineComponent>().UIRootObj;
 
-				ui.AddComponent<UIHelpComponent>();
-				return ui;
-	        }
-	        catch (Exception e)
-	        {
-		        Log.Error(e);
-		        return null;
-	        }
-		}
+            string assetsName = $"Assets/Bundles/UI/Demo/{UIType.UIHelp}.prefab";
+            GameObject bundleGameObject = await uiComponent.Scene().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
+            GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject, uiRoot.transform);
+            UI ui = uiComponent.AddChild<UI, string, GameObject>(UIType.UIHelp, gameObject);
+
+            ui.AddComponent<UIHelpComponent>();
+            return ui;
+        }
 
         public override void OnRemove(UIComponent uiComponent)
         {

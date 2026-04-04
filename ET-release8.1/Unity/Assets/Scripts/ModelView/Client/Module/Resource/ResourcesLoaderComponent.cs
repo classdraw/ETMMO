@@ -96,6 +96,7 @@ namespace ET.Client
         /// </summary>
         public static T LoadAssetSync<T>(this ResourcesLoaderComponent self, string location) where T : UnityEngine.Object
         {
+
             if (self.ResourceAgent != null)
             {
                 return self.ResourceAgent.LoadAsset<T>(location);
@@ -124,7 +125,6 @@ namespace ET.Client
             {
                 return await self.ResourceAgent.LoadAllAssetsAsync<T>(location);
             }
-
             // 原实现（已注释）
             /*
             using CoroutineLock coroutineLock = await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());

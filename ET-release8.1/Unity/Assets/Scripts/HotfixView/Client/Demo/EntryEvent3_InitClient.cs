@@ -10,15 +10,13 @@ namespace ET.Client
         protected override async ETTask Run(Scene root, EntryEvent3 args)
         {
             GlobalComponent globalComponent = root.AddComponent<GlobalComponent>();
-            //root.AddComponent<UIGlobalComponent>();
-            //root.AddComponent<UIComponent>();
 
-            var resourcesLoaderComponent=root.AddComponent<ResourcesLoaderComponent>();
-            
+            var resourcesLoaderComponent = root.AddComponent<ResourcesLoaderComponent>();
             //显示层框架入口 资源加载用到ResourcesLoaderComponent 在这个后面
             await root.AddComponent<TEngineComponent>().Init(resourcesLoaderComponent);
-
-            root.AddComponent<TUIComponent>();
+            
+            root.AddComponent<UIGlobalComponent>();
+            root.AddComponent<UIComponent>();
             
             root.AddComponent<PlayerComponent>();
             root.AddComponent<CurrentScenesComponent>();
