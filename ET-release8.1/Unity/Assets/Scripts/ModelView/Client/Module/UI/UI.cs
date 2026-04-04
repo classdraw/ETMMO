@@ -62,6 +62,7 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this UI self)
         {
+
             foreach (UI ui in self.nameChildren.Values)
             {
                 ui.Dispose();
@@ -69,6 +70,15 @@ namespace ET.Client
 		
             UnityEngine.Object.Destroy(self.GameObject);
             self.nameChildren.Clear();
+            
+            self.FullScreen = false;
+            self.Raycaster = null;
+            self.UICanvas = null;
+            self.IsHide = false;
+            self.ChildRaycasters.Clear();
+            self.ChildCanvases.Clear();
+            self.GameObject = null;
+
         }
 
         public static void SetAsFirstSibling(this UI self)
