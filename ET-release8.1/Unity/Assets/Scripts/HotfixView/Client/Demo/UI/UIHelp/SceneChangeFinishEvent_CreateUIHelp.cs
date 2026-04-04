@@ -5,8 +5,7 @@
     {
         protected override async ETTask Run(Scene scene, SceneChangeFinish args)
         {
-            //await UIHelper.Create(scene, UIType.UIHelp, UILayer.Mid);
-            await ETTask.CompletedTask;
+            await UIHelper.Create(scene, UIType.UIHelp);
         }
     }
 }

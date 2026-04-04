@@ -3,11 +3,10 @@
     public static class UIHelper
     {
         [EnableAccessEntiyChild]
-        public static async ETTask<UI> Create(Entity scene, string uiType, UILayer uiLayer)
+        public static async ETTask<UI> Create(Entity scene, string uiType)
         {
             return await scene.GetComponent<UIComponent>().Create(uiType);
-            //await ETTask.CompletedTask;
-           // return new UI();
+
         }
         
         [EnableAccessEntiyChild]

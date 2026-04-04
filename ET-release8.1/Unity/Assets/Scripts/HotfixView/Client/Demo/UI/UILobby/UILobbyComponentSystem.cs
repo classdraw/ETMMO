@@ -16,6 +16,12 @@ namespace ET.Client
             self.enterMap.GetComponent<Button>().onClick.AddListener(() => { self.EnterMap().Coroutine(); });
         }
         
+        [EntitySystem]
+        private static void Destroy(this UILobbyComponent self)
+        {
+
+        }
+
         public static async ETTask EnterMap(this UILobbyComponent self)
         {
             Scene root = self.Root();

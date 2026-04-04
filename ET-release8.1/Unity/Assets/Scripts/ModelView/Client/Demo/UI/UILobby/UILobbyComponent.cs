@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace ET.Client
 {
 	[ComponentOf(typeof(UI))]
-	public class UILobbyComponent : Entity, IAwake
+	public class UILobbyComponent : Entity, IAwake,IDestroy
 	{
 		public GameObject enterMap;
 		public Text text;

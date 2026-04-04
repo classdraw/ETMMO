@@ -24,12 +24,6 @@ namespace ET.Client
             self.GameEntryObj = gameEntry;
             self.EngineGlobal = gameEntry.GetComponent<TEngineGlobal>();
             await self.EngineGlobal.StartEngine();//框架初始化
-            
-            //uiRoot初始化
-            GameObject uiRoot = await LoadGameObjectInstance(resLoader, self.UIRootPath);
-            GameObject.DontDestroyOnLoad(uiRoot);
-            self.UIRootObj = uiRoot;
-            
             self.EngineGlobal.SetResAgent(resLoader.ResourceAgent);//绑定资源加载器
             
             //ModuleSystem.GetModule<IResourceModuleET>()
@@ -53,11 +47,7 @@ namespace ET.Client
                 self.GameEntryObj = null;
             }
             
-            if (self.UIRootObj != null)
-            {
-                GameObject.Destroy(self.UIRootObj);
-                self.UIRootObj = null;
-            }
+
         }
 
     }

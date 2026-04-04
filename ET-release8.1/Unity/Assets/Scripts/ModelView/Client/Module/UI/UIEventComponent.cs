@@ -10,6 +10,8 @@ namespace ET.Client
 	public class UIEventComponent: Singleton<UIEventComponent>, ISingletonAwake
 	{
 		public Dictionary<string, AUIEvent> UIEvents { get; } = new();
+
+		public Dictionary<string, int> UISortingOrders { get; } = new();
 		
         public void Awake()
         {
@@ -25,6 +27,7 @@ namespace ET.Client
                 UIEventAttribute uiEventAttribute = attrs[0] as UIEventAttribute;
                 AUIEvent aUIEvent = Activator.CreateInstance(type) as AUIEvent;
                 this.UIEvents.Add(uiEventAttribute.UIType, aUIEvent);
+                this.UISortingOrders.Add(uiEventAttribute.UIType, uiEventAttribute.UISortingOrder);
             }
         }
 	}

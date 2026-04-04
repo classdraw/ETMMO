@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace ET.Client
 {
-    [UIEvent(UIType.UILSLogin)]
-    [FriendOfAttribute(typeof(ET.Client.TEngineComponent))]
+    [UIEvent(UIType.UILSLogin,(int)UISortingOrder.UI)]
+    [FriendOfAttribute(typeof(ET.Client.UIGlobalComponent))]
     public class UILSLoginEvent : AUIEvent
     {
         public override async ETTask<UI> OnCreate(UIComponent uiComponent)
         {
-            var uiRoot = uiComponent.Root().GetComponent<TEngineComponent>().UIRootObj;
             string assetsName = $"Assets/Bundles/UI/LockStep/{UIType.UILSLogin}.prefab";
             GameObject bundleGameObject = await uiComponent.Scene().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
-            GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject,uiRoot.transform);
-            UI ui = uiComponent.AddChild<UI, string, GameObject>(UIType.UILSLogin, gameObject);
+            GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject, uiComponent.UIGlobalComponent.UICanvas);
+            UI ui = uiComponent.AddChild<UI, string, GameObject, int>(UIType.UILSLogin, gameObject,
+                UIEventComponent.Instance.UISortingOrders[UIType.UILSLogin]);
             ui.AddComponent<UILSLoginComponent>();
             return ui;
         }

@@ -17,6 +17,12 @@ namespace ET.Client
 			self.account = rc.Get<GameObject>("Account");
 			self.password = rc.Get<GameObject>("Password");
 		}
+		
+		[EntitySystem]
+		private static void Destroy(this UILoginComponent self)
+		{
+			
+		}
  
 		//按钮点击登录流程
 		public static void OnLogin(this UILoginComponent self)

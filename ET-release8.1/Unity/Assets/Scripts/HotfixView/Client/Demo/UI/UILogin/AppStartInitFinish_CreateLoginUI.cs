@@ -7,7 +7,7 @@
 		{
 			//Log.Info("CCCCCCCCCCCCCC");
 			//框架好了才能干别的
-			await UIHelper.Create(root, UIType.UILogin, UILayer.Mid);
+			await UIHelper.Create(root, UIType.UILogin);
 			/*
 			var computer1=root.GetComponent<ComputersComponent>().AddChild<Computer>();
 			computer1.AddComponent<ComputerTest1Component>();

@@ -8,12 +8,20 @@ namespace ET.Client
     public static partial class UISystem
     {
         [EntitySystem]
-        private static void Awake(this UI self, string name, GameObject gameObject)
+        private static void Awake(this UI self, string name, GameObject gameObject, int uiSortingOrder)
         {
             self.nameChildren.Clear();
             gameObject.layer = LayerMask.NameToLayer(LayerNames.UI);
             self.Name = name;
             self.GameObject = gameObject;
+
+            Canvas canvas = gameObject.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                canvas.overrideSorting = true;
+                canvas.sortingOrder = uiSortingOrder;
+                canvas.sortingLayerName = "Default";
+            }
         }
 		
         [EntitySystem]
@@ -62,14 +70,14 @@ namespace ET.Client
             {
                 return null;
             }
-            UI child = self.AddChild<UI, string, GameObject>(name, childGameObject);
+            UI child = self.AddChild<UI, string, GameObject, int>(name, childGameObject, 0);
             self.Add(child);
             return child;
         }
     }
     
     [ChildOf()]
-    public sealed class UI: Entity, IAwake<string, GameObject>, IDestroy
+    public sealed class UI: Entity, IAwake<string, GameObject, int>, IDestroy
     {
         public GameObject GameObject { get; set; }
 		
