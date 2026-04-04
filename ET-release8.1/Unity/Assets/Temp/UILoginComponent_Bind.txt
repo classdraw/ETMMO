@@ -1,6 +1,22 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
 using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UILoginComponent : Entity, IAwake, IDestroy
+	{
+		public InputField m_inputAccount;
+		public InputField m_inputPassword;
+		public Button m_btnLogin;
+	}
+}
 
 namespace ET.Client
 {
@@ -17,20 +33,14 @@ namespace ET.Client
 			self.m_btnLogin = m_bindComponent.GetComponent<Button>(2);
 			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
 		}
-		
+
 		[EntitySystem]
 		private static void Destroy(this UILoginComponent self)
 		{
-			
 		}
- 
-		//按钮点击登录流程
+
 		public static void OnLogin(this UILoginComponent self)
 		{
-			LoginHelper.Login(
-				self.Root(), 
-				self.m_inputAccount.text, 
-				self.m_inputPassword.text).Coroutine();
 		}
 	}
 }

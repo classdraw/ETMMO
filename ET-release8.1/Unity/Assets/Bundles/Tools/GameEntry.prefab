@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9020377092558278793}
-  - component: {fileID: 1798423243294035000}
   - component: {fileID: -7506891034086335915}
   m_Layer: 0
   m_Name: GameEntry
@@ -37,18 +36,6 @@ Transform:
   - {fileID: 7127101207808246763}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1798423243294035000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 510217751041402403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4eba5432f61b274981537d301ed9b85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-7506891034086335915
 MonoBehaviour:
   m_ObjectHideFlags: 0
