@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ET.Client
 {
-    [UIEvent(UIType.UILSRoom,(int)UISortingOrder.UI)]
+    [UIEvent(UIType.UILSRoom,(int)UISortingOrder.UI,true)]
     [FriendOfAttribute(typeof(ET.Client.UIGlobalComponent))]
     public class UILSRoomEvent : AUIEvent
     {

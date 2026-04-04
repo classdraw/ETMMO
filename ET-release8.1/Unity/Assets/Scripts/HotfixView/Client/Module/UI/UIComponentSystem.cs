@@ -18,7 +18,22 @@ namespace ET.Client
 		public static async ETTask<UI> Create(this UIComponent self, string uiType)
 		{
 			UI ui = await self.UIGlobalComponent.OnCreate(self, uiType);
+			if (UIEventComponent.Instance.UIFullScreens.TryGetValue(uiType, out bool fullScreen))
+			{
+				ui.FullScreen = fullScreen;
+			}
+			else
+			{
+				ui.FullScreen = false;
+			}
+
 			self.UIs.Add(uiType, ui);
+			self.UIStack.Add(ui);
+			if (ui.FullScreen)
+			{
+				RefreshUIStackVisibility(self);
+			}
+
 			return ui;
 		}
 
@@ -33,7 +48,60 @@ namespace ET.Client
 			
 			self.UIs.Remove(uiType);
 			UI ui = uiRef;
+			RemoveUIFromStack(self, ui);
 			ui?.Dispose();
+			RefreshUIStackVisibility(self);
+			
+		}
+
+		public static void RefreshUIStackVisibility(UIComponent self)
+		{
+			bool isHideNext = false;
+			for (int i = self.UIStack.Count - 1; i >= 0; i--)
+			{
+				UI stackUi = self.UIStack[i];
+				if (stackUi == null)
+				{
+					continue;
+				}
+
+				if (!isHideNext)
+				{
+					if (stackUi.IsHide)
+					{
+						continue;
+					}
+
+					stackUi.Visible(true);
+					if (stackUi.FullScreen)
+					{
+						isHideNext = true;
+					}
+				}
+				else
+				{
+					stackUi.Visible(false);
+				}
+			}
+		}
+
+		private static void RemoveUIFromStack(UIComponent self, UI ui)
+		{
+			if (ui == null)
+			{
+				return;
+			}
+
+			long instanceId = ui.InstanceId;
+			for (int i = self.UIStack.Count - 1; i >= 0; i--)
+			{
+				UI stackUi = self.UIStack[i];
+				if (stackUi != null && stackUi.InstanceId == instanceId)
+				{
+					self.UIStack.RemoveAt(i);
+					return;
+				}
+			}
 		}
 
 		public static UI Get(this UIComponent self, string name)

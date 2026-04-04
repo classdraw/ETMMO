@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ET.Client
 {
@@ -7,6 +9,17 @@ namespace ET.Client
     [FriendOf(typeof(UI))]
     public static partial class UISystem
     {
+        private static int UiShowLayer => LayerMask.NameToLayer(LayerNames.UI);
+
+        private static int UiHideLayer
+        {
+            get
+            {
+                int ignoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
+                return ignoreRaycast >= 0 ? ignoreRaycast : UIType.WINDOW_HIDE_LAYER;
+            }
+        }
+
         [EntitySystem]
         private static void Awake(this UI self, string name, GameObject gameObject, int uiSortingOrder)
         {
@@ -14,13 +27,49 @@ namespace ET.Client
             gameObject.layer = LayerMask.NameToLayer(LayerNames.UI);
             self.Name = name;
             self.GameObject = gameObject;
-
-            Canvas canvas = gameObject.GetComponent<Canvas>();
-            if (canvas != null)
+            
+            self.UICanvas = gameObject.GetComponent<Canvas>();
+            if (self.UICanvas != null)
             {
-                canvas.overrideSorting = true;
-                canvas.sortingOrder = uiSortingOrder;
-                canvas.sortingLayerName = "Default";
+                self.UICanvas.overrideSorting = true;
+                self.UICanvas.sortingOrder = uiSortingOrder;
+                self.UICanvas.sortingLayerName = "Default";
+
+                Canvas[] allCanvas = gameObject.GetComponentsInChildren<Canvas>(true);
+                List<Canvas> childCanvases = new List<Canvas>(allCanvas.Length);
+                foreach (Canvas canvas in allCanvas)
+                {
+                    if (canvas != self.UICanvas)
+                    {
+                        childCanvases.Add(canvas);
+                    }
+                }
+
+                self.ChildCanvases = childCanvases.ToArray();
+            }
+            else
+            {
+                self.ChildCanvases = Array.Empty<Canvas>();
+            }
+
+            self.Raycaster = gameObject.GetComponent<GraphicRaycaster>();
+            if (self.Raycaster != null)
+            {
+                GraphicRaycaster[] all = gameObject.GetComponentsInChildren<GraphicRaycaster>(true);
+                List<GraphicRaycaster> childRaycasters = new List<GraphicRaycaster>(all.Length);
+                foreach (GraphicRaycaster gr in all)
+                {
+                    if (gr != self.Raycaster)
+                    {
+                        childRaycasters.Add(gr);
+                    }
+                }
+
+                self.ChildRaycasters = childRaycasters.ToArray();
+            }
+            else
+            {
+                self.ChildRaycasters = Array.Empty<GraphicRaycaster>();
             }
         }
 		
@@ -41,6 +90,68 @@ namespace ET.Client
             self.GameObject.transform.SetAsFirstSibling();
         }
 
+        public static bool Visible(this UI self)
+        {
+            if (self.UICanvas != null)
+            {
+                return self.UICanvas.gameObject.layer == UiShowLayer;
+            }
+
+            return false;
+        }
+
+        public static void Visible(this UI self, bool visible)
+        {
+            if (self.UICanvas == null)
+            {
+                return;
+            }
+
+            int setLayer = visible ? UiShowLayer : UiHideLayer;
+            if (self.UICanvas.gameObject.layer == setLayer)
+            {
+                return;
+            }
+
+            self.UICanvas.gameObject.layer = setLayer;
+            for (int i = 0; i < self.ChildCanvases.Length; i++)
+            {
+                Canvas child = self.ChildCanvases[i];
+                if (child != null)
+                {
+                    child.gameObject.layer = setLayer;
+                }
+            }
+
+            self.Interactable(visible);
+        }
+        public static bool Interactable(this UI self)
+        {
+            if (self.Raycaster != null)
+            {
+                return self.Raycaster.enabled;
+            }
+
+            return false;
+        }
+
+        public static void Interactable(this UI self, bool interactable)
+        {
+            if (self.Raycaster == null)
+            {
+                return;
+            }
+
+            self.Raycaster.enabled = interactable;
+            for (int i = 0; i < self.ChildRaycasters.Length; i++)
+            {
+                GraphicRaycaster child = self.ChildRaycasters[i];
+                if (child != null)
+                {
+                    child.enabled = interactable;
+                }
+            }
+        }
         public static void Add(this UI self, UI ui)
         {
             self.nameChildren.Add(ui.Name, ui);
@@ -80,8 +191,20 @@ namespace ET.Client
     public sealed class UI: Entity, IAwake<string, GameObject, int>, IDestroy
     {
         public GameObject GameObject { get; set; }
-		
+        public Canvas UICanvas { get; set; }
+
+        public Canvas[] ChildCanvases { get; set; }
+
+        public GraphicRaycaster Raycaster { get; set; }
+
+        public GraphicRaycaster[] ChildRaycasters { get; set; }
+
         public string Name { get; set; }
+
+        public bool FullScreen { get; set; }
+
+        public bool IsHide { get; set; }
+        
 
         public Dictionary<string, EntityRef<UI>> nameChildren = new();
     }

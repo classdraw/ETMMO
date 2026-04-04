@@ -12,6 +12,8 @@ namespace ET.Client
 		public Dictionary<string, AUIEvent> UIEvents { get; } = new();
 
 		public Dictionary<string, int> UISortingOrders { get; } = new();
+
+		public Dictionary<string, bool> UIFullScreens { get; } = new();
 		
         public void Awake()
         {
@@ -28,6 +30,7 @@ namespace ET.Client
                 AUIEvent aUIEvent = Activator.CreateInstance(type) as AUIEvent;
                 this.UIEvents.Add(uiEventAttribute.UIType, aUIEvent);
                 this.UISortingOrders.Add(uiEventAttribute.UIType, uiEventAttribute.UISortingOrder);
+                this.UIFullScreens.Add(uiEventAttribute.UIType, uiEventAttribute.FullScreen);
             }
         }
 	}

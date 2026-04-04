@@ -2,7 +2,7 @@
 
 namespace ET.Client
 {
-    [UIEvent(UIType.UILobby,(int)UISortingOrder.UI)]
+    [UIEvent(UIType.UILobby,(int)UISortingOrder.UI,true)]
     [FriendOfAttribute(typeof(ET.Client.UIGlobalComponent))]
     public class UILobbyEvent : AUIEvent
     {

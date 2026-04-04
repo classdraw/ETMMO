@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ET;
 
 namespace ET.Client
 {
@@ -9,6 +10,8 @@ namespace ET.Client
 	public class UIComponent: Entity, IAwake
 	{
 		public Dictionary<string, EntityRef<UI>> UIs = new();
+
+		public List<EntityRef<UI>> UIStack = new();
 
 		private EntityRef<UIGlobalComponent> uiGlobalComponent;
 

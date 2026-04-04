@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ET.Client
 {
-    [UIEvent(UIType.UILSLogin,(int)UISortingOrder.UI)]
+    [UIEvent(UIType.UILSLogin,(int)UISortingOrder.UI,true)]
     [FriendOfAttribute(typeof(ET.Client.UIGlobalComponent))]
     public class UILSLoginEvent : AUIEvent
     {
