@@ -37,4 +37,12 @@
     {
         public int TestValue;
     }
+
+    /// <summary>
+    /// NetClient 会话断开，通知显示层（如打开 UISessionError）。
+    /// </summary>
+    public struct SessionDisposeNotify
+    {
+        public int Error;
+    }
 }

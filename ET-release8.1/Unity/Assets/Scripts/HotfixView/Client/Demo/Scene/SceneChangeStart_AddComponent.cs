@@ -11,7 +11,6 @@ namespace ET.Client
             try
             {
                 Scene currentScene = root.CurrentScene();
-
                 ResourcesLoaderComponent resourcesLoaderComponent = currentScene.GetComponent<ResourcesLoaderComponent>();
             
                 // 加载场景资源

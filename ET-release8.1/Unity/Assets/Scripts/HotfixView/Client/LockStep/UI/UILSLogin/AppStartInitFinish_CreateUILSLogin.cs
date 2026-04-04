@@ -5,6 +5,7 @@
 	{
 		protected override async ETTask Run(Scene root, AppStartInitFinish args)
 		{
+			
 			await UIHelper.Create(root, UIType.UILSLogin);
 		}
 	}

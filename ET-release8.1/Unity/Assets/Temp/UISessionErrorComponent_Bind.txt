@@ -1,0 +1,44 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UISessionErrorComponent : Entity, IAwake, IDestroy
+	{
+		public Text m_textLoading;
+		public Button m_btnGoLogin;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UISessionErrorComponent))]
+	[FriendOf(typeof(UISessionErrorComponent))]
+	public static partial class UISessionErrorComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UISessionErrorComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_textLoading = m_bindComponent.GetComponent<Text>(0);
+			self.m_btnGoLogin = m_bindComponent.GetComponent<Button>(1);
+			self.m_btnGoLogin.onClick.AddListener(() => { self.OnGoLogin(); });
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UISessionErrorComponent self)
+		{
+		}
+
+		public static void OnGoLogin(this UISessionErrorComponent self)
+		{
+		}
+	}
+}

@@ -31,6 +31,7 @@ namespace ET.Client
 				self.Root(), 
 				self.m_inputAccount.text, 
 				self.m_inputPassword.text).Coroutine();
+
 		}
 	}
 }

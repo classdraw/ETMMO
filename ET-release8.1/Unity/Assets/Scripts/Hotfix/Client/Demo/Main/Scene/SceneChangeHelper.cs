@@ -21,9 +21,33 @@
             unitComponent.Add(unit);
             root.RemoveComponent<AIComponent>();
             
-            EventSystem.Instance.Publish(currentScene, new SceneChangeFinish());
+            EventSystem.Instance.Publish(currentScene, new SceneChangeFinish());//下一个场景要干的事
+            
+            EventSystem.Instance.Publish(root, new SceneChangeFinish());//root场景订阅 那么自己销毁
             // 通知等待场景切换的协程
             root.GetComponent<ObjectWait>().Notify(new Wait_SceneChangeFinish());
+        }
+
+        /// <summary>
+        /// 客户端主动切场景：不等待 M2C_CreateMyUnit，仅走 SceneChangeStart / LoadScene 与 SceneChangeFinish。
+        /// </summary>
+        public static async ETTask SceneChangeToSimple(Scene root, string sceneName, long sceneInstanceId)
+        {
+            root.RemoveComponent<AIComponent>();
+
+            CurrentScenesComponent currentScenesComponent = root.GetComponent<CurrentScenesComponent>();
+            currentScenesComponent.Scene?.Dispose();
+            Scene currentScene = CurrentSceneFactory.Create(sceneInstanceId, sceneName, currentScenesComponent);
+            currentScene.AddComponent<UnitComponent>();
+
+            EventSystem.Instance.Publish(root, new SceneChangeStart());
+
+            root.RemoveComponent<AIComponent>();
+
+            EventSystem.Instance.Publish(currentScene, new SceneChangeFinish());
+            EventSystem.Instance.Publish(root, new SceneChangeFinish());
+            root.GetComponent<ObjectWait>().Notify(new Wait_SceneChangeFinish());
+            await ETTask.CompletedTask;
         }
     }
 }

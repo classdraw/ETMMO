@@ -6,6 +6,9 @@
         protected override async ETTask Run(Scene entity, NetClient2Main_SessionDispose message)
         {
             Log.Error($"session dispose, error: {message.Error}");
+
+            EventSystem.Instance.Publish(entity, new SessionDisposeNotify { Error = message.Error });
+
             await ETTask.CompletedTask;
         }
     }

@@ -17,6 +17,7 @@ namespace ET.Client
 		
 		public static async ETTask<UI> Create(this UIComponent self, string uiType)
 		{
+
 			UI ui = await self.UIGlobalComponent.OnCreate(self, uiType);
 			if (UIEventComponent.Instance.UIFullScreens.TryGetValue(uiType, out bool fullScreen))
 			{
@@ -43,7 +44,7 @@ namespace ET.Client
 			{
 				return;
 			}
-			
+
 			self.UIGlobalComponent.OnRemove(self, uiType);
 			
 			self.UIs.Remove(uiType);
