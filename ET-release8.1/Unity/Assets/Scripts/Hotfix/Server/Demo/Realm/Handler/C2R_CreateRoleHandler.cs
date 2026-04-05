@@ -36,7 +36,7 @@ namespace ET.Server
                 DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
                 var roleInfos = await dbComponent.Query<RoleInfo>(
                     d=>
-                            d.Name==request.Name);
+                            d.Name==request.Name&&d.ServerId==request.ServerId);
                 if (roleInfos!=null&&roleInfos.Count>0)
                 {
                     response.Error = ErrorCode.ERR_RoleNameSame;
