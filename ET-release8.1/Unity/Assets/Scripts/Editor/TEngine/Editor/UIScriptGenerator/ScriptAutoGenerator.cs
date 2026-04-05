@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using TEngine;
 
 namespace TEngine.Editor.UI
 {
@@ -594,8 +595,15 @@ namespace TEngine.Editor.UI
                 return;
             }
 
-            var com = child.GetComponent(componentType);
-            uiBindComponent.AddComponent(com);
+            Component com = child.GetComponent(componentType);
+            if (com != null)
+            {
+                uiBindComponent.AddComponent(com);
+            }
+            else
+            {
+                Debug.LogWarning($"重新绑定：节点「{child.name}」上未找到组件 {componentType.Name}，已跳过。");
+            }
         }
 
         private static System.Type GetComponentTypeFromEnumName(string enumName)
@@ -655,6 +663,7 @@ namespace TEngine.Editor.UI
                 UIComponentName.VerticalLayoutGroup => typeof(VerticalLayoutGroup),
                 UIComponentName.Dropdown => typeof(Dropdown),
                 UIComponentName.TextMeshProUGUI => typeof(TextMeshProUGUI),
+                UIComponentName.LayoutLoopList => typeof(LayoutLoopList),
                 _ => null,
             };
         }
@@ -753,7 +762,11 @@ namespace TEngine.Editor.UI
 
         private static string GetPrefixName()
         {
-            return ScriptGeneratorSetting.GetPrefixNameByCodeStyle(ScriptGeneratorSetting.Instance.CodeStyle);
+            ScriptGeneratorSetting inst = ScriptGeneratorSetting.Instance;
+            UIFieldCodeStyle style = inst != null
+                ? inst.CodeStyle
+                : UIFieldCodeStyle.MPrefix;
+            return ScriptGeneratorSetting.GetPrefixNameByCodeStyle(style);
         }
 
         private static string GetVariableName(string varName)

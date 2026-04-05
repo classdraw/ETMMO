@@ -63,32 +63,38 @@ namespace TEngine.Editor.UI
 
         public bool NullableEnable;
 
-        [SerializeField]
-        private List<ScriptGenerateRuler> scriptGenerateRule = new List<ScriptGenerateRuler>()
-        {
-            new ScriptGenerateRuler("m_go", UIComponentName.GameObject),
-            new ScriptGenerateRuler("m_item", UIComponentName.GameObject),
-            new ScriptGenerateRuler("m_tf", UIComponentName.Transform),
-            new ScriptGenerateRuler("m_rect", UIComponentName.RectTransform),
-            new ScriptGenerateRuler("m_text", UIComponentName.Text),
-            new ScriptGenerateRuler("m_richText", UIComponentName.RichTextItem),
-            new ScriptGenerateRuler("m_btn", UIComponentName.Button),
-            new ScriptGenerateRuler("m_img", UIComponentName.Image),
-            new ScriptGenerateRuler("m_rimg", UIComponentName.RawImage),
-            new ScriptGenerateRuler("m_scrollBar", UIComponentName.Scrollbar),
-            new ScriptGenerateRuler("m_scroll", UIComponentName.ScrollRect),
-            new ScriptGenerateRuler("m_input", UIComponentName.InputField),
-            new ScriptGenerateRuler("m_grid", UIComponentName.GridLayoutGroup),
-            new ScriptGenerateRuler("m_hlay", UIComponentName.HorizontalLayoutGroup),
-            new ScriptGenerateRuler("m_vlay", UIComponentName.VerticalLayoutGroup),
-            new ScriptGenerateRuler("m_slider", UIComponentName.Slider),
-            new ScriptGenerateRuler("m_group", UIComponentName.ToggleGroup),
-            new ScriptGenerateRuler("m_curve", UIComponentName.AnimationCurve),
-            new ScriptGenerateRuler("m_canvasGroup", UIComponentName.CanvasGroup),
-            new ScriptGenerateRuler("m_tmp",UIComponentName.TextMeshProUGUI),
-        };
+        [SerializeField] private List<ScriptGenerateRuler> scriptGenerateRule = CreateBuiltinScriptGenerateRules();
 
         public List<ScriptGenerateRuler> ScriptGenerateRule => scriptGenerateRule;
+
+        /// <summary>新建 Setting、合并规则时共用的内置前缀表（与代码版本同步，不依赖旧 asset 是否已序列化）。</summary>
+        private static List<ScriptGenerateRuler> CreateBuiltinScriptGenerateRules()
+        {
+            return new List<ScriptGenerateRuler>()
+            {
+                new ScriptGenerateRuler("m_go", UIComponentName.GameObject),
+                new ScriptGenerateRuler("m_item", UIComponentName.GameObject),
+                new ScriptGenerateRuler("m_tf", UIComponentName.Transform),
+                new ScriptGenerateRuler("m_rect", UIComponentName.RectTransform),
+                new ScriptGenerateRuler("m_text", UIComponentName.Text),
+                new ScriptGenerateRuler("m_richText", UIComponentName.RichTextItem),
+                new ScriptGenerateRuler("m_btn", UIComponentName.Button),
+                new ScriptGenerateRuler("m_img", UIComponentName.Image),
+                new ScriptGenerateRuler("m_rimg", UIComponentName.RawImage),
+                new ScriptGenerateRuler("m_scrollBar", UIComponentName.Scrollbar),
+                new ScriptGenerateRuler("m_scroll", UIComponentName.ScrollRect),
+                new ScriptGenerateRuler("m_loopList", UIComponentName.LayoutLoopList),
+                new ScriptGenerateRuler("m_input", UIComponentName.InputField),
+                new ScriptGenerateRuler("m_grid", UIComponentName.GridLayoutGroup),
+                new ScriptGenerateRuler("m_hlay", UIComponentName.HorizontalLayoutGroup),
+                new ScriptGenerateRuler("m_vlay", UIComponentName.VerticalLayoutGroup),
+                new ScriptGenerateRuler("m_slider", UIComponentName.Slider),
+                new ScriptGenerateRuler("m_group", UIComponentName.ToggleGroup),
+                new ScriptGenerateRuler("m_curve", UIComponentName.AnimationCurve),
+                new ScriptGenerateRuler("m_canvasGroup", UIComponentName.CanvasGroup),
+                new ScriptGenerateRuler("m_tmp", UIComponentName.TextMeshProUGUI),
+            };
+        }
 
 
         [MenuItem("TEngine/Create ScriptGeneratorSetting")]
@@ -110,11 +116,44 @@ namespace TEngine.Editor.UI
 
         public static List<ScriptGenerateRuler> GetScriptGenerateRule()
         {
+            List<ScriptGenerateRuler> builtin = CreateBuiltinScriptGenerateRules();
+
             if (Instance == null)
             {
-                return null;
+                return builtin;
             }
-            return Instance.ScriptGenerateRule;
+
+            List<ScriptGenerateRuler> fromAsset = Instance.ScriptGenerateRule;
+            if (fromAsset == null || fromAsset.Count == 0)
+            {
+                return builtin;
+            }
+
+            var merged = new List<ScriptGenerateRuler>(fromAsset.Count + builtin.Count);
+            foreach (ScriptGenerateRuler r in fromAsset)
+            {
+                merged.Add(r);
+            }
+
+            foreach (ScriptGenerateRuler b in builtin)
+            {
+                bool exists = false;
+                for (int i = 0; i < merged.Count; i++)
+                {
+                    if (string.Equals(merged[i].uiElementRegex, b.uiElementRegex, StringComparison.Ordinal))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                {
+                    merged.Add(new ScriptGenerateRuler(b.uiElementRegex, b.componentName, b.isUIWidget));
+                }
+            }
+
+            return merged;
         }
 
         public static string GetUINameSpace()
@@ -162,20 +201,22 @@ namespace TEngine.Editor.UI
 
         public static string GetUIComponentWithoutPrefixName(UIComponentName uiComponentName)
         {
-            if (Instance.ScriptGenerateRule == null)
+            List<ScriptGenerateRuler> rules = GetScriptGenerateRule();
+            for (int i = 0; i < rules.Count; i++)
             {
-                return string.Empty;
-            }
-
-            for (int i = 0; i < Instance.ScriptGenerateRule.Count; i++)
-            {
-                var rule = Instance.ScriptGenerateRule[i];
-
+                ScriptGenerateRuler rule = rules[i];
                 if (rule.componentName == uiComponentName)
                 {
-                    return rule.uiElementRegex.Substring(rule.uiElementRegex.IndexOf("_", StringComparison.Ordinal) + 1);
+                    int underscore = rule.uiElementRegex.IndexOf("_", StringComparison.Ordinal);
+                    if (underscore < 0)
+                    {
+                        return string.Empty;
+                    }
+
+                    return rule.uiElementRegex.Substring(underscore + 1);
                 }
             }
+
             return string.Empty;
         }
 
@@ -185,6 +226,11 @@ namespace TEngine.Editor.UI
             {
                 return null;
             }
+            if (Instance == null || Instance.UIGenTypes == null)
+            {
+                return null;
+            }
+
             var tempList = Instance.UIGenTypes;
             for (int i = 0; i < tempList.Count; i++)
             {

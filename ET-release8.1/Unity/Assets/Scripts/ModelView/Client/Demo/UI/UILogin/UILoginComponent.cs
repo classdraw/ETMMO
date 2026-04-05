@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TEngine;
+using GameLogic;
 
 namespace ET.Client
 {
@@ -9,5 +11,13 @@ namespace ET.Client
 		public InputField m_inputAccount;
 		public InputField m_inputPassword;
 		public Button m_btnLogin;
+		public LayoutLoopList m_loopListVerticalScroll;
+		public Button m_btnBack;
+		public Text m_textServerList;
+		
+		public R2C_GetServerInfos m_ServerListData;
+		public string m_Account;
+		public string m_Token;
+
 	}
 }

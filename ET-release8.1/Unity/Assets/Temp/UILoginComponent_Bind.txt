@@ -1,0 +1,58 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+using TEngine;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UILoginComponent : Entity, IAwake, IDestroy
+	{
+		public InputField m_inputAccount;
+		public InputField m_inputPassword;
+		public Button m_btnLogin;
+		public LayoutLoopList m_loopListVerticalScroll;
+		public Button m_btnBack;
+		public Text m_textServerList;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UILoginComponent))]
+	[FriendOf(typeof(UILoginComponent))]
+	public static partial class UILoginComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UILoginComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_inputAccount = m_bindComponent.GetComponent<InputField>(0);
+			self.m_inputPassword = m_bindComponent.GetComponent<InputField>(1);
+			self.m_btnLogin = m_bindComponent.GetComponent<Button>(2);
+			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
+			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(3);
+			self.m_btnBack = m_bindComponent.GetComponent<Button>(4);
+			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
+			self.m_textServerList = m_bindComponent.GetComponent<Text>(5);
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UILoginComponent self)
+		{
+		}
+
+		public static void OnLogin(this UILoginComponent self)
+		{
+		}
+
+		public static void OnBack(this UILoginComponent self)
+		{
+		}
+	}
+}

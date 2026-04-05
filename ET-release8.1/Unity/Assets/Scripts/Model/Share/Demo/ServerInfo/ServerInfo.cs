@@ -11,6 +11,6 @@ namespace ET
     public class ServerInfo:Entity,IAwake
     {
         public int Status;
-        public string ServerName;
+        public string ServerName;//DBName
     }
 }

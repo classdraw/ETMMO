@@ -24,7 +24,7 @@ namespace ET.Server
             var serverInfoConfigs = StartZoneConfigCategory.Instance.GetAll();
             foreach (var info in serverInfoConfigs.Values)
             {
-                if (info.ZoneType!=1)//1表示可选区服
+                if (info.ZoneType!=(int)ZoneType.Normal)//1表示可选区服
                 {
                     continue;
                 }

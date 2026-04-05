@@ -15,7 +15,6 @@ namespace ET
         {
             self.Status = serverInfoProto.Status;
             self.ServerName = serverInfoProto.ServerName;
-            
         }
 
         public static ServerInfoProto ToMessage(this ServerInfo self)

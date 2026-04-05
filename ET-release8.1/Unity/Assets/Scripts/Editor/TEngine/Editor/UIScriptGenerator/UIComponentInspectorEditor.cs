@@ -140,8 +140,13 @@ namespace GameLogic
                 return;
             }
 
-            m_uiBindComponent.Clear();
+            // 生成逻辑以 Selection.activeTransform 为根，与 Inspector 目标对齐，避免清空后绑到错误物体
+            Selection.activeTransform = m_uiBindComponent.transform;
+            Undo.RecordObject(m_uiBindComponent, "重新绑定 UI 组件");
             ScriptGenerator.GenerateUIComponentScript();
+            EditorUtility.SetDirty(m_uiBindComponent);
+            serializedObject.Update();
+            Repaint();
         }
 
         private void GenerateBindTextFile()
@@ -196,6 +201,11 @@ namespace GameLogic
             if (extraUsings.Contains("UnityEngine.UI"))
             {
                 usings.AppendLine("using UnityEngine.UI;");
+            }
+
+            if (extraUsings.Contains("TEngine"))
+            {
+                usings.AppendLine("using TEngine;");
             }
 
 #if ENABLE_TEXTMESHPRO
@@ -323,6 +333,12 @@ namespace GameLogic
             if (ns == "UnityEngine.UI")
             {
                 extraUsings.Add("UnityEngine.UI");
+                return t.Name;
+            }
+
+            if (ns == "TEngine")
+            {
+                extraUsings.Add("TEngine");
                 return t.Name;
             }
 

@@ -94,5 +94,6 @@ namespace TEngine.Editor.UI
         TextMeshProUGUI,
         Canvas,
         Dropdown,
+        LayoutLoopList,
     }
 }
