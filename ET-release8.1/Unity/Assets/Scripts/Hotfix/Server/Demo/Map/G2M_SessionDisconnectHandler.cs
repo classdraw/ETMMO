@@ -9,24 +9,7 @@
 	{
 		protected override async ETTask Run(Unit unit, G2M_SessionDisconnect message)
 		{
-			if (unit == null || unit.IsDisposed)
-			{
-				return;
-			}
-
-			Log.Console($"会话断开，从地图移除角色 roleId:{unit.Id}");
-			unit.RemoveComponent<AOIEntity>();
-			RemoveUnitAfterDisconnect(unit).Coroutine();
-			await ETTask.CompletedTask;
-		}
-
-		private static async ETTask RemoveUnitAfterDisconnect(Unit unit)
-		{
-			await unit.Fiber().WaitFrameFinish();
-			await unit.RemoveLocation(LocationType.Unit);
-			unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Remove(unit.Id);
-			UnitComponent unitComponent = unit.Root().GetComponent<UnitComponent>();
-			unitComponent.Remove(unit.Id);
+			await UnitHelper.ForceUnitOfflineFromMapAsync(unit, "SessionDisconnect");
 		}
 	}
 }

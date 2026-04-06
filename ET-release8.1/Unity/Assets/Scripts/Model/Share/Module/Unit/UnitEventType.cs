@@ -36,4 +36,12 @@ namespace ET
     {
         public Unit Unit;
     }
+
+    /// <summary>
+    /// 地图角色下线：在移除 AOI 之后、回收 Unit 之前由地图服发布，订阅方可写库或同步持久化数据。
+    /// </summary>
+    public struct UnitOfflinePersist
+    {
+        public Unit Unit;
+    }
 }

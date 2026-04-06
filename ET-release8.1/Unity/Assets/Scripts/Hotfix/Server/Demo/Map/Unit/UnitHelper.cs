@@ -7,6 +7,27 @@ namespace ET.Server
     [FriendOf(typeof(NumericComponent))]
     public static partial class UnitHelper
     {
+        /// <summary>
+        /// 强制从当前地图下线：移除 AOI → 触发 <see cref="UnitOfflinePersist"/>（写库等）→ 下一帧后摘 Location、GateSession 映射并 Dispose Unit。
+        /// 与 <see cref="G2M_RequestExitGameHandler"/> / <see cref="G2M_SessionDisconnectHandler"/> 共用。
+        /// </summary>
+        public static async ETTask ForceUnitOfflineFromMapAsync(Unit unit, string reasonTag = null)
+        {
+            if (unit == null || unit.IsDisposed)
+            {
+                return;
+            }
+
+            string tag = string.IsNullOrEmpty(reasonTag) ? "Offline" : reasonTag;
+            Log.Console($"ForceUnitOfflineFromMap [{tag}] roleId:{unit.Id}");
+            unit.RemoveComponent<AOIEntity>();
+            await EventSystem.Instance.PublishAsync(unit.Scene(), new UnitOfflinePersist { Unit = unit });
+            await unit.Fiber().WaitFrameFinish();
+            await unit.RemoveLocation(LocationType.Unit);
+            unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Remove(unit.Id);
+            UnitComponent unitComponent = unit.Root().GetComponent<UnitComponent>();
+            unitComponent.Remove(unit.Id);
+        }
         
         public static void AfterTransfer(Unit unit,Scene root, M2M_UnitTransferRequest request)
         {
