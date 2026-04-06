@@ -114,7 +114,7 @@ namespace ET.Client
 			}
 
 			int serverId = serverList.ServerInfoList[index].Id;
-			LoginHelper.LoginRoleEnterGame(self.Root(), serverId, cache.Account, cache.Token);
+			LoginHelper.LoginRoleEnterGame(self.Root(), serverId, cache.Account, cache.Token).Coroutine();
 			Log.Info($"UILogin 区服列表点击 index={index}");
 		}
 

@@ -16,7 +16,8 @@
         "Unity.CustomFrame",
         "TEngine.Editor",
         "UniTask",
-        "Unity.TEngine"
+        "Unity.TEngine",
+        "Unity.2D.Tilemap.Editor"
     ],
     "includePlatforms": [
         "Editor"

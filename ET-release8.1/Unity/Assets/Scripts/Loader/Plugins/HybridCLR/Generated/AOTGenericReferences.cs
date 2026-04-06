@@ -124,7 +124,9 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// ET.StateMachineWrap<ET.Client.LoginFinish_CreateUILSLobby.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.LoginFinish_RemoveLoginUI.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.LoginFinish_RemoveUILSLogin.<Run>d__0>
-	// ET.StateMachineWrap<ET.Client.LoginHelper.<Login>d__0>
+	// ET.StateMachineWrap<ET.Client.LoginHelper.<LoginGetServerList>d__1>
+	// ET.StateMachineWrap<ET.Client.LoginHelper.<LoginOld>d__0>
+	// ET.StateMachineWrap<ET.Client.LoginHelper.<LoginRoleEnterGame>d__2>
 	// ET.StateMachineWrap<ET.Client.M2C_CreateMyUnitHandler.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.M2C_CreateUnitsHandler.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.M2C_PathfindingResultHandler.<Run>d__0>
@@ -180,6 +182,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// ET.StateMachineWrap<ET.Client.UILoadingEvent.<OnCreate>d__0>
 	// ET.StateMachineWrap<ET.Client.UILobbyComponentSystem.<EnterMap>d__2>
 	// ET.StateMachineWrap<ET.Client.UILobbyEvent.<OnCreate>d__0>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__8>
 	// ET.StateMachineWrap<ET.Client.UILoginEvent.<OnCreate>d__0>
 	// ET.StateMachineWrap<ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2>
 	// ET.StateMachineWrap<ET.Client.UISessionErrorEvent.<OnCreate>d__0>
@@ -637,6 +640,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.Func<object,object>
 	// System.Func<object>
 	// System.Linq.Buffer<ET.RpcInfo>
+	// System.Nullable<int>
 	// System.Predicate<DotRecast.Detour.StraightPathItem>
 	// System.Predicate<ET.EntityRef<object>>
 	// System.Predicate<ET.MessageSessionDispatcherInfo>
@@ -664,6 +668,9 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// System.ValueTuple<uint,object>
 	// System.ValueTuple<uint,uint>
 	// System.ValueTuple<ushort,object>
+	// UnityEngine.Events.InvokableCall<object,int>
+	// UnityEngine.Events.UnityAction<object,int>
+	// UnityEngine.Events.UnityEvent<object,int>
 	// }}
 
 	public void RefMethods()
@@ -720,7 +727,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.LoginFinish_CreateUILSLobby.<Run>d__0>(object&,ET.Client.LoginFinish_CreateUILSLobby.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.LoginFinish_RemoveLoginUI.<Run>d__0>(object&,ET.Client.LoginFinish_RemoveLoginUI.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.LoginFinish_RemoveUILSLogin.<Run>d__0>(object&,ET.Client.LoginFinish_RemoveUILSLogin.<Run>d__0&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.LoginHelper.<Login>d__0>(object&,ET.Client.LoginHelper.<Login>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.LoginHelper.<LoginOld>d__0>(object&,ET.Client.LoginHelper.<LoginOld>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.LoginHelper.<LoginRoleEnterGame>d__2>(object&,ET.Client.LoginHelper.<LoginRoleEnterGame>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.M2C_PathfindingResultHandler.<Run>d__0>(object&,ET.Client.M2C_PathfindingResultHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.M2C_StartSceneChangeHandler.<Run>d__0>(object&,ET.Client.M2C_StartSceneChangeHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.Main2NetClient_LoginGameHandler.<Run>d__0>(object&,ET.Client.Main2NetClient_LoginGameHandler.<Run>d__0&)
@@ -746,6 +754,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.TestEventSee_Debug.<Test1>d__1>(object&,ET.Client.TestEventSee_Debug.<Test1>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1>(object&,ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILobbyComponentSystem.<EnterMap>d__2>(object&,ET.Client.UILobbyComponentSystem.<EnterMap>d__2&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__8>(object&,ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__8&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2>(object&,ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.ConsoleComponentSystem.<Start>d__1>(object&,ET.ConsoleComponentSystem.<Start>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Entry.<StartAsync>d__2>(object&,ET.Entry.<StartAsync>d__2&)
@@ -762,6 +771,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadAsset>d__20<object>>(object&,TEngine.ResourceAgent.<LoadAsset>d__20<object>&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,TEngine.ResourceAgent.<LoadSceneAsync>d__28>(object&,TEngine.ResourceAgent.<LoadSceneAsync>d__28&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<System.ValueTuple<uint,object>>.AwaitUnsafeOnCompleted<object,ET.Client.RouterHelper.<GetRouterAddress>d__1>(object&,ET.Client.RouterHelper.<GetRouterAddress>d__1&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<byte>.AwaitUnsafeOnCompleted<object,ET.Client.LoginHelper.<LoginGetServerList>d__1>(object&,ET.Client.LoginHelper.<LoginGetServerList>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<byte>.AwaitUnsafeOnCompleted<object,ET.MoveComponentSystem.<MoveToAsync>d__5>(object&,ET.MoveComponentSystem.<MoveToAsync>d__5&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<int>.AwaitUnsafeOnCompleted<object,ET.Client.MoveHelper.<MoveToAsync>d__0>(object&,ET.Client.MoveHelper.<MoveToAsync>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<int>.AwaitUnsafeOnCompleted<object,ET.Client.TestEventSee_Debug.<Test2>d__2>(object&,ET.Client.TestEventSee_Debug.<Test2>d__2&)
@@ -828,7 +838,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.LoginFinish_CreateUILSLobby.<Run>d__0>(ET.Client.LoginFinish_CreateUILSLobby.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.LoginFinish_RemoveLoginUI.<Run>d__0>(ET.Client.LoginFinish_RemoveLoginUI.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.LoginFinish_RemoveUILSLogin.<Run>d__0>(ET.Client.LoginFinish_RemoveUILSLogin.<Run>d__0&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.LoginHelper.<Login>d__0>(ET.Client.LoginHelper.<Login>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.LoginHelper.<LoginOld>d__0>(ET.Client.LoginHelper.<LoginOld>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.LoginHelper.<LoginRoleEnterGame>d__2>(ET.Client.LoginHelper.<LoginRoleEnterGame>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.M2C_CreateMyUnitHandler.<Run>d__0>(ET.Client.M2C_CreateMyUnitHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.M2C_CreateUnitsHandler.<Run>d__0>(ET.Client.M2C_CreateUnitsHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.M2C_PathfindingResultHandler.<Run>d__0>(ET.Client.M2C_PathfindingResultHandler.<Run>d__0&)
@@ -866,6 +877,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UIHelper.<Remove>d__1>(ET.Client.UIHelper.<Remove>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1>(ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILobbyComponentSystem.<EnterMap>d__2>(ET.Client.UILobbyComponentSystem.<EnterMap>d__2&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__8>(ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__8&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2>(ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.ConsoleComponentSystem.<Start>d__1>(ET.ConsoleComponentSystem.<Start>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Entry.<StartAsync>d__2>(ET.Entry.<StartAsync>d__2&)
@@ -895,6 +907,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder<ET.Client.Wait_SceneChangeFinish>.Start<ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_SceneChangeFinish>>(ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_SceneChangeFinish>&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<ET.Client.Wait_UnitStop>.Start<ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_UnitStop>>(ET.ObjectWaitSystem.<Wait>d__4<ET.Client.Wait_UnitStop>&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<System.ValueTuple<uint,object>>.Start<ET.Client.RouterHelper.<GetRouterAddress>d__1>(ET.Client.RouterHelper.<GetRouterAddress>d__1&)
+		// System.Void ET.ETAsyncTaskMethodBuilder<byte>.Start<ET.Client.LoginHelper.<LoginGetServerList>d__1>(ET.Client.LoginHelper.<LoginGetServerList>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<byte>.Start<ET.MoveComponentSystem.<MoveToAsync>d__5>(ET.MoveComponentSystem.<MoveToAsync>d__5&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<int>.Start<ET.Client.MoveHelper.<MoveToAsync>d__0>(ET.Client.MoveHelper.<MoveToAsync>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder<int>.Start<ET.Client.TestEventSee_Debug.<Test2>d__2>(ET.Client.TestEventSee_Debug.<Test2>d__2&)
@@ -1121,6 +1134,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// ET.ETTask<System.Collections.Generic.Dictionary<string,object>> TEngine.IResourceModuleET.LoadAllAssetsAsync<object>(string,System.Threading.CancellationToken,string)
 		// object TEngine.IResourceModuleET.LoadAsset<object>(string,string)
 		// ET.ETTask<object> TEngine.IResourceModuleET.LoadAssetAsync<object>(string,System.Threading.CancellationToken,string)
+		// object UnityEngine.Component.GetComponent<object>()
+		// object UnityEngine.GameObject.AddComponent<object>()
 		// object UnityEngine.GameObject.GetComponent<object>()
 		// object[] UnityEngine.GameObject.GetComponentsInChildren<object>(bool)
 		// object UnityEngine.Object.Instantiate<object>(object)
