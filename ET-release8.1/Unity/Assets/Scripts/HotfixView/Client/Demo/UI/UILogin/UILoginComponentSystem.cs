@@ -9,6 +9,11 @@ namespace ET.Client
 	[FriendOf(typeof(UILoginComponent))]
 	public static partial class UILoginComponentSystem
 	{
+		private static NetworkCacheComponent NetCache(this UILoginComponent self)
+		{
+			return self.Root().GetComponent<NetworkCacheComponent>();
+		}
+
 		[EntitySystem]
 		private static void Awake(this UILoginComponent self)
 		{
@@ -39,12 +44,13 @@ namespace ET.Client
 
 		private static void OnServerListItemRefresh(UILoginComponent self, Component com, int dataIndex)
 		{
-			if (self.IsDisposed || self.m_ServerListData == null || self.m_ServerListData.ServerInfoList == null)
+			R2C_GetServerInfos serverList = self.NetCache()?.LastServerListResponse;
+			if (self.IsDisposed || serverList == null || serverList.ServerInfoList == null)
 			{
 				return;
 			}
 
-			var list = self.m_ServerListData.ServerInfoList;
+			var list = serverList.ServerInfoList;
 			if (dataIndex < 0 || dataIndex >= list.Count)
 			{
 				return;
@@ -100,8 +106,15 @@ namespace ET.Client
 				return;
 			}
 
-			int serverId = self.m_ServerListData.ServerInfoList[index].Id;
-			LoginHelper.LoginRoleEnterGame(self.Root(), serverId, self.m_Account, self.m_Token);
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetServerInfos serverList = cache?.LastServerListResponse;
+			if (serverList?.ServerInfoList == null || index < 0 || index >= serverList.ServerInfoList.Count)
+			{
+				return;
+			}
+
+			int serverId = serverList.ServerInfoList[index].Id;
+			LoginHelper.LoginRoleEnterGame(self.Root(), serverId, cache.Account, cache.Token);
 			Log.Info($"UILogin 区服列表点击 index={index}");
 		}
 
@@ -118,27 +131,22 @@ namespace ET.Client
 
 		private static async ETTask LoginGetServerListAsync(this UILoginComponent self)
 		{
-			LoginGetServerListResult result = await LoginHelper.LoginGetServerList(
+			bool ok = await LoginHelper.LoginGetServerList(
 				self.Root(),
 				self.m_inputAccount.text,
 				self.m_inputPassword.text);
-			if (string.IsNullOrEmpty(result.Token))
+			if (!ok)
 			{
 				return;
 			}
 
-			self.m_Account = self.m_inputAccount.text;
-			self.m_Token = result.Token;
-			self.m_ServerListData = result.ServerInfos;
 			self.ChangeStep2();
 		}
 
 		//正常登录显示
 		private static void ChangeStep1(this UILoginComponent self)
 		{
-			self.m_Token = string.Empty;
-			self.m_ServerListData = null;
-			self.m_Account = string.Empty;
+			self.NetCache()?.ClearCache();
 			self.m_inputAccount.gameObject.SetActive(true);
 			self.m_inputPassword.gameObject.SetActive(true);
 			self.m_btnLogin.gameObject.SetActive(true);
@@ -166,13 +174,14 @@ namespace ET.Client
 				return;
 			}
 
-			if (self.m_ServerListData?.ServerInfoList == null)
+			R2C_GetServerInfos serverList = self.NetCache()?.LastServerListResponse;
+			if (serverList?.ServerInfoList == null)
 			{
 				self.m_loopListVerticalScroll.RefreshDataCount(0);
 				return;
 			}
 
-			int count = self.m_ServerListData.ServerInfoList.Count;
+			int count = serverList.ServerInfoList.Count;
 			self.m_loopListVerticalScroll.RefreshDataCount(count);
 		}
 	}

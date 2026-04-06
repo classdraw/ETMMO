@@ -14,10 +14,5 @@ namespace ET.Client
 		public LayoutLoopList m_loopListVerticalScroll;
 		public Button m_btnBack;
 		public Text m_textServerList;
-		
-		public R2C_GetServerInfos m_ServerListData;
-		public string m_Account;
-		public string m_Token;
-
 	}
 }

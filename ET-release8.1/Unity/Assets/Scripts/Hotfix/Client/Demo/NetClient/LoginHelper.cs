@@ -2,12 +2,6 @@ using CommandLine;
 
 namespace ET.Client
 {
-    public struct LoginGetServerListResult
-    {
-        public R2C_GetServerInfos ServerInfos;
-        public string Token;
-    }
-
     public static class LoginHelper
     {
         //总登录流程 现在拆解
@@ -108,13 +102,18 @@ namespace ET.Client
         }
         
         /// <summary>
-        /// 登录 获得session 并且获得服务器列表
+        /// 登录并拉取区服列表，成功时将账号、Token、区服列表写入 <see cref="NetworkCacheComponent"/>。
         /// </summary>
-        /// <param name="root"></param>
-        /// <param name="account"></param>
-        /// <param name="password"></param>
-        public static async ETTask<LoginGetServerListResult> LoginGetServerList(Scene root, string account, string password)
+        /// <returns>是否成功写入缓存。</returns>
+        public static async ETTask<bool> LoginGetServerList(Scene root, string account, string password)
         {
+            NetworkCacheComponent cache = root.GetComponent<NetworkCacheComponent>();
+            if (cache == null)
+            {
+                Log.Error("LoginGetServerList: 未找到 NetworkCacheComponent");
+                return false;
+            }
+
             root.RemoveComponent<ClientSenderComponent>();
 
             ClientSenderComponent clientSenderComponent = root.AddComponent<ClientSenderComponent>();
@@ -122,7 +121,7 @@ namespace ET.Client
             if (response == null || response.Error != ErrorCode.ERR_Success)
             {
                 Log.Error($"登录失败{response?.Error}");
-                return default;
+                return false;
             }
 
             string token = response.Token;
@@ -134,10 +133,11 @@ namespace ET.Client
             if (r2CGetServerInfos == null || r2CGetServerInfos.Error != ErrorCode.ERR_Success)
             {
                 Log.Error("请求服务器列表失败");
-                return default;
+                return false;
             }
 
-            return new LoginGetServerListResult { ServerInfos = r2CGetServerInfos, Token = token };
+            cache.SetLoginServerListData(account, token, r2CGetServerInfos);
+            return true;
         }
         
         public static async ETTask LoginRoleEnterGame(Scene root, int serverId,string account,string token)

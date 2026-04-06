@@ -19,6 +19,7 @@ namespace ET.Client
             root.AddComponent<UIComponent>();
             
             root.AddComponent<PlayerComponent>();
+            root.AddComponent<NetworkCacheComponent>();
             root.AddComponent<CurrentScenesComponent>();
 
             root.AddComponent<ComputersComponent>();

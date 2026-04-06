@@ -40,12 +40,12 @@
             Scene currentScene = CurrentSceneFactory.Create(sceneInstanceId, sceneName, currentScenesComponent);
             currentScene.AddComponent<UnitComponent>();
 
-            EventSystem.Instance.Publish(root, new SceneChangeStart());
+            EventSystem.Instance.Publish(root, new SceneChangeStart());//MAIN
 
             root.RemoveComponent<AIComponent>();
 
             EventSystem.Instance.Publish(currentScene, new SceneChangeFinish());
-            EventSystem.Instance.Publish(root, new SceneChangeFinish());
+            EventSystem.Instance.Publish(root, new SceneChangeFinish());//MAIN
             root.GetComponent<ObjectWait>().Notify(new Wait_SceneChangeFinish());
             await ETTask.CompletedTask;
         }
