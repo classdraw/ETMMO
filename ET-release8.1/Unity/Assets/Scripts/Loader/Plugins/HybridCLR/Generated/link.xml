@@ -188,6 +188,7 @@
     <type fullname="ET.CodeLoader" preserve="all" />
     <type fullname="ET.GlobalComponent" preserve="all" />
     <type fullname="ET.GlobalConfig" preserve="all" />
+    <type fullname="GameLogic.CameraTestCtrl" preserve="all" />
     <type fullname="GameLogic.UIBindComponent" preserve="all" />
     <type fullname="ReferenceCollector" preserve="all" />
   </assembly>

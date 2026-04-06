@@ -22,6 +22,7 @@ namespace ET.Client
             self.Account = string.Empty;
             self.Token = string.Empty;
             self.LastServerListResponse = null;
+            self.LoginGamePlayerId = 0;
         }
 
         /// <summary>一次写入登录拉服后的账号、Token 与区服列表响应。</summary>

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GameLogic;
+using UnityEngine;
 
 namespace ET.Client
 {
@@ -15,9 +16,18 @@ namespace ET.Client
 
             GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
+            NetworkCacheComponent netCache = scene.Root().GetComponent<NetworkCacheComponent>();
+            bool isMainPlayerUnit = netCache != null && netCache.LoginGamePlayerId != 0 && unit.Id == netCache.LoginGamePlayerId;
+            go.name = isMainPlayerUnit ? $"unit_{unit.Id}*" : $"unit_{unit.Id}";
             go.transform.position = unit.Position;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();
+
+            if (isMainPlayerUnit==true&&CameraTestCtrl.Instance!=null)
+            {
+                CameraTestCtrl.Instance.SetUnit(go.transform);
+            }
+
             await ETTask.CompletedTask;
         }
     }

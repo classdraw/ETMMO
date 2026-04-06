@@ -76,6 +76,11 @@ namespace ET
 
         public bool IsTurnHorizontal;
 
+        /// <summary>
+        /// 为 true 时移动过程中不修改 Unit.Rotation（例如俯视角用左右翻转代替转向）。
+        /// </summary>
+        public bool DisableMoveRotation;
+
         public quaternion From;
 
         public quaternion To;

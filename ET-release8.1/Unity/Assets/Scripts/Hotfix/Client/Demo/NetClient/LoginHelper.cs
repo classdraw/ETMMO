@@ -196,6 +196,12 @@ namespace ET.Client
                 Log.Error($"进入游戏失败;{netClient2MainLoginGame.Error}");
                 return;
             }
+
+            NetworkCacheComponent netCache = root.GetComponent<NetworkCacheComponent>();
+            if (netCache != null)
+            {
+                netCache.LoginGamePlayerId = netClient2MainLoginGame.PlayerId;
+            }
             
             Log.Info("进入游戏成功");
             await EventSystem.Instance.PublishAsync(root, new LoginFinish());

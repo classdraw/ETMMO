@@ -31,6 +31,9 @@ namespace ET.Client
 
                 GlobalComponent globalComponent = root.GetComponent<GlobalComponent>();
                 GameObject unitGo = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
+                NetworkCacheComponent netCache = root.GetComponent<NetworkCacheComponent>();
+                bool isMainPlayerUnit = netCache != null && netCache.LoginGamePlayerId != 0 && lsUnit.Id == netCache.LoginGamePlayerId;
+                unitGo.name = isMainPlayerUnit ? $"unit_{lsUnit.Id}*" : $"unit_{lsUnit.Id}";
                 unitGo.transform.position = lsUnit.Position.ToVector();
 
                 LSUnitView lsUnitView = self.AddChildWithId<LSUnitView, GameObject>(lsUnit.Id, unitGo);

@@ -43,6 +43,7 @@ namespace ET
             self.Speed = 0;
             self.N = 0;
             self.TurnTime = 0;
+            self.DisableMoveRotation = true;
         }
         
         public static bool IsArrived(this MoveComponent self)
@@ -124,7 +125,7 @@ namespace ET
                 if (moveTime >= self.NeedTime)
                 {
                     unit.Position = self.NextTarget;
-                    if (self.TurnTime > 0)
+                    if (!self.DisableMoveRotation && self.TurnTime > 0)
                     {
                         unit.Rotation = self.To;
                     }
@@ -140,7 +141,7 @@ namespace ET
                     }
                     
                     // 计算方向插值
-                    if (self.TurnTime > 0)
+                    if (!self.DisableMoveRotation && self.TurnTime > 0)
                     {
                         amount = moveTime * 1f / self.TurnTime;
                         if (amount > 1)
@@ -166,7 +167,10 @@ namespace ET
                 if (self.N >= self.Targets.Count - 1)
                 {
                     unit.Position = self.NextTarget;
-                    unit.Rotation = self.To;
+                    if (!self.DisableMoveRotation)
+                    {
+                        unit.Rotation = self.To;
+                    }
 
                     self.MoveFinish(ret);
                     return;
@@ -202,6 +206,11 @@ namespace ET
             self.StartTime += self.NeedTime;
             
             self.NeedTime = (long) (distance / self.Speed * 1000);
+            
+            if (self.DisableMoveRotation)
+            {
+                return;
+            }
             
             if (self.TurnTime > 0)
             {

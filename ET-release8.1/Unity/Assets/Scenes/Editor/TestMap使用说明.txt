@@ -1,0 +1,4 @@
+背景是Default -2~N  BG是-2
+角色是Unit
+树木需要挡住角色就是Tree
+建筑就是Building

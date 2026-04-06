@@ -26,6 +26,7 @@ MonoBehaviour:
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls
   externalHotUpdateAssembliyDirs:
   - Temp/Bin/Debug
+  - Library/ScriptAssemblies
   strippedAOTDllOutputRootDir: HybridCLRData/AssembliesPostIl2CppStrip
   patchAOTAssemblies:
   - Unity.CustomFrame.dll

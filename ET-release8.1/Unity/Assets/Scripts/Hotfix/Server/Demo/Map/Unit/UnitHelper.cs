@@ -26,7 +26,16 @@ namespace ET.Server
             
             unit.AddComponent<MoveComponent>();
             unit.AddComponent<PathfindingComponent, string>(root.Name);
-            unit.Position = new float3(-10, 0, -10);
+            if (root.Name.Equals(("Map1")))
+            {
+                unit.Position = new float3(57f, 0, 7f);
+                
+            }
+            else
+            {
+                unit.Position = new float3(1.34f, 0, -3.4f);
+            }
+            
 
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
             if (request.IsEnterGame)
