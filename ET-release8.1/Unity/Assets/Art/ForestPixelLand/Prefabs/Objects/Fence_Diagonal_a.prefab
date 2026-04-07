@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1946641841, guid: f9076f5781e6b6d4681aba530fa2dabf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.42745098}
   m_FlipX: 0
@@ -94,7 +94,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6903770948117820014}
   - component: {fileID: 4447398819857800818}
-  - component: {fileID: 8578623637803881010}
   m_Layer: 0
   m_Name: Fence_Diagonal_a
   m_TagString: Untagged
@@ -156,8 +155,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 561869287
-  m_SortingLayer: 3
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 3
   m_Sprite: {fileID: 155934392, guid: 6bdaf2187635cfd46bd3595d46869c4b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -170,61 +169,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &8578623637803881010
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 669102343042356344}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.30187455, y: 0.092534505}
-    oldSize: {x: 1.5625, y: 2.5625}
-    newSize: {x: 1.5625, y: 2.5625}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.0306137, y: 1.7921233}
-      - {x: 0.8964412, y: 1.8007236}
-      - {x: 0.7447784, y: 1.6774445}
-      - {x: -0.1792481, y: 0.3705821}
-      - {x: -0.17049217, y: 0.7277162}
-      - {x: -0.2791977, y: 0.73518276}
-      - {x: -0.4084816, y: 0.6776955}
-      - {x: -0.47167897, y: -0.08230305}
-      - {x: -0.32804418, y: -0.21131682}
-      - {x: -0.13108182, y: -0.08861041}
-      - {x: 0.55462074, y: 0.77634335}
-      - {x: 1.0494373, y: 1.5177178}
-      - {x: 1.0564163, y: 1.5816879}
-  m_UseDelaunayMesh: 0

@@ -94,7 +94,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4878257400074138613}
   - component: {fileID: 204375323551392655}
-  - component: {fileID: 8800073203079753246}
   m_Layer: 0
   m_Name: VillageTower
   m_TagString: Untagged
@@ -157,7 +156,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 561869287
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 3
   m_Sprite: {fileID: -1723555722, guid: f24bb3cf1da91f8479513177c3ce6b3b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -170,49 +169,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!68 &8800073203079753246
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3426793237745150641}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -2.03}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -2.0126934, y: 1.5454535}
-  - {x: -1.2727051, y: 0.49021196}
-  - {x: 1.2658224, y: 0.51770055}
-  - {x: 2.1565065, y: 1.8637767}
-  - {x: 1.2375345, y: 2.9777303}
-  - {x: -1.2548628, y: 2.9568636}
-  - {x: -2.0220556, y: 1.5661447}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
