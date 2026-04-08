@@ -140,7 +140,7 @@ namespace ET.Client
             return true;
         }
         
-        public static async ETTask LoginRoleEnterGame(Scene root, int serverId,string account,string token)
+        public static async ETTask<bool> LoginRoleEnterGame(Scene root, int serverId,string account,string token)
         {
             ClientSenderComponent clientSenderComponent = root.GetComponent<ClientSenderComponent>();
             //获得区服角色列表
@@ -152,7 +152,7 @@ namespace ET.Client
             if (r2CGetRoles==null||r2CGetRoles.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error("请求区服角色列表失败");
-                return;
+                return false;
             }
 
             RoleInfoProto roleInfoProto = default;
@@ -168,7 +168,7 @@ namespace ET.Client
                 if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
                 {
                     Log.Error($"创建区服角色失败{r2CCreateRole.Error}");
-                    return;
+                    return false;
                 }
 
                 roleInfoProto = r2CCreateRole.RoleInfo;
@@ -187,14 +187,14 @@ namespace ET.Client
             if (r2CGetRealmKey==null||r2CGetRealmKey.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error("获取RealmKey失败");
-                return;
+                return false;
             }
             //r2CGetRealmKey.Key 是随机64位+时间的hashcode
             var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address);
             if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error($"进入游戏失败;{netClient2MainLoginGame.Error}");
-                return;
+                return false;
             }
 
             NetworkCacheComponent netCache = root.GetComponent<NetworkCacheComponent>();
@@ -212,6 +212,7 @@ namespace ET.Client
             root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
             //登录完成
             await EventSystem.Instance.PublishAsync(root, new LoginFinish());*/
+            return true;
         } 
         
     }

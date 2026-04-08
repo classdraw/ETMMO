@@ -13,12 +13,15 @@ namespace ET.Client
 	[ComponentOf(typeof(UI))]
 	public class UILoginComponent : Entity, IAwake, IDestroy
 	{
+		public GameObject m_goObj1;
 		public InputField m_inputAccount;
 		public InputField m_inputPassword;
 		public Button m_btnLogin;
+		public GameObject m_goObj2;
 		public LayoutLoopList m_loopListVerticalScroll;
 		public Button m_btnBack;
 		public Text m_textServerList;
+		public GameObject m_goObj3;
 	}
 }
 
@@ -32,14 +35,17 @@ namespace ET.Client
 		private static void Awake(this UILoginComponent self)
 		{
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
-			self.m_inputAccount = m_bindComponent.GetComponent<InputField>(0);
-			self.m_inputPassword = m_bindComponent.GetComponent<InputField>(1);
-			self.m_btnLogin = m_bindComponent.GetComponent<Button>(2);
+			self.m_goObj1 = m_bindComponent.GetComponent<RectTransform>(0).gameObject;
+			self.m_inputAccount = m_bindComponent.GetComponent<InputField>(1);
+			self.m_inputPassword = m_bindComponent.GetComponent<InputField>(2);
+			self.m_btnLogin = m_bindComponent.GetComponent<Button>(3);
 			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
-			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(3);
-			self.m_btnBack = m_bindComponent.GetComponent<Button>(4);
+			self.m_goObj2 = m_bindComponent.GetComponent<RectTransform>(4).gameObject;
+			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(5);
+			self.m_btnBack = m_bindComponent.GetComponent<Button>(6);
 			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
-			self.m_textServerList = m_bindComponent.GetComponent<Text>(5);
+			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
+			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
 		}
 
 		[EntitySystem]

@@ -18,14 +18,17 @@ namespace ET.Client
 		private static void Awake(this UILoginComponent self)
 		{
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
-			self.m_inputAccount = m_bindComponent.GetComponent<InputField>(0);
-			self.m_inputPassword = m_bindComponent.GetComponent<InputField>(1);
-			self.m_btnLogin = m_bindComponent.GetComponent<Button>(2);
+			self.m_goObj1 = m_bindComponent.GetComponent<RectTransform>(0).gameObject;
+			self.m_inputAccount = m_bindComponent.GetComponent<InputField>(1);
+			self.m_inputPassword = m_bindComponent.GetComponent<InputField>(2);
+			self.m_btnLogin = m_bindComponent.GetComponent<Button>(3);
 			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
-			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(3);
-			self.m_btnBack = m_bindComponent.GetComponent<Button>(4);
+			self.m_goObj2 = m_bindComponent.GetComponent<RectTransform>(4).gameObject;
+			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(5);
+			self.m_btnBack = m_bindComponent.GetComponent<Button>(6);
 			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
-			self.m_textServerList = m_bindComponent.GetComponent<Text>(5);
+			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
+			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
 			
 			self.m_loopListVerticalScroll.OnItemRefresh.RemoveAllListeners();
 			self.m_loopListVerticalScroll.OnItemRefresh.AddListener((com, index) => { OnServerListItemRefresh(self, com, index); });
@@ -106,6 +109,11 @@ namespace ET.Client
 				return;
 			}
 
+			self.LoginRoleEnterGameAsync(index).Coroutine();
+		}
+
+		private static async ETTask LoginRoleEnterGameAsync(this UILoginComponent self,int index)
+		{
 			NetworkCacheComponent cache = self.NetCache();
 			R2C_GetServerInfos serverList = cache?.LastServerListResponse;
 			if (serverList?.ServerInfoList == null || index < 0 || index >= serverList.ServerInfoList.Count)
@@ -114,8 +122,15 @@ namespace ET.Client
 			}
 
 			int serverId = serverList.ServerInfoList[index].Id;
-			LoginHelper.LoginRoleEnterGame(self.Root(), serverId, cache.Account, cache.Token).Coroutine();
-			Log.Info($"UILogin 区服列表点击 index={index}");
+			bool isOk = await LoginHelper.LoginRoleEnterGame(self.Root(), serverId, cache.Account, cache.Token);
+			if (!isOk)
+			{
+				self.ChangeStep1();
+			}
+			else
+			{
+				Log.Info($"UILogin 区服列表点击 index={index}");
+			}
 		}
 
 		public static void OnBack(this UILoginComponent self)
@@ -137,6 +152,7 @@ namespace ET.Client
 				self.m_inputPassword.text);
 			if (!ok)
 			{
+				self.ChangeStep1();//失败返回登录
 				return;
 			}
 
@@ -147,23 +163,18 @@ namespace ET.Client
 		private static void ChangeStep1(this UILoginComponent self)
 		{
 			self.NetCache()?.ClearCache();
-			self.m_inputAccount.gameObject.SetActive(true);
-			self.m_inputPassword.gameObject.SetActive(true);
-			self.m_btnLogin.gameObject.SetActive(true);
-			self.m_loopListVerticalScroll.gameObject.SetActive(false);
-			self.m_btnBack.gameObject.SetActive(false);
-			self.m_textServerList.gameObject.SetActive(false);
+			self.m_goObj1.gameObject.SetActive(true);
+			self.m_goObj2.gameObject.SetActive(false);
+			self.m_goObj3.gameObject.SetActive(false);
+
 		}
 		
 		//正常登录显示
 		private static void ChangeStep2(this UILoginComponent self)
 		{
-			self.m_inputAccount.gameObject.SetActive(false);
-			self.m_inputPassword.gameObject.SetActive(false);
-			self.m_btnLogin.gameObject.SetActive(false);
-			self.m_loopListVerticalScroll.gameObject.SetActive(true);
-			self.m_btnBack.gameObject.SetActive(true);
-			self.m_textServerList.gameObject.SetActive(true);
+			self.m_goObj1.gameObject.SetActive(false);
+			self.m_goObj2.gameObject.SetActive(true);
+			self.m_goObj3.gameObject.SetActive(false);
 			self.RefreshServerList();
 		}
 
