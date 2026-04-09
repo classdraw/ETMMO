@@ -22,6 +22,20 @@ namespace ET.Client
 		public Button m_btnBack;
 		public Text m_textServerList;
 		public GameObject m_goObj3;
+		public Text m_textLeftTitle;
+		public GameObject m_goLeft;
+		public Button m_btnLeftCreate;
+		public Button m_btnLeftTran;
+		public Button m_btnLeftDelete;
+		public Button m_btnLeftEnter;
+		public InputField m_inputLeft;
+		public Text m_textRightTitle;
+		public GameObject m_goRight;
+		public Button m_btnRightCreate;
+		public Button m_btnRightTran;
+		public Button m_btnRightDelete;
+		public Button m_btnRightEnter;
+		public InputField m_inputRight;
 	}
 }
 
@@ -46,6 +60,28 @@ namespace ET.Client
 			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
 			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
 			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
+			self.m_textLeftTitle = m_bindComponent.GetComponent<Text>(9);
+			self.m_goLeft = m_bindComponent.GetComponent<RectTransform>(10).gameObject;
+			self.m_btnLeftCreate = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnLeftCreate.onClick.AddListener(() => { self.OnLeftCreate(); });
+			self.m_btnLeftTran = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnLeftTran.onClick.AddListener(() => { self.OnLeftTran(); });
+			self.m_btnLeftDelete = m_bindComponent.GetComponent<Button>(13);
+			self.m_btnLeftDelete.onClick.AddListener(() => { self.OnLeftDelete(); });
+			self.m_btnLeftEnter = m_bindComponent.GetComponent<Button>(14);
+			self.m_btnLeftEnter.onClick.AddListener(() => { self.OnLeftEnter(); });
+			self.m_inputLeft = m_bindComponent.GetComponent<InputField>(15);
+			self.m_textRightTitle = m_bindComponent.GetComponent<Text>(16);
+			self.m_goRight = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
+			self.m_btnRightCreate = m_bindComponent.GetComponent<Button>(18);
+			self.m_btnRightCreate.onClick.AddListener(() => { self.OnRightCreate(); });
+			self.m_btnRightTran = m_bindComponent.GetComponent<Button>(19);
+			self.m_btnRightTran.onClick.AddListener(() => { self.OnRightTran(); });
+			self.m_btnRightDelete = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnRightDelete.onClick.AddListener(() => { self.OnRightDelete(); });
+			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnRightEnter.onClick.AddListener(() => { self.OnRightEnter(); });
+			self.m_inputRight = m_bindComponent.GetComponent<InputField>(22);
 		}
 
 		[EntitySystem]
@@ -58,6 +94,38 @@ namespace ET.Client
 		}
 
 		public static void OnBack(this UILoginComponent self)
+		{
+		}
+
+		public static void OnLeftCreate(this UILoginComponent self)
+		{
+		}
+
+		public static void OnLeftTran(this UILoginComponent self)
+		{
+		}
+
+		public static void OnLeftDelete(this UILoginComponent self)
+		{
+		}
+
+		public static void OnLeftEnter(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRightCreate(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRightTran(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRightDelete(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRightEnter(this UILoginComponent self)
 		{
 		}
 	}

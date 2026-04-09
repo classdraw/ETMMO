@@ -17,5 +17,19 @@ namespace ET.Client
 		public Button m_btnBack;
 		public Text m_textServerList;
 		public GameObject m_goObj3;
+		public Text m_textLeftTitle;
+		public GameObject m_goLeft;
+		public Button m_btnLeftCreate;
+		public Button m_btnLeftTran;
+		public Button m_btnLeftDelete;
+		public Button m_btnLeftEnter;
+		public InputField m_inputLeft;
+		public Text m_textRightTitle;
+		public GameObject m_goRight;
+		public Button m_btnRightCreate;
+		public Button m_btnRightTran;
+		public Button m_btnRightDelete;
+		public Button m_btnRightEnter;
+		public InputField m_inputRight;
 	}
 }

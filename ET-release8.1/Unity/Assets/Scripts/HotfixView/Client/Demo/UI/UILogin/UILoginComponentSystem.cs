@@ -29,6 +29,28 @@ namespace ET.Client
 			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
 			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
 			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
+			self.m_textLeftTitle = m_bindComponent.GetComponent<Text>(9);
+			self.m_goLeft = m_bindComponent.GetComponent<RectTransform>(10).gameObject;
+			self.m_btnLeftCreate = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnLeftCreate.onClick.AddListener(() => { self.OnLeftCreate(); });
+			self.m_btnLeftTran = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnLeftTran.onClick.AddListener(() => { self.OnLeftTran(); });
+			self.m_btnLeftDelete = m_bindComponent.GetComponent<Button>(13);
+			self.m_btnLeftDelete.onClick.AddListener(() => { self.OnLeftDelete(); });
+			self.m_btnLeftEnter = m_bindComponent.GetComponent<Button>(14);
+			self.m_btnLeftEnter.onClick.AddListener(() => { self.OnLeftEnter(); });
+			self.m_inputLeft = m_bindComponent.GetComponent<InputField>(15);
+			self.m_textRightTitle = m_bindComponent.GetComponent<Text>(16);
+			self.m_goRight = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
+			self.m_btnRightCreate = m_bindComponent.GetComponent<Button>(18);
+			self.m_btnRightCreate.onClick.AddListener(() => { self.OnRightCreate(); });
+			self.m_btnRightTran = m_bindComponent.GetComponent<Button>(19);
+			self.m_btnRightTran.onClick.AddListener(() => { self.OnRightTran(); });
+			self.m_btnRightDelete = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnRightDelete.onClick.AddListener(() => { self.OnRightDelete(); });
+			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnRightEnter.onClick.AddListener(() => { self.OnRightEnter(); });
+			self.m_inputRight = m_bindComponent.GetComponent<InputField>(22);
 			
 			self.m_loopListVerticalScroll.OnItemRefresh.RemoveAllListeners();
 			self.m_loopListVerticalScroll.OnItemRefresh.AddListener((com, index) => { OnServerListItemRefresh(self, com, index); });
@@ -42,6 +64,91 @@ namespace ET.Client
 			if (self.m_loopListVerticalScroll != null)
 			{
 				self.m_loopListVerticalScroll.OnItemRefresh.RemoveAllListeners();
+			}
+		}
+		#region 点击按钮流程
+
+		
+		//按钮点击登录流程
+		public static void OnLogin(this UILoginComponent self)
+		{
+			self.LoginGetServerListAsync().Coroutine();
+		}
+
+
+		public static void OnBack(this UILoginComponent self)
+		{
+			self.ChangeStep1();	
+		}
+		
+		public static void OnLeftCreate(this UILoginComponent self)
+		{
+			self.OnLeftCreateAsync().Coroutine();
+		}
+
+		public static void OnLeftTran(this UILoginComponent self)
+		{
+		}
+
+		public static void OnLeftDelete(this UILoginComponent self)
+		{
+			self.OnLeftDeleteAsync().Coroutine();
+		}
+
+		public static void OnLeftEnter(this UILoginComponent self)
+		{
+			self.OnLeftEnterAsync().Coroutine();
+		}
+
+		public static void OnRightCreate(this UILoginComponent self)
+		{
+			self.OnRightCreateAsync().Coroutine();
+		}
+
+		public static void OnRightTran(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRightDelete(this UILoginComponent self)
+		{
+			self.OnRightDeleteAsync().Coroutine();
+		}
+
+		public static void OnRightEnter(this UILoginComponent self)
+		{
+			self.OnRightEnterAsync().Coroutine();
+		}
+		
+		
+		/// <summary>区服列表项点击，index 为 ServerInfoList 下标。</summary>
+		public static void OnServerListItemClick(this UILoginComponent self, int index)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			self.LoginGetRoleList(index).Coroutine();
+		}
+
+		#endregion
+		
+		#region Logic方法
+
+		/// <summary>
+		/// 先判断 <paramref name="result"/>.Ok；失败时除 <see cref="ErrorCode.ERR_RoleNameSame"/> 外回到登录第一步。
+		/// </summary>
+		private static void HandleLoginOpFailure(this UILoginComponent self, LoginOperationResult result, string tag)
+		{
+			if (result.Ok)
+			{
+				return;
+			}
+
+			Log.Info($"UILogin {tag}: 失败 ErrorCode={result.ErrorCode}");
+			if (result.ErrorCode != ErrorCode.ERR_RoleNameSame)
+			{
+				self.ChangeStep1();
 			}
 		}
 
@@ -101,18 +208,169 @@ namespace ET.Client
 			clickBtn.onClick.AddListener(() => { self.OnServerListItemClick(index); });
 		}
 
-		/// <summary>区服列表项点击，index 为 ServerInfoList 下标。</summary>
-		public static void OnServerListItemClick(this UILoginComponent self, int index)
+		private static async ETTask OnLeftCreateAsync(this UILoginComponent self)
 		{
 			if (self.IsDisposed)
 			{
 				return;
 			}
 
-			self.LoginRoleEnterGameAsync(index).Coroutine();
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetRoles roles = cache?.LastRoleListResponse;
+			bool hasLeftRole = roles?.RoleInfoList != null && roles.RoleInfoList.Count >= 1;
+			if (hasLeftRole)
+			{
+				Log.Warning("UILogin OnLeftCreate: 左侧已有角色，无法重复创建");
+				return;
+			}
+
+			string roleName = self.m_inputLeft != null ? self.m_inputLeft.text.Trim() : string.Empty;
+			if (string.IsNullOrEmpty(roleName))
+			{
+				Log.Warning("UILogin OnLeftCreate: 请输入左侧角色名称");
+				return;
+			}
+
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName);
+			if (!result.Ok)
+			{
+				self.HandleLoginOpFailure(result, "OnLeftCreate");
+				return;
+			}
+
+			self.RefreshRoleList();
 		}
 
-		private static async ETTask LoginRoleEnterGameAsync(this UILoginComponent self,int index)
+		private static async ETTask OnRightCreateAsync(this UILoginComponent self)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetRoles roles = cache?.LastRoleListResponse;
+			bool hasRightRole = roles?.RoleInfoList != null && roles.RoleInfoList.Count >= 2;
+			if (hasRightRole)
+			{
+				Log.Warning("UILogin OnRightCreate: 右侧（第 2 个）已有角色，无法重复创建");
+				return;
+			}
+
+			string roleName = self.m_inputRight != null ? self.m_inputRight.text.Trim() : string.Empty;
+			if (string.IsNullOrEmpty(roleName))
+			{
+				Log.Warning("UILogin OnRightCreate: 请输入右侧角色名称");
+				return;
+			}
+
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName);
+			if (!result.Ok)
+			{
+				self.HandleLoginOpFailure(result, "OnRightCreate");
+				return;
+			}
+
+			self.RefreshRoleList();
+		}
+
+		private static async ETTask OnLeftDeleteAsync(this UILoginComponent self)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetRoles roles = cache?.LastRoleListResponse;
+			if (roles?.RoleInfoList == null || roles.RoleInfoList.Count < 1)
+			{
+				Log.Warning("UILogin OnLeftDelete: 左侧无角色（index=0）");
+				return;
+			}
+
+			long roleId = roles.RoleInfoList[0].Id;
+			LoginOperationResult result = await LoginHelper.LoginDeleteRole(self.Root(), roleId);
+			if (!result.Ok)
+			{
+				self.HandleLoginOpFailure(result, "OnLeftDelete");
+				return;
+			}
+
+			self.RefreshRoleList();
+		}
+
+		private static async ETTask OnRightDeleteAsync(this UILoginComponent self)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetRoles roles = cache?.LastRoleListResponse;
+			if (roles?.RoleInfoList == null || roles.RoleInfoList.Count < 2)
+			{
+				Log.Warning("UILogin OnRightDelete: 右侧无角色（index=1）");
+				return;
+			}
+
+			long roleId = roles.RoleInfoList[1].Id;
+			LoginOperationResult result = await LoginHelper.LoginDeleteRole(self.Root(), roleId);
+			if (!result.Ok)
+			{
+				self.HandleLoginOpFailure(result, "OnRightDelete");
+				return;
+			}
+
+			self.RefreshRoleList();
+		}
+
+		private static async ETTask OnLeftEnterAsync(this UILoginComponent self)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			R2C_GetRoles roles = self.NetCache()?.LastRoleListResponse;
+			if (roles?.RoleInfoList == null || roles.RoleInfoList.Count < 1)
+			{
+				Log.Warning("UILogin OnLeftEnter: 左侧无角色");
+				return;
+			}
+
+			long roleId = roles.RoleInfoList[0].Id;
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId);
+			if (!result.Ok)
+			{
+				self.HandleLoginOpFailure(result, "OnLeftEnter");
+			}
+		}
+
+		private static async ETTask OnRightEnterAsync(this UILoginComponent self)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			R2C_GetRoles roles = self.NetCache()?.LastRoleListResponse;
+			if (roles?.RoleInfoList == null || roles.RoleInfoList.Count < 2)
+			{
+				Log.Warning("UILogin OnRightEnter: 右侧无角色");
+				return;
+			}
+
+			long roleId = roles.RoleInfoList[1].Id;
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId);
+			if (!result.Ok)
+			{
+				self.HandleLoginOpFailure(result, "OnRightEnter");
+			}
+		}
+
+		private static async ETTask LoginGetRoleList(this UILoginComponent self,int index)
 		{
 			NetworkCacheComponent cache = self.NetCache();
 			R2C_GetServerInfos serverList = cache?.LastServerListResponse;
@@ -122,37 +380,27 @@ namespace ET.Client
 			}
 
 			int serverId = serverList.ServerInfoList[index].Id;
-			bool isOk = await LoginHelper.LoginRoleEnterGame(self.Root(), serverId, cache.Account, cache.Token);
-			if (!isOk)
+			cache.ServerId = serverId;
+			LoginOperationResult result = await LoginHelper.LoginGetRoleList(self.Root());
+			if (!result.Ok)
 			{
-				self.ChangeStep1();
+				self.HandleLoginOpFailure(result, "LoginGetRoleList");
+				return;
 			}
-			else
-			{
-				Log.Info($"UILogin 区服列表点击 index={index}");
-			}
-		}
 
-		public static void OnBack(this UILoginComponent self)
-		{
-			self.ChangeStep1();	
-		}
-
-		//按钮点击登录流程
-		public static void OnLogin(this UILoginComponent self)
-		{
-			self.LoginGetServerListAsync().Coroutine();
+			Log.Info($"UILogin 区服列表点击 index={index}");
+			self.ChangeStep3();
 		}
 
 		private static async ETTask LoginGetServerListAsync(this UILoginComponent self)
 		{
-			bool ok = await LoginHelper.LoginGetServerList(
+			LoginOperationResult result = await LoginHelper.LoginGetServerList(
 				self.Root(),
 				self.m_inputAccount.text,
 				self.m_inputPassword.text);
-			if (!ok)
+			if (!result.Ok)
 			{
-				self.ChangeStep1();//失败返回登录
+				self.HandleLoginOpFailure(result, "LoginGetServerList");
 				return;
 			}
 
@@ -177,6 +425,16 @@ namespace ET.Client
 			self.m_goObj3.gameObject.SetActive(false);
 			self.RefreshServerList();
 		}
+		
+				
+		//正常登录显示
+		private static void ChangeStep3(this UILoginComponent self)
+		{
+			self.m_goObj1.gameObject.SetActive(false);
+			self.m_goObj2.gameObject.SetActive(false);
+			self.m_goObj3.gameObject.SetActive(true);
+			self.RefreshRoleList();
+		}
 
 		private static void RefreshServerList(this UILoginComponent self)
 		{
@@ -195,5 +453,76 @@ namespace ET.Client
 			int count = serverList.ServerInfoList.Count;
 			self.m_loopListVerticalScroll.RefreshDataCount(count);
 		}
+
+		private static void RefreshRoleList(this UILoginComponent self)
+		{
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetRoles r2CGetRoles = cache.LastRoleListResponse;
+			if (r2CGetRoles?.RoleInfoList != null && r2CGetRoles.RoleInfoList.Count >= 1)
+			{
+				self.SetLeftRole(r2CGetRoles.RoleInfoList[0]);
+			}
+			else
+			{
+				self.SetLeftRole(null);
+			}
+
+			if (r2CGetRoles?.RoleInfoList != null && r2CGetRoles.RoleInfoList.Count >= 2)
+			{
+				self.SetRightRole(r2CGetRoles.RoleInfoList[1]);
+			}
+			else
+			{
+				self.SetRightRole(null);
+			}
+		}
+
+		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)
+		{
+			if (roleInfoProto==null)
+			{
+				self.m_btnLeftDelete.gameObject.SetActive(false);
+				self.m_btnLeftTran.gameObject.SetActive(true);
+				self.m_btnLeftCreate.gameObject.SetActive(true);
+				self.m_btnLeftEnter.gameObject.SetActive(false);
+				self.m_textLeftTitle.text = "角色1";
+				self.m_inputLeft.gameObject.SetActive(true);
+			}
+			else
+			{
+				self.m_btnLeftDelete.gameObject.SetActive(true);
+				self.m_btnLeftTran.gameObject.SetActive(false);
+				self.m_btnLeftCreate.gameObject.SetActive(false);
+				self.m_btnLeftEnter.gameObject.SetActive(true);
+				self.m_inputLeft.gameObject.SetActive(false);
+				self.m_textLeftTitle.text = roleInfoProto.Name;
+			}
+		}
+
+		private static void SetRightRole(this UILoginComponent self, RoleInfoProto roleInfoProto)
+		{
+			if (roleInfoProto == null)
+			{
+				self.m_btnRightDelete.gameObject.SetActive(false);
+				self.m_btnRightTran.gameObject.SetActive(true);
+				self.m_btnRightCreate.gameObject.SetActive(true);
+				self.m_btnRightEnter.gameObject.SetActive(false);
+				self.m_textRightTitle.text = "角色2";
+				self.m_inputRight.gameObject.SetActive(true);
+			}
+			else
+			{
+				self.m_btnRightDelete.gameObject.SetActive(true);
+				self.m_btnRightTran.gameObject.SetActive(false);
+				self.m_btnRightCreate.gameObject.SetActive(false);
+				self.m_btnRightEnter.gameObject.SetActive(true);
+				self.m_inputRight.gameObject.SetActive(false);
+				self.m_textRightTitle.text = roleInfoProto.Name;
+			}
+		}
+
+		#endregion
+
+
 	}
 }

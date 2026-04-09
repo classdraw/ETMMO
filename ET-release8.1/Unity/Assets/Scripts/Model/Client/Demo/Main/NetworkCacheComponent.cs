@@ -14,6 +14,12 @@ namespace ET.Client
         /// <summary>最近一次拉取的区服列表响应，业务侧按需赋值。</summary>
         public R2C_GetServerInfos LastServerListResponse { get; set; }
 
+        public int ServerId { get; set; }
+        //最后一次获取的角色数据
+        public R2C_GetRoles LastRoleListResponse { get; set; }
+
+        public int RoleId { get; set; }
+
         /// <summary><see cref="NetClient2Main_LoginGame.PlayerId"/>（进图时的 MyUnitId），用于视图层识别本单位。</summary>
         public long LoginGamePlayerId { get; set; }
 

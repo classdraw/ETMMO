@@ -31,5 +31,8 @@ namespace ET
         public const int ERR_RepeatedEnterGameError1 = 200017;//玩家重复登陆失败
         public const int ERR_RepeatedEnterGameError2 = 200018;//玩家进入游戏逻辑服异常
         public const int ERR_ErrorEnterGame = 200019;//玩家进入游戏逻辑服异常
+        
+        
+        public const int ERR_None = 300000;//占位
     }
 }
