@@ -13,7 +13,13 @@ namespace ET.Server
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ProcessInnerSender>();
             root.AddComponent<MessageSender>();
-
+            //本地内部定位发送
+            root.AddComponent<LocationProxyComponent>();
+            root.AddComponent<MessageLocationSenderComponent>();
+            
+            //数据库
+            root.AddComponent<DBManagerComponent>();
+            root.AddComponent<UnitCacheComponent>();//角色缓存服务器
             await ETTask.CompletedTask;
         }
     }
