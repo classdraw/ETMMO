@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 //Object并非C#基础中的Object，而是 UnityEngine.Object
@@ -58,6 +59,7 @@ public class ReferenceCollectorEditor: Editor
 	{
         //使ReferenceCollector支持撤销操作，还有Redo，不过没有在这里使用
         Undo.RecordObject(referenceCollector, "Changed Settings");
+		serializedObject.Update();
 		var dataProperty = serializedObject.FindProperty("data");
         //开始水平布局，如果是比较新版本学习U3D的，可能不知道这东西，这个是老GUI系统的知识，除了用在编辑器里，还可以用在生成的游戏中
 		GUILayout.BeginHorizontal();
@@ -82,6 +84,12 @@ public class ReferenceCollectorEditor: Editor
 		}
 		EditorGUILayout.EndHorizontal();
 		EditorGUILayout.BeginHorizontal();
+		if (GUILayout.Button("角色绑点收集"))
+		{
+			BindSpriteRendererNodes();
+		}
+		EditorGUILayout.EndHorizontal();
+		EditorGUILayout.BeginHorizontal();
         //可以在编辑器中对searchKey进行赋值，只要输入对应的Key值，就可以点后面的删除按钮删除相对应的元素
         searchKey = EditorGUILayout.TextField(searchKey);
         //添加的可以用于选中Object的框，这里的object也是(UnityEngine.Object
@@ -97,8 +105,8 @@ public class ReferenceCollectorEditor: Editor
 
 		var delList = new List<int>();
         SerializedProperty property;
-        //遍历ReferenceCollector中data list的所有元素，显示在编辑器中
-        for (int i = referenceCollector.data.Count - 1; i >= 0; i--)
+        // 必须以 dataProperty.arraySize 为准，避免与 referenceCollector.data.Count 不同步导致 GetArrayElementAtIndex 越界
+        for (int i = dataProperty.arraySize - 1; i >= 0; i--)
 		{
 			GUILayout.BeginHorizontal();
             //这里的知识点在ReferenceCollector中有说
@@ -139,6 +147,149 @@ public class ReferenceCollectorEditor: Editor
 		}
 		serializedObject.ApplyModifiedProperties();
 		serializedObject.UpdateIfRequiredOrScript();
+	}
+
+	/// <summary>
+	/// 收集：激活且可见（组件启用）、已赋 sprite 的 SpriteRenderer；key 由节点名规范为大写英文标识（英文字母开头）。
+	/// </summary>
+	private void BindSpriteRendererNodes()
+	{
+		Undo.RecordObject(referenceCollector, "ReferenceCollector 角色绑定");
+		var spriteRenderers = referenceCollector.GetComponentsInChildren<SpriteRenderer>(false);
+		var usedKeys = new HashSet<string>(StringComparer.Ordinal);
+		foreach (var item in referenceCollector.data)
+		{
+			if (!string.IsNullOrEmpty(item.key))
+			{
+				usedKeys.Add(item.key);
+			}
+		}
+
+		foreach (var sr in spriteRenderers)
+		{
+			if (sr == null || !IsCollectableSpriteRenderer(sr))
+			{
+				continue;
+			}
+
+			GameObject go = sr.gameObject;
+			string baseKey = NodeNameToPascalEnglishKey(go.name);
+			string key = baseKey;
+			int n = 2;
+			while (usedKeys.Contains(key))
+			{
+				key = $"{baseKey}_{n}";
+				n++;
+			}
+
+			usedKeys.Add(key);
+			referenceCollector.Add(key, go);
+		}
+
+		referenceCollector.Sort();
+		EditorUtility.SetDirty(referenceCollector);
+
+		// 打印当前所有 key，英文逗号分割，便于复制
+		var keysSb = new StringBuilder();
+		for (int i = 0; i < referenceCollector.data.Count; i++)
+		{
+			string k = referenceCollector.data[i]?.key;
+			if (string.IsNullOrEmpty(k))
+			{
+				continue;
+			}
+
+			if (keysSb.Length > 0)
+			{
+				keysSb.Append(", ");
+			}
+			keysSb.Append(k);
+		}
+		Debug.Log(keysSb.ToString());
+	}
+
+	/// <summary>激活、Renderer 启用、且已指定 Sprite。</summary>
+	private static bool IsCollectableSpriteRenderer(SpriteRenderer sr)
+	{
+		return sr.enabled && sr.sprite != null;
+	}
+
+	/// <summary>
+	/// 仅保留英文字母与数字，并转为 PascalCase（每个单词首字母大写，其余小写）。
+	/// 必须以英文字母开头（否则前缀 R）。
+	/// </summary>
+	private static string NodeNameToPascalEnglishKey(string rawName)
+	{
+		if (string.IsNullOrEmpty(rawName))
+		{
+			return "R";
+		}
+
+		var sb = new StringBuilder();
+		bool newWord = true;
+		bool prevWasLower = false;
+
+		foreach (char c in rawName)
+		{
+			bool isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+			bool isDigit = (c >= '0' && c <= '9');
+
+			if (!isLetter && !isDigit)
+			{
+				newWord = true;
+				prevWasLower = false;
+				continue;
+			}
+
+			if (isDigit)
+			{
+				sb.Append(c);
+				// 数字后如果跟字母，视为新单词（例如 2d -> 2D）
+				newWord = true;
+				prevWasLower = false;
+				continue;
+			}
+
+			// 处理大小写：新单词首字母大写，其余小写；并将 camelCase 的大写也视作新单词
+			bool isUpper = (c >= 'A' && c <= 'Z');
+			bool isLower = (c >= 'a' && c <= 'z');
+			bool upperStartsNewWord = isUpper && prevWasLower;
+
+			if (newWord || upperStartsNewWord)
+			{
+				char upper = isLower ? (char)(c - 32) : c;
+				sb.Append(upper);
+				newWord = false;
+			}
+			else
+			{
+				char lower = isUpper ? (char)(c + 32) : c;
+				sb.Append(lower);
+			}
+
+			prevWasLower = isLower;
+		}
+
+		string s = sb.ToString();
+		if (s.Length == 0)
+		{
+			return "R";
+		}
+
+		char first = s[0];
+		bool startsWithLetter = (first >= 'A' && first <= 'Z') || (first >= 'a' && first <= 'z');
+		if (!startsWithLetter)
+		{
+			return "R" + s;
+		}
+
+		// 确保首字母大写
+		if (first >= 'a' && first <= 'z')
+		{
+			s = (char)(first - 32) + s.Substring(1);
+		}
+
+		return s;
 	}
 
     //添加元素，具体知识点在ReferenceCollector中说了
