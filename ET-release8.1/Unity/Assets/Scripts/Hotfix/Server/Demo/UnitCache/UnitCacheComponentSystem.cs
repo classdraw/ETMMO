@@ -76,7 +76,7 @@ namespace ET.Server
                 foreach (var entity in entitList)
                 {
                     string key = entity.GetType().FullName;
-                    UnitCache unitCache = default;
+                    UnitCache unitCache = null;
                     if (!self.UnitCaches.TryGetValue(key,out EntityRef<UnitCache> unitCacheRef))
                     {
                         unitCache = self.AddChild<UnitCache>();
