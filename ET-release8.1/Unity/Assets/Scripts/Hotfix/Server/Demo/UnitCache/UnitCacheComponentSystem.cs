@@ -41,7 +41,7 @@ namespace ET.Server
             self.UnitCacheKeyList.Clear();
         }
         
-        public static async ETTask<Entity> Destroy(this UnitCacheComponent self,long unitId,string key)
+        public static async ETTask<Entity> Get(this UnitCacheComponent self,long unitId,string key)
         {
             UnitCache unitCache = null;
             if (!self.UnitCaches.TryGetValue(key,out EntityRef<UnitCache> unitCacheRef))
