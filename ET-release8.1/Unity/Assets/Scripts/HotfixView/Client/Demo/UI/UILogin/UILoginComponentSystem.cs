@@ -25,8 +25,8 @@ namespace ET.Client
 			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
 			self.m_goObj2 = m_bindComponent.GetComponent<RectTransform>(4).gameObject;
 			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(5);
-			self.m_btnBack = m_bindComponent.GetComponent<Button>(6);
-			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
+			self.m_btnBack1 = m_bindComponent.GetComponent<Button>(6);
+			self.m_btnBack1.onClick.AddListener(() => { self.OnBack(); });
 			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
 			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
 			self.m_textLeftTitle = m_bindComponent.GetComponent<Text>(9);
@@ -51,6 +51,8 @@ namespace ET.Client
 			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnRightEnter.onClick.AddListener(() => { self.OnRightEnter(); });
 			self.m_inputRight = m_bindComponent.GetComponent<InputField>(22);
+			self.m_btnBack2 = m_bindComponent.GetComponent<Button>(23);
+			self.m_btnBack2.onClick.AddListener(() => { self.OnBack(); });
 			
 			self.m_loopListVerticalScroll.OnItemRefresh.RemoveAllListeners();
 			self.m_loopListVerticalScroll.OnItemRefresh.AddListener((com, index) => { OnServerListItemRefresh(self, com, index); });
@@ -479,6 +481,7 @@ namespace ET.Client
 
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)
 		{
+			self.m_inputLeft.text = "";
 			if (roleInfoProto==null)
 			{
 				self.m_btnLeftDelete.gameObject.SetActive(false);
@@ -487,6 +490,7 @@ namespace ET.Client
 				self.m_btnLeftEnter.gameObject.SetActive(false);
 				self.m_textLeftTitle.text = "角色1";
 				self.m_inputLeft.gameObject.SetActive(true);
+				
 			}
 			else
 			{
@@ -501,6 +505,7 @@ namespace ET.Client
 
 		private static void SetRightRole(this UILoginComponent self, RoleInfoProto roleInfoProto)
 		{
+			self.m_inputRight.text = "";
 			if (roleInfoProto == null)
 			{
 				self.m_btnRightDelete.gameObject.SetActive(false);

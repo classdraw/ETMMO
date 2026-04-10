@@ -19,7 +19,7 @@ namespace ET.Client
 		public Button m_btnLogin;
 		public GameObject m_goObj2;
 		public LayoutLoopList m_loopListVerticalScroll;
-		public Button m_btnBack;
+		public Button m_btnBack1;
 		public Text m_textServerList;
 		public GameObject m_goObj3;
 		public Text m_textLeftTitle;
@@ -36,6 +36,7 @@ namespace ET.Client
 		public Button m_btnRightDelete;
 		public Button m_btnRightEnter;
 		public InputField m_inputRight;
+		public Button m_btnBack2;
 	}
 }
 
@@ -56,8 +57,8 @@ namespace ET.Client
 			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
 			self.m_goObj2 = m_bindComponent.GetComponent<RectTransform>(4).gameObject;
 			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(5);
-			self.m_btnBack = m_bindComponent.GetComponent<Button>(6);
-			self.m_btnBack.onClick.AddListener(() => { self.OnBack(); });
+			self.m_btnBack1 = m_bindComponent.GetComponent<Button>(6);
+			self.m_btnBack1.onClick.AddListener(() => { self.OnBack1(); });
 			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
 			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
 			self.m_textLeftTitle = m_bindComponent.GetComponent<Text>(9);
@@ -82,6 +83,8 @@ namespace ET.Client
 			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnRightEnter.onClick.AddListener(() => { self.OnRightEnter(); });
 			self.m_inputRight = m_bindComponent.GetComponent<InputField>(22);
+			self.m_btnBack2 = m_bindComponent.GetComponent<Button>(23);
+			self.m_btnBack2.onClick.AddListener(() => { self.OnBack2(); });
 		}
 
 		[EntitySystem]
@@ -93,7 +96,7 @@ namespace ET.Client
 		{
 		}
 
-		public static void OnBack(this UILoginComponent self)
+		public static void OnBack1(this UILoginComponent self)
 		{
 		}
 
@@ -126,6 +129,10 @@ namespace ET.Client
 		}
 
 		public static void OnRightEnter(this UILoginComponent self)
+		{
+		}
+
+		public static void OnBack2(this UILoginComponent self)
 		{
 		}
 	}

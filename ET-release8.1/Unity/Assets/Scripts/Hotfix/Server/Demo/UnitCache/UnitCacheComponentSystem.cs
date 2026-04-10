@@ -27,6 +27,8 @@ namespace ET.Server
                 unitCache.key = key;
                 self.UnitCaches.Add(key,unitCache);
             }
+
+            self.AddComponent<LRUCache>();
         }
         
         [EntitySystem]
@@ -39,6 +41,11 @@ namespace ET.Server
             }
             self.UnitCaches.Clear();
             self.UnitCacheKeyList.Clear();
+        }
+        
+        public static void CallCache(this UnitCacheComponent self, long id)
+        {
+            self.GetComponent<LRUCache>().Call(id);
         }
         
         public static async ETTask<Entity> Get(this UnitCacheComponent self,long unitId,string key)
@@ -71,35 +78,34 @@ namespace ET.Server
         
         public static async ETTask AddOrUpdate(this UnitCacheComponent self,long unitId,List<Entity> entitList)
         {
-            using (ListComponent<Entity> list=ListComponent<Entity>.Create())
+            ListComponent<Entity> list = ListComponent<Entity>.Create();
+            self.CallCache(unitId);
+            foreach (var entity in entitList)
             {
-                foreach (var entity in entitList)
+                string key = entity.GetType().FullName;
+                UnitCache unitCache = null;
+                if (!self.UnitCaches.TryGetValue(key,out EntityRef<UnitCache> unitCacheRef))
                 {
-                    string key = entity.GetType().FullName;
-                    UnitCache unitCache = null;
-                    if (!self.UnitCaches.TryGetValue(key,out EntityRef<UnitCache> unitCacheRef))
-                    {
-                        unitCache = self.AddChild<UnitCache>();
-                        unitCache.key = key;
-                        self.UnitCaches.Add(key,unitCache);
-                    }
-                    else
-                    {
-                        unitCache = unitCacheRef;
-                    }
+                    unitCache = self.AddChild<UnitCache>();
+                    unitCache.key = key;
+                    self.UnitCaches.Add(key,unitCache);
+                }
+                else
+                {
+                    unitCache = unitCacheRef;
+                }
                     
-                    unitCache?.AddOrUpdate(entity);
-                    list.Add(entity);
-                }
-
-
-                if (list.Count>0)
-                {
-                    await self.Root().GetComponent<DBManagerComponent>().GetZoneDB(self.Zone()).Save(unitId, list);
-                }
-
-                await ETTask.CompletedTask;
+                unitCache?.AddOrUpdate(entity);
+                list.Add(entity);
             }
+
+
+            if (list.Count>0)
+            {
+                await self.Root().GetComponent<DBManagerComponent>().GetZoneDB(self.Zone()).Save(unitId, list);
+            }
+
+            await ETTask.CompletedTask;
         }
     }
 }

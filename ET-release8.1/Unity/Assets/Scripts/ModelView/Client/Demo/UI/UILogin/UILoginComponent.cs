@@ -14,7 +14,7 @@ namespace ET.Client
 		public Button m_btnLogin;
 		public GameObject m_goObj2;
 		public LayoutLoopList m_loopListVerticalScroll;
-		public Button m_btnBack;
+		public Button m_btnBack1;
 		public Text m_textServerList;
 		public GameObject m_goObj3;
 		public Text m_textLeftTitle;
@@ -31,5 +31,6 @@ namespace ET.Client
 		public Button m_btnRightDelete;
 		public Button m_btnRightEnter;
 		public InputField m_inputRight;
+		public Button m_btnBack2;
 	}
 }
