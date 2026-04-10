@@ -64,7 +64,7 @@ namespace ET.Server
             {
                 foreach (UnitCache unitCache in self.UnitCaches.Values)
                 {
-                    unitCache.Delete(unitId);
+                    unitCache?.Delete(unitId);
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace ET.Server
                         unitCache = unitCacheRef;
                     }
                     
-                    unitCache.AddOrUpdate(entity);
+                    unitCache?.AddOrUpdate(entity);
                     list.Add(entity);
                 }
 
