@@ -6,7 +6,7 @@ namespace ET.Server
     {
         public static async ETTask<Unit> GetUnitCache(Scene gateScene,Scene mapScene,long unitId)
         {
-            ActorId instanceId = StartSceneConfigCategory.Instance.GetBySceneName(gateScene.Zone(), "UnitCache").ActorId;
+            ActorId instanceId = StartSceneConfigCategory.Instance.GetBySceneType(gateScene.Zone(),SceneType.UnitCache).ActorId;
             //得到角色身上有多少个相关的组件数据（数据保存的）
             Other2UnitCache_GetUnit messaage = Other2UnitCache_GetUnit.Create();
             messaage.UnitId = unitId;

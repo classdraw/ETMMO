@@ -109,10 +109,15 @@ namespace ET.Server
                 }
             }
 
-            foreach ((int key, long value) in nc.NumericDic)
+            if (nc!=null&&nc.NumericDic!=null)
             {
-                unitInfo.KV.Add(key, value);
+                foreach ((int key, long value) in nc.NumericDic)
+                {
+                    unitInfo.KV.Add(key, value);
+                }
             }
+
+
 
             return unitInfo;
         }

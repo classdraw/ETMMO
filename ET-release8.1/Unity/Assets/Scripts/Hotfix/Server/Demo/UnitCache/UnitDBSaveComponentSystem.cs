@@ -26,8 +26,10 @@ namespace ET.Server
         [EntitySystem]
         private static void Awake(this ET.Server.UnitDBSaveComponent self)
         {
-
-            self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(10 * 1000, TimerInvokeType.SaveChangeDBDate, self);
+            //正式上线 每10-15分钟随机存储一次
+            //long time = RandomGenerator.RandomNumber(10, 16) * 60 * 1000;
+            long time = 4 * 1000;
+            self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(time, TimerInvokeType.SaveChangeDBDate, self);
         }
         [EntitySystem]
         private static void Destroy(this ET.Server.UnitDBSaveComponent self)
@@ -40,9 +42,11 @@ namespace ET.Server
         {
             self.Bytes[type] = bytes;
         }
-        
+        //发现改动 及时发送数据给缓存服  缓存服定时更新
         public static void AddChange(this UnitDBSaveComponent self, Type type)
         {
+            //self.EntityChangeTypeSet.Add(type);
+
             self.ComponentTypes.Add(type);
             if (typeof(IUnitCache).IsAssignableFrom(type))
             {
@@ -50,7 +54,7 @@ namespace ET.Server
             }
             else if (typeof(ITransfer).IsAssignableFrom(type))
             {
-                self.TransferChanges.Add(type);
+               self.TransferChanges.Add(type);
             }
           
         }
@@ -58,6 +62,7 @@ namespace ET.Server
         public static async ETTask SaveChange(this UnitDBSaveComponent self)
         {
             CoroutineLockComponent coroutineLockComponent = self.Root().GetComponent<CoroutineLockComponent>();
+            //数据完成更新之后再进行网络消息整理
             using ( await coroutineLockComponent.Wait(CoroutineLockType.Mailbox, self.GetParent<Unit>().InstanceId))
             {
                 self.SaveChangeNoWait();
@@ -109,8 +114,10 @@ namespace ET.Server
             }
             
             self.EntityChangeTypeSet.Clear();
-
-            StartSceneConfig unitCacheCfg = StartSceneConfigCategory.Instance.GetBySceneName(unit.Zone(), "UnitCache");
+            
+            
+            //通知缓存服更新数据
+            StartSceneConfig unitCacheCfg = StartSceneConfigCategory.Instance.GetBySceneType(unit.Zone(), SceneType.UnitCache);
             self.Root().GetComponent<MessageSender>().Call(unitCacheCfg.ActorId,message).Coroutine();
         }
         

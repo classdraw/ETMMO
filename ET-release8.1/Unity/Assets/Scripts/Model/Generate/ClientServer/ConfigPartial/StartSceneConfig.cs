@@ -33,6 +33,11 @@ namespace ET
             return this.ProcessScenes[process];
         }
         
+        public StartSceneConfig GetBySceneType(int zone,SceneType sceneType)
+        {
+            return this.ClientScenesByName[zone][sceneType.ToString()];
+        }
+        
         public StartSceneConfig GetBySceneName(int zone, string name)
         {
             return this.ClientScenesByName[zone][name];

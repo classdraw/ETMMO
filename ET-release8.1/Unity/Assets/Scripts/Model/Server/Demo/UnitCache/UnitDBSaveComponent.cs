@@ -4,13 +4,14 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ET.Server
 {
-    [ComponentOf]
+    [ComponentOf(typeof(Unit))]
     public class UnitDBSaveComponent: Entity,IAwake,IDestroy
     {
         public long Timer;
-
-        public HashSet<Type> EntityChangeTypeSet = new HashSet<Type>();
         
+        //一般发生改变需要保存的东西
+        public HashSet<Type> EntityChangeTypeSet { get; } = new HashSet<Type>();
+        //传送需要保存的东西
         public HashSet<Type> TransferChanges { get; } = new HashSet<Type>();
 
         public Dictionary<Type, byte[]> Bytes { get; } = new Dictionary<Type, byte[]>();
