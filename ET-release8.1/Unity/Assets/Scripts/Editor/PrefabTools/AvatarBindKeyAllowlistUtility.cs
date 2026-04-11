@@ -14,7 +14,9 @@ namespace ET
 
         public static AvatarBindKeyAllowlistAsset Load()
         {
-            return AssetDatabase.LoadAssetAtPath<AvatarBindKeyAllowlistAsset>(DefaultAssetPath);
+            AvatarBindKeyAllowlistAsset asset = AssetDatabase.LoadAssetAtPath<AvatarBindKeyAllowlistAsset>(DefaultAssetPath);
+            asset?.MigrateLegacyKeysIfNeeded();
+            return asset;
         }
 
         public static AvatarBindKeyAllowlistAsset CreateAtDefaultPath()
@@ -31,18 +33,19 @@ namespace ET
             return asset;
         }
 
+        /// <summary> 绑点收集：所有非空 Key 的集合（Ordinal）。 </summary>
         public static HashSet<string> ParseToSet()
         {
             var set = new HashSet<string>(StringComparer.Ordinal);
             AvatarBindKeyAllowlistAsset asset = Load();
-            if (asset == null || asset.keys == null)
+            if (asset == null || asset.entries == null)
             {
                 return set;
             }
 
-            foreach (string s in asset.keys)
+            foreach (AvatarBindKeyEntry e in asset.entries)
             {
-                string t = s?.Trim() ?? string.Empty;
+                string t = e?.key?.Trim() ?? string.Empty;
                 if (t.Length > 0)
                 {
                     set.Add(t);

@@ -90,6 +90,10 @@ namespace ET.Client
             self.AvatarParts?.Clear();
         }
         
+        private static void ChangeAvatar(this Avatar2DComponent self,int avatarConfigId)
+        {
+            
+        }
         
         /**
          *int avatarConfigId = 2001;
