@@ -86,11 +86,13 @@ namespace ET
 
         public static ExcelPackage GetPackage(string filePath)
         {
-            if (!packages.TryGetValue(filePath, out var package))
+            // 必须用 FileInfo（或长期存活的 Stream）。原先 using FileStream 会在返回前释放流，EPPlus 延迟读表时流已关闭，
+            // 部分 xlsx（如 Client/AvatarConfig@c.xlsx）会在第二轮导出时报错或读不到数据。
+            string fullPath = Path.GetFullPath(filePath);
+            if (!packages.TryGetValue(fullPath, out var package))
             {
-                using Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                package = new ExcelPackage(stream);
-                packages[filePath] = package;
+                package = new ExcelPackage(new FileInfo(fullPath));
+                packages[fullPath] = package;
             }
 
             return package;
@@ -229,7 +231,13 @@ namespace ET
         private static void ExportExcel(string path)
         {
             string dir = Path.GetDirectoryName(path);
-            string relativePath = Path.GetRelativePath(excelDir, dir);
+            string excelRoot = Path.GetFullPath(excelDir);
+            string dirFull = Path.GetFullPath(string.IsNullOrEmpty(dir) ? excelRoot : dir);
+            string relativePath = Path.GetRelativePath(excelRoot, dirFull);
+            if (relativePath == ".")
+            {
+                relativePath = string.Empty;
+            }
             string fileName = Path.GetFileName(path);
             if (!fileName.EndsWith(".xlsx") || fileName.StartsWith("~$") || fileName.Contains("#"))
             {
@@ -372,6 +380,11 @@ namespace ET
 
         static void ExportSheetClass(ExcelWorksheet worksheet, Table table)
         {
+            if (worksheet.Dimension == null)
+            {
+                return;
+            }
+
             const int row = 2;
             for (int col = 3; col <= worksheet.Dimension.End.Column; ++col)
             {
@@ -491,6 +504,11 @@ namespace ET
         static void ExportSheetJson(ExcelWorksheet worksheet, string name, 
                 Dictionary<string, HeadInfo> classField, ConfigType configType, StringBuilder sb)
         {
+            if (worksheet.Dimension == null)
+            {
+                return;
+            }
+
             string configTypeStr = configType.ToString();
             for (int row = 6; row <= worksheet.Dimension.End.Row; ++row)
             {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using ET;
 using UnityEditor;
 using UnityEngine;
 //Object并非C#基础中的Object，而是 UnityEngine.Object
@@ -150,10 +151,21 @@ public class ReferenceCollectorEditor: Editor
 	}
 
 	/// <summary>
-	/// 收集：激活且可见（组件启用）、已赋 sprite 的 SpriteRenderer；key 由节点名规范为大写英文标识（英文字母开头）。
+	/// 收集：激活且可见、已赋 sprite 的 SpriteRenderer。
+	/// 仅当物体名与白名单某 key 完全一致（Ordinal）时才写入该 key。
 	/// </summary>
 	private void BindSpriteRendererNodes()
 	{
+		HashSet<string> keyAllowlist = AvatarBindKeyAllowlistUtility.ParseToSet();
+		if (keyAllowlist.Count == 0)
+		{
+			EditorUtility.DisplayDialog("ReferenceCollector",
+				"请配置角色绑点 Key 白名单：在 Project 中创建或使用 " + AvatarBindKeyAllowlistUtility.DefaultAssetPath +
+				"（菜单 Create → ET → 角色绑点 Key 白名单，或在「预制体处理工具」中点「创建资源」），填写 keys 后点「保存到资源」。",
+				"确定");
+			return;
+		}
+
 		Undo.RecordObject(referenceCollector, "ReferenceCollector 角色绑定");
 		var spriteRenderers = referenceCollector.GetComponentsInChildren<SpriteRenderer>(false);
 		var usedKeys = new HashSet<string>(StringComparer.Ordinal);
@@ -173,17 +185,21 @@ public class ReferenceCollectorEditor: Editor
 			}
 
 			GameObject go = sr.gameObject;
-			string baseKey = NodeNameToPascalEnglishKey(go.name);
-			string key = baseKey;
-			int n = 2;
-			while (usedKeys.Contains(key))
+			string resolvedKey = ResolveBindingKeyByExactName(go.name, keyAllowlist);
+			if (string.IsNullOrEmpty(resolvedKey))
 			{
-				key = $"{baseKey}_{n}";
-				n++;
+				Debug.LogWarning($"[ReferenceCollector] 跳过「{go.name}」：物体名须与白名单某 key 完全一致。");
+				continue;
 			}
 
-			usedKeys.Add(key);
-			referenceCollector.Add(key, go);
+			if (usedKeys.Contains(resolvedKey))
+			{
+				Debug.LogWarning($"[ReferenceCollector] 跳过「{go.name}」：key「{resolvedKey}」已占用。");
+				continue;
+			}
+
+			usedKeys.Add(resolvedKey);
+			referenceCollector.Add(resolvedKey, go);
 		}
 
 		referenceCollector.Sort();
@@ -208,88 +224,20 @@ public class ReferenceCollectorEditor: Editor
 		Debug.Log(keysSb.ToString());
 	}
 
+	private static string ResolveBindingKeyByExactName(string gameObjectName, HashSet<string> allowlist)
+	{
+		if (string.IsNullOrEmpty(gameObjectName) || allowlist == null || allowlist.Count == 0)
+		{
+			return null;
+		}
+
+		return allowlist.Contains(gameObjectName) ? gameObjectName : null;
+	}
+
 	/// <summary>激活、Renderer 启用、且已指定 Sprite。</summary>
 	private static bool IsCollectableSpriteRenderer(SpriteRenderer sr)
 	{
 		return sr.enabled && sr.sprite != null;
-	}
-
-	/// <summary>
-	/// 仅保留英文字母与数字，并转为 PascalCase（每个单词首字母大写，其余小写）。
-	/// 必须以英文字母开头（否则前缀 R）。
-	/// </summary>
-	private static string NodeNameToPascalEnglishKey(string rawName)
-	{
-		if (string.IsNullOrEmpty(rawName))
-		{
-			return "R";
-		}
-
-		var sb = new StringBuilder();
-		bool newWord = true;
-		bool prevWasLower = false;
-
-		foreach (char c in rawName)
-		{
-			bool isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
-			bool isDigit = (c >= '0' && c <= '9');
-
-			if (!isLetter && !isDigit)
-			{
-				newWord = true;
-				prevWasLower = false;
-				continue;
-			}
-
-			if (isDigit)
-			{
-				sb.Append(c);
-				// 数字后如果跟字母，视为新单词（例如 2d -> 2D）
-				newWord = true;
-				prevWasLower = false;
-				continue;
-			}
-
-			// 处理大小写：新单词首字母大写，其余小写；并将 camelCase 的大写也视作新单词
-			bool isUpper = (c >= 'A' && c <= 'Z');
-			bool isLower = (c >= 'a' && c <= 'z');
-			bool upperStartsNewWord = isUpper && prevWasLower;
-
-			if (newWord || upperStartsNewWord)
-			{
-				char upper = isLower ? (char)(c - 32) : c;
-				sb.Append(upper);
-				newWord = false;
-			}
-			else
-			{
-				char lower = isUpper ? (char)(c + 32) : c;
-				sb.Append(lower);
-			}
-
-			prevWasLower = isLower;
-		}
-
-		string s = sb.ToString();
-		if (s.Length == 0)
-		{
-			return "R";
-		}
-
-		char first = s[0];
-		bool startsWithLetter = (first >= 'A' && first <= 'Z') || (first >= 'a' && first <= 'z');
-		if (!startsWithLetter)
-		{
-			return "R" + s;
-		}
-
-		// 确保首字母大写
-		if (first >= 'a' && first <= 'z')
-		{
-			s = (char)(first - 32) + s.Substring(1);
-		}
-
-		return s;
 	}
 
     //添加元素，具体知识点在ReferenceCollector中说了

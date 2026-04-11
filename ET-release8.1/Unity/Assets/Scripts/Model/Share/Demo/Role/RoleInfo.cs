@@ -14,12 +14,9 @@ namespace ET
         public string Name;
         public int State;
         public string AccountName;
-        public long LastLoginTime;
+        public long LastLoginTime;//离线保存的时候做处理
         public long CreateTime;
         public int ServerId;
-
-        /// <summary>最近一次在地图服触发的下线/持久化时间（秒，服务器时间）。</summary>
-        public long LastOfflineTime;
-        
+ 
     }
 }

@@ -45,12 +45,11 @@ namespace ET.Client
                     continue;
                 }
 
-                var partDict = new Dictionary<AvatarPartType, GameObject>();
+                var partDict = new Dictionary<AvatarPartType, SpriteRenderer>();
                 for (int j = 0; j < (int)AvatarPartType.Count; j++)
                 {
                     AvatarPartType partType = (AvatarPartType)j;
-                    string partKey = partType.ToString();
-                    GameObject partObj = partsCollector.Get<GameObject>(partKey);
+                    SpriteRenderer partObj = GetPartSpriteRenderer(partsCollector, partType);
                     if (partObj == null)
                     {
                         continue;
@@ -62,22 +61,33 @@ namespace ET.Client
 
                 self.AvatarParts[avatarType] = partDict;
             }
+            
+            
+            self.AvatarObjs[AvatarType.Horse].SetActive(false);
+            self.AvatarObjs[AvatarType.Unit].SetActive(true);
+        }
+
+        /// <summary>
+        /// 先按枚举名（如 EyeBack）取绑点；若无则尝试 ReferenceCollector 收集用的下划线左右 key（与编辑器白名单一致）。
+        /// 若左右两个都存在，优先 Left（单槽位枚举仅保留一个引用）。
+        /// </summary>
+        private static SpriteRenderer GetPartSpriteRenderer(ReferenceCollector partsCollector, AvatarPartType partType)
+        {
+            string primary = partType.ToString();
+            SpriteRenderer r = partsCollector.Get<SpriteRenderer>(primary);
+            if (r != null)
+            {
+                return r;
+            }
+            Log.Error("GetPartSpriteRenderer:"+primary+" Error!!!");
+            return null;
         }
         
         [EntitySystem]
         private static void Destroy(this Avatar2DComponent self)
         {
             self.AvatarObjs?.Clear();
-
-            if (self.AvatarParts != null)
-            {
-                foreach (KeyValuePair<AvatarType, Dictionary<AvatarPartType, GameObject>> kv in self.AvatarParts)
-                {
-                    kv.Value?.Clear();
-                }
-
-                self.AvatarParts.Clear();
-            }
+            self.AvatarParts?.Clear();
         }
     }
 }

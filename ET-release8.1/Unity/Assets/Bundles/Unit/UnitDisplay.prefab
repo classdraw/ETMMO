@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 7336397656362228804}
   - component: {fileID: 7675058501176156457}
   m_Layer: 0
-  m_Name: Back
+  m_Name: Eye_Back_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 3950379656860198480}
   - component: {fileID: 8682761851172304086}
   m_Layer: 0
-  m_Name: Front
+  m_Name: Eye_Front_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1006,7 +1006,7 @@ GameObject:
   - component: {fileID: 2926984660724565398}
   - component: {fileID: 7202206667143050131}
   m_Layer: 0
-  m_Name: _2L_Cloth
+  m_Name: Foot_Cloth_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1403,7 +1403,7 @@ GameObject:
   - component: {fileID: 5390823064370679378}
   - component: {fileID: 6829015093525228135}
   m_Layer: 0
-  m_Name: L_Weapon
+  m_Name: Weapon_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1671,10 +1671,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-  - key: Unit
-    gameObject: {fileID: 5412488900641530541}
   - key: Horse
     gameObject: {fileID: 3454352277981884049}
+  - key: Unit
+    gameObject: {fileID: 5412488900641530541}
 --- !u!1 &2289180816833464500
 GameObject:
   m_ObjectHideFlags: 0
@@ -3003,7 +3003,7 @@ GameObject:
   - component: {fileID: 9183714998577718322}
   - component: {fileID: 6970663095488582740}
   m_Layer: 0
-  m_Name: 6_FaceHair
+  m_Name: FaceHair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3087,7 +3087,7 @@ GameObject:
   - component: {fileID: 8806947832162202196}
   - component: {fileID: 1158724708261692545}
   m_Layer: 0
-  m_Name: -20_R_Arm
+  m_Name: Armor_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3359,7 +3359,7 @@ GameObject:
   - component: {fileID: 1624484556589594465}
   - component: {fileID: 2189388234481613831}
   m_Layer: 0
-  m_Name: Front
+  m_Name: Eye_Front_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4009,7 +4009,7 @@ GameObject:
   - component: {fileID: 2269948647866996920}
   - component: {fileID: 5993066578644241199}
   m_Layer: 0
-  m_Name: R_Shield
+  m_Name: Shield_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4411,7 +4411,7 @@ GameObject:
   - component: {fileID: 3739827154011135676}
   - component: {fileID: 6474005757355391776}
   m_Layer: 0
-  m_Name: 7_Hair
+  m_Name: Hair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 7114105486280323889}
   - component: {fileID: 2552218575954743838}
   m_Layer: 0
-  m_Name: 20_L_Arm
+  m_Name: Armor_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5018,7 +5018,7 @@ GameObject:
   - component: {fileID: 5866372247799355289}
   - component: {fileID: 1381793599728482496}
   m_Layer: 0
-  m_Name: ClothBody
+  m_Name: Cloth_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5261,46 +5261,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-  - key: Back
-    gameObject: {fileID: 5842249968160072706}
-  - key: Back_2
-    gameObject: {fileID: 346783376277438117}
+  - key: Armor_Body
+    gameObject: {fileID: 8423243919774008715}
+  - key: Armor_Left
+    gameObject: {fileID: 5247224643262067730}
+  - key: Armor_Right
+    gameObject: {fileID: 3767534225072659387}
   - key: Body
     gameObject: {fileID: 5338631722837433124}
-  - key: BodyArmor
-    gameObject: {fileID: 8423243919774008715}
-  - key: ClothBody
+  - key: Cloth_Body
     gameObject: {fileID: 5291900322938062872}
-  - key: Front
-    gameObject: {fileID: 480252205777740206}
-  - key: Front_2
+  - key: Eye_Back_Left
+    gameObject: {fileID: 346783376277438117}
+  - key: Eye_Back_Right
+    gameObject: {fileID: 5842249968160072706}
+  - key: Eye_Front_Left
     gameObject: {fileID: 4051412085577077334}
-  - key: LWeapon
-    gameObject: {fileID: 1973837409662387810}
-  - key: R11Helmet1
-    gameObject: {fileID: 7756183183859929572}
-  - key: R11RCloth
-    gameObject: {fileID: 5609904667206986182}
-  - key: R12RFoot
-    gameObject: {fileID: 6628571063045766212}
-  - key: R20LArm
-    gameObject: {fileID: 5247224643262067730}
-  - key: R20RArm
-    gameObject: {fileID: 3767534225072659387}
-  - key: R2LCloth
-    gameObject: {fileID: 1287723044837599012}
-  - key: R3LFoot
-    gameObject: {fileID: 8720272441687825342}
-  - key: R5Head
-    gameObject: {fileID: 5554092598964281229}
-  - key: R6FaceHair
+  - key: Eye_Front_Right
+    gameObject: {fileID: 480252205777740206}
+  - key: FaceHair
     gameObject: {fileID: 3756709156593371991}
-  - key: R7Hair
+  - key: Foot_Cloth_Left
+    gameObject: {fileID: 1287723044837599012}
+  - key: Foot_Cloth_Right
+    gameObject: {fileID: 5609904667206986182}
+  - key: Foot_Left
+    gameObject: {fileID: 8720272441687825342}
+  - key: Foot_Right
+    gameObject: {fileID: 6628571063045766212}
+  - key: Hair
     gameObject: {fileID: 5020983976572633437}
-  - key: RWeapon
-    gameObject: {fileID: 9130139181806716540}
+  - key: Helmet
+    gameObject: {fileID: 7756183183859929572}
   - key: Shadow
     gameObject: {fileID: 5542844471443430510}
+  - key: Weapon_Left
+    gameObject: {fileID: 1973837409662387810}
+  - key: Weapon_Right
+    gameObject: {fileID: 9130139181806716540}
 --- !u!1 &5484146275834407820
 GameObject:
   m_ObjectHideFlags: 0
@@ -5681,7 +5679,7 @@ GameObject:
   - component: {fileID: 3690156052534204336}
   - component: {fileID: 592391106259891759}
   m_Layer: 0
-  m_Name: 5_Head
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5766,7 +5764,7 @@ GameObject:
   - component: {fileID: 6503847920393336734}
   - component: {fileID: 1649754493034394235}
   m_Layer: 0
-  m_Name: _11R_Cloth
+  m_Name: Foot_Cloth_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5999,7 +5997,7 @@ GameObject:
   - component: {fileID: 4211907099929626005}
   - component: {fileID: 6460159466203967500}
   m_Layer: 0
-  m_Name: Back
+  m_Name: Eye_Back_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7191,7 +7189,7 @@ GameObject:
   - component: {fileID: 7719117265430568385}
   - component: {fileID: 7605748276788276779}
   m_Layer: 0
-  m_Name: _12R_Foot
+  m_Name: Foot_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7545,7 +7543,7 @@ GameObject:
   - component: {fileID: 6230695245813622258}
   - component: {fileID: 916984799159557213}
   m_Layer: 0
-  m_Name: L_Shield
+  m_Name: Shield_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8073,7 +8071,7 @@ GameObject:
   - component: {fileID: 5126632136019543830}
   - component: {fileID: 8188449888978342763}
   m_Layer: 0
-  m_Name: 11_Helmet1
+  m_Name: Helmet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8135,7 +8133,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 11
-  m_Sprite: {fileID: 21300000, guid: 732442a90ec3747df83c46125de06b60, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ea5c4fc418c71491eb063b759868a2a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -8721,7 +8719,7 @@ GameObject:
   - component: {fileID: 4971945431076021297}
   - component: {fileID: 3688244532814473263}
   m_Layer: 0
-  m_Name: BodyArmor
+  m_Name: Armor_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9053,7 +9051,7 @@ GameObject:
   - component: {fileID: 2342617784227907442}
   - component: {fileID: 6142584177663464817}
   m_Layer: 0
-  m_Name: _3L_Foot
+  m_Name: Foot_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9222,7 +9220,7 @@ GameObject:
   - component: {fileID: 5238734873928205014}
   - component: {fileID: 8697856655881229063}
   m_Layer: 0
-  m_Name: R_Weapon
+  m_Name: Weapon_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,6 +1,7 @@
 using System;
 namespace ET.Server
 {
+    [FriendOf(typeof(RoleInfo))]
     [MessageSessionHandler(SceneType.Gate)]
     public class C2G_LoginGameGateHandler : MessageSessionHandler<C2G_LoginGameGate, G2C_LoginGameGate>
     {
@@ -30,6 +31,7 @@ namespace ET.Server
 
             long instanceId = session.InstanceId;
             var coroutineLockComponent = session?.Root().GetComponent<CoroutineLockComponent>();
+ 
             using (session.AddComponent<SessionLockingComponent>()) //using 自动释放
             using (await coroutineLockComponent.Wait(CoroutineLockType.LoginGate, request.AccountName.GetLongHashCode()))
             {
@@ -59,6 +61,7 @@ namespace ET.Server
                     //通过player找到playerSessionComponent，再找到session 
                     //playerSessionComponent 可以网络消息处理
                     //player也可以网络消息处理 只是处理消息类型不同
+                    //player的id和player的unitId一样
                     player = playerComponent.AddChildWithId<Player, string>(request.RoleId,account);
                     player.UnitId = request.RoleId;
                     

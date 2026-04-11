@@ -1,0 +1,3 @@
+{"dict": [
+[2001, {"_t":"AvatarConfig","_id":2001,"AvatarType":0,"Name":"Armor_1_Body","Model":"Armor/Armor_Armor_1_Body.prefab"}],
+]}

@@ -50,7 +50,7 @@ namespace ET.Server
                 roleInfo.State = (int)RoleInfoState.Normal;
                 long nowTime= TimeInfo.Instance.ServerNow();
                 roleInfo.CreateTime = nowTime;
-                roleInfo.LastLoginTime = 0;//创建角色登录时间是0
+                roleInfo.LastLoginTime = nowTime;
                 roleInfo.Name = request.Name;
                 await dbComponent.Save<RoleInfo>(roleInfo);
                     
