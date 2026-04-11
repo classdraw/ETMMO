@@ -2632,7 +2632,7 @@ GameObject:
   - component: {fileID: 3473374005416581195}
   - component: {fileID: 8731258523450707855}
   - component: {fileID: 4884000608992710814}
-  - component: {fileID: 1163380650810043079}
+  - component: {fileID: 4033043568668739501}
   m_Layer: 0
   m_Name: HorseRoot
   m_TagString: Untagged
@@ -2690,7 +2690,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1163380650810043079
+--- !u!114 &4033043568668739501
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2699,94 +2699,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3454352277981884049}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 502d8cafd6a5a0447ab1db9a24cdcb10, type: 3}
+  m_Script: {fileID: 11500000, guid: f7e3a91c4b2d4e8f9a0b1c2d3e4f5a6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-  - key: -15_R_Shoulder
-    gameObject: {fileID: 3045525488246706909}
-  - key: -19_RCArm
-    gameObject: {fileID: 8028982537399994637}
-  - key: -20_R_Arm
-    gameObject: {fileID: 3518366287986012873}
-  - key: 11_Helmet1
-    gameObject: {fileID: 3251012905340420959}
-  - key: '12_Helmet2 '
-    gameObject: {fileID: 2448764814698484459}
-  - key: 20_L_Arm
-    gameObject: {fileID: 1800424638005336556}
-  - key: 21_LCArm
-    gameObject: {fileID: 2854938423741705567}
-  - key: 25_L_Shoulder
-    gameObject: {fileID: 5484146275834407820}
-  - key: 5_Head
-    gameObject: {fileID: 62293894438721852}
-  - key: 6_FaceHair
-    gameObject: {fileID: 7775608036980073776}
-  - key: 7_Hair
-    gameObject: {fileID: 5545401424297785928}
-  - key: Acc
-    gameObject: {fileID: 5226918840851064855}
-  - key: Back
-    gameObject: {fileID: 8944407981867442272}
-  - key: Back_2
-    gameObject: {fileID: 8349313368239310999}
-  - key: Back_3
-    gameObject: {fileID: 696067193071137835}
-  - key: Body
-    gameObject: {fileID: 6737129623994588918}
-  - key: BodyArmor
-    gameObject: {fileID: 6074608122177740954}
-  - key: BodyBack
-    gameObject: {fileID: 8681796269942276120}
-  - key: BodyFront
-    gameObject: {fileID: 2666891190438071941}
-  - key: ClothBody
-    gameObject: {fileID: 5744752699963255582}
-  - key: Front
-    gameObject: {fileID: 1038992683291999240}
-  - key: FrontFootBottom
-    gameObject: {fileID: 5933618319363349808}
-  - key: FrontFootBottom_2
-    gameObject: {fileID: 4491515721562041062}
-  - key: FrontFootBottom_3
-    gameObject: {fileID: 6483748668859630298}
-  - key: FrontFootBottom_4
-    gameObject: {fileID: 4797296679157014041}
-  - key: FrontFootTop
-    gameObject: {fileID: 7421464526490963788}
-  - key: FrontFootTop_2
-    gameObject: {fileID: 6235184895557264294}
-  - key: FrontFootTop_3
-    gameObject: {fileID: 6791959969678165612}
-  - key: FrontFootTop_4
-    gameObject: {fileID: 5094804610204761562}
-  - key: Front_2
-    gameObject: {fileID: 2406307638427363076}
-  - key: Head
-    gameObject: {fileID: 4661132882241910010}
-  - key: L_Shield
-    gameObject: {fileID: 4247624554195230851}
-  - key: L_Weapon
-    gameObject: {fileID: 4529584688256687552}
-  - key: Neck
-    gameObject: {fileID: 5514043086404993769}
-  - key: R_Shield
-    gameObject: {fileID: 2124061920216934528}
-  - key: R_Weapon
-    gameObject: {fileID: 5165954806827647187}
   - key: Shadow
-    gameObject: {fileID: 5163695032623864827}
-  - key: Tail
-    gameObject: {fileID: 894870692151994894}
-  - key: _11R_Cloth
-    gameObject: {fileID: 2769380669150936251}
-  - key: _12R_Foot
-    gameObject: {fileID: 6582422652598814900}
-  - key: _2L_Cloth
-    gameObject: {fileID: 3949884129714711704}
-  - key: _3L_Foot
-    gameObject: {fileID: 5847127970030710792}
+    spriteRenderer: {fileID: 531972615089651730}
 --- !u!1 &3459274013164822712
 GameObject:
   m_ObjectHideFlags: 0
@@ -5190,7 +5108,7 @@ GameObject:
   - component: {fileID: 3953053113333461716}
   - component: {fileID: 7345315141457372654}
   - component: {fileID: 8021413386729205589}
-  - component: {fileID: 4264519353319368563}
+  - component: {fileID: 6476331225990753728}
   m_Layer: 0
   m_Name: UnitRoot
   m_TagString: Untagged
@@ -5248,7 +5166,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4264519353319368563
+--- !u!114 &6476331225990753728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5257,48 +5175,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 5412488900641530541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 502d8cafd6a5a0447ab1db9a24cdcb10, type: 3}
+  m_Script: {fileID: 11500000, guid: f7e3a91c4b2d4e8f9a0b1c2d3e4f5a6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   data:
   - key: Armor_Body
-    gameObject: {fileID: 8423243919774008715}
+    spriteRenderer: {fileID: 3688244532814473263}
   - key: Armor_Left
-    gameObject: {fileID: 5247224643262067730}
+    spriteRenderer: {fileID: 2552218575954743838}
   - key: Armor_Right
-    gameObject: {fileID: 3767534225072659387}
+    spriteRenderer: {fileID: 1158724708261692545}
   - key: Body
-    gameObject: {fileID: 5338631722837433124}
+    spriteRenderer: {fileID: 2647321952832176258}
   - key: Cloth_Body
-    gameObject: {fileID: 5291900322938062872}
+    spriteRenderer: {fileID: 1381793599728482496}
   - key: Eye_Back_Left
-    gameObject: {fileID: 346783376277438117}
+    spriteRenderer: {fileID: 7675058501176156457}
   - key: Eye_Back_Right
-    gameObject: {fileID: 5842249968160072706}
+    spriteRenderer: {fileID: 6460159466203967500}
   - key: Eye_Front_Left
-    gameObject: {fileID: 4051412085577077334}
+    spriteRenderer: {fileID: 2189388234481613831}
   - key: Eye_Front_Right
-    gameObject: {fileID: 480252205777740206}
+    spriteRenderer: {fileID: 8682761851172304086}
   - key: FaceHair
-    gameObject: {fileID: 3756709156593371991}
+    spriteRenderer: {fileID: 6970663095488582740}
   - key: Foot_Cloth_Left
-    gameObject: {fileID: 1287723044837599012}
+    spriteRenderer: {fileID: 7202206667143050131}
   - key: Foot_Cloth_Right
-    gameObject: {fileID: 5609904667206986182}
+    spriteRenderer: {fileID: 1649754493034394235}
   - key: Foot_Left
-    gameObject: {fileID: 8720272441687825342}
+    spriteRenderer: {fileID: 6142584177663464817}
   - key: Foot_Right
-    gameObject: {fileID: 6628571063045766212}
+    spriteRenderer: {fileID: 7605748276788276779}
   - key: Hair
-    gameObject: {fileID: 5020983976572633437}
+    spriteRenderer: {fileID: 6474005757355391776}
   - key: Helmet
-    gameObject: {fileID: 7756183183859929572}
+    spriteRenderer: {fileID: 8188449888978342763}
   - key: Shadow
-    gameObject: {fileID: 5542844471443430510}
+    spriteRenderer: {fileID: 4745367740023273064}
   - key: Weapon_Left
-    gameObject: {fileID: 1973837409662387810}
+    spriteRenderer: {fileID: 6829015093525228135}
   - key: Weapon_Right
-    gameObject: {fileID: 9130139181806716540}
+    spriteRenderer: {fileID: 8697856655881229063}
 --- !u!1 &5484146275834407820
 GameObject:
   m_ObjectHideFlags: 0

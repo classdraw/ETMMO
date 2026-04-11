@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using ET;
 using UnityEditor;
 using UnityEngine;
 //Object并非C#基础中的Object，而是 UnityEngine.Object
@@ -85,12 +83,6 @@ public class ReferenceCollectorEditor: Editor
 		}
 		EditorGUILayout.EndHorizontal();
 		EditorGUILayout.BeginHorizontal();
-		if (GUILayout.Button("角色绑点收集"))
-		{
-			BindSpriteRendererNodes();
-		}
-		EditorGUILayout.EndHorizontal();
-		EditorGUILayout.BeginHorizontal();
         //可以在编辑器中对searchKey进行赋值，只要输入对应的Key值，就可以点后面的删除按钮删除相对应的元素
         searchKey = EditorGUILayout.TextField(searchKey);
         //添加的可以用于选中Object的框，这里的object也是(UnityEngine.Object
@@ -148,96 +140,6 @@ public class ReferenceCollectorEditor: Editor
 		}
 		serializedObject.ApplyModifiedProperties();
 		serializedObject.UpdateIfRequiredOrScript();
-	}
-
-	/// <summary>
-	/// 收集：激活且可见、已赋 sprite 的 SpriteRenderer。
-	/// 仅当物体名与白名单某 key 完全一致（Ordinal）时才写入该 key。
-	/// </summary>
-	private void BindSpriteRendererNodes()
-	{
-		HashSet<string> keyAllowlist = AvatarBindKeyAllowlistUtility.ParseToSet();
-		if (keyAllowlist.Count == 0)
-		{
-			EditorUtility.DisplayDialog("ReferenceCollector",
-				"请配置角色绑点 Key 白名单：在 Project 中创建或使用 " + AvatarBindKeyAllowlistUtility.DefaultAssetPath +
-				"（菜单 Create → ET → 角色绑点 Key 白名单，或在「预制体处理工具」中点「创建资源」），填写 keys 后点「保存到资源」。",
-				"确定");
-			return;
-		}
-
-		Undo.RecordObject(referenceCollector, "ReferenceCollector 角色绑定");
-		var spriteRenderers = referenceCollector.GetComponentsInChildren<SpriteRenderer>(false);
-		var usedKeys = new HashSet<string>(StringComparer.Ordinal);
-		foreach (var item in referenceCollector.data)
-		{
-			if (!string.IsNullOrEmpty(item.key))
-			{
-				usedKeys.Add(item.key);
-			}
-		}
-
-		foreach (var sr in spriteRenderers)
-		{
-			if (sr == null || !IsCollectableSpriteRenderer(sr))
-			{
-				continue;
-			}
-
-			GameObject go = sr.gameObject;
-			string resolvedKey = ResolveBindingKeyByExactName(go.name, keyAllowlist);
-			if (string.IsNullOrEmpty(resolvedKey))
-			{
-				Debug.LogWarning($"[ReferenceCollector] 跳过「{go.name}」：物体名须与白名单某 key 完全一致。");
-				continue;
-			}
-
-			if (usedKeys.Contains(resolvedKey))
-			{
-				Debug.LogWarning($"[ReferenceCollector] 跳过「{go.name}」：key「{resolvedKey}」已占用。");
-				continue;
-			}
-
-			usedKeys.Add(resolvedKey);
-			referenceCollector.Add(resolvedKey, go);
-		}
-
-		referenceCollector.Sort();
-		EditorUtility.SetDirty(referenceCollector);
-
-		// 打印当前所有 key，英文逗号分割，便于复制
-		var keysSb = new StringBuilder();
-		for (int i = 0; i < referenceCollector.data.Count; i++)
-		{
-			string k = referenceCollector.data[i]?.key;
-			if (string.IsNullOrEmpty(k))
-			{
-				continue;
-			}
-
-			if (keysSb.Length > 0)
-			{
-				keysSb.Append(", ");
-			}
-			keysSb.Append(k);
-		}
-		Debug.Log(keysSb.ToString());
-	}
-
-	private static string ResolveBindingKeyByExactName(string gameObjectName, HashSet<string> allowlist)
-	{
-		if (string.IsNullOrEmpty(gameObjectName) || allowlist == null || allowlist.Count == 0)
-		{
-			return null;
-		}
-
-		return allowlist.Contains(gameObjectName) ? gameObjectName : null;
-	}
-
-	/// <summary>激活、Renderer 启用、且已指定 Sprite。</summary>
-	private static bool IsCollectableSpriteRenderer(SpriteRenderer sr)
-	{
-		return sr.enabled && sr.sprite != null;
 	}
 
     //添加元素，具体知识点在ReferenceCollector中说了

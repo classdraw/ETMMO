@@ -1082,226 +1082,9 @@ namespace ET
         }
     }
 
-    [MemoryPackable]
-    [Message(OuterMessage.C2R_LoginAccount)]
-    [ResponseType(nameof(R2C_LoginAccount))]
-    public partial class C2R_LoginAccount : MessageObject, ISessionRequest
-    {
-        public static C2R_LoginAccount Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(C2R_LoginAccount), isFromPool) as C2R_LoginAccount;
-        }
-
-        /// <summary>
-        /// 登录并且获取token
-        /// </summary>
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public string AccountName { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Password { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.AccountName = default;
-            this.Password = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(OuterMessage.R2C_LoginAccount)]
-    public partial class R2C_LoginAccount : MessageObject, ISessionResponse
-    {
-        public static R2C_LoginAccount Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(R2C_LoginAccount), isFromPool) as R2C_LoginAccount;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Error { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Message { get; set; }
-
-        [MemoryPackOrder(3)]
-        public string Token { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Error = default;
-            this.Message = default;
-            this.Token = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(OuterMessage.A2C_Disconnet)]
-    public partial class A2C_Disconnet : MessageObject, ISessionMessage
-    {
-        public static A2C_Disconnet Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(A2C_Disconnet), isFromPool) as A2C_Disconnet;
-        }
-
-        /// <summary>
-        /// 强制客户端session离线 0踢人 1超时
-        /// </summary>
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Error { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Message { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Error = default;
-            this.Message = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(OuterMessage.ServerInfoProto)]
-    public partial class ServerInfoProto : MessageObject
-    {
-        public static ServerInfoProto Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(ServerInfoProto), isFromPool) as ServerInfoProto;
-        }
-
-        /// <summary>
-        /// 服务器列表数据
-        /// </summary>
-        [MemoryPackOrder(0)]
-        public int Id { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Status { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string ServerName { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.Id = default;
-            this.Status = default;
-            this.ServerName = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(OuterMessage.C2R_GetServerInfos)]
-    [ResponseType(nameof(R2C_GetServerInfos))]
-    public partial class C2R_GetServerInfos : MessageObject, ISessionRequest
-    {
-        public static C2R_GetServerInfos Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(C2R_GetServerInfos), isFromPool) as C2R_GetServerInfos;
-        }
-
-        /// <summary>
-        /// 获得服务器列表
-        /// </summary>
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public string Token { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string AccountName { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Token = default;
-            this.AccountName = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(OuterMessage.R2C_GetServerInfos)]
-    public partial class R2C_GetServerInfos : MessageObject, ISessionResponse
-    {
-        public static R2C_GetServerInfos Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(R2C_GetServerInfos), isFromPool) as R2C_GetServerInfos;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Error { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Message { get; set; }
-
-        [MemoryPackOrder(3)]
-        public List<ServerInfoProto> ServerInfoList { get; set; } = new();
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Error = default;
-            this.Message = default;
-            this.ServerInfoList.Clear();
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
+    /// <summary>
+    /// 角色相关////////////////////////////////////////
+    /// </summary>
     [MemoryPackable]
     [Message(OuterMessage.RoleInfoProto)]
     public partial class RoleInfoProto : MessageObject
@@ -1593,6 +1376,232 @@ namespace ET
         }
     }
 
+    /// <summary>
+    /// 角色相关////////////////////////////////////////
+    /// </summary>
+    /// <summary>
+    /// 登陆相关////////////////////////////////////////
+    /// </summary>
+    [MemoryPackable]
+    [Message(OuterMessage.C2R_LoginAccount)]
+    [ResponseType(nameof(R2C_LoginAccount))]
+    public partial class C2R_LoginAccount : MessageObject, ISessionRequest
+    {
+        public static C2R_LoginAccount Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2R_LoginAccount), isFromPool) as C2R_LoginAccount;
+        }
+
+        /// <summary>
+        /// 登录并且获取token
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string AccountName { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Password { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.AccountName = default;
+            this.Password = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.R2C_LoginAccount)]
+    public partial class R2C_LoginAccount : MessageObject, ISessionResponse
+    {
+        public static R2C_LoginAccount Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(R2C_LoginAccount), isFromPool) as R2C_LoginAccount;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public string Token { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.Token = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.A2C_Disconnet)]
+    public partial class A2C_Disconnet : MessageObject, ISessionMessage
+    {
+        public static A2C_Disconnet Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(A2C_Disconnet), isFromPool) as A2C_Disconnet;
+        }
+
+        /// <summary>
+        /// 强制客户端session离线 0踢人 1超时
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.ServerInfoProto)]
+    public partial class ServerInfoProto : MessageObject
+    {
+        public static ServerInfoProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(ServerInfoProto), isFromPool) as ServerInfoProto;
+        }
+
+        /// <summary>
+        /// 服务器列表数据
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int Id { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Status { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string ServerName { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Id = default;
+            this.Status = default;
+            this.ServerName = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2R_GetServerInfos)]
+    [ResponseType(nameof(R2C_GetServerInfos))]
+    public partial class C2R_GetServerInfos : MessageObject, ISessionRequest
+    {
+        public static C2R_GetServerInfos Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2R_GetServerInfos), isFromPool) as C2R_GetServerInfos;
+        }
+
+        /// <summary>
+        /// 获得服务器列表
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string Token { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string AccountName { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Token = default;
+            this.AccountName = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.R2C_GetServerInfos)]
+    public partial class R2C_GetServerInfos : MessageObject, ISessionResponse
+    {
+        public static R2C_GetServerInfos Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(R2C_GetServerInfos), isFromPool) as R2C_GetServerInfos;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public List<ServerInfoProto> ServerInfoList { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ServerInfoList.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     [MemoryPackable]
     [Message(OuterMessage.C2R_GetRealmKey)]
     [ResponseType(nameof(R2C_GetRealmKey))]
@@ -1832,6 +1841,9 @@ namespace ET
         }
     }
 
+    /// <summary>
+    /// 登陆相关////////////////////////////////////////
+    /// </summary>
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -1868,19 +1880,19 @@ namespace ET
         public const ushort M2C_TransferMap = 10033;
         public const ushort C2G_Benchmark = 10034;
         public const ushort G2C_Benchmark = 10035;
-        public const ushort C2R_LoginAccount = 10036;
-        public const ushort R2C_LoginAccount = 10037;
-        public const ushort A2C_Disconnet = 10038;
-        public const ushort ServerInfoProto = 10039;
-        public const ushort C2R_GetServerInfos = 10040;
-        public const ushort R2C_GetServerInfos = 10041;
-        public const ushort RoleInfoProto = 10042;
-        public const ushort C2R_GetRoles = 10043;
-        public const ushort R2C_GetRoles = 10044;
-        public const ushort C2R_CreateRole = 10045;
-        public const ushort R2C_CreateRole = 10046;
-        public const ushort C2R_DeleteRole = 10047;
-        public const ushort R2C_DeleteRole = 10048;
+        public const ushort RoleInfoProto = 10036;
+        public const ushort C2R_GetRoles = 10037;
+        public const ushort R2C_GetRoles = 10038;
+        public const ushort C2R_CreateRole = 10039;
+        public const ushort R2C_CreateRole = 10040;
+        public const ushort C2R_DeleteRole = 10041;
+        public const ushort R2C_DeleteRole = 10042;
+        public const ushort C2R_LoginAccount = 10043;
+        public const ushort R2C_LoginAccount = 10044;
+        public const ushort A2C_Disconnet = 10045;
+        public const ushort ServerInfoProto = 10046;
+        public const ushort C2R_GetServerInfos = 10047;
+        public const ushort R2C_GetServerInfos = 10048;
         public const ushort C2R_GetRealmKey = 10049;
         public const ushort R2C_GetRealmKey = 10050;
         public const ushort C2G_LoginGameGate = 10051;

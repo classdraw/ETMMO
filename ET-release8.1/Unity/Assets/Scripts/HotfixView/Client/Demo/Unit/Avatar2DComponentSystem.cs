@@ -39,12 +39,12 @@ namespace ET.Client
                 self.AvatarObjs[avatarType] = avatarObj;
 
                 // 3) 每个 AvatarObj 上的 ReferenceCollector（key 为 AvatarPartType）
-                ReferenceCollector partsCollector = avatarObj.GetComponent<ReferenceCollector>();
+                ReferenceSpriteCollector partsCollector = avatarObj.GetComponent<ReferenceSpriteCollector>();
                 if (partsCollector == null)
                 {
                     continue;
                 }
-
+                
                 var partDict = new Dictionary<AvatarPartType, SpriteRenderer>();
                 for (int j = 0; j < (int)AvatarPartType.Count; j++)
                 {
@@ -71,15 +71,15 @@ namespace ET.Client
         /// 先按枚举名（如 EyeBack）取绑点；若无则尝试 ReferenceCollector 收集用的下划线左右 key（与编辑器白名单一致）。
         /// 若左右两个都存在，优先 Left（单槽位枚举仅保留一个引用）。
         /// </summary>
-        private static SpriteRenderer GetPartSpriteRenderer(ReferenceCollector partsCollector, AvatarPartType partType)
+        private static SpriteRenderer GetPartSpriteRenderer(ReferenceSpriteCollector partsCollector, AvatarPartType partType)
         {
             string primary = partType.ToString();
-            SpriteRenderer r = partsCollector.Get<SpriteRenderer>(primary);
-            if (r != null)
+            SpriteRenderer ro = partsCollector.Get<SpriteRenderer>(primary);
+            if (ro != null)
             {
-                return r;
+                return ro;
             }
-            Log.Error("GetPartSpriteRenderer:"+primary+" Error!!!");
+            
             return null;
         }
         
@@ -89,6 +89,24 @@ namespace ET.Client
             self.AvatarObjs?.Clear();
             self.AvatarParts?.Clear();
         }
+        
+        
+        /**
+         *int avatarConfigId = 2001;
+if (AvatarConfigCategory.Instance.Contain(avatarConfigId))
+{
+    AvatarConfig cfg = AvatarConfigCategory.Instance.Get(avatarConfigId);
+    int type = cfg.AvatarType;
+    string name = cfg.Name;
+    string model = cfg.Model;   // 表里「模型」字段，一般是资源/预制体相对路径
+}
+else
+{
+    // 没有该 Id 时不要直接 Get，否则会抛异常
+}
+         *
+         * 
+         */
     }
 }
 
