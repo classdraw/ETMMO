@@ -1,7 +1,7 @@
 namespace ET
 {
     /// <summary>
-    /// 角色各部位 AvatarConfig Id，与 <see cref="RoleInfoProto"/> 外观字段一致。
+    /// 角色各部位 AvatarConfig Id（紧凑字段）；协议侧见 <see cref="RoleInfoProto"/> 的 Parts。
     /// </summary>
     public struct RoleAvatarIds
     {

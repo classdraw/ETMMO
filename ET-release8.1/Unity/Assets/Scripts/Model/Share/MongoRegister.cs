@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Bson.Serialization.Options;
+using MongoDB.Bson.Serialization.Serializers;
 using TrueSync;
 using Unity.Mathematics;
 
@@ -39,6 +41,11 @@ namespace ET
             RegisterStruct<TSVector4>();
             RegisterStruct<TSQuaternion>();
             RegisterStruct<LSInput>();
+
+            // int 作 key 的 Dictionary 不能按 BSON Document 序列化（要求 key 为字符串）；Clone/ToJson 等走 BSON 时需 ArrayOfArrays
+            BsonSerializer.RegisterSerializer(
+                typeof(Dictionary<int, int>),
+                new DictionaryInterfaceImplementerSerializer<Dictionary<int, int>>(DictionaryRepresentation.ArrayOfArrays));
 
             Dictionary<string, Type> types = CodeTypes.Instance.GetTypes();
             foreach (Type type in types.Values)

@@ -1115,42 +1115,9 @@ namespace ET
         [MemoryPackOrder(6)]
         public int ServerId { get; set; }
 
+        [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
         [MemoryPackOrder(7)]
-        public int ArmorBody { get; set; }
-
-        [MemoryPackOrder(8)]
-        public int ArmorLeft { get; set; }
-
-        [MemoryPackOrder(9)]
-        public int ArmorRight { get; set; }
-
-        [MemoryPackOrder(10)]
-        public int Body { get; set; }
-
-        [MemoryPackOrder(11)]
-        public int BodyArmLeft { get; set; }
-
-        [MemoryPackOrder(12)]
-        public int BodyArmRight { get; set; }
-
-        [MemoryPackOrder(13)]
-        public int FootLeft { get; set; }
-
-        [MemoryPackOrder(14)]
-        public int FootRight { get; set; }
-
-        [MemoryPackOrder(15)]
-        public int Head { get; set; }
-
-        [MemoryPackOrder(16)]
-        public int EyeFront { get; set; }
-
-        [MemoryPackOrder(17)]
-        public int EyeBack { get; set; }
-
-        [MemoryPackOrder(18)]
-        public int Hair { get; set; }
-
+        public Dictionary<int, int> Parts { get; set; } = new();
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -1165,18 +1132,7 @@ namespace ET
             this.LastLoginTime = default;
             this.CreateTime = default;
             this.ServerId = default;
-            this.ArmorBody = default;
-            this.ArmorLeft = default;
-            this.ArmorRight = default;
-            this.Body = default;
-            this.BodyArmLeft = default;
-            this.BodyArmRight = default;
-            this.FootLeft = default;
-            this.FootRight = default;
-            this.Head = default;
-            this.EyeFront = default;
-            this.EyeBack = default;
-            this.Hair = default;
+            this.Parts.Clear();
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1288,6 +1244,7 @@ namespace ET
         [MemoryPackOrder(4)]
         public int ServerId { get; set; }
 
+        [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
         [MemoryPackOrder(5)]
         public Dictionary<int, int> Parts { get; set; } = new();
         public override void Dispose()

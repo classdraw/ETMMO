@@ -52,21 +52,7 @@ namespace ET
                 return default;
             }
 
-            return new RoleAvatarIds
-            {
-                ArmorBody = proto.ArmorBody,
-                ArmorLeft = proto.ArmorLeft,
-                ArmorRight = proto.ArmorRight,
-                Body = proto.Body,
-                BodyArmLeft = proto.BodyArmLeft,
-                BodyArmRight = proto.BodyArmRight,
-                FootLeft = proto.FootLeft,
-                FootRight = proto.FootRight,
-                Head = proto.Head,
-                EyeFront = proto.EyeFront,
-                EyeBack = proto.EyeBack,
-                Hair = proto.Hair,
-            };
+            return RoleAvatarParts.ToRoleAvatarIds(proto.Parts);
         }
         
         private static bool TryPickSyncedAvatarIds(int[] constantIds, int[] outIds, int fallback)

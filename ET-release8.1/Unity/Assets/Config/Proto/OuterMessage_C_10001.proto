@@ -249,18 +249,7 @@ message RoleInfoProto
 	int64 CreateTime = 6;
 	int32 ServerId = 7;
 
-	int32 ArmorBody = 8;
-	int32 ArmorLeft = 9;
-	int32 ArmorRight = 10;
-	int32 Body = 11;
-	int32 BodyArmLeft = 12;
-	int32 BodyArmRight = 13;
-	int32 FootLeft = 14;
-	int32 FootRight = 15;
-	int32 Head = 16;
-	int32 EyeFront = 17;
-	int32 EyeBack = 18;
-	int32 Hair = 19;
+	map<int32,int32> Parts = 8;
 }
 
 

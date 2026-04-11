@@ -41,10 +41,79 @@ namespace ET
             }
         }
 
+        /// <summary>从协议/缓存 Parts 转为登录界面用的紧凑结构。</summary>
+        public static RoleAvatarIds ToRoleAvatarIds(Dictionary<int, int> parts)
+        {
+            if (parts == null || parts.Count == 0)
+            {
+                return default;
+            }
+
+            return new RoleAvatarIds
+            {
+                ArmorLeft = Get(parts, AvatarPartType.Armor_Left),
+                ArmorRight = Get(parts, AvatarPartType.Armor_Right),
+                ArmorBody = Get(parts, AvatarPartType.Armor_Body),
+                Body = Get(parts, AvatarPartType.Body),
+                BodyArmLeft = Get(parts, AvatarPartType.Body_Arm_Left),
+                BodyArmRight = Get(parts, AvatarPartType.Body_Arm_Right),
+                FootLeft = Get(parts, AvatarPartType.Foot_Left),
+                FootRight = Get(parts, AvatarPartType.Foot_Right),
+                Head = Get(parts, AvatarPartType.Head),
+                Hair = Get(parts, AvatarPartType.Hair),
+                EyeFront = GetFrontEyeId(parts),
+                EyeBack = GetBackEyeId(parts),
+            };
+        }
+
+        /// <summary>从 <see cref="RoleInfo"/> 写入协议 Parts（与 <see cref="MergeRoleAvatarIdsIntoParts"/> 规则一致）。</summary>
+        public static void MergePartsFromRoleInfo(RoleInfo roleInfo, Dictionary<int, int> parts)
+        {
+            if (roleInfo == null || parts == null)
+            {
+                return;
+            }
+
+            parts.Clear();
+            var ids = new RoleAvatarIds
+            {
+                ArmorLeft = roleInfo.ArmorLeft,
+                ArmorRight = roleInfo.ArmorRight,
+                ArmorBody = roleInfo.ArmorBody,
+                Body = roleInfo.Body,
+                BodyArmLeft = roleInfo.BodyArmLeft,
+                BodyArmRight = roleInfo.BodyArmRight,
+                FootLeft = roleInfo.FootLeft,
+                FootRight = roleInfo.FootRight,
+                Head = roleInfo.Head,
+                EyeFront = roleInfo.EyeFront,
+                EyeBack = roleInfo.EyeBack,
+                Hair = roleInfo.Hair,
+            };
+            MergeRoleAvatarIdsIntoParts(ids, parts);
+        }
+
         public static void ApplyPartsToRoleInfo(Dictionary<int, int> parts, RoleInfo roleInfo)
         {
-            if (parts == null || roleInfo == null)
+            if (roleInfo == null)
             {
+                return;
+            }
+
+            if (parts == null || parts.Count == 0)
+            {
+                roleInfo.ArmorLeft = 0;
+                roleInfo.ArmorRight = 0;
+                roleInfo.ArmorBody = 0;
+                roleInfo.Body = 0;
+                roleInfo.BodyArmLeft = 0;
+                roleInfo.BodyArmRight = 0;
+                roleInfo.FootLeft = 0;
+                roleInfo.FootRight = 0;
+                roleInfo.Head = 0;
+                roleInfo.Hair = 0;
+                roleInfo.EyeFront = 0;
+                roleInfo.EyeBack = 0;
                 return;
             }
 
@@ -84,9 +153,21 @@ namespace ET
             }
         }
 
-        private static int Get(Dictionary<int, int> parts, AvatarPartType partType)
+               private static int Get(Dictionary<int, int> parts, AvatarPartType partType)
         {
             return parts.TryGetValue((int)partType, out int v) ? v : 0;
+        }
+
+        private static int GetFrontEyeId(Dictionary<int, int> parts)
+        {
+            int a = Get(parts, AvatarPartType.Eye_Front_Left);
+            return a != 0 ? a : Get(parts, AvatarPartType.Eye_Front_Right);
+        }
+
+        private static int GetBackEyeId(Dictionary<int, int> parts)
+        {
+            int a = Get(parts, AvatarPartType.Eye_Back_Left);
+            return a != 0 ? a : Get(parts, AvatarPartType.Eye_Back_Right);
         }
     }
 }
