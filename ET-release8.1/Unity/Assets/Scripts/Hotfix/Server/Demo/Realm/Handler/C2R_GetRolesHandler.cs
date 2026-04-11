@@ -42,8 +42,8 @@ namespace ET.Server
                 
                 foreach (var roleInfo in roleInfos)
                 {
-                    roleInfo.LastLoginTime = TimeInfo.Instance.ServerNow();
-                    await dbComponent.Save<Entity>(roleInfo);
+                    //roleInfo.LastLoginTime = TimeInfo.Instance.ServerNow();
+                    //await dbComponent.Save<Entity>(roleInfo);
                     response.RoleInfoList.Add(roleInfo.ToMessage());
                     roleInfo?.Dispose();
                 }

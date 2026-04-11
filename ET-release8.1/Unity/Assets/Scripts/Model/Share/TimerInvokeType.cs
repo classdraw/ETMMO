@@ -13,9 +13,14 @@
         public const int MoveTimer = 201;
         public const int AITimer = 202;
         public const int SessionAcceptTimeout = 203;
-        public const int AccountChectOutTime = 204;//账号超时
-        public const int PlayerOfflineOutTime = 205;//玩家超时
         
         public const int RoomUpdate = 301;
+        
+        
+        public const int PlayerOfflineOutTime = 401;//玩家超时
+        public const int SaveChangeDBDate = 402;
+        
+        public const int NumericSync = 403;//数值同步
+        public const int AccountChectOutTime = 404;//账号超时
     }
 }

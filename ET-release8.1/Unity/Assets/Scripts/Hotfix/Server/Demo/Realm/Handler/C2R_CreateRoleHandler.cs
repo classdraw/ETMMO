@@ -50,7 +50,7 @@ namespace ET.Server
                 roleInfo.State = (int)RoleInfoState.Normal;
                 long nowTime= TimeInfo.Instance.ServerNow();
                 roleInfo.CreateTime = nowTime;
-                roleInfo.LastLoginTime = nowTime;
+                roleInfo.LastLoginTime = 0;
                 roleInfo.Name = request.Name;
                 RoleAvatarParts.ApplyPartsToRoleInfo(request.Parts, roleInfo);
 
