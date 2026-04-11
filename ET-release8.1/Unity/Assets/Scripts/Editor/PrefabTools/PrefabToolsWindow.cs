@@ -83,6 +83,11 @@ namespace ET
                     RemoveMissingScriptsFromSelectedPrefabs();
                 }
 
+                if (GUILayout.Button("清空 SpriteRenderer 引用图（含子物体，sprite 非空则置 null）", GUILayout.Height(34)))
+                {
+                    ClearSpriteRendererSpritesFromSelectedPrefabs();
+                }
+
                 if (GUILayout.Button("根节点 RectTransform → Transform（仅根为 Rect 时）", GUILayout.Height(34)))
                 {
                     ConvertPrefabRootRectTransformToTransform();
@@ -423,6 +428,83 @@ namespace ET
             EditorUtility.DisplayDialog("预制体处理工具",
                 $"已扫描 {paths.Count} 个预制体，其中 {modifiedPrefabs} 个有修改；共移除 {totalRemoved} 处 Missing 脚本。",
                 "确定");
+        }
+
+        private static void ClearSpriteRendererSpritesFromSelectedPrefabs()
+        {
+            List<string> paths = CollectSelectedPrefabPaths();
+            if (paths.Count == 0)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", "请先在 Project 中选中至少一个 .prefab 资源。", "确定");
+                return;
+            }
+
+            if (!EditorUtility.DisplayDialog("预制体处理工具",
+                    $"将对 {paths.Count} 个预制体递归处理：所有 SpriteRenderer 上 sprite 不为空的统一设为 null。\n是否继续？",
+                    "确定", "取消"))
+            {
+                return;
+            }
+
+            int totalCleared = 0;
+            int modifiedPrefabs = 0;
+
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                foreach (string path in paths)
+                {
+                    GameObject root = PrefabUtility.LoadPrefabContents(path);
+                    try
+                    {
+                        int n = ClearSpriteRendererSpritesRecursive(root);
+                        if (n > 0)
+                        {
+                            PrefabUtility.SaveAsPrefabAsset(root, path);
+                            totalCleared += n;
+                            modifiedPrefabs++;
+                        }
+                    }
+                    finally
+                    {
+                        PrefabUtility.UnloadPrefabContents(root);
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
+
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("预制体处理工具",
+                $"已扫描 {paths.Count} 个预制体，其中 {modifiedPrefabs} 个有修改；共清空 {totalCleared} 处 SpriteRenderer.sprite。",
+                "确定");
+        }
+
+        /// <summary>递归自身及子物体：将 sprite 已赋值的 <see cref="SpriteRenderer"/> 的 sprite 设为 null。</summary>
+        private static int ClearSpriteRendererSpritesRecursive(GameObject go)
+        {
+            int cleared = 0;
+            SpriteRenderer[] renderers = go.GetComponents<SpriteRenderer>();
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                SpriteRenderer sr = renderers[i];
+                if (sr != null && sr.sprite != null)
+                {
+                    sr.sprite = null;
+                    EditorUtility.SetDirty(sr);
+                    cleared++;
+                }
+            }
+
+            Transform t = go.transform;
+            for (int c = 0; c < t.childCount; c++)
+            {
+                cleared += ClearSpriteRendererSpritesRecursive(t.GetChild(c).gameObject);
+            }
+
+            return cleared;
         }
 
         private static List<string> CollectSelectedPrefabPaths()

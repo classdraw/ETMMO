@@ -62,7 +62,7 @@ namespace ET
 		/// <summary>Id</summary>
 		public int Id { get; set; }
 		/// <summary>Type</summary>
-		public int AvatarType { get; set; }
+		public int AvatarPartType { get; set; }
 		/// <summary>名字</summary>
 		public string Name { get; set; }
 		/// <summary>模型</summary>

@@ -1,4 +1,5 @@
 using CommandLine;
+using ET;
 
 namespace ET.Client
 {
@@ -57,6 +58,8 @@ namespace ET.Client
                 c2RCreateRole.ServerId = serverInfoProto.Id;
                 c2RCreateRole.AccountName = account;
                 c2RCreateRole.Name = account;
+                c2RCreateRole.Parts.Clear();
+                RoleAvatarParts.MergeRoleAvatarIdsIntoParts(DefaultAvatarHelper.RollRandomDefault(), c2RCreateRole.Parts);
                 R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
                 if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
                 {
@@ -210,7 +213,7 @@ namespace ET.Client
             return LoginOperationResult.Success();
         }
 
-        public static async ETTask<LoginOperationResult> LoginCreateRole(Scene root,string roleName)
+        public static async ETTask<LoginOperationResult> LoginCreateRole(Scene root, string roleName, RoleAvatarIds avatar = default)
         {
             NetworkCacheComponent cache = root.GetComponent<NetworkCacheComponent>();
             if (cache == null)
@@ -231,6 +234,8 @@ namespace ET.Client
             c2RCreateRole.AccountName = cache.Account;
             c2RCreateRole.ServerId = cache.ServerId;
             c2RCreateRole.Name = roleName;
+            c2RCreateRole.Parts.Clear();
+            RoleAvatarParts.MergeRoleAvatarIdsIntoParts(avatar, c2RCreateRole.Parts);
             R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
             if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
             {

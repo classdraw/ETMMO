@@ -65,5 +65,7 @@ MonoBehaviour:
     value: 24
   - key: Shadow
     value: 25
+  - key: Head
+    value: 26
   editorListScrollHeight: 180
   keys: []

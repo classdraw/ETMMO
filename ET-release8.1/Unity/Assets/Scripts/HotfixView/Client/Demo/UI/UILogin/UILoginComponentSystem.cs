@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ET;
+using UnityEngine;
 using UnityEngine.UI;
 using GameLogic;
 using TEngine;
@@ -90,6 +91,12 @@ namespace ET.Client
 
 		public static void OnLeftTran(this UILoginComponent self)
 		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			self.RefreshLoginSlotAvatarAsync(self.m_goLeft, null).Coroutine();
 		}
 
 		public static void OnLeftDelete(this UILoginComponent self)
@@ -109,6 +116,12 @@ namespace ET.Client
 
 		public static void OnRightTran(this UILoginComponent self)
 		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			self.RefreshLoginSlotAvatarAsync(self.m_goRight, null).Coroutine();
 		}
 
 		public static void OnRightDelete(this UILoginComponent self)
@@ -152,6 +165,149 @@ namespace ET.Client
 			{
 				self.ChangeStep1();
 			}
+		}
+
+		/// <summary>
+		/// 按 AvatarConfig 加载模型预制体，将其中 Sprite 同步到 <paramref name="partsCollector"/> 对应部位（逻辑同 <see cref="Avatar2DComponentSystem"/> 的 ChangeAvatar）。
+		/// </summary>
+		public static async ETTask ChangeAvatar(this UILoginComponent self, int avatarConfigId, ReferenceSpriteCollector partsCollector)
+		{
+			if (partsCollector == null)
+			{
+				Log.Warning("UILogin ChangeAvatar: partsCollector 为空");
+				return;
+			}
+
+			if (!AvatarConfigCategory.Instance.Contain(avatarConfigId))
+			{
+				Log.Warning($"UILogin ChangeAvatar: AvatarConfig 不存在 id={avatarConfigId}");
+				return;
+			}
+
+			ResourcesLoaderComponent resLoader = self.Scene().GetComponent<ResourcesLoaderComponent>();
+			if (resLoader == null)
+			{
+				Log.Warning("UILogin ChangeAvatar: CurrentScene 无 ResourcesLoaderComponent");
+				return;
+			}
+
+			AvatarConfig cfg = AvatarConfigCategory.Instance.Get(avatarConfigId);
+			AvatarPartType partType = (AvatarPartType)cfg.AvatarPartType;
+			if (!AvatarEyePairUtility.HasBindPointForCollector(partsCollector, partType))
+			{
+				Log.Warning($"UILogin ChangeAvatar: ReferenceSpriteCollector 未绑定部位 key={partType}（眼睛需至少绑定 Eye_Front_Left/Right 或 Eye_Back_Left/Right 之一）");
+				return;
+			}
+
+			string location = "Assets/Bundles/Avatar/" + cfg.Model;
+			GameObject prefab = await resLoader.LoadAssetAsync<GameObject>(location);
+			if (prefab == null)
+			{
+				Log.Error($"UILogin ChangeAvatar: 加载失败 location={location}");
+				return;
+			}
+
+			SpriteRenderer prefabSr = prefab.GetComponent<SpriteRenderer>();
+			if (prefabSr == null)
+			{
+				Log.Error($"UILogin ChangeAvatar: 预制体无 SpriteRenderer location={location}");
+				return;
+			}
+
+			Sprite sprite = prefabSr.sprite;
+			if (AvatarEyePairUtility.IsEyePairPart(partType))
+			{
+				AvatarEyePairUtility.ApplySpriteToEyePair(partsCollector, partType, sprite);
+			}
+			else
+			{
+				SpriteRenderer spriteRenderer = partsCollector.Get(partType.ToString());
+				if (spriteRenderer == null)
+				{
+					return;
+				}
+
+				spriteRenderer.sprite = sprite;
+			}
+		}
+
+		/// <summary>
+		/// 将一组 AvatarConfig Id 依次应用到登录界面插槽（与 <see cref="DefaultAvatarHelper"/> 随机规则或 <see cref="RoleInfoProto"/> 数据对应）。
+		/// </summary>
+		private static async ETTask ApplyRoleAvatarIdsAsync(this UILoginComponent self, ReferenceSpriteCollector collector, RoleAvatarIds ids)
+		{
+			if (collector == null)
+			{
+				return;
+			}
+
+			if (ids.ArmorBody != 0) await self.ChangeAvatar(ids.ArmorBody, collector);
+			if (ids.ArmorLeft != 0) await self.ChangeAvatar(ids.ArmorLeft, collector);
+			if (ids.ArmorRight != 0) await self.ChangeAvatar(ids.ArmorRight, collector);
+			if (ids.Body != 0) await self.ChangeAvatar(ids.Body, collector);
+			if (ids.BodyArmLeft != 0) await self.ChangeAvatar(ids.BodyArmLeft, collector);
+			if (ids.BodyArmRight != 0) await self.ChangeAvatar(ids.BodyArmRight, collector);
+			if (ids.FootLeft != 0) await self.ChangeAvatar(ids.FootLeft, collector);
+			if (ids.FootRight != 0) await self.ChangeAvatar(ids.FootRight, collector);
+			if (ids.Head != 0) await self.ChangeAvatar(ids.Head, collector);
+			if (ids.EyeFront != 0) await self.ChangeAvatar(ids.EyeFront, collector);
+			if (ids.EyeBack != 0) await self.ChangeAvatar(ids.EyeBack, collector);
+			if (ids.Hair != 0) await self.ChangeAvatar(ids.Hair, collector);
+		}
+
+		/// <summary>
+		/// 无角色：随机默认外貌；有角色：按协议数据换装。均走 <see cref="ChangeAvatar"/>。
+		/// </summary>
+		private static async ETTask RefreshLoginSlotAvatarAsync(this UILoginComponent self, GameObject slotRoot, RoleInfoProto roleOrNull)
+		{
+			if (self.IsDisposed || slotRoot == null)
+			{
+				return;
+			}
+
+			RoleAvatarIds ids = roleOrNull == null
+				? DefaultAvatarHelper.RollRandomDefault()
+				: DefaultAvatarHelper.FromRoleInfoProto(roleOrNull);
+
+			if (roleOrNull == null)
+			{
+				if (slotRoot == self.m_goLeft)
+				{
+					self.PendingCreateLeftAvatar = ids;
+				}
+				else if (slotRoot == self.m_goRight)
+				{
+					self.PendingCreateRightAvatar = ids;
+				}
+			}
+
+			ReferenceSpriteCollector collector = slotRoot.GetComponentInChildren<ReferenceSpriteCollector>(true);
+			if (collector == null)
+			{
+				return;
+			}
+
+			await self.ApplyRoleAvatarIdsAsync(collector, ids);
+		}
+
+		private static async ETTask RefreshLoginRoleAvatarsAsync(this UILoginComponent self)
+		{
+			if (self.IsDisposed)
+			{
+				return;
+			}
+
+			NetworkCacheComponent cache = self.NetCache();
+			R2C_GetRoles r2CGetRoles = cache?.LastRoleListResponse;
+			RoleInfoProto left = r2CGetRoles?.RoleInfoList != null && r2CGetRoles.RoleInfoList.Count >= 1
+				? r2CGetRoles.RoleInfoList[0]
+				: null;
+			RoleInfoProto right = r2CGetRoles?.RoleInfoList != null && r2CGetRoles.RoleInfoList.Count >= 2
+				? r2CGetRoles.RoleInfoList[1]
+				: null;
+
+			await self.RefreshLoginSlotAvatarAsync(self.m_goLeft, left);
+			await self.RefreshLoginSlotAvatarAsync(self.m_goRight, right);
 		}
 
 		private static void OnServerListItemRefresh(UILoginComponent self, Component com, int dataIndex)
@@ -233,7 +389,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName);
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateLeftAvatar);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftCreate");
@@ -266,7 +422,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName);
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateRightAvatar);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightCreate");
@@ -477,6 +633,8 @@ namespace ET.Client
 			{
 				self.SetRightRole(null);
 			}
+
+			self.RefreshLoginRoleAvatarsAsync().Coroutine();
 		}
 
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)

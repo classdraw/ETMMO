@@ -7,28 +7,28 @@ using System.ComponentModel;
 namespace ET
 {
     [Config]
-    public partial class AvatarConfigCategory : Singleton<AvatarConfigCategory>, IMerge
+    public partial class ConstantConfigCategory : Singleton<ConstantConfigCategory>, IMerge
     {
         [BsonElement]
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
-        private Dictionary<int, AvatarConfig> dict = new();
+        private Dictionary<int, ConstantConfig> dict = new();
 		
         public void Merge(object o)
         {
-            AvatarConfigCategory s = o as AvatarConfigCategory;
+            ConstantConfigCategory s = o as ConstantConfigCategory;
             foreach (var kv in s.dict)
             {
                 this.dict.Add(kv.Key, kv.Value);
             }
         }
 		
-        public AvatarConfig Get(int id)
+        public ConstantConfig Get(int id)
         {
-            this.dict.TryGetValue(id, out AvatarConfig item);
+            this.dict.TryGetValue(id, out ConstantConfig item);
 
             if (item == null)
             {
-                throw new Exception($"配置找不到，配置表名: {nameof (AvatarConfig)}，配置id: {id}");
+                throw new Exception($"配置找不到，配置表名: {nameof (ConstantConfig)}，配置id: {id}");
             }
 
             return item;
@@ -39,12 +39,12 @@ namespace ET
             return this.dict.ContainsKey(id);
         }
 
-        public Dictionary<int, AvatarConfig> GetAll()
+        public Dictionary<int, ConstantConfig> GetAll()
         {
             return this.dict;
         }
 
-        public AvatarConfig GetOne()
+        public ConstantConfig GetOne()
         {
             if (this.dict == null || this.dict.Count <= 0)
             {
@@ -57,16 +57,14 @@ namespace ET
         }
     }
 
-	public partial class AvatarConfig: ProtoObject, IConfig
+	public partial class ConstantConfig: ProtoObject, IConfig
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
-		/// <summary>Type</summary>
-		public int AvatarPartType { get; set; }
 		/// <summary>名字</summary>
 		public string Name { get; set; }
-		/// <summary>模型</summary>
-		public string Model { get; set; }
+		/// <summary>StringValue</summary>
+		public string StringValue { get; set; }
 
 	}
 }

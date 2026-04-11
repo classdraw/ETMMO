@@ -1,0 +1,14 @@
+{"dict": [
+[9001, {"_t":"ConstantConfig","_id":9001,"Name":"Default_Armor_Body","StringValue":"2001,2004,2007"}],
+[9002, {"_t":"ConstantConfig","_id":9002,"Name":"Default_Armor_Left","StringValue":"2002,2005,2008"}],
+[9003, {"_t":"ConstantConfig","_id":9003,"Name":"Default_Armor_Right","StringValue":"2003,2006,2009"}],
+[9004, {"_t":"ConstantConfig","_id":9004,"Name":"Default_Body","StringValue":"2016,2022,2028"}],
+[9005, {"_t":"ConstantConfig","_id":9005,"Name":"Default_Body_Arm_Left","StringValue":"2017,2023,2029"}],
+[9006, {"_t":"ConstantConfig","_id":9006,"Name":"Default_Body_Arm_Right","StringValue":"2018,2024,2030"}],
+[9007, {"_t":"ConstantConfig","_id":9007,"Name":"Default_Foot_Left","StringValue":"2019,2025,2031"}],
+[9008, {"_t":"ConstantConfig","_id":9008,"Name":"Default_Foot_Right","StringValue":"2020,2026,2032"}],
+[9009, {"_t":"ConstantConfig","_id":9009,"Name":"Default_Head","StringValue":"2021,2027,2033"}],
+[9010, {"_t":"ConstantConfig","_id":9010,"Name":"Default_Eye_Front_Left","StringValue":"2055,2056"}],
+[9011, {"_t":"ConstantConfig","_id":9011,"Name":"Default_Eye_Back_Left","StringValue":"2057,2058"}],
+[9012, {"_t":"ConstantConfig","_id":9012,"Name":"Default_Hair","StringValue":"2046,2047,2048,2049,2050,2051,2052,2053,2054"}],
+]}

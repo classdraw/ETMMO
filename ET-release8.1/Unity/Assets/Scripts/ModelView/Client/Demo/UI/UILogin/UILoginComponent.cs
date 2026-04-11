@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ET;
+using UnityEngine;
 using UnityEngine.UI;
 using TEngine;
 using GameLogic;
@@ -8,6 +9,12 @@ namespace ET.Client
 	[ComponentOf(typeof(UI))]
 	public class UILoginComponent: Entity, IAwake,IDestroy
 	{
+		/// <summary>左侧创角槽当前展示用的外貌（与界面换装一致，创建角色时提交）。</summary>
+		public RoleAvatarIds PendingCreateLeftAvatar;
+
+		/// <summary>右侧创角槽当前展示用的外貌。</summary>
+		public RoleAvatarIds PendingCreateRightAvatar;
+
 		public GameObject m_goObj1;
 		public InputField m_inputAccount;
 		public InputField m_inputPassword;

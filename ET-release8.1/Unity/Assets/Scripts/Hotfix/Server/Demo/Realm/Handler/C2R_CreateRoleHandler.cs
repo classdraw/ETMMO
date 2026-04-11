@@ -52,6 +52,8 @@ namespace ET.Server
                 roleInfo.CreateTime = nowTime;
                 roleInfo.LastLoginTime = nowTime;
                 roleInfo.Name = request.Name;
+                RoleAvatarParts.ApplyPartsToRoleInfo(request.Parts, roleInfo);
+
                 await dbComponent.Save<RoleInfo>(roleInfo);
                     
                 response.RoleInfo = roleInfo.ToMessage();

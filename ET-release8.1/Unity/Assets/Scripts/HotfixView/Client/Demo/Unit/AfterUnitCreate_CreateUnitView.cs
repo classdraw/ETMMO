@@ -24,6 +24,8 @@ namespace ET.Client
             unit.AddComponent<AnimatorComponent>();
             unit.AddComponent<Avatar2DComponent,GameObject>(go);
 
+            var unitObj=go.Get<GameObject>("Unit");
+            unitObj.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             if (isMainPlayerUnit==true&&CameraTestCtrl.Instance!=null)
             {
                 CameraTestCtrl.Instance.SetUnit(go.transform);

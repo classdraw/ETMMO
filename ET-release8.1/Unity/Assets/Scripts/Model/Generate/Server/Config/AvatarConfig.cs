@@ -65,8 +65,6 @@ namespace ET
 		public int AvatarPartType { get; set; }
 		/// <summary>名字</summary>
 		public string Name { get; set; }
-		/// <summary>模型</summary>
-		public string Model { get; set; }
 
 	}
 }

@@ -19,6 +19,18 @@ namespace ET
             self.LastLoginTime = roleInfoProto.LastLoginTime;
             self.CreateTime = roleInfoProto.CreateTime;
             self.ServerId = roleInfoProto.ServerId;
+            self.ArmorBody = roleInfoProto.ArmorBody;
+            self.ArmorLeft = roleInfoProto.ArmorLeft;
+            self.ArmorRight = roleInfoProto.ArmorRight;
+            self.Body = roleInfoProto.Body;
+            self.BodyArmLeft = roleInfoProto.BodyArmLeft;
+            self.BodyArmRight = roleInfoProto.BodyArmRight;
+            self.FootLeft = roleInfoProto.FootLeft;
+            self.FootRight = roleInfoProto.FootRight;
+            self.Head = roleInfoProto.Head;
+            self.EyeFront = roleInfoProto.EyeFront;
+            self.EyeBack = roleInfoProto.EyeBack;
+            self.Hair = roleInfoProto.Hair;
         }
 
         public static RoleInfoProto ToMessage(this RoleInfo self)
@@ -31,7 +43,19 @@ namespace ET
             roleInfoProto.LastLoginTime = self.LastLoginTime;
             roleInfoProto.CreateTime = self.CreateTime;
             roleInfoProto.ServerId = self.ServerId;
-            
+            roleInfoProto.ArmorBody = self.ArmorBody;
+            roleInfoProto.ArmorLeft = self.ArmorLeft;
+            roleInfoProto.ArmorRight = self.ArmorRight;
+            roleInfoProto.Body = self.Body;
+            roleInfoProto.BodyArmLeft = self.BodyArmLeft;
+            roleInfoProto.BodyArmRight = self.BodyArmRight;
+            roleInfoProto.FootLeft = self.FootLeft;
+            roleInfoProto.FootRight = self.FootRight;
+            roleInfoProto.Head = self.Head;
+            roleInfoProto.EyeFront = self.EyeFront;
+            roleInfoProto.EyeBack = self.EyeBack;
+            roleInfoProto.Hair = self.Hair;
+
             return roleInfoProto;
         }
     }
