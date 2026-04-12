@@ -33,6 +33,7 @@ namespace ET.Server
             }
             //增加这个实体
             mapScene.GetComponent<UnitComponent>().AddChild(unit);
+            //这个组件不会序列化 所有需要序列化出来后 添加
             if (unit.GetComponent<UnitDBSaveComponent>() == null)
             {
                 unit.AddComponent<UnitDBSaveComponent>();
@@ -57,7 +58,7 @@ namespace ET.Server
             return unit;
         }
         
-        
+        //unit上 所有组件序列化 然后AddOrUpdate保存到数据库
         public static void AddOrUpdateUnitAllCache(Unit unit)
         {
             Other2UnitCache_AddOrUpdateUnit message = Other2UnitCache_AddOrUpdateUnit.Create();

@@ -14,10 +14,23 @@ namespace ET.Server
             unitComponent.AddChild(unit);
             unitComponent.Add(unit);
 
+            /*
             foreach (byte[] bytes in request.Entitys)
             {
                 Entity entity = MongoHelper.Deserialize<Entity>(bytes);
                 unit.AddComponent(entity);
+            }*/
+            unit.AddComponent<UnitDBSaveComponent>();
+            //从传送后对象把bytes带过去
+            for (var i = 0; i < request.Entitys.Count; i++)
+            {
+                string k = request.Types[i];
+                Type t = CodeTypes.Instance.GetType(k);
+                byte[] v = request.Entitys[i];
+                
+                Entity entity = MongoHelper.Deserialize<Entity>(v);
+                unit.AddComponent(entity);
+                unit.GetComponent<UnitDBSaveComponent>().AddToBytes(t,v);
             }
             
             unit.LastMapId = unit.MapId;

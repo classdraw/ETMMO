@@ -40,7 +40,7 @@ namespace ET.Server
         
         public static void AddToBytes(this UnitDBSaveComponent self, Type type, byte[] bytes)
         {
-            self.Bytes[type] = bytes;
+            self.Bytes[type] = bytes;//实力已经存储了 这里是给传送用  序列化
         }
         //发现改动 及时发送数据给缓存服  缓存服定时更新
         public static void AddChange(this UnitDBSaveComponent self, Type type)
@@ -116,7 +116,7 @@ namespace ET.Server
             self.EntityChangeTypeSet.Clear();
             
             
-            //通知缓存服更新数据
+            //通知缓存服更新数据   这里会更新缓存 也会更新数据库数据 最终在AddOrUpdate处理
             StartSceneConfig unitCacheCfg = StartSceneConfigCategory.Instance.GetBySceneType(unit.Zone(), SceneType.UnitCache);
             self.Root().GetComponent<MessageSender>().Call(unitCacheCfg.ActorId,message).Coroutine();
         }

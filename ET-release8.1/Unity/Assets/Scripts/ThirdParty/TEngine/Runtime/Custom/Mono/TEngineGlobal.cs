@@ -217,15 +217,6 @@ namespace ET
 
             Utility.Json.SetJsonHelper(jsonHelper);
         }
-
-        private void Update()
-        {
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.LogError("11111111111111");
-                Debug.Log("2222222222222");
-            }
-        }
+        
     }
 }

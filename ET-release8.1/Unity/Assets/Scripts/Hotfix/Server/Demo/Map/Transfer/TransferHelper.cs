@@ -25,13 +25,22 @@ namespace ET.Server
             request.MapId = 0;//测试 后面读表
             request.OldActorId = unit.GetActorId();
             request.Unit = unit.ToBson();
+            /**
             foreach (Entity entity in unit.Components.Values)
             {
                 if (entity is ITransfer)
                 {
                     request.Entitys.Add(entity.ToBson());
                 }
+            }*/
+            
+            //传送序列化存储
+            foreach (var keyValuePair in unit.GetComponent<UnitDBSaveComponent>().Bytes)
+            {
+                request.Types.Add(keyValuePair.Key.FullName);
+                request.Entitys.Add(keyValuePair.Value);
             }
+            
             unit.Dispose();
             
             await root.GetComponent<LocationProxyComponent>().Lock(LocationType.Unit, unitId, request.OldActorId);

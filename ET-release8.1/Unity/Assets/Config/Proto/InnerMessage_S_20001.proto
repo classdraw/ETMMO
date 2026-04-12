@@ -169,6 +169,7 @@ message M2M_UnitTransferRequest // IRequest
 	int32 MapId = 4;
 	bool IsEnterGame = 5;
 	repeated bytes Entitys = 6;
+	repeated string Types = 7;
 }
 
 message M2M_UnitTransferResponse // IResponse

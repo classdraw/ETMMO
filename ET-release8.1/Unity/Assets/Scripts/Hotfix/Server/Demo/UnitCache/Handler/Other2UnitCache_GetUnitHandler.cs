@@ -45,6 +45,7 @@ namespace ET.Server
                         {
                             keyList.Add(key);
                         }
+                        //这里会去数据库取 如果取不到 那么肯定是新用户
                         foreach (string key in keyList)
                         {
                             Entity entity = await unitCacheComponent.Get(request.UnitId, key);

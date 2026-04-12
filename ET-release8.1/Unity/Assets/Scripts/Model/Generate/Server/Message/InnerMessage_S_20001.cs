@@ -754,6 +754,9 @@ namespace ET
         [MemoryPackOrder(5)]
         public List<byte[]> Entitys { get; set; } = new();
 
+        [MemoryPackOrder(6)]
+        public List<string> Types { get; set; } = new();
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -767,6 +770,7 @@ namespace ET
             this.MapId = default;
             this.IsEnterGame = default;
             this.Entitys.Clear();
+            this.Types.Clear();
 
             ObjectPool.Instance.Recycle(this);
         }
