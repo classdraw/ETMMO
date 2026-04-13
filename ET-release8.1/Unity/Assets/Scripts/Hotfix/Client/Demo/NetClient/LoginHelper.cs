@@ -6,7 +6,7 @@ namespace ET.Client
     public static class LoginHelper
     {
         //总登录流程 现在拆解
-        public static async ETTask LoginOld(Scene root, string account, string password)
+        public static async ETTask LoginOld(Scene root, string account, string password,int baseAvatar)
         {
             //root是客户端 main fiber 
             root.RemoveComponent<ClientSenderComponent>();//移除链接gate的组建 相当于重新链接
@@ -58,8 +58,8 @@ namespace ET.Client
                 c2RCreateRole.ServerId = serverInfoProto.Id;
                 c2RCreateRole.AccountName = account;
                 c2RCreateRole.Name = account;
-                c2RCreateRole.Parts.Clear();
-                RoleAvatarParts.MergeRoleAvatarIdsIntoParts(DefaultAvatarHelper.RollRandomDefault(), c2RCreateRole.Parts);
+                c2RCreateRole.BaseAvatar = baseAvatar;
+                
                 R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
                 if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
                 {
@@ -86,7 +86,7 @@ namespace ET.Client
                 return;
             }
             //r2CGetRealmKey.Key 是随机64位+时间的hashcode
-            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address);
+            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address,baseAvatar);
             if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error($"进入游戏失败;{netClient2MainLoginGame.Error}");
@@ -213,7 +213,7 @@ namespace ET.Client
             return LoginOperationResult.Success();
         }
 
-        public static async ETTask<LoginOperationResult> LoginCreateRole(Scene root, string roleName, RoleAvatarIds avatar = default)
+        public static async ETTask<LoginOperationResult> LoginCreateRole(Scene root, string roleName, int baseAvatar)
         {
             NetworkCacheComponent cache = root.GetComponent<NetworkCacheComponent>();
             if (cache == null)
@@ -234,8 +234,8 @@ namespace ET.Client
             c2RCreateRole.AccountName = cache.Account;
             c2RCreateRole.ServerId = cache.ServerId;
             c2RCreateRole.Name = roleName;
-            c2RCreateRole.Parts.Clear();
-            RoleAvatarParts.MergeRoleAvatarIdsIntoParts(avatar, c2RCreateRole.Parts);
+            c2RCreateRole.BaseAvatar = baseAvatar;
+
             R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
             if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
             {
@@ -256,7 +256,7 @@ namespace ET.Client
             return LoginOperationResult.Success();
         }
 
-        public static async ETTask<LoginOperationResult> LoginRoleEnterGame(Scene root, long roleId)
+        public static async ETTask<LoginOperationResult> LoginRoleEnterGame(Scene root, long roleId,int baseAvatar)
         {
             NetworkCacheComponent cache = root.GetComponent<NetworkCacheComponent>();
             if (cache == null)
@@ -285,7 +285,7 @@ namespace ET.Client
                 return LoginOperationResult.Fail(err);
             }
             //r2CGetRealmKey.Key 是随机64位+时间的hashcode
-            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(cache.Account, r2CGetRealmKey.Key, roleId, r2CGetRealmKey.Address);
+            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(cache.Account, r2CGetRealmKey.Key, roleId, r2CGetRealmKey.Address,baseAvatar);
             if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
             {
                 int err = netClient2MainLoginGame?.Error ?? ErrorCode.ERR_None;

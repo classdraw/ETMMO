@@ -175,7 +175,7 @@ public class ReferenceSpriteCollectorEditor : Editor
 
 		foreach (var sr in spriteRenderers)
 		{
-			if (sr == null || !IsCollectableSpriteRenderer(sr))
+			if (sr == null || !sr.enabled)
 			{
 				continue;
 			}
@@ -230,11 +230,7 @@ public class ReferenceSpriteCollectorEditor : Editor
 
 		return allowlist.Contains(gameObjectName) ? gameObjectName : null;
 	}
-
-	private static bool IsCollectableSpriteRenderer(SpriteRenderer sr)
-	{
-		return sr.enabled && sr.sprite != null;
-	}
+	
 
 	private void AddReference(SerializedProperty dataProperty, string key, SpriteRenderer spriteRenderer)
 	{

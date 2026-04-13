@@ -19,7 +19,7 @@ namespace ET
             self.LastLoginTime = roleInfoProto.LastLoginTime;
             self.CreateTime = roleInfoProto.CreateTime;
             self.ServerId = roleInfoProto.ServerId;
-            RoleAvatarParts.ApplyPartsToRoleInfo(roleInfoProto.Parts, self);
+            self.BaseAvatar = roleInfoProto.BaseAvatar;
         }
 
         public static RoleInfoProto ToMessage(this RoleInfo self)
@@ -32,8 +32,7 @@ namespace ET
             roleInfoProto.LastLoginTime = self.LastLoginTime;
             roleInfoProto.CreateTime = self.CreateTime;
             roleInfoProto.ServerId = self.ServerId;
-            roleInfoProto.Parts.Clear();
-            RoleAvatarParts.MergePartsFromRoleInfo(self, roleInfoProto.Parts);
+            roleInfoProto.BaseAvatar = self.BaseAvatar;
 
             return roleInfoProto;
         }

@@ -257,6 +257,9 @@ namespace ET
         [MemoryPackOrder(6)]
         public MoveInfo MoveInfo { get; set; }
 
+        [MemoryPackOrder(7)]
+        public int BaseAvatar { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -271,6 +274,7 @@ namespace ET
             this.Forward = default;
             this.KV.Clear();
             this.MoveInfo = default;
+            this.BaseAvatar = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1115,9 +1119,9 @@ namespace ET
         [MemoryPackOrder(6)]
         public int ServerId { get; set; }
 
-        [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
         [MemoryPackOrder(7)]
-        public Dictionary<int, int> Parts { get; set; } = new();
+        public int BaseAvatar { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -1132,7 +1136,7 @@ namespace ET
             this.LastLoginTime = default;
             this.CreateTime = default;
             this.ServerId = default;
-            this.Parts.Clear();
+            this.BaseAvatar = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1244,9 +1248,9 @@ namespace ET
         [MemoryPackOrder(4)]
         public int ServerId { get; set; }
 
-        [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
         [MemoryPackOrder(5)]
-        public Dictionary<int, int> Parts { get; set; } = new();
+        public int BaseAvatar { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -1259,7 +1263,7 @@ namespace ET
             this.AccountName = default;
             this.Name = default;
             this.ServerId = default;
-            this.Parts.Clear();
+            this.BaseAvatar = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1730,6 +1734,12 @@ namespace ET
         [MemoryPackOrder(3)]
         public long RoleId { get; set; }
 
+        /// <summary>
+        /// 初始皮肤
+        /// </summary>
+        [MemoryPackOrder(4)]
+        public int BaseAvatar { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -1741,6 +1751,7 @@ namespace ET
             this.Key = default;
             this.AccountName = default;
             this.RoleId = default;
+            this.BaseAvatar = default;
 
             ObjectPool.Instance.Recycle(this);
         }

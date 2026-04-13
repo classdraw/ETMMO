@@ -1,4 +1,5 @@
-﻿using ET;
+﻿using System.Collections.Generic;
+using ET;
 using UnityEngine;
 using UnityEngine.UI;
 using GameLogic;
@@ -96,6 +97,8 @@ namespace ET.Client
 				return;
 			}
 
+			self.PendingCreateLeftBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
+				self.PendingCreateLeftBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateLeftBaseAvatar);
 			self.RefreshLoginSlotAvatarAsync(self.m_goLeft, null).Coroutine();
 		}
 
@@ -121,6 +124,8 @@ namespace ET.Client
 				return;
 			}
 
+			self.PendingCreateRightBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
+				self.PendingCreateRightBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateRightBaseAvatar);
 			self.RefreshLoginSlotAvatarAsync(self.m_goRight, null).Coroutine();
 		}
 
@@ -232,31 +237,27 @@ namespace ET.Client
 		}
 
 		/// <summary>
-		/// 将一组 AvatarConfig Id 依次应用到登录界面插槽（与 <see cref="DefaultAvatarHelper"/> 随机规则或 <see cref="RoleInfoProto"/> 数据对应）。
+		/// 根据 <paramref name="baseAvatar"/>（ConstantConfig 9013~9015 之一）收集模板里配置的全部 <see cref="AvatarConfig"/> Id（数量不限），
+		/// 按配置顺序依次 <see cref="ChangeAvatar"/>；眼睛只配左眼 Id 时由 <see cref="AvatarEyePairUtility"/> 同步右眼。
 		/// </summary>
-		private static async ETTask ApplyRoleAvatarIdsAsync(this UILoginComponent self, ReferenceSpriteCollector collector, RoleAvatarIds ids)
+		private static async ETTask ApplyBaseAvatarAsync(this UILoginComponent self, ReferenceSpriteCollector collector, int baseAvatar)
 		{
 			if (collector == null)
 			{
 				return;
 			}
 
-			if (ids.ArmorBody != 0) await self.ChangeAvatar(ids.ArmorBody, collector);
-			if (ids.ArmorLeft != 0) await self.ChangeAvatar(ids.ArmorLeft, collector);
-			if (ids.ArmorRight != 0) await self.ChangeAvatar(ids.ArmorRight, collector);
-			if (ids.Body != 0) await self.ChangeAvatar(ids.Body, collector);
-			if (ids.BodyArmLeft != 0) await self.ChangeAvatar(ids.BodyArmLeft, collector);
-			if (ids.BodyArmRight != 0) await self.ChangeAvatar(ids.BodyArmRight, collector);
-			if (ids.FootLeft != 0) await self.ChangeAvatar(ids.FootLeft, collector);
-			if (ids.FootRight != 0) await self.ChangeAvatar(ids.FootRight, collector);
-			if (ids.Head != 0) await self.ChangeAvatar(ids.Head, collector);
-			if (ids.EyeFront != 0) await self.ChangeAvatar(ids.EyeFront, collector);
-			if (ids.EyeBack != 0) await self.ChangeAvatar(ids.EyeBack, collector);
-			if (ids.Hair != 0) await self.ChangeAvatar(ids.Hair, collector);
+			List<int> partIds = new List<int>();
+			DefaultAvatarHelper.CollectBaseAvatarDisplayConfigIds(baseAvatar, partIds);
+			for (int i = 0; i < partIds.Count; i++)
+			{
+				await self.ChangeAvatar(partIds[i], collector);
+			}
 		}
 
 		/// <summary>
-		/// 无角色：随机默认外貌；有角色：按协议数据换装。均走 <see cref="ChangeAvatar"/>。
+		/// 无角色：随机 <see cref="RoleInfoProto.BaseAvatar"/>（9013~9015）；有角色：用协议中的 BaseAvatar。
+		/// 仅保存/提交一个 int；展示时模板行写几个 AvatarConfig Id 就换几次装，模板无效则不换装。
 		/// </summary>
 		private static async ETTask RefreshLoginSlotAvatarAsync(this UILoginComponent self, GameObject slotRoot, RoleInfoProto roleOrNull)
 		{
@@ -265,19 +266,34 @@ namespace ET.Client
 				return;
 			}
 
-			RoleAvatarIds ids = roleOrNull == null
-				? DefaultAvatarHelper.RollRandomDefault()
-				: DefaultAvatarHelper.FromRoleInfoProto(roleOrNull);
-
-			if (roleOrNull == null)
+			int baseAvatar;
+			if (roleOrNull != null)
+			{
+				baseAvatar = DefaultAvatarHelper.GetBaseAvatarFromRoleOrDefault(roleOrNull);
+			}
+			else
 			{
 				if (slotRoot == self.m_goLeft)
 				{
-					self.PendingCreateLeftAvatar = ids;
+					baseAvatar = self.PendingCreateLeftBaseAvatar;
+					if (baseAvatar == 0)
+					{
+						baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+						self.PendingCreateLeftBaseAvatar = baseAvatar;
+					}
 				}
 				else if (slotRoot == self.m_goRight)
 				{
-					self.PendingCreateRightAvatar = ids;
+					baseAvatar = self.PendingCreateRightBaseAvatar;
+					if (baseAvatar == 0)
+					{
+						baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+						self.PendingCreateRightBaseAvatar = baseAvatar;
+					}
+				}
+				else
+				{
+					baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
 				}
 			}
 
@@ -287,7 +303,7 @@ namespace ET.Client
 				return;
 			}
 
-			await self.ApplyRoleAvatarIdsAsync(collector, ids);
+			await self.ApplyBaseAvatarAsync(collector, baseAvatar);
 		}
 
 		private static async ETTask RefreshLoginRoleAvatarsAsync(this UILoginComponent self)
@@ -389,7 +405,12 @@ namespace ET.Client
 				return;
 			}
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateLeftAvatar);
+			if (self.PendingCreateLeftBaseAvatar == 0)
+			{
+				self.PendingCreateLeftBaseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+			}
+
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateLeftBaseAvatar);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftCreate");
@@ -422,7 +443,12 @@ namespace ET.Client
 				return;
 			}
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateRightAvatar);
+			if (self.PendingCreateRightBaseAvatar == 0)
+			{
+				self.PendingCreateRightBaseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+			}
+
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateRightBaseAvatar);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightCreate");
@@ -499,7 +525,7 @@ namespace ET.Client
 			}
 
 			long roleId = roles.RoleInfoList[0].Id;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId);
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId,self.PendingCreateLeftBaseAvatar);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftEnter");
@@ -521,7 +547,7 @@ namespace ET.Client
 			}
 
 			long roleId = roles.RoleInfoList[1].Id;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId);
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId,self.PendingCreateRightBaseAvatar);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightEnter");

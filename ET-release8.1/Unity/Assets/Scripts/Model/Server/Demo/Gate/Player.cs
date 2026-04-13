@@ -9,10 +9,11 @@
 
     //登陆玩家实体
     [ChildOf(typeof(PlayerComponent))]
-    public sealed class Player : Entity, IAwake<string>//id就是 数据库roleId
+    public sealed class Player : Entity, IAwake<string,int>//id就是 数据库roleId
     {
         public long UnitId { get; set; }//数据库id 也是唯一id  UnitId=Id
         public string AccountName { get; set; }
         public PlayerState PlayerState { get; set; }
+        public int BaseAvatar { get; set; }
     }
 }

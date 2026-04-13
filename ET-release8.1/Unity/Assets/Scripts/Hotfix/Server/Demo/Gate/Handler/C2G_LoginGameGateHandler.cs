@@ -62,7 +62,7 @@ namespace ET.Server
                     //playerSessionComponent 可以网络消息处理
                     //player也可以网络消息处理 只是处理消息类型不同
                     //player的id和player的unitId一样
-                    player = playerComponent.AddChildWithId<Player, string>(request.RoleId,account);
+                    player = playerComponent.AddChildWithId<Player, string,int>(request.RoleId,account,request.BaseAvatar);
                     player.UnitId = request.RoleId;
                     
                     playerComponent.Add(player);

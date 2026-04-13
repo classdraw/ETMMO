@@ -145,6 +145,43 @@ namespace ET.Client
 
             await ETTask.CompletedTask;
         }
+
+		/// <summary>
+		/// 按基底外观（ConstantConfig 9013~9015）初始化角色各部位：依配置顺序逐个 <see cref="ChangeAvatar"/>，
+		/// 并保存一份 key/value：<see cref="AvatarPartType"/> -> AvatarConfigId。
+		/// </summary>
+		public static async ETTask InitPartsFromBaseAvatarAsync(this Avatar2DComponent self, Unit unit, int baseAvatar)
+		{
+			if (self == null || unit == null || unit.IsDisposed)
+			{
+				return;
+			}
+
+			if (baseAvatar == 0)
+			{
+				baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+			}
+
+			RoleAvatarParts roleAvatarParts = unit.GetComponent<RoleAvatarParts>() ?? unit.AddComponent<RoleAvatarParts>();
+			roleAvatarParts.PartToAvatarConfigId.Clear();
+
+			List<int> partIds = new List<int>();
+			DefaultAvatarHelper.CollectBaseAvatarDisplayConfigIds(baseAvatar, partIds);
+			for (int i = 0; i < partIds.Count; i++)
+			{
+				int avatarConfigId = partIds[i];
+				if (!AvatarConfigCategory.Instance.Contain(avatarConfigId))
+				{
+					continue;
+				}
+
+				AvatarConfig cfg = AvatarConfigCategory.Instance.Get(avatarConfigId);
+				AvatarPartType partType = (AvatarPartType)cfg.AvatarPartType;
+				roleAvatarParts.PartToAvatarConfigId[partType] = avatarConfigId;
+
+				await self.ChangeAvatar(avatarConfigId);
+			}
+		}
         
     }
 }

@@ -4,7 +4,8 @@ using UnityEngine;
 namespace ET.Client
 {
     /// <summary>
-    /// 眼睛部位：库表/协议只存一份配置 Id（前眼 EyeFront、后眼 EyeBack），显示层需同时写到 Left/Right 绑点。
+    /// 眼睛部位：<see cref="AvatarConfig"/> 与 ConstantConfig（Default_Eye_Front_Left / Default_Eye_Back_Left）只配左眼 Id；
+    /// 换装时把同一 Sprite 写到左右眼绑点，右眼与左眼一致。
     /// </summary>
     public static class AvatarEyePairUtility
     {

@@ -54,18 +54,7 @@ namespace ET
         
         
         //avatar数据
-        public int ArmorBody;
-        public int ArmorLeft;
-        public int ArmorRight;
-        public int Body;
-        public int BodyArmLeft;
-        public int BodyArmRight;
-        public int FootLeft;
-        public int FootRight;
-        public int Head;
-        public int EyeFront;
-        public int EyeBack;
-        public int Hair;
+        public int BaseAvatar;//保存基础avatar组，角色皮肤，角色穿着在unit存储
 
     }
 }

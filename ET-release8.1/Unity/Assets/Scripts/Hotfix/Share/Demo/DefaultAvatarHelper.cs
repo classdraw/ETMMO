@@ -1,137 +1,101 @@
+using System;
 using System.Collections.Generic;
 
 namespace ET
 {
-    public static class DefaultAvatarHelper
-    {
-        /// <summary>
-        /// 9001~9003、9004~9009 各组共用一次随机下标；前/后眼各只存一份 Id（9010、9011 分别随机）；9012 单独随机。
-        /// </summary>
-        public static RoleAvatarIds RollRandomDefault()
-        {
-            const int fallback = 0;
-            int[] buf = new int[6];
-            RoleAvatarIds ids = default;
+	/// <summary>
+	/// 基底外观：角色只存 <see cref="RoleInfoProto.BaseAvatar"/>（9013/9014/9015 常量表 Id）。
+	/// 模板行 <c>StringValue</c> 为任意多个 <see cref="AvatarConfig"/> Id（逗号/分号/竖线分隔），按书写顺序依次换装，配置几项就应用几项。
+	/// 眼睛请在表里只配左眼对应的 AvatarConfig Id（前眼/后眼各至多一项），显示层会同步到右眼。
+	/// 若模板行不存在、为空或解析不到任何有效 Id，则列表为空（不再从其它常量行自动补齐）。
+	/// </summary>
+	public static class DefaultAvatarHelper
+	{
+		public const int ConstantBaseAvatarA = 9013;
+		public const int ConstantBaseAvatarB = 9014;
+		public const int ConstantBaseAvatarC = 9015;
 
-            if (TryPickSyncedAvatarIds(new[] { 9001, 9002, 9003 }, buf, fallback))
-            {
-                ids.ArmorBody = buf[0];
-                ids.ArmorLeft = buf[1];
-                ids.ArmorRight = buf[2];
-            }
-            else
-            {
-                Log.Warning("DefaultAvatar: 9001~9003 同步随机失败");
-            }
+		private static readonly int[] BaseAvatarPool = { ConstantBaseAvatarA, ConstantBaseAvatarB, ConstantBaseAvatarC };
 
-            if (TryPickSyncedAvatarIds(new[] { 9004, 9005, 9006, 9007, 9008, 9009 }, buf, fallback))
-            {
-                ids.Body = buf[0];
-                ids.BodyArmLeft = buf[1];
-                ids.BodyArmRight = buf[2];
-                ids.FootLeft = buf[3];
-                ids.FootRight = buf[4];
-                ids.Head = buf[5];
-            }
-            else
-            {
-                Log.Warning("DefaultAvatar: 9004~9009 同步随机失败");
-            }
+		public static int GetDefaultBaseAvatar()
+		{
+			return ConstantBaseAvatarA;
+		}
 
-            ids.EyeFront = PickRandomAvatarIdFromConstant(9010, fallback);
-            ids.EyeBack = PickRandomAvatarIdFromConstant(9011, fallback);
+		public static int RollRandomBaseAvatar()
+		{
+			int i = RandomGenerator.RandomNumber(0, BaseAvatarPool.Length);
+			return BaseAvatarPool[i];
+		}
 
-            ids.Hair = PickRandomAvatarIdFromConstant(9012, fallback);
-            return ids;
-        }
+		/// <summary>
+		/// 顺序轮换基底外观：在 <see cref="BaseAvatarPool"/> 内按 index++，超过长度则回到 0。
+		/// 若 <paramref name="currentBaseAvatar"/> 不在池内，则返回池的第 0 项。
+		/// </summary>
+		public static int NextBaseAvatar(int currentBaseAvatar)
+		{
+			if (BaseAvatarPool == null || BaseAvatarPool.Length == 0)
+			{
+				return 0;
+			}
 
-        public static RoleAvatarIds FromRoleInfoProto(RoleInfoProto proto)
-        {
-            if (proto == null)
-            {
-                return default;
-            }
+			int idx = -1;
+			for (int i = 0; i < BaseAvatarPool.Length; i++)
+			{
+				if (BaseAvatarPool[i] == currentBaseAvatar)
+				{
+					idx = i;
+					break;
+				}
+			}
 
-            return RoleAvatarParts.ToRoleAvatarIds(proto.Parts);
-        }
-        
-        private static bool TryPickSyncedAvatarIds(int[] constantIds, int[] outIds, int fallback)
-        {
-            int n = constantIds.Length;
-            var lists = new List<int>[n];
-            for (int i = 0; i < n; i++)
-            {
-                lists[i] = ParseAvatarIdListFromConstant(constantIds[i]);
-                if (lists[i].Count == 0)
-                {
-                    for (int j = 0; j < n; j++)
-                    {
-                        outIds[j] = fallback;
-                    }
+			int nextIndex = idx + 1;
+			if (nextIndex < 0 || nextIndex >= BaseAvatarPool.Length)
+			{
+				nextIndex = 0;
+			}
 
-                    return false;
-                }
-            }
+			return BaseAvatarPool[nextIndex];
+		}
 
-            int minLen = lists[0].Count;
-            for (int i = 1; i < n; i++)
-            {
-                if (lists[i].Count < minLen)
-                {
-                    minLen = lists[i].Count;
-                }
-            }
+		public static int GetBaseAvatarFromRoleOrDefault(RoleInfoProto roleOrNull)
+		{
+			if (roleOrNull == null || roleOrNull.BaseAvatar == 0)
+			{
+				return RollRandomBaseAvatar();
+			}
 
-            int idx = RandomGenerator.RandomNumber(0, minLen);
-            for (int i = 0; i < n; i++)
-            {
-                outIds[i] = lists[i][idx];
-            }
+			return roleOrNull.BaseAvatar;
+		}
 
-            return true;
-        }
+		/// <summary>
+		/// 收集要在界面上按序应用的 AvatarConfig Id：仅来自基底模板行（9013 等）的 StringValue 列表。
+		/// </summary>
+		public static void CollectBaseAvatarDisplayConfigIds(int baseAvatarConstantId, List<int> dest)
+		{
+			if (dest == null)
+			{
+				throw new ArgumentNullException(nameof(dest));
+			}
 
-        private static List<int> ParseAvatarIdListFromConstant(int constantId)
-        {
-            List<int> ids = new List<int>();
-            if (!ConstantConfigCategory.Instance.Contain(constantId))
-            {
-                Log.Warning($"DefaultAvatar: ConstantConfig 不存在 id={constantId}");
-                return ids;
-            }
+			dest.Clear();
 
-            string raw = ConstantConfigCategory.Instance.Get(constantId).StringValue;
-            if (string.IsNullOrWhiteSpace(raw))
-            {
-                Log.Warning($"DefaultAvatar: ConstantConfig id={constantId} StringValue 为空");
-                return ids;
-            }
-
-            foreach (string part in raw.Split(','))
-            {
-                if (int.TryParse(part.Trim(), out int id))
-                {
-                    ids.Add(id);
-                }
-            }
-
-            if (ids.Count == 0)
-            {
-                Log.Warning($"DefaultAvatar: ConstantConfig id={constantId} 无有效整数列表 raw={raw}");
-            }
-
-            return ids;
-        }
-
-        private static int PickRandomAvatarIdFromConstant(int constantId, int fallback)
-        {
-            List<int> ids = ParseAvatarIdListFromConstant(constantId);
-            if (ids.Count == 0)
-            {
-                return fallback;
-            }
-
-            return RandomGenerator.RandomArray(ids);
-        }
-    }
+			if (baseAvatarConstantId != 0
+			    && ConstantConfigCategory.Instance.Contain(baseAvatarConstantId))
+			{
+				string raw = ConstantConfigCategory.Instance.Get(baseAvatarConstantId).StringValue;
+				if (!string.IsNullOrWhiteSpace(raw))
+				{
+					string[] parts = raw.Split(new[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
+					for (int i = 0; i < parts.Length; i++)
+					{
+						if (int.TryParse(parts[i].Trim(), out int id) && id != 0)
+						{
+							dest.Add(id);
+						}
+					}
+				}
+			}
+		}
+	}
 }

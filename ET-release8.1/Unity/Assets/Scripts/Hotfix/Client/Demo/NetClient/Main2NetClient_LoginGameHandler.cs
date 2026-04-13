@@ -21,6 +21,7 @@ namespace ET.Client
             c2GLoginGameGate.Key = request.RealmKey;
             c2GLoginGameGate.AccountName = request.AccountName;
             c2GLoginGameGate.RoleId = request.RoleId;
+            c2GLoginGameGate.BaseAvatar = request.BaseAvatar;
             G2C_LoginGameGate g2CLoginGameGate = (G2C_LoginGameGate)await gateSession.Call(c2GLoginGameGate);
 
             if (g2CLoginGameGate==null||g2CLoginGameGate.Error!=ErrorCode.ERR_Success)
