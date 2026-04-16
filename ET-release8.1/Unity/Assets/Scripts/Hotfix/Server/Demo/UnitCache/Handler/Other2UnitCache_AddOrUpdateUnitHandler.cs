@@ -13,12 +13,14 @@ namespace ET.Server
         {
             UnitCacheComponent unitCacheComponent = root.GetComponent<UnitCacheComponent>();
             long unitId = request.UnitId;
-            using ListComponent<Entity> entityList = ListComponent<Entity>.Create();
-            for (int i=0;i<request.EntityTypes.Count;i++) {
-                Entity entity= MongoHelper.Deserialize<Entity>(request.EntityBytes[i]);
-                entityList.Add(entity);
+            using (ListComponent<Entity> entityList = ListComponent<Entity>.Create())
+            {
+                for (int i=0;i<request.EntityTypes.Count;i++) {
+                    Entity entity= MongoHelper.Deserialize<Entity>(request.EntityBytes[i]);
+                    entityList.Add(entity);
+                }
+                await unitCacheComponent.AddOrUpdate(unitId, entityList);
             }
-            await unitCacheComponent.AddOrUpdate(unitId, entityList);
         }
     }
 }

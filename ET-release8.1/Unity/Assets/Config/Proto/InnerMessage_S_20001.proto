@@ -270,6 +270,9 @@ message M2G_SecondLogin // ILocationResponse
 	string Message = 3;
 }
 
+// *********************************
+// ***********玩家缓存相关***********
+// *********************************
 
 //---------------------缓存服--------------------
 // ResponseType UnitCache2Other_AddOrUpdateUnit
