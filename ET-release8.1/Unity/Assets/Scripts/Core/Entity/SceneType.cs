@@ -30,7 +30,7 @@ namespace ET
 		LoginCenter= 1 << 21,//登录中心服
 		Mail = 1 << 22,//邮箱服务器
 		// 客户端
-		Demo = 1 << 30,
+		StateSync = 1 << 30,
 		Current = 1L << 31,
 		LockStep = 1L << 32,
 		LockStepView = 1L << 33,
