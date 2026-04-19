@@ -424,16 +424,40 @@ message G2C_EnterGame // ISessionResponse
 
 //////////////////////登陆相关////////////////////////////////////////
 
+//////////////////////数值///////////////////////////////////////////
+
 // ResponseType M2C_TestNumericValue
 message C2M_TestNumericValue // ILocationRequest
 {
 	int32 RpcId = 1;
 }
 
-message M2C_TestNumericValue // IResponse
+message M2C_TestNumericValue // ILocationResponse
 {
 	int32 RpcId = 1;
 	int32 Error = 2;
 	string Message = 3;
 	string response = 4;
 }
+
+message M2C_NoticeUnitNumeric // IMessage
+{
+	int64 UnitId = 1;
+	int32 NumericType = 2;
+	int64 NewValue = 3 ;
+}
+
+message M2C_NoticeNumericMsg // IMessage
+{
+	int32 NumericType = 1;
+	int64 NewValue = 2;
+}
+
+message M2C_NoticeUnitNumericList // IMessage
+{
+	int64 UnitId = 1;
+	repeated int32 NumericTypeList = 2;
+	repeated int64 NewValueList = 3;
+}
+
+//////////////////////数值///////////////////////////////////////////

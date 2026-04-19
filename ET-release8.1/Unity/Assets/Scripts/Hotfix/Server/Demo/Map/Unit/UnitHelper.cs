@@ -44,7 +44,7 @@ namespace ET.Server
                 EventSystem.Instance.Publish(unit.Scene(), new UnitCheckCfg() { Unit = unit });
                 EventSystem.Instance.Publish(unit.Scene(), new UnitReEffect() { Unit = unit });
             }*/
-            
+            unit.AddComponent<NumericNoticeComponent>();//数值同步组件
             unit.AddComponent<MoveComponent>();
             unit.AddComponent<PathfindingComponent, string>(root.Name);
             if (root.Name.Equals(("Map1")))

@@ -57,5 +57,76 @@ namespace ET.Server
         {
             root.GetComponent<MessageSender>().Send(actorId, message);
         }
+        
+        public static void SendClient(Unit unit, IMessage message, NoticeClientType noticeClientType)
+        {
+            if (unit.IsDisposed)
+            {
+                return;
+            }
+            
+            if (message is IMapMessage iCurrentScene)
+            {
+                iCurrentScene.SceneId = unit.Scene().Id;
+            }
+            
+            switch (noticeClientType)
+            {
+                case NoticeClientType.NoNotice:
+                    break;
+                case NoticeClientType.Self:
+                    SendClientSelf(unit, message);
+                    break;
+                case NoticeClientType.Broadcast:
+                    SendClientBroadcast(unit, message);
+                    break;
+                case NoticeClientType.BroadcastWithoutSelf:
+                    SendClientBroadcastWithoutSelf(unit, message);
+                    break;
+            }
+        }
+        
+        
+        private static void SendClientSelf(Unit unit, IMessage message)
+        {
+            unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(unit.Id, message).Coroutine();
+        }
+        
+        private static void SendClientBroadcast(Unit unit, IMessage message)
+        {
+            if (unit.GetComponent<AOIEntity>() == null)
+            {
+                return;
+            }
+            (message as MessageObject).IsFromPool = false;
+            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
+            // 网络底层做了优化，同一个消息不会多次序列化
+            MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
+            foreach (AOIEntity u in dict.Values)
+            {
+                oneTypeMessageLocationType.Send(u.Unit.Id, message).Coroutine();
+            }
+        }
+
+        
+        private static void SendClientBroadcastWithoutSelf(Unit unit, IMessage message)
+        {
+            if (unit.GetComponent<AOIEntity>() == null)
+            {
+                return;
+            }
+            (message as MessageObject).IsFromPool = false;
+            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
+            // 网络底层做了优化，同一个消息不会多次序列化
+            MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
+            foreach (AOIEntity u in dict.Values)
+            {
+                if (unit.Id == u.Unit.Id)
+                {
+                    continue;
+                }
+                oneTypeMessageLocationType.Send(u.Unit.Id, message).Coroutine();
+            }
+        }
     }
 }

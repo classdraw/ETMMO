@@ -1863,6 +1863,9 @@ namespace ET
     /// <summary>
     /// 登陆相关////////////////////////////////////////
     /// </summary>
+    /// <summary>
+    /// 数值///////////////////////////////////////////
+    /// </summary>
     [MemoryPackable]
     [Message(OuterMessage.C2M_TestNumericValue)]
     [ResponseType(nameof(M2C_TestNumericValue))]
@@ -1891,7 +1894,7 @@ namespace ET
 
     [MemoryPackable]
     [Message(OuterMessage.M2C_TestNumericValue)]
-    public partial class M2C_TestNumericValue : MessageObject, IResponse, ILocationResponse
+    public partial class M2C_TestNumericValue : MessageObject, ILocationResponse
     {
         public static M2C_TestNumericValue Create(bool isFromPool = false)
         {
@@ -1926,6 +1929,104 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_NoticeUnitNumeric)]
+    public partial class M2C_NoticeUnitNumeric : MessageObject, IMessage
+    {
+        public static M2C_NoticeUnitNumeric Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_NoticeUnitNumeric), isFromPool) as M2C_NoticeUnitNumeric;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int NumericType { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long NewValue { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.NumericType = default;
+            this.NewValue = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_NoticeNumericMsg)]
+    public partial class M2C_NoticeNumericMsg : MessageObject, IMessage
+    {
+        public static M2C_NoticeNumericMsg Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_NoticeNumericMsg), isFromPool) as M2C_NoticeNumericMsg;
+        }
+
+        [MemoryPackOrder(0)]
+        public int NumericType { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long NewValue { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.NumericType = default;
+            this.NewValue = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_NoticeUnitNumericList)]
+    public partial class M2C_NoticeUnitNumericList : MessageObject, IMessage
+    {
+        public static M2C_NoticeUnitNumericList Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_NoticeUnitNumericList), isFromPool) as M2C_NoticeUnitNumericList;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public List<int> NumericTypeList { get; set; } = new();
+
+        [MemoryPackOrder(2)]
+        public List<long> NewValueList { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.NumericTypeList.Clear();
+            this.NewValueList.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// 数值///////////////////////////////////////////
+    /// </summary>
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -1983,5 +2084,8 @@ namespace ET
         public const ushort G2C_EnterGame = 10054;
         public const ushort C2M_TestNumericValue = 10055;
         public const ushort M2C_TestNumericValue = 10056;
+        public const ushort M2C_NoticeUnitNumeric = 10057;
+        public const ushort M2C_NoticeNumericMsg = 10058;
+        public const ushort M2C_NoticeUnitNumericList = 10059;
     }
 }
