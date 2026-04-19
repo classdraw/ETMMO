@@ -55,7 +55,7 @@ namespace ET.Server
             await unit.SendToClient(m2CCreateUnits);
 
             // 加入aoi
-            unit.AddComponent<AOIEntity, int, float3>(9 * 1000, unit.Position);
+            unit.AddComponent<AOIEntity, int, float3>(6 * 1000, unit.Position);
             
             if (request.IsEnterGame)
             {
