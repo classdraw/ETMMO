@@ -15,7 +15,7 @@
 	    public const int Hp = 1001;//血量
 	    //public const int HpBase = Hp * 10 + 1;
 
-	    //public const int MaxHp = 1002;
+	    public const int MaxHp = 1002;
 	    //public const int MaxHpBase = MaxHp * 10 + 1;
 	    //public const int MaxHpAdd = MaxHp * 10 + 2;
 	    //public const int MaxHpPct = MaxHp * 10 + 3;
