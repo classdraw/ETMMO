@@ -16,7 +16,7 @@ namespace ET.Server
 
         public Dictionary<Type, byte[]> Bytes { get; } = new Dictionary<Type, byte[]>();
 
-        [BsonIgnore]
-        public HashSet<Type> ComponentTypes { get; } = new HashSet<Type>();
+        //[BsonIgnore]
+        //public HashSet<Type> ComponentTypes { get; } = new HashSet<Type>();
     }
 }

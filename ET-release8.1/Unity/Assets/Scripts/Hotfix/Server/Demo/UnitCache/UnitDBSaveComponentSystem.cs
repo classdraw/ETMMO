@@ -28,34 +28,40 @@ namespace ET.Server
         {
             //正式上线 每10-15分钟随机存储一次
             //long time = RandomGenerator.RandomNumber(10, 16) * 60 * 1000;
-            long time = 4 * 1000;
+            long time = 10 * 1000;
             self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(time, TimerInvokeType.SaveChangeDBDate, self);
         }
+        
         [EntitySystem]
         private static void Destroy(this ET.Server.UnitDBSaveComponent self)
         {
 
             self.Root().GetComponent<TimerComponent>().Remove(ref self.Timer);
+            //self.ComponentTypes.Clear();
+            self.EntityChangeTypeSet.Clear();
+            self.TransferChanges.Clear();
+            self.Bytes.Clear();
         }
         
         public static void AddToBytes(this UnitDBSaveComponent self, Type type, byte[] bytes)
         {
-            self.Bytes[type] = bytes;//实力已经存储了 这里是给传送用  序列化
+            self.Bytes[type] = bytes;//数据库已经存储了 缓存在unitCache, 这里是给传送用  序列化
         }
         //发现改动 及时发送数据给缓存服  缓存服定时更新
         public static void AddChange(this UnitDBSaveComponent self, Type type)
         {
             //self.EntityChangeTypeSet.Add(type);
 
-            self.ComponentTypes.Add(type);
+            //self.ComponentTypes.Add(type);//一个存档 记录所有改变的组件
             if (typeof(IUnitCache).IsAssignableFrom(type))
             {
                 self.EntityChangeTypeSet.Add(type);
             }
-            else if (typeof(ITransfer).IsAssignableFrom(type))
-            {
-               self.TransferChanges.Add(type);
-            }
+            
+            //else if (typeof(ITransfer).IsAssignableFrom(type))
+            //{
+            //   self.TransferChanges.Add(type);
+            //}
           
         }
         
@@ -110,7 +116,7 @@ namespace ET.Server
                 byte[] bytes = entity.ToBson();
                 message.EntityTypes.Add(type.FullName);
                 message.EntityBytes.Add(bytes);
-                self.AddToBytes(type,bytes);
+                self.AddToBytes(type,bytes);//加到bytes目的是传送时候方便序列化，到另外一个场景不会丢失  比如背包数据
             }
             
             self.EntityChangeTypeSet.Clear();
@@ -118,7 +124,7 @@ namespace ET.Server
             
             //通知缓存服更新数据   这里会更新缓存 也会更新数据库数据 最终在AddOrUpdate处理
             StartSceneConfig unitCacheCfg = StartSceneConfigCategory.Instance.GetBySceneType(unit.Zone(), SceneType.UnitCache);
-            self.Root().GetComponent<MessageSender>().Call(unitCacheCfg.ActorId,message).Coroutine();
+            self.Root()?.GetComponent<MessageSender>().Call(unitCacheCfg.ActorId,message).Coroutine();
         }
         
         public static void SaveTransfer(this UnitDBSaveComponent unitSaver)

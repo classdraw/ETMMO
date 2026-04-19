@@ -6,6 +6,7 @@ using UnityEngine;
 namespace ET.Client
 {
     [FriendOf(typeof(Avatar2DComponent))]
+    [FriendOf(typeof(RoleAvatarParts))]
     [EntitySystemOf(typeof(Avatar2DComponent))]
     public static partial class Avatar2DComponentSystem
     {

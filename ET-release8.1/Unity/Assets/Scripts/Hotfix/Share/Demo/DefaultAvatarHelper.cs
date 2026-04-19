@@ -15,47 +15,56 @@ namespace ET
 		public const int ConstantBaseAvatarB = 9014;
 		public const int ConstantBaseAvatarC = 9015;
 
-		private static readonly int[] BaseAvatarPool = { ConstantBaseAvatarA, ConstantBaseAvatarB, ConstantBaseAvatarC };
 
 		public static int GetDefaultBaseAvatar()
 		{
 			return ConstantBaseAvatarA;
 		}
 
-		public static int RollRandomBaseAvatar()
+		/// <summary>基底外观常量表 Id 个数（<see cref="ConstantBaseAvatarA"/>~<see cref="ConstantBaseAvatarC"/> 连续区间）。</summary>
+		public static int GetBaseAvatarPoolLength()
 		{
-			int i = RandomGenerator.RandomNumber(0, BaseAvatarPool.Length);
-			return BaseAvatarPool[i];
+			return ConstantBaseAvatarC - ConstantBaseAvatarA + 1;
 		}
 
-		/// <summary>
-		/// 顺序轮换基底外观：在 <see cref="BaseAvatarPool"/> 内按 index++，超过长度则回到 0。
-		/// 若 <paramref name="currentBaseAvatar"/> 不在池内，则返回池的第 0 项。
-		/// </summary>
-		public static int NextBaseAvatar(int currentBaseAvatar)
+		/// <summary>在 <see cref="ConstantBaseAvatarA"/>~<see cref="ConstantBaseAvatarC"/> 内随机取一项。</summary>
+		public static int RollRandomBaseAvatar()
 		{
-			if (BaseAvatarPool == null || BaseAvatarPool.Length == 0)
+			int len = GetBaseAvatarPoolLength();
+			if (len <= 0)
 			{
 				return 0;
 			}
 
-			int idx = -1;
-			for (int i = 0; i < BaseAvatarPool.Length; i++)
+			int offset = RandomGenerator.RandomNumber(0, len);
+			return ConstantBaseAvatarA + offset;
+		}
+
+		/// <summary>
+		/// 顺序轮换基底外观：在 9013~9015 内按 index++，超过长度则回到 0。
+		/// 若 <paramref name="currentBaseAvatar"/> 不在池内，则返回 <see cref="ConstantBaseAvatarA"/>。
+		/// </summary>
+		public static int NextBaseAvatar(int currentBaseAvatar)
+		{
+			int len = GetBaseAvatarPoolLength();
+			if (len <= 0)
 			{
-				if (BaseAvatarPool[i] == currentBaseAvatar)
-				{
-					idx = i;
-					break;
-				}
+				return 0;
 			}
 
+			if (currentBaseAvatar < ConstantBaseAvatarA || currentBaseAvatar > ConstantBaseAvatarC)
+			{
+				return ConstantBaseAvatarA;
+			}
+
+			int idx = currentBaseAvatar - ConstantBaseAvatarA;
 			int nextIndex = idx + 1;
-			if (nextIndex < 0 || nextIndex >= BaseAvatarPool.Length)
+			if (nextIndex >= len)
 			{
 				nextIndex = 0;
 			}
 
-			return BaseAvatarPool[nextIndex];
+			return ConstantBaseAvatarA + nextIndex;
 		}
 
 		public static int GetBaseAvatarFromRoleOrDefault(RoleInfoProto roleOrNull)
