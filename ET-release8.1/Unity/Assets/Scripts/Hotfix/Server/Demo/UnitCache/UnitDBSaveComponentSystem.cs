@@ -42,7 +42,7 @@ namespace ET.Server
             self.TransferChanges.Clear();
             self.Bytes.Clear();
         }
-        
+        //这里的type只能是IUnitCache ITransfer
         public static void AddToBytes(this UnitDBSaveComponent self, Type type, byte[] bytes)
         {
             self.Bytes[type] = bytes;//数据库已经存储了 缓存在unitCache, 这里是给传送用  序列化

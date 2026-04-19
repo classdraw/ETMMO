@@ -61,8 +61,6 @@ namespace ET.Server
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
             if (request.IsEnterGame)
             {
-//                unit.AddComponent<NumericComponent>();
-                //unit.AddComponent<FashionComponent>();
 
                 EventSystem.Instance.Publish(unit.Scene(), new UnitCheckCfg() { Unit = unit });
                 EventSystem.Instance.Publish(unit.Scene(), new UnitReEffect() { Unit = unit });

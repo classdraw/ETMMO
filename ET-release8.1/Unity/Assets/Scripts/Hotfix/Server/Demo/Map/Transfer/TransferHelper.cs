@@ -20,20 +20,23 @@ namespace ET.Server
             // location加锁
             long unitId = unit.Id;
             
+            //传送就存档一份数据库
+            unit.GetComponent<UnitDBSaveComponent>()?.SaveChangeNoWait();
+            
             M2M_UnitTransferRequest request = M2M_UnitTransferRequest.Create();
             request.IsEnterGame = isEnterGame;
             request.MapId = 0;//测试 后面读表
             request.OldActorId = unit.GetActorId();
             request.Unit = unit.ToBson();
-            /**
-            foreach (Entity entity in unit.Components.Values)
-            {
-                if (entity is ITransfer)
-                {
-                    request.Entitys.Add(entity.ToBson());
-                }
-            }*/
             
+            //foreach (Entity entity in unit.Components.Values)
+            //{
+            //    if (entity is ITransfer)
+            //    {
+            //        request.Entitys.Add(entity.ToBson());
+            //    }
+            //}
+            //
             //传送序列化存储
             foreach (var keyValuePair in unit.GetComponent<UnitDBSaveComponent>().Bytes)
             {
