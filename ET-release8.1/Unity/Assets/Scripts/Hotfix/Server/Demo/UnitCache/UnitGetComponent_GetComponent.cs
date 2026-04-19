@@ -33,7 +33,7 @@ namespace ET.Server
             {
                 return;
             }
-            
+            //延迟组件反序列化的时机，玩家有用到对应组件再对需要的组件反序列化，降低cpu消耗尖端 
             Entity t = MongoHelper.Deserialize(type,bs) as Entity;
             //不存在需要自己添加进去
             unit.AddComponent(t);
