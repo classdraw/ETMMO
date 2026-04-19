@@ -1863,6 +1863,69 @@ namespace ET
     /// <summary>
     /// 登陆相关////////////////////////////////////////
     /// </summary>
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_TestNumericValue)]
+    [ResponseType(nameof(M2C_TestNumericValue))]
+    public partial class C2M_TestNumericValue : MessageObject, ILocationRequest
+    {
+        public static C2M_TestNumericValue Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_TestNumericValue), isFromPool) as C2M_TestNumericValue;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_TestNumericValue)]
+    public partial class M2C_TestNumericValue : MessageObject, IResponse, ILocationResponse
+    {
+        public static M2C_TestNumericValue Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_TestNumericValue), isFromPool) as M2C_TestNumericValue;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public string response { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.response = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -1918,5 +1981,7 @@ namespace ET
         public const ushort G2C_LoginGameGate = 10052;
         public const ushort C2G_EnterGame = 10053;
         public const ushort G2C_EnterGame = 10054;
+        public const ushort C2M_TestNumericValue = 10055;
+        public const ushort M2C_TestNumericValue = 10056;
     }
 }

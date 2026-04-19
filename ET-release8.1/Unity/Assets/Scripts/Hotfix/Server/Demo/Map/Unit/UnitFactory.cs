@@ -18,6 +18,7 @@ namespace ET.Server
                     NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
                     numericComponent.Set(NumericType.Speed, 3f); // 速度是3米每秒
                     numericComponent.Set(NumericType.AOI, 6000); // 视野6米
+                    numericComponent.Set(NumericType.Level,0);//等级
                     
                     unitComponent.Add(unit);
                     // 加入aoi
