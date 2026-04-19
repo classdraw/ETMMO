@@ -50,8 +50,6 @@ namespace ET.Server
         //发现改动 及时发送数据给缓存服  缓存服定时更新
         public static void AddChange(this UnitDBSaveComponent self, Type type)
         {
-            //self.EntityChangeTypeSet.Add(type);
-
             //self.ComponentTypes.Add(type);//一个存档 记录所有改变的组件
             if (typeof(IUnitCache).IsAssignableFrom(type))
             {

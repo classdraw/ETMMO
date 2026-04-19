@@ -4,7 +4,7 @@ namespace ET
     public static partial class UnitSystem
     {
         [EntitySystem]
-        private static void Awake(this Unit self, int configId,int baseAvatar)
+        private static void Awake(this Unit self, int configId, int baseAvatar)
         {
             self.ConfigId = configId;
             self.BaseAvatar = baseAvatar;
@@ -14,7 +14,7 @@ namespace ET
         {
             return UnitConfigCategory.Instance.Get(self.ConfigId);
         }
-        
+
         public static UnitType Type(this Unit self)
         {
             return (UnitType)self.Config().Type;
@@ -46,7 +46,7 @@ namespace ET
         {
             return self.Type() == UnitType.NPC;
         }
-        
+
         /// <summary>
         /// 是否是宠物
         /// </summary>
@@ -55,6 +55,15 @@ namespace ET
         public static bool IsPet(this Unit self)
         {
             return self.Type() == UnitType.Pet;
+        }
+        
+        [EntitySystem]
+        private static void GetComponentSys(this ET.Unit unit, System.Type type)
+        {
+            if (typeof(IUnitCache).IsAssignableFrom(type)|| typeof(ITransfer).IsAssignableFrom(type))
+            {
+                EventSystem.Instance.Publish(unit.Scene(),new UnitGetComponent{Type = type,Unit = unit});
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ namespace ET.Server
     /// Gate/Map 侧从 UnitCache 拉回组件 BSON 后，写入本地 Unit 的 <see cref="UnitDBSaveComponent.Bytes"/>，供传送等逻辑使用。
     /// </summary>
     [Invoke((long)SceneType.UnitCache)]
-    public class InvokeAddToBytes_UnitCache : AInvokeHandler<AddToBytes>
+    public class AddToBytesInvoker_UnitCache : AInvokeHandler<AddToBytes>
     {
         public override void Handle(AddToBytes args)
         {

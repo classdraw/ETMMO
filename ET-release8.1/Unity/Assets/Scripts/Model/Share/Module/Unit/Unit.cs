@@ -6,7 +6,7 @@ namespace ET
 {
     [ChildOf(typeof(UnitComponent))]
     [DebuggerDisplay("ViewName,nq")]
-    public partial class Unit: Entity, IAwake<int,int>
+    public partial class Unit: Entity, IAwake<int,int>,IGetComponentSys
     {
         public int ConfigId { get; set; } //配置表id
         public int BaseAvatar { get; set; }//初始的皮

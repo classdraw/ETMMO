@@ -41,14 +41,14 @@ namespace ET.Server
 
             for (int i = 0; i < unitCache2OtherGetUnit.EntityList.Count; i++)
             {
-                if (i == indexOf)
+                if (i == indexOf)//unit自身 不需要加到bytes
                 {
                     continue;
                 }
 
                 byte[] entityByte = unitCache2OtherGetUnit.EntityList[i];
                 Type type = CodeTypes.Instance.GetType(unitCache2OtherGetUnit.ComponentNameList[i]);
-                
+                //丢到角色身上  序列化后传送用 
                 EventSystem.Instance.Invoke((long)SceneType.UnitCache,new AddToBytes()
                 {
                     Unit = unit,Type = type,Bytes = entityByte
@@ -64,8 +64,8 @@ namespace ET.Server
             Other2UnitCache_AddOrUpdateUnit message = Other2UnitCache_AddOrUpdateUnit.Create();
             message.UnitId = unit.Id;
             
-            message.EntityTypes.Add(unit.GetType().FullName);
-            message.EntityBytes.Add(unit.ToBson());
+            message.EntityTypes.Add(unit.GetType().FullName);//直接加入unit
+            message.EntityBytes.Add(unit.ToBson());//直接加入unit
             
             foreach (Entity entity in unit.Components.Values)
             {
@@ -82,7 +82,7 @@ namespace ET.Server
                 EventSystem.Instance.Invoke((long)SceneType.UnitCache,new AddToBytes(){Unit = unit,Type = type,Bytes = bytes});
             }
 
-            StartSceneConfig cfg = StartSceneConfigCategory.Instance.GetBySceneName(unit.Zone(), "UnitCache");
+            StartSceneConfig cfg = StartSceneConfigCategory.Instance.GetBySceneType(unit.Zone(), SceneType.UnitCache);
             unit.Root().GetComponent<MessageSender>().Call(cfg.ActorId,message).Coroutine();
         }
 

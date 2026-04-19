@@ -27,9 +27,9 @@ namespace ET.Server
                 string k = request.Types[i];
                 Type t = CodeTypes.Instance.GetType(k);
                 byte[] v = request.Entitys[i];
-                
-                Entity entity = MongoHelper.Deserialize<Entity>(v);
-                unit.AddComponent(entity);
+                //这里不用自己添加  在UnitGetComponent事件里 如果发现没有这个组件 那么会从UnitDBSaveComponent序列化出来
+                //Entity entity = MongoHelper.Deserialize<Entity>(v);
+                //unit.AddComponent(entity);
                 unit.GetComponent<UnitDBSaveComponent>().AddToBytes(t,v);
             }
             

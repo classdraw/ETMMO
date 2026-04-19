@@ -1,4 +1,6 @@
-﻿namespace ET.Client
+﻿using System;
+
+namespace ET
 {
     public struct SceneChangeStart
     {
@@ -44,5 +46,11 @@
     public struct SessionDisposeNotify
     {
         public int Error;
+    }
+
+    public struct UnitGetComponent
+    {
+        public EntityRef<Unit> Unit;
+        public Type Type;
     }
 }
