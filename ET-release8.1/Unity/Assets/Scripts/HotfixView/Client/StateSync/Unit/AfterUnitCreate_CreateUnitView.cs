@@ -35,21 +35,5 @@ namespace ET.Client
             
             await ETTask.CompletedTask;
         }
-        //测试数值同步
-        private async ETTask AAA(Scene scene)
-        {
-            ClientSenderComponent clientSender = scene.Root().GetComponent<ClientSenderComponent>();
-            if (clientSender == null)
-            {
-                return;
-            }
-
-            C2M_TestNumericValue request = C2M_TestNumericValue.Create();
-            IResponse response = await clientSender.Call(request, false);
-            if (response is M2C_TestNumericValue m2C)
-            {
-                Log.Info($"C2M_TestNumericValue Error={m2C.Error} response={m2C.response}");
-            }
-        }
     }
 }
