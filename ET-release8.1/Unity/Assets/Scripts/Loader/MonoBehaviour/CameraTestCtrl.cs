@@ -3,7 +3,7 @@ using UnityEngine;
 namespace GameLogic
 {
     /// <summary>
-    /// 挂在摄像机上：发现名为 Unit 的物体则缓存，每帧仅将相机 X、Z 对齐到该物体（Y 不变）。
+    /// 挂在摄像机上：对 <see cref="SetUnit"/> 传入的 target，每帧将相机位置平滑插值到 <c>target.position + offset</c>。
     /// </summary>
     public class CameraTestCtrl : MonoBehaviour
     {
@@ -21,8 +21,18 @@ namespace GameLogic
         {
             this._unit = unit;
         }
+
         [SerializeField]
         private Transform _unit;
+
+        /// <summary>相对 target 世界坐标的目标点偏移，相机插值到 <c>target.position + offset</c>。</summary>
+        [SerializeField]
+        private Vector3 offset;
+
+        [SerializeField]
+        private float smoothTime = 0.15f;
+
+        private Vector3 smoothVelocity;
 
         private void Awake()
         {
@@ -31,15 +41,13 @@ namespace GameLogic
 
         private void LateUpdate()
         {
-            if (_unit == null)
+            if (this._unit == null)
             {
                 return;
             }
 
-            Vector3 pos = transform.position;
-            pos.x = _unit.position.x;
-            pos.z = _unit.position.z;
-            transform.position = pos;
+            Vector3 target = this._unit.position + this.offset;
+            this.transform.position = Vector3.SmoothDamp(this.transform.position, target, ref this.smoothVelocity, this.smoothTime);
         }
     }
 }

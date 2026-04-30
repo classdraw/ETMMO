@@ -99,7 +99,7 @@ namespace ET.Client
 
 			self.PendingCreateLeftBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
 				self.PendingCreateLeftBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateLeftBaseAvatar);
-			self.RefreshLoginSlotAvatarAsync(self.m_goLeft, null).Coroutine();
+			//显示模型
 		}
 
 		public static void OnLeftDelete(this UILoginComponent self)
@@ -126,7 +126,7 @@ namespace ET.Client
 
 			self.PendingCreateRightBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
 				self.PendingCreateRightBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateRightBaseAvatar);
-			self.RefreshLoginSlotAvatarAsync(self.m_goRight, null).Coroutine();
+			//显示模型
 		}
 
 		public static void OnRightDelete(this UILoginComponent self)
@@ -254,77 +254,7 @@ namespace ET.Client
 				await self.ChangeAvatar(partIds[i], collector);
 			}
 		}
-
-		/// <summary>
-		/// 无角色：随机 <see cref="RoleInfoProto.BaseAvatar"/>（9013~9015）；有角色：用协议中的 BaseAvatar。
-		/// 仅保存/提交一个 int；展示时模板行写几个 AvatarConfig Id 就换几次装，模板无效则不换装。
-		/// </summary>
-		private static async ETTask RefreshLoginSlotAvatarAsync(this UILoginComponent self, GameObject slotRoot, RoleInfoProto roleOrNull)
-		{
-			if (self.IsDisposed || slotRoot == null)
-			{
-				return;
-			}
-
-			int baseAvatar;
-			if (roleOrNull != null)
-			{
-				baseAvatar = DefaultAvatarHelper.GetBaseAvatarFromRoleOrDefault(roleOrNull);
-			}
-			else
-			{
-				if (slotRoot == self.m_goLeft)
-				{
-					baseAvatar = self.PendingCreateLeftBaseAvatar;
-					if (baseAvatar == 0)
-					{
-						baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
-						self.PendingCreateLeftBaseAvatar = baseAvatar;
-					}
-				}
-				else if (slotRoot == self.m_goRight)
-				{
-					baseAvatar = self.PendingCreateRightBaseAvatar;
-					if (baseAvatar == 0)
-					{
-						baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
-						self.PendingCreateRightBaseAvatar = baseAvatar;
-					}
-				}
-				else
-				{
-					baseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
-				}
-			}
-
-			ReferenceSpriteCollector collector = slotRoot.GetComponentInChildren<ReferenceSpriteCollector>(true);
-			if (collector == null)
-			{
-				return;
-			}
-
-			await self.ApplyBaseAvatarAsync(collector, baseAvatar);
-		}
-
-		private static async ETTask RefreshLoginRoleAvatarsAsync(this UILoginComponent self)
-		{
-			if (self.IsDisposed)
-			{
-				return;
-			}
-
-			NetworkCacheComponent cache = self.NetCache();
-			R2C_GetRoles r2CGetRoles = cache?.LastRoleListResponse;
-			RoleInfoProto left = r2CGetRoles?.RoleInfoList != null && r2CGetRoles.RoleInfoList.Count >= 1
-				? r2CGetRoles.RoleInfoList[0]
-				: null;
-			RoleInfoProto right = r2CGetRoles?.RoleInfoList != null && r2CGetRoles.RoleInfoList.Count >= 2
-				? r2CGetRoles.RoleInfoList[1]
-				: null;
-
-			await self.RefreshLoginSlotAvatarAsync(self.m_goLeft, left);
-			await self.RefreshLoginSlotAvatarAsync(self.m_goRight, right);
-		}
+		
 
 		private static void OnServerListItemRefresh(UILoginComponent self, Component com, int dataIndex)
 		{
@@ -659,8 +589,7 @@ namespace ET.Client
 			{
 				self.SetRightRole(null);
 			}
-
-			self.RefreshLoginRoleAvatarsAsync().Coroutine();
+			//显示模型
 		}
 
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)

@@ -49,12 +49,12 @@ namespace ET.Server
             unit.AddComponent<PathfindingComponent, string>(root.Name);
             if (root.Name.Equals(("Map1")))
             {
-                unit.Position = new float3(-24f, 0, 13f);
+                unit.Position = new float3(-8.7f, 0, -15.5f);
                 
             }
             else
             {
-                unit.Position = new float3(1.34f, 0, -3.4f);
+                unit.Position = new float3(17.4f, 0, -12.6f);
             }
             
 

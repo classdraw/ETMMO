@@ -22,16 +22,14 @@ namespace ET.Client
             go.transform.position = unit.Position;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();
-            Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);
-
-            var unitObj=go.Get<GameObject>("Unit");
-            unitObj.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            //Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);
+            
             if (isMainPlayerUnit==true&&CameraTestCtrl.Instance!=null)
             {
                 CameraTestCtrl.Instance.SetUnit(go.transform);
             }
 
-			await avatar2D.InitPartsFromBaseAvatarAsync(unit, unit.BaseAvatar);
+			//await avatar2D.InitPartsFromBaseAvatarAsync(unit, unit.BaseAvatar);
             
             await ETTask.CompletedTask;
         }
