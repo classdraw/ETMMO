@@ -510,20 +510,35 @@ namespace ETEditor
 
             Dictionary<string, ObjMaterial> materialList = PrepareFileWrite();
 
-            List<MeshFilter> meshes = Collect();
-            int count = 0;
-            foreach (MeshFilter mf in meshes)
+            var tempTerrainRoots = new List<GameObject>();
+            List<MeshFilter> meshes = Collect(tempTerrainRoots);
+            try
             {
-                sw.Write("mtllib ./" + filename + ".mtl\n");
-                string strMes = MeshToString(mf, materialList);
-                sw.Write(strMes);
-                EditorUtility.DisplayProgressBar("Exporting objects...", mf.name, count++ / (float) meshes.Count);
+                int count = 0;
+                foreach (MeshFilter mf in meshes)
+                {
+                    sw.Write("mtllib ./" + filename + ".mtl\n");
+                    string strMes = MeshToString(mf, materialList);
+                    sw.Write(strMes);
+                    EditorUtility.DisplayProgressBar("Exporting objects...", mf.name, count++ / (float) meshes.Count);
+                }
+            }
+            finally
+            {
+                foreach (GameObject go in tempTerrainRoots)
+                {
+                    if (go != null)
+                    {
+                        UnityEngine.Object.DestroyImmediate(go);
+                    }
+                }
+
+                EditorUtility.ClearProgressBar();
             }
 
             sw.Flush();
             sw.Close();
 
-            EditorUtility.ClearProgressBar();
             AssetDatabase.Refresh();
         }
 
@@ -555,9 +570,14 @@ namespace ETEditor
             return new Dictionary<string, ObjMaterial>();
         }
 
-        public static List<MeshFilter> Collect()
+        /// <param name="tempTerrainExportRoots">本方法为地形导出创建的临时根物体，调用方须在 finally 中 DestroyImmediate。</param>
+        public static List<MeshFilter> Collect(List<GameObject> tempTerrainExportRoots)
         {
             List<MeshFilter> meshes = new List<MeshFilter>();
+            if (tempTerrainExportRoots == null)
+            {
+                tempTerrainExportRoots = new List<GameObject>();
+            }
 
             // 确定场景内必须有NAVMESH_TAG这个tag
             // ————————————————
@@ -589,18 +609,183 @@ namespace ETEditor
                 }
             }
 
+            AppendTerrainColliderNavMeshes(meshes, tempTerrainExportRoots);
+
             if (meshes.Count == 0)
             {
-                Debug.LogError($"NavMeshExporter Collect Error - 场景里没有需要被导出的物体，需要被导出的物体，它们的Tag必须是：[{NAVMESH_TAG}]。");
+                Debug.LogError(
+                    $"NavMeshExporter Collect Error - 场景里没有需要被导出的物体：带 [{NAVMESH_TAG}] 的 MeshFilter，或同 Tag 的 TerrainCollider（需同物体有 Terrain + TerrainData）。");
             }
 
             return meshes;
         }
 
+        /// <summary> 将带 NavMesh 标签的 TerrainCollider 转为高度图网格并挂到临时子物体上参与 Obj 导出。 </summary>
+        private static void AppendTerrainColliderNavMeshes(List<MeshFilter> meshes, List<GameObject> tempTerrainExportRoots)
+        {
+            TerrainCollider[] terrainColliders = FindObjectsOfType<TerrainCollider>(true);
+            foreach (TerrainCollider tc in terrainColliders)
+            {
+                if (tc == null || !tc.CompareTag(NAVMESH_TAG))
+                {
+                    continue;
+                }
+
+                Terrain terrain = tc.GetComponent<Terrain>();
+                if (terrain == null || terrain.terrainData == null)
+                {
+                    Debug.LogWarning($"NavMeshExporter：TerrainCollider「{tc.gameObject.name}」无 Terrain 或 TerrainData，已跳过。");
+                    continue;
+                }
+
+                Mesh mesh = BuildHeightmapMeshFromTerrainData(terrain.terrainData);
+                if (mesh == null || mesh.vertexCount == 0)
+                {
+                    continue;
+                }
+
+                mesh.name = terrain.name + "_TerrainHeight";
+
+                GameObject temp = new GameObject(terrain.name + "__NavTerrainExport");
+                temp.hideFlags = HideFlags.HideAndDontSave;
+                temp.transform.SetParent(terrain.transform, false);
+                temp.transform.localPosition = Vector3.zero;
+                temp.transform.localRotation = Quaternion.identity;
+                temp.transform.localScale = Vector3.one;
+
+                MeshFilter mf = temp.AddComponent<MeshFilter>();
+                mf.sharedMesh = mesh;
+
+                MeshRenderer mr = temp.AddComponent<MeshRenderer>();
+                Material builtinMat = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Material.mat");
+                mr.sharedMaterial = builtinMat != null ? builtinMat : new Material(Shader.Find("Diffuse"));
+
+                tempTerrainExportRoots.Add(temp);
+                meshes.Add(mf);
+            }
+        }
+
+        private static int GetTerrainHeightmapExportStep(int resolution)
+        {
+            const int maxSamplesPerAxis = 513;
+            if (resolution <= maxSamplesPerAxis)
+            {
+                return 1;
+            }
+
+            return Mathf.Max(1, Mathf.CeilToInt((float)(resolution - 1) / (maxSamplesPerAxis - 1)));
+        }
+
+        private static List<int> BuildHeightmapAxisCoords(int resolution, int step)
+        {
+            var coords = new List<int>();
+            if (resolution < 2)
+            {
+                return coords;
+            }
+
+            for (int i = 0; i < resolution; i += step)
+            {
+                coords.Add(i);
+            }
+
+            if (coords[coords.Count - 1] != resolution - 1)
+            {
+                coords.Add(resolution - 1);
+            }
+
+            return coords;
+        }
+
+        /// <summary> Terrain 本地空间网格：X/Z 覆盖 terrainData.size，Y 为高度图采样（与 TerrainCollider 一致）。 </summary>
+        private static Mesh BuildHeightmapMeshFromTerrainData(TerrainData terrainData)
+        {
+            int dim = terrainData.heightmapResolution;
+            if (dim < 2)
+            {
+                return null;
+            }
+
+            float sizeX = terrainData.size.x;
+            float sizeY = terrainData.size.y;
+            float sizeZ = terrainData.size.z;
+            float[,] heights = terrainData.GetHeights(0, 0, dim, dim);
+            int step = GetTerrainHeightmapExportStep(dim);
+            List<int> cx = BuildHeightmapAxisCoords(dim, step);
+            List<int> cz = BuildHeightmapAxisCoords(dim, step);
+            int nx = cx.Count;
+            int nz = cz.Count;
+
+            var vertices = new List<Vector3>(nx * nz);
+            for (int iz = 0; iz < nz; iz++)
+            {
+                int hz = cz[iz];
+                float vz = (float)hz / (dim - 1) * sizeZ;
+                for (int ix = 0; ix < nx; ix++)
+                {
+                    int hx = cx[ix];
+                    float vx = (float)hx / (dim - 1) * sizeX;
+                    float vy = heights[hz, hx] * sizeY;
+                    vertices.Add(new Vector3(vx, vy, vz));
+                }
+            }
+
+            var triangles = new List<int>((nx - 1) * (nz - 1) * 6);
+            for (int iz = 0; iz < nz - 1; iz++)
+            {
+                for (int ix = 0; ix < nx - 1; ix++)
+                {
+                    int v00 = iz * nx + ix;
+                    int v10 = v00 + 1;
+                    int v01 = v00 + nx;
+                    int v11 = v01 + 1;
+                    triangles.Add(v00);
+                    triangles.Add(v11);
+                    triangles.Add(v10);
+                    triangles.Add(v00);
+                    triangles.Add(v01);
+                    triangles.Add(v11);
+                }
+            }
+
+            var mesh = new Mesh();
+            mesh.indexFormat = vertices.Count > 65535 ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
+            mesh.SetVertices(vertices);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
         public static string MeshToString(MeshFilter mf, Dictionary<string, ObjMaterial> materialList)
         {
             Mesh m = mf.sharedMesh;
-            Material[] mats = mf.GetComponent<Renderer>().sharedMaterials;
+            if (m == null)
+            {
+                Debug.LogWarning($"NavMeshExporter MeshToString：「{mf.name}」无 sharedMesh，已跳过。");
+                return string.Empty;
+            }
+
+            if (!EditorUtility.IsPersistent(m))
+            {
+                if (m.vertexCount > 0 && (m.normals == null || m.normals.Length != m.vertexCount))
+                {
+                    m.RecalculateNormals();
+                }
+
+                if (m.vertexCount > 0 && (m.uv == null || m.uv.Length != m.vertexCount))
+                {
+                    m.uv = new Vector2[m.vertexCount];
+                }
+            }
+
+            Renderer rend = mf.GetComponent<Renderer>();
+            Material[] mats = rend != null ? rend.sharedMaterials : null;
+            if (mats == null || mats.Length == 0)
+            {
+                mats = new Material[] { null };
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.Append("g ").Append(mf.name).Append("\n");
             // foreach(Vector3 v in m.vertices) {
@@ -633,12 +818,7 @@ namespace ETEditor
             }
 
             int countMat = m.subMeshCount;
-            if (mats == null)
-            {
-                Debug.LogWarning($"NavMeshExporter MeshToString Error - 没有找到材质");
-                return sb.ToString();
-            }
-            else if (mats.Length < countMat)
+            if (mats.Length < countMat)
             {
                 Debug.LogWarning($"NavMeshExporter MeshToString Error - 共享材质数量小于该物体的子物体数量 - {mats.Length} / {countMat}");
                 countMat = mats.Length;

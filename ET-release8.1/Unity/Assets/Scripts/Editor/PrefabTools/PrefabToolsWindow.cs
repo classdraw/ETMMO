@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -15,53 +15,11 @@ namespace ET
     {
         private const string AvatarPrefabOutputRoot = "Assets/Bundles/Avatar";
 
-        private AvatarBindKeyAllowlistAsset allowlistAsset;
-
-        private readonly List<AvatarBindKeyEntry> allowlistEditorEntries = new List<AvatarBindKeyEntry>();
-
-        private string allowlistSearchFilter = string.Empty;
-
-        private Vector2 allowlistScroll;
-
-        private float allowlistScrollMaxHeight = 180f;
-
         [MenuItem("Tools/预制体处理工具合集", false, 50)]
         public static void Open()
         {
             var w = GetWindow<PrefabToolsWindow>(true, "预制体处理工具", true);
             w.minSize = new Vector2(440, 480);
-        }
-
-        private void OnEnable()
-        {
-            SyncAllowlistFromAsset();
-        }
-
-        private void SyncAllowlistFromAsset()
-        {
-            allowlistAsset = AvatarBindKeyAllowlistUtility.Load();
-            allowlistEditorEntries.Clear();
-            if (allowlistAsset != null)
-            {
-                allowlistAsset.MigrateLegacyKeysIfNeeded();
-                if (allowlistAsset.entries != null)
-                {
-                    foreach (AvatarBindKeyEntry e in allowlistAsset.entries)
-                    {
-                        allowlistEditorEntries.Add(new AvatarBindKeyEntry
-                        {
-                            key = e.key ?? string.Empty,
-                            value = e.value
-                        });
-                    }
-                }
-
-                allowlistScrollMaxHeight = allowlistAsset.editorListScrollHeight;
-            }
-            else
-            {
-                allowlistScrollMaxHeight = 180f;
-            }
         }
 
         private void OnGUI()
@@ -101,6 +59,16 @@ namespace ET
                 EditorStyles.wordWrappedMiniLabel);
 
             EditorGUILayout.Space(12);
+            EditorGUILayout.LabelField("场景", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox(
+                "仅编辑态：Hierarchy 中当前「活动」场景（EditorSceneManager.GetActiveScene），不处理其它已加载场景；退出 Play 后使用。含未激活物体。Tag 设为「NavMesh」需在 TagManager 中存在。",
+                MessageType.Info);
+            if (GUILayout.Button("当前活动场景：Collider 物体 Tag → NavMesh", GUILayout.Height(34)))
+            {
+                SetNavMeshTagOnEditorActiveSceneColliderObjects();
+            }
+
+            EditorGUILayout.Space(12);
             EditorGUILayout.LabelField("Avatar 精灵预制体", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 "在 Project 中选中文件夹（可含子目录），执行前会先删除整个 " + AvatarPrefabOutputRoot + " 再重新生成。\n" +
@@ -118,232 +86,6 @@ namespace ET
                     GenerateAvatarSpritePrefabsFromSelectedFolders();
                 }
             }
-
-            EditorGUILayout.Space(12);
-            DrawAvatarBindKeyAllowlistPanel();
-        }
-
-        private void DrawAvatarBindKeyAllowlistPanel()
-        {
-            EditorGUILayout.LabelField("角色绑点 Key / Value 白名单", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox(
-                $"资源路径：{AvatarBindKeyAllowlistUtility.DefaultAssetPath}\n" +
-                "Key：与挂 SpriteRenderer 的节点名完全一致（Ordinal）。Value：整型，与 ET.Client.AvatarPartType 取值对应（通常从 0 递增）。\n" +
-                "「导出 AvatarPartType」会生成可粘贴到枚举体内的成员行。保存后写入资源。",
-                MessageType.Info);
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("当前资源", GUILayout.Width(52));
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.ObjectField(allowlistAsset, typeof(AvatarBindKeyAllowlistAsset), false);
-            EditorGUI.EndDisabledGroup();
-            if (GUILayout.Button("刷新", GUILayout.Width(44)))
-            {
-                SyncAllowlistFromAsset();
-            }
-
-            if (GUILayout.Button("创建资源", GUILayout.Width(72)))
-            {
-                if (allowlistAsset == null)
-                {
-                    allowlistAsset = AvatarBindKeyAllowlistUtility.CreateAtDefaultPath();
-                    SyncAllowlistFromAsset();
-                    Selection.activeObject = allowlistAsset;
-                    EditorGUIUtility.PingObject(allowlistAsset);
-                }
-                else
-                {
-                    EditorUtility.DisplayDialog("预制体处理工具", "默认路径已存在白名单资源。", "确定");
-                }
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            allowlistSearchFilter = EditorGUILayout.TextField("查找", allowlistSearchFilter ?? string.Empty);
-            if (GUILayout.Button("清空查找", GUILayout.Width(72)))
-            {
-                allowlistSearchFilter = string.Empty;
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            float sliderH = EditorGUILayout.Slider("列表区域高度", allowlistScrollMaxHeight, 100f, 520f);
-            if (Mathf.Abs(sliderH - allowlistScrollMaxHeight) > 0.01f)
-            {
-                allowlistScrollMaxHeight = sliderH;
-            }
-
-            allowlistScroll = EditorGUILayout.BeginScrollView(allowlistScroll, GUILayout.Height(allowlistScrollMaxHeight));
-
-            string q = allowlistSearchFilter?.Trim() ?? string.Empty;
-            int removeIndex = -1;
-
-            for (int i = 0; i < allowlistEditorEntries.Count; i++)
-            {
-                AvatarBindKeyEntry row = allowlistEditorEntries[i];
-                string keyStr = row.key ?? string.Empty;
-                string valueStr = row.value.ToString();
-                if (q.Length > 0 &&
-                    keyStr.IndexOf(q, StringComparison.OrdinalIgnoreCase) < 0 &&
-                    valueStr.IndexOf(q, StringComparison.OrdinalIgnoreCase) < 0)
-                {
-                    continue;
-                }
-
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField($"{i + 1}.", GUILayout.Width(28));
-                EditorGUILayout.LabelField("Key", GUILayout.Width(28));
-                row.key = EditorGUILayout.TextField(keyStr);
-                EditorGUILayout.LabelField("Value", GUILayout.Width(40));
-                row.value = EditorGUILayout.IntField(row.value, GUILayout.Width(56));
-                allowlistEditorEntries[i] = row;
-                if (GUILayout.Button("删除", GUILayout.Width(44)))
-                {
-                    removeIndex = i;
-                }
-
-                EditorGUILayout.EndHorizontal();
-            }
-
-            EditorGUILayout.EndScrollView();
-
-            if (removeIndex >= 0)
-            {
-                allowlistEditorEntries.RemoveAt(removeIndex);
-            }
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("添加一项", GUILayout.Height(26)))
-            {
-                int nextVal = 0;
-                foreach (AvatarBindKeyEntry e in allowlistEditorEntries)
-                {
-                    if (e.value >= nextVal)
-                    {
-                        nextVal = e.value + 1;
-                    }
-                }
-
-                allowlistEditorEntries.Add(new AvatarBindKeyEntry { key = string.Empty, value = nextVal });
-            }
-
-            if (GUILayout.Button("保存到资源", GUILayout.Height(26)))
-            {
-                if (allowlistAsset == null)
-                {
-                    allowlistAsset = AvatarBindKeyAllowlistUtility.CreateAtDefaultPath();
-                }
-
-                Undo.RecordObject(allowlistAsset, "保存角色绑点 Key 白名单");
-                if (allowlistAsset.entries == null)
-                {
-                    allowlistAsset.entries = new List<AvatarBindKeyEntry>();
-                }
-
-                allowlistAsset.entries.Clear();
-                foreach (AvatarBindKeyEntry e in allowlistEditorEntries)
-                {
-                    string k = e.key?.Trim() ?? string.Empty;
-                    if (k.Length == 0)
-                    {
-                        continue;
-                    }
-
-                    allowlistAsset.entries.Add(new AvatarBindKeyEntry { key = k, value = e.value });
-                }
-
-                allowlistAsset.editorListScrollHeight = allowlistScrollMaxHeight;
-                EditorUtility.SetDirty(allowlistAsset);
-                AssetDatabase.SaveAssets();
-                EditorUtility.DisplayDialog("预制体处理工具", "已写入 ScriptableObject 资源。", "确定");
-            }
-
-            if (GUILayout.Button("导出 AvatarPartType", GUILayout.Height(26)))
-            {
-                ExportAvatarPartTypeEnumSnippetToClipboard();
-            }
-
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.LabelField($"共 {allowlistEditorEntries.Count} 项（保存时跳过 Key 为空的行）", EditorStyles.miniLabel);
-        }
-
-        private void ExportAvatarPartTypeEnumSnippetToClipboard()
-        {
-            var rows = new List<(string member, int val)>();
-            foreach (AvatarBindKeyEntry e in allowlistEditorEntries)
-            {
-                string k = e.key?.Trim() ?? string.Empty;
-                if (k.Length == 0)
-                {
-                    continue;
-                }
-
-                rows.Add((KeyStringToEnumMemberName(k), e.value));
-            }
-
-            if (rows.Count == 0)
-            {
-                EditorUtility.DisplayDialog("预制体处理工具", "没有可导出的项（Key 均为空）。", "确定");
-                return;
-            }
-
-            rows.Sort((a, b) => a.val.CompareTo(b.val));
-            var usedNames = new HashSet<string>(StringComparer.Ordinal);
-            var sb = new StringBuilder();
-            sb.AppendLine("// 粘贴到 ET.Client.AvatarPartType 枚举体内，与现有成员合并；末尾请保留 Count。");
-            foreach ((string member, int val) in rows)
-            {
-                string m = member;
-                string baseName = m;
-                int suf = 2;
-                while (usedNames.Contains(m))
-                {
-                    m = baseName + "_" + suf++;
-                }
-
-                usedNames.Add(m);
-                sb.AppendLine($"        {m} = {val},");
-            }
-
-            EditorGUIUtility.systemCopyBuffer = sb.ToString().TrimEnd();
-            EditorUtility.DisplayDialog("预制体处理工具", $"已复制 {rows.Count} 行枚举成员到剪贴板。", "确定");
-        }
-
-        private static string KeyStringToEnumMemberName(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                return "Invalid";
-            }
-
-            var sb = new StringBuilder();
-            for (int i = 0; i < key.Length; i++)
-            {
-                char c = key[i];
-                if (char.IsLetterOrDigit(c) || c == '_')
-                {
-                    sb.Append(c);
-                }
-                else
-                {
-                    sb.Append('_');
-                }
-            }
-
-            string s = sb.ToString();
-            if (s.Length == 0)
-            {
-                return "Invalid";
-            }
-
-            if (char.IsDigit(s[0]))
-            {
-                return "K_" + s;
-            }
-
-            return s;
         }
 
         private static int CountSelectedPrefabPaths()
@@ -376,6 +118,85 @@ namespace ET
             }
 
             return new List<string>(set);
+        }
+
+        private const string NavMeshColliderTag = "NavMesh";
+
+        /// <summary>
+        /// 仅处理编辑器当前活动场景（与 Hierarchy 加粗场景一致），不用 SceneManager，避免与 ET.Scene 类型名冲突须写全名。
+        /// </summary>
+        private static void SetNavMeshTagOnEditorActiveSceneColliderObjects()
+        {
+            if (EditorApplication.isPlaying)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    "请在退出 Play 模式后使用。\n本功能只处理编辑态下当前活动场景，不会在运行时改场景。",
+                    "确定");
+                return;
+            }
+
+            UnityEngine.SceneManagement.Scene unityScene = EditorSceneManager.GetActiveScene();
+            if (!unityScene.IsValid() || !unityScene.isLoaded)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", "当前没有已加载的有效活动场景。", "确定");
+                return;
+            }
+
+            GameObject[] roots = unityScene.GetRootGameObjects();
+            var visited = new HashSet<int>();
+            int colliderObjectCount = 0;
+            int tagChanged = 0;
+
+            Undo.IncrementCurrentGroup();
+            int undoGroup = Undo.GetCurrentGroup();
+            try
+            {
+                foreach (GameObject root in roots)
+                {
+                    if (root == null)
+                    {
+                        continue;
+                    }
+
+                    Collider[] colliders = root.GetComponentsInChildren<Collider>(true);
+                    foreach (Collider col in colliders)
+                    {
+                        if (col == null)
+                        {
+                            continue;
+                        }
+
+                        GameObject go = col.gameObject;
+                        if (!visited.Add(go.GetInstanceID()))
+                        {
+                            continue;
+                        }
+
+                        colliderObjectCount++;
+                        if (go.CompareTag(NavMeshColliderTag))
+                        {
+                            continue;
+                        }
+
+                        Undo.RecordObject(go, "Tag → NavMesh (Collider)");
+                        go.tag = NavMeshColliderTag;
+                        tagChanged++;
+                    }
+                }
+            }
+            catch (UnityException e)
+            {
+                Undo.RevertAllDownToGroup(undoGroup);
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    $"设置 Tag 失败。请确认 Project Settings → Tags and Layers 中存在「{NavMeshColliderTag}」标签。\n{e.Message}",
+                    "确定");
+                return;
+            }
+
+            Undo.SetCurrentGroupName("Collider 物体 Tag → NavMesh");
+            EditorUtility.DisplayDialog("预制体处理工具",
+                $"活动场景：{unityScene.name}\n带 Collider 的物体（去重）：{colliderObjectCount} 个\nTag 已改为「{NavMeshColliderTag}」：{tagChanged} 个",
+                "确定");
         }
 
         private static void RemoveMissingScriptsFromSelectedPrefabs()

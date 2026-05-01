@@ -43,7 +43,7 @@ namespace ET
             self.Speed = 0;
             self.N = 0;
             self.TurnTime = 0;
-            self.DisableMoveRotation = true;
+            self.DisableMoveRotation = false;
         }
         
         public static bool IsArrived(this MoveComponent self)

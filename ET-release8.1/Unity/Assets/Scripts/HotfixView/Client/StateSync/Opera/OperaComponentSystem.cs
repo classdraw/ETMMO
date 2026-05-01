@@ -9,7 +9,7 @@ namespace ET.Client
         [EntitySystem]
         private static void Awake(this OperaComponent self)
         {
-            self.mapMask = LayerMask.GetMask("Map");
+            self.mapMask = LayerMask.GetMask("Ground");
         }
 
         [EntitySystem]

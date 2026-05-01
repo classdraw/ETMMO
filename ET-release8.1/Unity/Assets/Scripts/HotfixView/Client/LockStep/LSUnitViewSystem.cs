@@ -20,11 +20,15 @@ namespace ET.Client
         [LSEntitySystem]
         private static void LSRollback(this LSUnitView self)
         {
-            //LSUnit unit = self.GetUnit();
-            //self.Transform.position = unit.Position.ToVector();
-            //self.Transform.rotation = unit.Rotation.ToQuaternion();
-            //self.t = 0;
-            //self.totalTime = 0;
+            LSUnit unit = self.GetUnit();
+            Vector3 p = unit.Position.ToVector();
+            Quaternion r = unit.Rotation.ToQuaternion();
+            self.Transform.position = p;
+            self.Transform.rotation = r;
+            self.Position = p;
+            self.Rotation = r;
+            self.t = 0;
+            self.totalTime = 0;
         }
 
         [EntitySystem]
@@ -33,18 +37,23 @@ namespace ET.Client
             LSUnit unit = self.GetUnit();
 
             Vector3 unitPos = unit.Position.ToVector();
+            Quaternion unitRot = unit.Rotation.ToQuaternion();
             const float speed = 6f;
-            float speed2 = speed;// * self.Room().SpeedMultiply;
+            float speed2 = speed;// * self.Room().SpeedMultiply
 
             if (unitPos != self.Position)
             {
                 float distance = (unitPos - self.Position).magnitude;
-                self.totalTime = distance / speed2;
+                self.totalTime = Mathf.Max(distance / speed2, 1e-5f);
                 self.t = 0;
-                self.Position = unit.Position.ToVector();
-                self.Rotation = unit.Rotation.ToQuaternion();
+                self.Position = unitPos;
+                self.Rotation = unitRot;
             }
-
+            else if (Quaternion.Angle(self.Rotation, unitRot) > 0.1f)
+            {
+                self.Rotation = unitRot;
+                self.t = 0;
+            }
 
             LSInput input = unit.GetComponent<LSInputComponent>().LSInput;
             if (input.V != TSVector2.zero)
@@ -56,8 +65,9 @@ namespace ET.Client
                 self.GetComponent<LSAnimatorComponent>().SetFloatValue("Speed", 0);
             }
             self.t += Time.deltaTime;
-            self.Transform.rotation = Quaternion.Lerp(self.Transform.rotation, self.Rotation, self.t / 1f);
-            self.Transform.position = Vector3.Lerp(self.Transform.position, self.Position, self.t / self.totalTime);
+            self.Transform.rotation = Quaternion.Lerp(self.Transform.rotation, self.Rotation, Mathf.Clamp01(self.t / 1f));
+            float posAlpha = self.totalTime > 1e-5f ? Mathf.Clamp01(self.t / self.totalTime) : 1f;
+            self.Transform.position = Vector3.Lerp(self.Transform.position, self.Position, posAlpha);
         }
 
         private static LSUnit GetUnit(this LSUnitView self)

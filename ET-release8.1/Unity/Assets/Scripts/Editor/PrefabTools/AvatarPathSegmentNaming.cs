@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace ET
 {
     /// <summary>
-    /// Avatar 预制体工具与 ReferenceSpriteCollector 绑点白名单共用路径段规范化（数字前缀、Armor 1、纯数字段等）。
+    /// Avatar 预制体工具路径段规范化（数字前缀、Armor 1、纯数字段等）。
     /// </summary>
     public static class AvatarPathSegmentNaming
     {

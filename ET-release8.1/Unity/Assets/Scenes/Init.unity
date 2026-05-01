@@ -439,7 +439,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 275
+    m_Bits: 3347
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unit: {fileID: 0}
-  offset: {x: 0, y: 18, z: -12}
+  offset: {x: 0, y: 15, z: -9}
   smoothTime: 0.15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
