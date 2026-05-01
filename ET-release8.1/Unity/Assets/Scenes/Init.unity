@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unit: {fileID: 0}
-  offset: {x: 0, y: 15, z: -9}
+  offset: {x: 0, y: 10, z: -6}
   smoothTime: 0.15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

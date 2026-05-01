@@ -18,8 +18,10 @@ namespace ET.Client
 		[EntitySystem]
 		private static void Awake(this AnimatorComponent self)
 		{
-			Animator animator = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject.GetComponent<Animator>();
+			var gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
+			var refCtrl = gameObject.GetComponent<ReferenceCollector>();
 
+			Animator animator = (refCtrl.GetObject("Root") as GameObject).GetComponent<Animator>();
 			if (animator == null)
 			{
 				return;
@@ -60,10 +62,10 @@ namespace ET.Client
 
 			try
 			{
-				self.Animator.SetFloat("MotionSpeed", self.MontionSpeed);
-
-				self.Animator.SetTrigger(self.MotionType.ToString());
-
+				//self.Animator.SetFloat("MotionSpeed", self.MontionSpeed);
+				//Log.Console("____"+self.MotionType);
+				//self.Animator.SetTrigger(self.MotionType.ToString());
+				self.Animator.CrossFade(self.MotionType.ToString(),0f);
 				self.MontionSpeed = 1;
 				self.MotionType = MotionType.None;
 			}
@@ -96,12 +98,8 @@ namespace ET.Client
 			self.MontionSpeed = motionSpeed;
 		}
 
-		public static void Play(this AnimatorComponent self, MotionType motionType, float motionSpeed = 1f)
+		public static void Play(this AnimatorComponent self, MotionType motionType, float motionSpeed)
 		{
-			if (!self.HasParameter(motionType.ToString()))
-			{
-				return;
-			}
 			self.MotionType = motionType;
 			self.MontionSpeed = motionSpeed;
 		}

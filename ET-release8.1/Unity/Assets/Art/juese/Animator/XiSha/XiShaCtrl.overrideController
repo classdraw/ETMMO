@@ -9,7 +9,7 @@ AnimatorOverrideController:
   m_Name: XiShaCtrl
   m_Controller: {fileID: 9100000, guid: 51ca14f4678d65a489d9d51dfcac46d6, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: c86eac20060264d44a315173a8006cf5, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 41413de9c59885c4892816900f1f38fb, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: d782b96a0693c7f45982c92a334e5b33, type: 2}
-  - m_OriginalClip: {fileID: 7400002, guid: c86eac20060264d44a315173a8006cf5, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 43a55c8df820bc74ab1f2b2687740370, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 948d7c3541593fa4f8f6d61e2155b32f, type: 2}

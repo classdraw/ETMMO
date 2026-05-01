@@ -149,6 +149,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// ET.StateMachineWrap<ET.Client.Match2G_NotifyMatchSuccessHandler.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.MoveHelper.<MoveToAsync>d__0>
 	// ET.StateMachineWrap<ET.Client.MoveHelper.<MoveToAsync>d__1>
+	// ET.StateMachineWrap<ET.Client.MoveStart_UnitAnimatorPlay.<Run>d__0>
+	// ET.StateMachineWrap<ET.Client.MoveStop_UnitAnimatorPlay.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.NetClient2Main_SessionDisposeHandler.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.OneFrameInputsHandler.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.OperaComponentSystem.<Test1>d__2>
@@ -193,16 +195,14 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// ET.StateMachineWrap<ET.Client.UILoadingEvent.<OnCreate>d__0>
 	// ET.StateMachineWrap<ET.Client.UILobbyComponentSystem.<EnterMap>d__2>
 	// ET.StateMachineWrap<ET.Client.UILobbyEvent.<OnCreate>d__0>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<ApplyBaseAvatarAsync>d__16>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<ChangeAvatar>d__15>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__25>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__26>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__19>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__21>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__23>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__20>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__22>
-	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__24>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__23>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__24>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__17>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__19>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__21>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__18>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__20>
+	// ET.StateMachineWrap<ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__22>
 	// ET.StateMachineWrap<ET.Client.UILoginEvent.<OnCreate>d__0>
 	// ET.StateMachineWrap<ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2>
 	// ET.StateMachineWrap<ET.Client.UISessionErrorEvent.<OnCreate>d__0>
@@ -736,6 +736,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.M2C_NoticeUnitNumericListHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.M2C_NoticeUnitNumericListHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.M2C_RemoveUnitsHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.M2C_RemoveUnitsHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.M2C_StopHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.M2C_StopHandler.<Run>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.MoveStart_UnitAnimatorPlay.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.MoveStart_UnitAnimatorPlay.<Run>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.MoveStop_UnitAnimatorPlay.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.MoveStop_UnitAnimatorPlay.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.NetClient2Main_SessionDisposeHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.NetClient2Main_SessionDisposeHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.OneFrameInputsHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.OneFrameInputsHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<ET.ETTaskCompleted,ET.Client.Room2C_AdjustUpdateTimeHandler.<Run>d__0>(ET.ETTaskCompleted&,ET.Client.Room2C_AdjustUpdateTimeHandler.<Run>d__0&)
@@ -801,16 +803,14 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.TestEventSee_Debug.<Test1>d__1>(object&,ET.Client.TestEventSee_Debug.<Test1>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1>(object&,ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILobbyComponentSystem.<EnterMap>d__2>(object&,ET.Client.UILobbyComponentSystem.<EnterMap>d__2&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<ApplyBaseAvatarAsync>d__16>(object&,ET.Client.UILoginComponentSystem.<ApplyBaseAvatarAsync>d__16&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<ChangeAvatar>d__15>(object&,ET.Client.UILoginComponentSystem.<ChangeAvatar>d__15&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__25>(object&,ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__25&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__26>(object&,ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__26&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__19>(object&,ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__19&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__21>(object&,ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__21&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__23>(object&,ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__23&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__20>(object&,ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__20&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__22>(object&,ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__22&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__24>(object&,ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__24&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__23>(object&,ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__23&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__24>(object&,ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__24&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__17>(object&,ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__17&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__19>(object&,ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__19&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__21>(object&,ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__21&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__18>(object&,ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__18&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__20>(object&,ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__20&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__22>(object&,ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__22&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2>(object&,ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.ConsoleComponentSystem.<Start>d__1>(object&,ET.ConsoleComponentSystem.<Start>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Entry.<StartAsync>d__2>(object&,ET.Entry.<StartAsync>d__2&)
@@ -915,6 +915,8 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.Main2NetClient_LoginHandler.<Run>d__0>(ET.Client.Main2NetClient_LoginHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.Match2G_NotifyMatchSuccessHandler.<Run>d__0>(ET.Client.Match2G_NotifyMatchSuccessHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.MoveHelper.<MoveToAsync>d__1>(ET.Client.MoveHelper.<MoveToAsync>d__1&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.MoveStart_UnitAnimatorPlay.<Run>d__0>(ET.Client.MoveStart_UnitAnimatorPlay.<Run>d__0&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.MoveStop_UnitAnimatorPlay.<Run>d__0>(ET.Client.MoveStop_UnitAnimatorPlay.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.NetClient2Main_SessionDisposeHandler.<Run>d__0>(ET.Client.NetClient2Main_SessionDisposeHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.OneFrameInputsHandler.<Run>d__0>(ET.Client.OneFrameInputsHandler.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.OperaComponentSystem.<Test1>d__2>(ET.Client.OperaComponentSystem.<Test1>d__2&)
@@ -942,16 +944,14 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UIHelper.<Remove>d__1>(ET.Client.UIHelper.<Remove>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1>(ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILobbyComponentSystem.<EnterMap>d__2>(ET.Client.UILobbyComponentSystem.<EnterMap>d__2&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<ApplyBaseAvatarAsync>d__16>(ET.Client.UILoginComponentSystem.<ApplyBaseAvatarAsync>d__16&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<ChangeAvatar>d__15>(ET.Client.UILoginComponentSystem.<ChangeAvatar>d__15&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__25>(ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__25&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__26>(ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__26&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__19>(ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__19&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__21>(ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__21&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__23>(ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__23&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__20>(ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__20&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__22>(ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__22&)
-		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__24>(ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__24&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__23>(ET.Client.UILoginComponentSystem.<LoginGetRoleList>d__23&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__24>(ET.Client.UILoginComponentSystem.<LoginGetServerListAsync>d__24&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__17>(ET.Client.UILoginComponentSystem.<OnLeftCreateAsync>d__17&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__19>(ET.Client.UILoginComponentSystem.<OnLeftDeleteAsync>d__19&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__21>(ET.Client.UILoginComponentSystem.<OnLeftEnterAsync>d__21&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__18>(ET.Client.UILoginComponentSystem.<OnRightCreateAsync>d__18&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__20>(ET.Client.UILoginComponentSystem.<OnRightDeleteAsync>d__20&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__22>(ET.Client.UILoginComponentSystem.<OnRightEnterAsync>d__22&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2>(ET.Client.UISessionErrorComponentSystem.<OnGoLoginAsync>d__2&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.ConsoleComponentSystem.<Start>d__1>(ET.ConsoleComponentSystem.<Start>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Entry.<StartAsync>d__2>(ET.Entry.<StartAsync>d__2&)
