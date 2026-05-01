@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ET;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,28 +33,30 @@ namespace ET.Client
 			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
 			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
 			self.m_textLeftTitle = m_bindComponent.GetComponent<Text>(9);
-			self.m_goLeft = m_bindComponent.GetComponent<RectTransform>(10).gameObject;
-			self.m_btnLeftCreate = m_bindComponent.GetComponent<Button>(11);
+			self.m_textLeftModel = m_bindComponent.GetComponent<Text>(10);
+			self.m_goLeft = m_bindComponent.GetComponent<RectTransform>(11).gameObject;
+			self.m_btnLeftCreate = m_bindComponent.GetComponent<Button>(12);
 			self.m_btnLeftCreate.onClick.AddListener(() => { self.OnLeftCreate(); });
-			self.m_btnLeftTran = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnLeftTran = m_bindComponent.GetComponent<Button>(13);
 			self.m_btnLeftTran.onClick.AddListener(() => { self.OnLeftTran(); });
-			self.m_btnLeftDelete = m_bindComponent.GetComponent<Button>(13);
+			self.m_btnLeftDelete = m_bindComponent.GetComponent<Button>(14);
 			self.m_btnLeftDelete.onClick.AddListener(() => { self.OnLeftDelete(); });
-			self.m_btnLeftEnter = m_bindComponent.GetComponent<Button>(14);
+			self.m_btnLeftEnter = m_bindComponent.GetComponent<Button>(15);
 			self.m_btnLeftEnter.onClick.AddListener(() => { self.OnLeftEnter(); });
-			self.m_inputLeft = m_bindComponent.GetComponent<InputField>(15);
-			self.m_textRightTitle = m_bindComponent.GetComponent<Text>(16);
-			self.m_goRight = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
-			self.m_btnRightCreate = m_bindComponent.GetComponent<Button>(18);
+			self.m_inputLeft = m_bindComponent.GetComponent<InputField>(16);
+			self.m_textRightTitle = m_bindComponent.GetComponent<Text>(17);
+			self.m_textRightModel = m_bindComponent.GetComponent<Text>(18);
+			self.m_goRight = m_bindComponent.GetComponent<RectTransform>(19).gameObject;
+			self.m_btnRightCreate = m_bindComponent.GetComponent<Button>(20);
 			self.m_btnRightCreate.onClick.AddListener(() => { self.OnRightCreate(); });
-			self.m_btnRightTran = m_bindComponent.GetComponent<Button>(19);
+			self.m_btnRightTran = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnRightTran.onClick.AddListener(() => { self.OnRightTran(); });
-			self.m_btnRightDelete = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnRightDelete = m_bindComponent.GetComponent<Button>(22);
 			self.m_btnRightDelete.onClick.AddListener(() => { self.OnRightDelete(); });
-			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(23);
 			self.m_btnRightEnter.onClick.AddListener(() => { self.OnRightEnter(); });
-			self.m_inputRight = m_bindComponent.GetComponent<InputField>(22);
-			self.m_btnBack2 = m_bindComponent.GetComponent<Button>(23);
+			self.m_inputRight = m_bindComponent.GetComponent<InputField>(24);
+			self.m_btnBack2 = m_bindComponent.GetComponent<Button>(25);
 			self.m_btnBack2.onClick.AddListener(() => { self.OnBack(); });
 			
 			self.m_loopListVerticalScroll.OnItemRefresh.RemoveAllListeners();
@@ -99,7 +102,7 @@ namespace ET.Client
 
 			self.PendingCreateLeftBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
 				self.PendingCreateLeftBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateLeftBaseAvatar);
-			//显示模型
+			self.UpdateLeftModelBaseAvatarText();
 		}
 
 		public static void OnLeftDelete(this UILoginComponent self)
@@ -126,7 +129,7 @@ namespace ET.Client
 
 			self.PendingCreateRightBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
 				self.PendingCreateRightBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateRightBaseAvatar);
-			//显示模型
+			self.UpdateRightModelBaseAvatarText();
 		}
 
 		public static void OnRightDelete(this UILoginComponent self)
@@ -589,7 +592,36 @@ namespace ET.Client
 			{
 				self.SetRightRole(null);
 			}
-			//显示模型
+		}
+
+		private static void UpdateLeftModelBaseAvatarText(this UILoginComponent self)
+		{
+			if (self.m_textLeftModel == null)
+			{
+				return;
+			}
+
+			R2C_GetRoles roles = self.NetCache()?.LastRoleListResponse;
+			bool hasRole = roles?.RoleInfoList != null && roles.RoleInfoList.Count >= 1;
+			int baseAvatar = hasRole
+				? roles.RoleInfoList[0].BaseAvatar
+				: (self.PendingCreateLeftBaseAvatar != 0 ? self.PendingCreateLeftBaseAvatar : DefaultAvatarHelper.GetDefaultBaseAvatar());
+			self.m_textLeftModel.text = string.Format("模型:{0}", baseAvatar);
+		}
+
+		private static void UpdateRightModelBaseAvatarText(this UILoginComponent self)
+		{
+			if (self.m_textRightModel == null)
+			{
+				return;
+			}
+
+			R2C_GetRoles roles = self.NetCache()?.LastRoleListResponse;
+			bool hasRole = roles?.RoleInfoList != null && roles.RoleInfoList.Count >= 2;
+			int baseAvatar = hasRole
+				? roles.RoleInfoList[1].BaseAvatar
+				: (self.PendingCreateRightBaseAvatar != 0 ? self.PendingCreateRightBaseAvatar : DefaultAvatarHelper.GetDefaultBaseAvatar());
+			self.m_textRightModel.text = string.Format("模型:{0}", baseAvatar);
 		}
 
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)
@@ -603,7 +635,6 @@ namespace ET.Client
 				self.m_btnLeftEnter.gameObject.SetActive(false);
 				self.m_textLeftTitle.text = "角色1";
 				self.m_inputLeft.gameObject.SetActive(true);
-				
 			}
 			else
 			{
@@ -614,6 +645,8 @@ namespace ET.Client
 				self.m_inputLeft.gameObject.SetActive(false);
 				self.m_textLeftTitle.text = roleInfoProto.Name;
 			}
+
+			self.UpdateLeftModelBaseAvatarText();
 		}
 
 		private static void SetRightRole(this UILoginComponent self, RoleInfoProto roleInfoProto)
@@ -637,6 +670,8 @@ namespace ET.Client
 				self.m_inputRight.gameObject.SetActive(false);
 				self.m_textRightTitle.text = roleInfoProto.Name;
 			}
+
+			self.UpdateRightModelBaseAvatarText();
 		}
 
 		#endregion

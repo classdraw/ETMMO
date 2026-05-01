@@ -13,7 +13,7 @@ namespace ET.Client
 		public int PendingCreateLeftBaseAvatar;
 		/// <summary>右侧空槽「创建角色」基底外观（换装按钮按序轮换），对应 ConstantConfig 9013~9015 之一。</summary>
 		public int PendingCreateRightBaseAvatar;
-
+		
 		public GameObject m_goObj1;
 		public InputField m_inputAccount;
 		public InputField m_inputPassword;
@@ -24,6 +24,7 @@ namespace ET.Client
 		public Text m_textServerList;
 		public GameObject m_goObj3;
 		public Text m_textLeftTitle;
+		public Text m_textLeftModel;
 		public GameObject m_goLeft;
 		public Button m_btnLeftCreate;
 		public Button m_btnLeftTran;
@@ -31,6 +32,7 @@ namespace ET.Client
 		public Button m_btnLeftEnter;
 		public InputField m_inputLeft;
 		public Text m_textRightTitle;
+		public Text m_textRightModel;
 		public GameObject m_goRight;
 		public Button m_btnRightCreate;
 		public Button m_btnRightTran;
