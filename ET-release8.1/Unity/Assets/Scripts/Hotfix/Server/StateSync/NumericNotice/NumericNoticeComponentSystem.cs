@@ -78,7 +78,7 @@ namespace ET.Server
             }
             else
             {
-                message = M2C_NoticeNumericMsg.Create();
+                message = M2C_NoticeNumericMsg.Create(true);
                 message.NumericType = numericType;
                 message.NewValue = newValue;
                 self.OutPutMessageDict.Add(numericType,message);
@@ -88,14 +88,17 @@ namespace ET.Server
         
         public static void CheckSyncTimer(this NumericNoticeComponent self)
         {
-            if (self.SyncTimeId != 0)
+            if (self.SyncTime <TimeInfo.Instance.ServerNow())
             {
-                self.Root().GetComponent<TimerComponent>().Remove(ref self.SyncTimeId);
+                if (self.SyncTimeId != 0)
+                {
+                    self.Root().GetComponent<TimerComponent>().Remove(ref self.SyncTimeId);
                 
-            }
+                }
 
-            self.SyncTime = TimeInfo.Instance.ServerNow() + 100;
-            self.SyncTimeId = self.Root().GetComponent<TimerComponent>().NewOnceTimer(self.SyncTime, TimerInvokeType.NumericSync, self);
+                self.SyncTime = TimeInfo.Instance.ServerNow() + 100;
+                self.SyncTimeId = self.Root().GetComponent<TimerComponent>().NewOnceTimer(self.SyncTime, TimerInvokeType.NumericSync, self);
+            }
         }
         
         public static void NoticeQueueMsgImmediately(this NumericNoticeComponent self)
