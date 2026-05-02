@@ -114,7 +114,7 @@ namespace ET
         public string GateAddress { get; set; }
 
         [MemoryPackOrder(5)]
-        public int BaseAvatar { get; set; }
+        public int ConfigId { get; set; }
 
         public override void Dispose()
         {
@@ -128,7 +128,7 @@ namespace ET
             this.RealmKey = default;
             this.RoleId = default;
             this.GateAddress = default;
-            this.BaseAvatar = default;
+            this.ConfigId = default;
 
             ObjectPool.Instance.Recycle(this);
         }

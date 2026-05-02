@@ -257,9 +257,6 @@ namespace ET
         [MemoryPackOrder(6)]
         public MoveInfo MoveInfo { get; set; }
 
-        [MemoryPackOrder(7)]
-        public int BaseAvatar { get; set; }
-
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -274,7 +271,6 @@ namespace ET
             this.Forward = default;
             this.KV.Clear();
             this.MoveInfo = default;
-            this.BaseAvatar = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1120,7 +1116,7 @@ namespace ET
         public int ServerId { get; set; }
 
         [MemoryPackOrder(7)]
-        public int BaseAvatar { get; set; }
+        public int ConfigId { get; set; }
 
         public override void Dispose()
         {
@@ -1136,7 +1132,7 @@ namespace ET
             this.LastLoginTime = default;
             this.CreateTime = default;
             this.ServerId = default;
-            this.BaseAvatar = default;
+            this.ConfigId = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1249,7 +1245,7 @@ namespace ET
         public int ServerId { get; set; }
 
         [MemoryPackOrder(5)]
-        public int BaseAvatar { get; set; }
+        public int ConfigId { get; set; }
 
         public override void Dispose()
         {
@@ -1263,7 +1259,7 @@ namespace ET
             this.AccountName = default;
             this.Name = default;
             this.ServerId = default;
-            this.BaseAvatar = default;
+            this.ConfigId = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1735,10 +1731,10 @@ namespace ET
         public long RoleId { get; set; }
 
         /// <summary>
-        /// 初始皮肤
+        /// 初始角色
         /// </summary>
         [MemoryPackOrder(4)]
-        public int BaseAvatar { get; set; }
+        public int ConfigId { get; set; }
 
         public override void Dispose()
         {
@@ -1751,7 +1747,7 @@ namespace ET
             this.Key = default;
             this.AccountName = default;
             this.RoleId = default;
-            this.BaseAvatar = default;
+            this.ConfigId = default;
 
             ObjectPool.Instance.Recycle(this);
         }

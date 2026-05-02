@@ -54,7 +54,7 @@ namespace ET
         
         
         //avatar数据
-        public int BaseAvatar;//保存基础avatar组，角色皮肤，角色穿着在unit存储
+        public int ConfigId;//对应UnitConfig配置表id
 
     }
 }

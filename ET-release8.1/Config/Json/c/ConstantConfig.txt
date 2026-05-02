@@ -1,5 +1,5 @@
 {"dict": [
-[9013, {"_t":"ConstantConfig","_id":9013,"Name":"Default_Role_1","StringValue":"2016,2017,2018,2019,2020,2021,2055,2057,2046,2001"}],
-[9014, {"_t":"ConstantConfig","_id":9014,"Name":"Default_Role_2","StringValue":"2022,2023,2024,2025,2026,2027,2055,2057,2048,2004"}],
-[9015, {"_t":"ConstantConfig","_id":9015,"Name":"Default_Role_3","StringValue":"2028,2029,2030,2031,2032,2033,2055,2057,2052,2007"}],
+[9013, {"_t":"ConstantConfig","_id":9013,"Name":"Default_Role_1","StringValue":"Assets/Bundles/Unit/HeroHuangXiaoYu.prefab"}],
+[9014, {"_t":"ConstantConfig","_id":9014,"Name":"Default_Role_2","StringValue":"Assets/Bundles/Unit/HeroHuangXiaoYu.prefab"}],
+[9015, {"_t":"ConstantConfig","_id":9015,"Name":"Default_Role_3","StringValue":"Assets/Bundles/Unit/HeroHuangXiaoYu.prefab"}],
 ]}

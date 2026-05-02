@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -91,7 +92,6 @@ namespace ET.Server
             unitInfo.Type = (int)unit.Type();
             unitInfo.Position = unit.Position;
             unitInfo.Forward = unit.Forward;
-            unitInfo.BaseAvatar = unit.BaseAvatar;
 
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             if (moveComponent != null)
@@ -126,5 +126,7 @@ namespace ET.Server
         {
             return self.GetComponent<AOIEntity>().GetBeSeePlayers();
         }
+        
+        
     }
 }

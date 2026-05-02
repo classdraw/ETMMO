@@ -59,7 +59,6 @@ message UnitInfo
 	Unity.Mathematics.float3 Forward = 5;
 	map<int32, int64> KV = 6;
 	MoveInfo MoveInfo = 7;
-	int32 BaseAvatar = 8;
 }
 
 message M2C_CreateUnits // IMessage
@@ -249,7 +248,7 @@ message RoleInfoProto
 	int64 LastLoginTime = 5;
 	int64 CreateTime = 6;
 	int32 ServerId = 7;
-	int32 BaseAvatar = 8;
+	int32 ConfigId = 8;
 }
 
 
@@ -281,7 +280,7 @@ message C2R_CreateRole // ISessionRequest
 	string AccountName = 3;
 	string Name = 4;
 	int32 ServerId = 5;
-	int32 BaseAvatar = 6;
+	int32 ConfigId = 6;
 }
 
 message R2C_CreateRole // ISessionResponse
@@ -396,7 +395,7 @@ message C2G_LoginGameGate // ISessionRequest
 	int64 Key = 2; // realmkey
 	string AccountName = 3; // 帐号
 	int64 RoleId = 4; //角色id
-	int32 BaseAvatar = 5; //初始皮肤
+	int32 ConfigId = 5; //初始角色
 }
 
 message G2C_LoginGameGate // ISessionResponse

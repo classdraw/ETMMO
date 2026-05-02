@@ -100,8 +100,10 @@ namespace ET.Client
 				return;
 			}
 
-			self.PendingCreateLeftBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
-				self.PendingCreateLeftBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateLeftBaseAvatar);
+			int cur = self.PendingCreateLeftConfigId == 0
+				? DefaultAvatarHelper.GetDefaultRoleUnitConfigId()
+				: self.PendingCreateLeftConfigId;
+			self.PendingCreateLeftConfigId = DefaultAvatarHelper.NextRoleUnitConfigId(cur);
 			self.UpdateLeftModelBaseAvatarText();
 		}
 
@@ -127,8 +129,10 @@ namespace ET.Client
 				return;
 			}
 
-			self.PendingCreateRightBaseAvatar = DefaultAvatarHelper.NextBaseAvatar(
-				self.PendingCreateRightBaseAvatar == 0 ? DefaultAvatarHelper.GetDefaultBaseAvatar() : self.PendingCreateRightBaseAvatar);
+			int cur = self.PendingCreateRightConfigId == 0
+				? DefaultAvatarHelper.GetDefaultRoleUnitConfigId()
+				: self.PendingCreateRightConfigId;
+			self.PendingCreateRightConfigId = DefaultAvatarHelper.NextRoleUnitConfigId(cur);
 			self.UpdateRightModelBaseAvatarText();
 		}
 
@@ -255,12 +259,12 @@ namespace ET.Client
 				return;
 			}
 
-			if (self.PendingCreateLeftBaseAvatar == 0)
+			if (self.PendingCreateLeftConfigId == 0)
 			{
-				self.PendingCreateLeftBaseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+				self.PendingCreateLeftConfigId = DefaultAvatarHelper.GetDefaultRoleUnitConfigId();
 			}
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateLeftBaseAvatar);
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateLeftConfigId);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftCreate");
@@ -293,12 +297,12 @@ namespace ET.Client
 				return;
 			}
 
-			if (self.PendingCreateRightBaseAvatar == 0)
+			if (self.PendingCreateRightConfigId == 0)
 			{
-				self.PendingCreateRightBaseAvatar = DefaultAvatarHelper.GetDefaultBaseAvatar();
+				self.PendingCreateRightConfigId = DefaultAvatarHelper.GetDefaultRoleUnitConfigId();
 			}
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateRightBaseAvatar);
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateRightConfigId);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightCreate");
@@ -375,7 +379,8 @@ namespace ET.Client
 			}
 
 			long roleId = roles.RoleInfoList[0].Id;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId,self.PendingCreateLeftBaseAvatar);
+			int configId = roles.RoleInfoList[0].ConfigId;
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftEnter");
@@ -397,7 +402,8 @@ namespace ET.Client
 			}
 
 			long roleId = roles.RoleInfoList[1].Id;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId,self.PendingCreateRightBaseAvatar);
+			int configId = roles.RoleInfoList[1].ConfigId;
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightEnter");
@@ -520,10 +526,10 @@ namespace ET.Client
 
 			R2C_GetRoles roles = self.NetCache()?.LastRoleListResponse;
 			bool hasRole = roles?.RoleInfoList != null && roles.RoleInfoList.Count >= 1;
-			int baseAvatar = hasRole
-				? roles.RoleInfoList[0].BaseAvatar
-				: (self.PendingCreateLeftBaseAvatar != 0 ? self.PendingCreateLeftBaseAvatar : DefaultAvatarHelper.GetDefaultBaseAvatar());
-			self.m_textLeftModel.text = string.Format("模型:{0}", baseAvatar);
+			int configId = hasRole
+				? roles.RoleInfoList[0].ConfigId
+				: (self.PendingCreateLeftConfigId != 0 ? self.PendingCreateLeftConfigId : DefaultAvatarHelper.GetDefaultRoleUnitConfigId());
+			self.m_textLeftModel.text = string.Format("模型:{0}", configId);
 		}
 
 		private static void UpdateRightModelBaseAvatarText(this UILoginComponent self)
@@ -535,10 +541,10 @@ namespace ET.Client
 
 			R2C_GetRoles roles = self.NetCache()?.LastRoleListResponse;
 			bool hasRole = roles?.RoleInfoList != null && roles.RoleInfoList.Count >= 2;
-			int baseAvatar = hasRole
-				? roles.RoleInfoList[1].BaseAvatar
-				: (self.PendingCreateRightBaseAvatar != 0 ? self.PendingCreateRightBaseAvatar : DefaultAvatarHelper.GetDefaultBaseAvatar());
-			self.m_textRightModel.text = string.Format("模型:{0}", baseAvatar);
+			int configId = hasRole
+				? roles.RoleInfoList[1].ConfigId
+				: (self.PendingCreateRightConfigId != 0 ? self.PendingCreateRightConfigId : DefaultAvatarHelper.GetDefaultRoleUnitConfigId());
+			self.m_textRightModel.text = string.Format("模型:{0}", configId);
 		}
 
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)

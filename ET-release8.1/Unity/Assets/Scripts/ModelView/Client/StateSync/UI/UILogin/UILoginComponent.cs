@@ -9,10 +9,10 @@ namespace ET.Client
 	[ComponentOf(typeof(UI))]
 	public class UILoginComponent: Entity, IAwake,IDestroy
 	{
-		/// <summary>左侧空槽「创建角色」基底外观（换装按钮按序轮换），对应 ConstantConfig 9013~9015 之一。</summary>
-		public int PendingCreateLeftBaseAvatar;
-		/// <summary>右侧空槽「创建角色」基底外观（换装按钮按序轮换），对应 ConstantConfig 9013~9015 之一。</summary>
-		public int PendingCreateRightBaseAvatar;
+		/// <summary>左侧空槽「创建角色」待提交的 <see cref="RoleInfoProto.ConfigId"/>（换装按 1001→1002→…→1005→1001，未选时界面默认 1001）。</summary>
+		public int PendingCreateLeftConfigId;
+		/// <summary>右侧空槽「创建角色」待提交的 <see cref="RoleInfoProto.ConfigId"/>（换装按 1001→1002→…→1005→1001，未选时界面默认 1001）。</summary>
+		public int PendingCreateRightConfigId;
 		
 		public GameObject m_goObj1;
 		public InputField m_inputAccount;

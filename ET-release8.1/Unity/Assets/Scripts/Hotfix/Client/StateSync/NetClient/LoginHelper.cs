@@ -6,7 +6,7 @@ namespace ET.Client
     public static class LoginHelper
     {
         //总登录流程 现在拆解
-        public static async ETTask LoginOld(Scene root, string account, string password,int baseAvatar)
+        public static async ETTask LoginOld(Scene root, string account, string password,int configId)
         {
             //root是客户端 main fiber 
             root.RemoveComponent<ClientSenderComponent>();//移除链接gate的组建 相当于重新链接
@@ -58,7 +58,7 @@ namespace ET.Client
                 c2RCreateRole.ServerId = serverInfoProto.Id;
                 c2RCreateRole.AccountName = account;
                 c2RCreateRole.Name = account;
-                c2RCreateRole.BaseAvatar = baseAvatar;
+                c2RCreateRole.ConfigId = configId;
                 
                 R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
                 if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)
@@ -86,7 +86,7 @@ namespace ET.Client
                 return;
             }
             //r2CGetRealmKey.Key 是随机64位+时间的hashcode
-            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address,baseAvatar);
+            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address,configId);
             if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error($"进入游戏失败;{netClient2MainLoginGame.Error}");
@@ -213,7 +213,7 @@ namespace ET.Client
             return LoginOperationResult.Success();
         }
 
-        public static async ETTask<LoginOperationResult> LoginCreateRole(Scene root, string roleName, int baseAvatar)
+        public static async ETTask<LoginOperationResult> LoginCreateRole(Scene root, string roleName, int configId)
         {
             NetworkCacheComponent cache = root.GetComponent<NetworkCacheComponent>();
             if (cache == null)
@@ -234,7 +234,7 @@ namespace ET.Client
             c2RCreateRole.AccountName = cache.Account;
             c2RCreateRole.ServerId = cache.ServerId;
             c2RCreateRole.Name = roleName;
-            c2RCreateRole.BaseAvatar = baseAvatar;
+            c2RCreateRole.ConfigId = configId;
 
             R2C_CreateRole r2CCreateRole=await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
             if (r2CCreateRole==null||r2CCreateRole.Error!=ErrorCode.ERR_Success)

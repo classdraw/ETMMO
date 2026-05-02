@@ -18,7 +18,7 @@
 
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
             
-            await LoginHelper.LoginOld(root, root.Name, "", DefaultAvatarHelper.ConstantBaseAvatarA);
+            await LoginHelper.LoginOld(root, root.Name, "", DefaultAvatarHelper.DefaultRoleUnitConfigId0);
             
             await EnterMapHelper.EnterMapAsync(root);
             

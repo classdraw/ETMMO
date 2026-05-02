@@ -25,7 +25,7 @@ namespace ET.Client
             LoginHelper.LoginOld(
                 self.Root(),
                self.account.GetComponent<InputField>().text,
-               self.password.GetComponent<InputField>().text,DefaultAvatarHelper.ConstantBaseAvatarA).Coroutine();
+               self.password.GetComponent<InputField>().text,DefaultAvatarHelper.DefaultRoleUnitConfigId0).Coroutine();
         }
     }
 }

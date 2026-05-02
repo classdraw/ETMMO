@@ -14,6 +14,6 @@
         public long UnitId { get; set; }//数据库id 也是唯一id  UnitId=Id
         public string AccountName { get; set; }
         public PlayerState PlayerState { get; set; }
-        public int BaseAvatar { get; set; }
+        public int ConfigId { get; set; }
     }
 }

@@ -52,7 +52,7 @@ namespace ET.Server
                 roleInfo.CreateTime = nowTime;
                 roleInfo.LastLoginTime = 0;
                 roleInfo.Name = request.Name;
-                roleInfo.BaseAvatar = request.BaseAvatar;
+                roleInfo.ConfigId = request.ConfigId;
 
                 await dbComponent.Save<RoleInfo>(roleInfo);
                     

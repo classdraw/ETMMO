@@ -12,7 +12,7 @@ namespace ET.Client
             // Unit View层
             string assetsName = $"Assets/Bundles/Unit/Unit.prefab";
             GameObject bundleGameObject = await scene.GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
-            string prefabKey = "Skeleton"+unit.BaseAvatar;
+            string prefabKey = "Skeleton"+unit.ConfigId;
             GameObject prefab =bundleGameObject.Get<GameObject>(prefabKey);
             GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);

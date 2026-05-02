@@ -1,6 +1,7 @@
 {"dict": [
-[1001, {"_t":"UnitConfig","_id":1001,"Type":1,"Name":"米克尔","Position":1,"Height":178,"Weight":68,"IsTest":true}],
-[1002, {"_t":"UnitConfig","_id":1002,"Type":1,"Name":"米克尔2","Position":2,"Height":278,"Weight":78,"IsTest":true}],
-[1003, {"_t":"UnitConfig","_id":1003,"Type":1,"Name":"米克尔3","Position":1,"Height":178,"Weight":68,"IsTest":true}],
-[1004, {"_t":"UnitConfig","_id":1004,"Type":1,"Name":"米克尔4","Position":2,"Height":278,"Weight":78,"IsTest":true}],
+[1001, {"_t":"UnitConfig","_id":1001,"Type":1,"Name":"黄小雨","Position":1,"Speed":3000,"Aoi":6000,"JobHp":700,"JobSp":2000,"Str":1,"Agi":1,"Vit":1,"Intell":1,"Dex":1,"Luk":1}],
+[1002, {"_t":"UnitConfig","_id":1002,"Type":1,"Name":"郭晓华","Position":2,"Speed":3000,"Aoi":6000,"JobHp":300,"JobSp":6000,"Str":1,"Agi":1,"Vit":1,"Intell":1,"Dex":1,"Luk":1}],
+[1003, {"_t":"UnitConfig","_id":1003,"Type":1,"Name":"西纱","Position":3,"Speed":3000,"Aoi":6000,"JobHp":500,"JobSp":3000,"Str":1,"Agi":1,"Vit":1,"Intell":1,"Dex":1,"Luk":1}],
+[1004, {"_t":"UnitConfig","_id":1004,"Type":1,"Name":"西纱","Position":4,"Speed":3000,"Aoi":6000,"JobHp":400,"JobSp":4000,"Str":1,"Agi":1,"Vit":1,"Intell":1,"Dex":1,"Luk":1}],
+[1005, {"_t":"UnitConfig","_id":1005,"Type":1,"Name":"西纱","Position":5,"Speed":3000,"Aoi":6000,"JobHp":500,"JobSp":3000,"Str":1,"Agi":1,"Vit":1,"Intell":1,"Dex":1,"Luk":1}],
 ]}

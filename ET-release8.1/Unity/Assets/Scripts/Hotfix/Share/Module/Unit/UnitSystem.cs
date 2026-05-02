@@ -4,10 +4,9 @@ namespace ET
     public static partial class UnitSystem
     {
         [EntitySystem]
-        private static void Awake(this Unit self, int configId, int baseAvatar)
+        private static void Awake(this Unit self, int configId)
         {
             self.ConfigId = configId;
-            self.BaseAvatar = baseAvatar;
         }
 
         public static UnitConfig Config(this Unit self)

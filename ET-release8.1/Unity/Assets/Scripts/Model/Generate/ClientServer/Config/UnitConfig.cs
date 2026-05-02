@@ -67,12 +67,26 @@ namespace ET
 		public string Name { get; set; }
 		/// <summary>位置</summary>
 		public int Position { get; set; }
-		/// <summary>身高</summary>
-		public int Height { get; set; }
-		/// <summary>体重</summary>
-		public int Weight { get; set; }
-		/// <summary>测试</summary>
-		public bool IsTest { get; set; }
+		/// <summary>速度*1000</summary>
+		public int Speed { get; set; }
+		/// <summary>AOI</summary>
+		public int Aoi { get; set; }
+		/// <summary>血量Job系数*1000</summary>
+		public int JobHp { get; set; }
+		/// <summary>蓝量Job系数*1000</summary>
+		public double JobSp { get; set; }
+		/// <summary>STR</summary>
+		public int Str { get; set; }
+		/// <summary>AGI</summary>
+		public int Agi { get; set; }
+		/// <summary>VIT</summary>
+		public int Vit { get; set; }
+		/// <summary>INT</summary>
+		public int Intell { get; set; }
+		/// <summary>DEX</summary>
+		public int Dex { get; set; }
+		/// <summary>LUK</summary>
+		public int Luk { get; set; }
 
 	}
 }
