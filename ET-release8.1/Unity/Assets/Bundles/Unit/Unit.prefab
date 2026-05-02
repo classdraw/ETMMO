@@ -45,12 +45,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-  - key: Skeleton9013
+  - key: Skeleton1001
     gameObject: {fileID: 7874937612349989003, guid: bfdd47e0ec0c7e44c84df3658e6160f7,
       type: 3}
-  - key: Skeleton9014
+  - key: Skeleton1002
     gameObject: {fileID: 7607968288820798271, guid: cad6c3ade1e9c08469ba1ff4409ac60a,
       type: 3}
-  - key: Skeleton9015
+  - key: Skeleton1003
     gameObject: {fileID: 2933072431170162511, guid: 162423797e11b824fbc505d46628e3bc,
+      type: 3}
+  - key: Skeleton1004
+    gameObject: {fileID: 523345393762717152, guid: 3ed9730a7034ed84cb89cfb6631d312c,
+      type: 3}
+  - key: Skeleton1005
+    gameObject: {fileID: 7638328607585169076, guid: 21c273d1fb20f094aa6730828d8a38de,
       type: 3}
