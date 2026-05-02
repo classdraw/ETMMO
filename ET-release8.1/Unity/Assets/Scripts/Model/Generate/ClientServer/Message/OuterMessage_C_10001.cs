@@ -2023,6 +2023,127 @@ namespace ET
     /// <summary>
     /// 数值///////////////////////////////////////////
     /// </summary>
+    /// <summary>
+    /// 背包///////////////////////////////////////////
+    /// </summary>
+    [MemoryPackable]
+    [Message(OuterMessage.ItemProto)]
+    public partial class ItemProto : MessageObject
+    {
+        public static ItemProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(ItemProto), isFromPool) as ItemProto;
+        }
+
+        [MemoryPackOrder(0)]
+        public int ConfigId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int ContainerType { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long Id { get; set; }
+
+        [MemoryPackOrder(3)]
+        public int Count { get; set; }
+
+        [MemoryPackOrder(4)]
+        public int ItemQuality { get; set; }
+
+        [MemoryPackOrder(5)]
+        public EquipInfoProto EquipInfo { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.ConfigId = default;
+            this.ContainerType = default;
+            this.Id = default;
+            this.Count = default;
+            this.ItemQuality = default;
+            this.EquipInfo = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.AttributeEntryProto)]
+    public partial class AttributeEntryProto : MessageObject
+    {
+        public static AttributeEntryProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(AttributeEntryProto), isFromPool) as AttributeEntryProto;
+        }
+
+        [MemoryPackOrder(0)]
+        public long Id { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Key { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long Value { get; set; }
+
+        [MemoryPackOrder(3)]
+        public int EntryType { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Id = default;
+            this.Key = default;
+            this.Value = default;
+            this.EntryType = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.EquipInfoProto)]
+    public partial class EquipInfoProto : MessageObject
+    {
+        public static EquipInfoProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(EquipInfoProto), isFromPool) as EquipInfoProto;
+        }
+
+        [MemoryPackOrder(0)]
+        public long Id { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Score { get; set; }
+
+        [MemoryPackOrder(2)]
+        public List<AttributeEntryProto> AttributeEntryProtoList { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Id = default;
+            this.Score = default;
+            this.AttributeEntryProtoList.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// 背包///////////////////////////////////////////
+    /// </summary>
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -2083,5 +2204,8 @@ namespace ET
         public const ushort M2C_NoticeUnitNumeric = 10057;
         public const ushort M2C_NoticeNumericMsg = 10058;
         public const ushort M2C_NoticeUnitNumericList = 10059;
+        public const ushort ItemProto = 10060;
+        public const ushort AttributeEntryProto = 10061;
+        public const ushort EquipInfoProto = 10062;
     }
 }

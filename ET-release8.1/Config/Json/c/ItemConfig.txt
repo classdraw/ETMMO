@@ -1,0 +1,6 @@
+{"dict": [
+[1001, {"_t":"ItemConfig","_id":1001,"Type":1,"Price":100,"Name":"小瓶红药水","Quality":1}],
+[1002, {"_t":"ItemConfig","_id":1002,"Type":1,"Price":120,"Name":"中瓶红药水","Quality":1}],
+[1003, {"_t":"ItemConfig","_id":1003,"Type":1,"Price":150,"Name":"小瓶蓝药水","Quality":1}],
+[1004, {"_t":"ItemConfig","_id":1004,"Type":1,"Price":170,"Name":"中瓶蓝药水","Quality":1}],
+]}

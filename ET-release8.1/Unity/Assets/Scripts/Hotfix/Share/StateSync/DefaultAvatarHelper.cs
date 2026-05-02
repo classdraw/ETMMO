@@ -14,7 +14,6 @@ namespace ET
 
 		/// <summary>登录创角界面轮换池长度（仅 const，满足 Hotfix 程序集约束）。</summary>
 		public const int DefaultRoleUnitConfigIdCount = 5;
-
 		public const int DefaultRoleUnitConfigId0 = 1001;
 		public const int DefaultRoleUnitConfigId1 = 1002;
 		public const int DefaultRoleUnitConfigId2 = 1003;

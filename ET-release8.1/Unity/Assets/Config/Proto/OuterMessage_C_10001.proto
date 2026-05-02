@@ -460,3 +460,31 @@ message M2C_NoticeUnitNumericList // IMessage
 }
 
 //////////////////////数值///////////////////////////////////////////
+//////////////////////背包///////////////////////////////////////////
+message ItemProto
+{
+	int32 ConfigId = 1;
+	int32 ContainerType = 2;
+	int64 Id = 3;
+	int32 Count = 4;
+	int32 ItemQuality  = 5;
+	EquipInfoProto EquipInfo = 6;
+}
+
+message AttributeEntryProto
+{
+	int64 Id = 1;
+	int32 Key = 2;
+	int64 Value = 3;
+	int32 EntryType = 4;
+}
+
+
+message EquipInfoProto
+{
+	int64 Id    = 1;
+	int32 Score = 2;
+	repeated AttributeEntryProto AttributeEntryProtoList = 3;
+}
+
+//////////////////////背包///////////////////////////////////////////
