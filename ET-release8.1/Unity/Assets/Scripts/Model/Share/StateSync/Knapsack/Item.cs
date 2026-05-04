@@ -11,7 +11,7 @@ namespace ET
         public int Count { get; set; }//数量
         public int Quality { get; set; }//品质
 
-        //配置数据
+        //配置数据 不会存入数据库
         [BsonIgnore]
         private ItemConfig Config => ItemConfigCategory.Instance.Get(this.ConfigId);
     }
