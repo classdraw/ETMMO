@@ -13,7 +13,7 @@ namespace ET
 
         //配置数据 不会存入数据库
         [BsonIgnore]
-        private ItemConfig Config => ItemConfigCategory.Instance.Get(this.ConfigId);
+        public ItemConfig Config => ItemConfigCategory.Instance.Get(this.ConfigId);
     }
 }
 

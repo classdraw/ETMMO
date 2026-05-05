@@ -16,5 +16,25 @@ namespace ET
         Warehouse = 2, //仓库
         Equipment = 3, //装备
     }
+    
+    /// <summary>
+    /// 物品类型
+    /// </summary>
+    public enum ItemType
+    {
+        /// <summary>
+        /// 货币
+        /// </summary>
+        Currency = 0,
+        /// <summary>
+        /// 装备
+        /// </summary>
+        Equip = 1,
+        /// <summary>
+        /// 道具
+        /// </summary>
+        Item = 2,
+    }
+
 }
 

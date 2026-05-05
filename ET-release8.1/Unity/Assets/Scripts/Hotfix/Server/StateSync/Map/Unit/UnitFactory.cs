@@ -42,6 +42,9 @@ namespace ET.Server
                     numericComponent.Set(NumericType.Hp, hp);
                     numericComponent.Set(NumericType.MaxHp, sp);
                     
+                    //背包组件
+                    //unit.AddComponent<KnapsackComponent>();
+                    
                     unitComponent.Add(unit);
                     // 加入aoi
                     var aoiEntity=unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
