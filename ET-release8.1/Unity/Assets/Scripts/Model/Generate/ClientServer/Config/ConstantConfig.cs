@@ -65,6 +65,8 @@ namespace ET
 		public string Name { get; set; }
 		/// <summary>StringValue</summary>
 		public string StringValue { get; set; }
+		/// <summary>IntValue</summary>
+		public int IntValue { get; set; }
 
 	}
 }

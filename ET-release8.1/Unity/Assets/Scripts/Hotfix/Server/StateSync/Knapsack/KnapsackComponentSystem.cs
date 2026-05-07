@@ -37,7 +37,8 @@ namespace ET.Server
                 }
             }
         }
-
+        
+        //获得所有容器所有东西
         public static void GetAllItems(this KnapsackComponent self,ListComponent<Item> itemList)
         {
             foreach (KnapsackContainerComponent container in self.ContainerInfoDic.Values)
@@ -46,6 +47,7 @@ namespace ET.Server
             }
         }
         
+        //获得某个容器组件
         public static KnapsackContainerComponent GetContainer(this KnapsackComponent self, int containerType)
         {
             self.ContainerInfoDic.TryGetValue(containerType, out EntityRef<KnapsackContainerComponent> container);

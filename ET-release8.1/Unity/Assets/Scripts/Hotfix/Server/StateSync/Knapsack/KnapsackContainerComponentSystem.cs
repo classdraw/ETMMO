@@ -4,6 +4,26 @@ namespace ET.Server
     [FriendOfAttribute(typeof(ET.Server.KnapsackContainerComponent))]
     public static partial class KnapsackContainerComponentSystem
     {
+        
+
+        private static int GetKnapsackMaxLoad()
+        {
+            if (!ConstantConfigCategory.Instance.Contain(ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId))
+            {
+                Log.Warning($"ConstantConfig 缺少 Id={ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId}，背包上限使用回退值 500");
+                return 200;
+            }
+
+            int v = ConstantConfigCategory.Instance.Get(ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId).IntValue;
+            if (v <= 0)
+            {
+                Log.Warning($"ConstantConfig Id={ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId} IntValue<=0，背包上限使用回退值 500");
+                return 200;
+            }
+
+            return v;
+        }
+
         [EntitySystem]
         private static void Awake(this ET.Server.KnapsackContainerComponent self, int knapsackContainerType)
         {
@@ -18,6 +38,7 @@ namespace ET.Server
         [EntitySystem]
         private static void Deserialize(this ET.Server.KnapsackContainerComponent self)
         {
+            //children会序列化 但是items不会序列化，所有需要在数据库反序列化后 把children加入到items
             foreach (Entity entity in self.Children.Values)
             {
                 if (entity is Item item)
@@ -41,7 +62,7 @@ namespace ET.Server
             return itemRef;
         }
         
-        public static bool IsItemExist(this KnapsackContainerComponent self, long itemId)
+        public static bool HasItem(this KnapsackContainerComponent self, long itemId)
         {
             self.Items.TryGetValue(itemId, out EntityRef<Item> itemRef);
             Item item = itemRef;
@@ -50,7 +71,7 @@ namespace ET.Server
 
         public static bool IsMaxLoad(this KnapsackContainerComponent self)
         {
-            return self.Items.Count == 500;
+            return self.Items.Count >= GetKnapsackMaxLoad();
         }
 
         public static bool IsCanAddItem(this KnapsackContainerComponent self,Item item)
@@ -83,7 +104,7 @@ namespace ET.Server
 
             return true;
         }
-
+        //如果后期需要类似暗黑的 一个装备占位2个或者6个格子的，那么这里需要判断position以及宽和高
         public static bool AddItem(this KnapsackContainerComponent self,Item item)
         {
             if (item==null||item.IsDisposed)

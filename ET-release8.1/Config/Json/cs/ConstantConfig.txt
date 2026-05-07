@@ -1,5 +1,3 @@
 {"dict": [
-[9013, {"_t":"ConstantConfig","_id":9013,"Name":"Default_Role_1","StringValue":"Assets/Bundles/Unit/HeroHuangXiaoYu.prefab"}],
-[9014, {"_t":"ConstantConfig","_id":9014,"Name":"Default_Role_2","StringValue":"Assets/Bundles/Unit/HeroHuangXiaoYu.prefab"}],
-[9015, {"_t":"ConstantConfig","_id":9015,"Name":"Default_Role_3","StringValue":"Assets/Bundles/Unit/HeroHuangXiaoYu.prefab"}],
+[90001, {"_t":"ConstantConfig","_id":90001,"Name":"","StringValue":"","IntValue":240}],
 ]}
