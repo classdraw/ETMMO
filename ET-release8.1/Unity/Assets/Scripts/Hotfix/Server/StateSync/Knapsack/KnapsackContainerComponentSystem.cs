@@ -86,6 +86,12 @@ namespace ET.Server
             {
                 return false;
             }
+
+            ItemConfig cfg = ItemConfigCategory.Instance.Get(item.ConfigId);
+            if (cfg.StackingLimit <= 0 || item.Count <= 0 || item.Count > cfg.StackingLimit)
+            {
+                return false;
+            }
             
             if(self.IsMaxLoad())
             {
@@ -104,8 +110,8 @@ namespace ET.Server
 
             return true;
         }
-        //如果后期需要类似暗黑的 一个装备占位2个或者6个格子的，那么这里需要判断position以及宽和高
-        public static bool AddItem(this KnapsackContainerComponent self,Item item)
+        //添加直接增加
+        private static bool AddItem(this KnapsackContainerComponent self,Item item)
         {
             if (item==null||item.IsDisposed)
             {
@@ -116,6 +122,13 @@ namespace ET.Server
             if (!ItemConfigCategory.Instance.Contain(item.ConfigId))
             {
                 Log.Error("ItemConfigCategory not Contain "+item.ConfigId+"!!!");
+                return false;
+            }
+
+            ItemConfig addCfg = ItemConfigCategory.Instance.Get(item.ConfigId);
+            if (addCfg.StackingLimit <= 0 || item.Count <= 0 || item.Count > addCfg.StackingLimit)
+            {
+                Log.Error($"AddItem 数量非法：ConfigId={item.ConfigId}, Count={item.Count}, StackingLimit={addCfg.StackingLimit}");
                 return false;
             }
 
@@ -136,8 +149,7 @@ namespace ET.Server
             
             item.ContainerType = self.KnapsackContainerType;
             self.Items.Add(item.Id,item);
-
-            
+            ItemNoticeHelper.SyncItemInfo(self.Parent.GetParent<Unit>(),item,ItemOpType.Add);
              
             //M2C_UpdateItemInfo m2CUpdateItemInfo = M2C_UpdateItemInfo.Create();
             //m2CUpdateItemInfo.Op = (int)ItemOpType.Add;
@@ -146,78 +158,143 @@ namespace ET.Server
              
             return true;
         }
-
-        public static bool RemoveItem(this KnapsackContainerComponent self, long itemId)
+        //-1表示直接移除该物品
+        public static bool RemoveItem(this KnapsackContainerComponent self, long itemId,int count=-1)
         {
             if (!self.Items.TryGetValue(itemId, out EntityRef<Item> itemRef))
             {
                 return false;
             }
             Item item = itemRef;
-            self.Items.Remove(itemId);
+            if (count==-1)
+            {
+                self.Items.Remove(itemId);
+                ItemNoticeHelper.SyncItemInfo(self.Parent.GetParent<Unit>(),item,ItemOpType.Remove);
+                item?.Dispose();
+            }
+            else
+            {
+                if (item.Count<count)
+                {
+                    return false;//不够移除
+                }
+                else if(item.Count==count)//刚好移除
+                {
+                    self.Items.Remove(itemId);
+                    ItemNoticeHelper.SyncItemInfo(self.Parent.GetParent<Unit>(),item,ItemOpType.Remove);
+                    item?.Dispose();
+                }
+                else//只是数量改变
+                {
+                    item.Count -= count;
+                    ItemNoticeHelper.SyncItemInfo(self.Parent.GetParent<Unit>(),item,ItemOpType.Update);
+                }
+                
+            }
             //M2C_UpdateItemInfo m2CUpdateItemInfo = M2C_UpdateItemInfo.Create();
             //m2CUpdateItemInfo.Op = (int)ItemOpType.Remove;
             //m2CUpdateItemInfo.ItemInfo = item.ToMessage();
             //MapMessageHelper.SendToClient(self.Parent.GetParent<Unit>(),m2CUpdateItemInfo);
-            item?.Dispose();
-            return true;
-        }
-
-        
-        public static Item RemoveItemNoDispose(this KnapsackContainerComponent self, long itemId)
-        {
-            if (!self.Items.TryGetValue(itemId, out EntityRef<Item> itemRef))
-            {
-                return null;
-            }
-
-            Item item = itemRef;
-            self.Items.Remove(itemId);
-            //M2C_UpdateItemInfo m2CUpdateItemInfo = M2C_UpdateItemInfo.Create();
-            //m2CUpdateItemInfo.Op = (int)ItemOpType.Remove;
-            //m2CUpdateItemInfo.ItemInfo = item.ToMessage();
-            //MapMessageHelper.SendToClient(self.Parent.GetParent<Unit>(),m2CUpdateItemInfo);
-            return item;
-        }
-        
-        
-        public static bool IsCanAddItemByConfigId(this KnapsackContainerComponent self, int configID)
-        {
-            if (!ItemConfigCategory.Instance.Contain(configID))
-            {
-                return false;
-            }
-
-            if (self.IsMaxLoad())
-            {
-                return false;
-            }
+            
             
             return true;
         }
         
+        /// <summary>
+        /// 先填满同 ConfigId 的未满堆叠，再计算需要新增几格；与 <see cref="AddItemByConfigId"/> 占用规则一致。
+        /// </summary>
+        public static bool CanAddItemByConfigId(this KnapsackContainerComponent self, int configId, int count)
+        {
+            if (!ItemConfigCategory.Instance.Contain(configId) || count <= 0)
+            {
+                return false;
+            }
+
+            ItemConfig itemConfig = ItemConfigCategory.Instance.Get(configId);
+            int stackingLimit = itemConfig.StackingLimit;
+            if (stackingLimit <= 0)
+            {
+                return false;
+            }
+
+            int remaining = count;
+            foreach (EntityRef<Item> itemRef in self.Items.Values)
+            {
+                Item item = itemRef;
+                if (item == null || item.IsDisposed || item.ConfigId != configId)
+                {
+                    continue;
+                }
+
+                int space = stackingLimit - item.Count;
+                if (space <= 0)
+                {
+                    continue;
+                }
+
+                int take = remaining < space ? remaining : space;
+                remaining -= take;
+                if (remaining <= 0)
+                {
+                    return true;
+                }
+            }
+
+            int maxLoad = GetKnapsackMaxLoad();
+            int newStacks = (remaining + stackingLimit - 1) / stackingLimit;
+            return self.Items.Count + newStacks <= maxLoad;
+        }
+
+        //根据堆叠上限增加物品
         public static bool AddItemByConfigId(this KnapsackContainerComponent self, int configId, int count = 1)
         {
-            if ( !ItemConfigCategory.Instance.Contain(configId))
+            if (!self.CanAddItemByConfigId(configId, count))//是否装得下
             {
                 return false;
             }
 
-            if ( count <= 0 )
-            {
-                return false;
-            }
+            ItemConfig itemConfig = ItemConfigCategory.Instance.Get(configId);
+            int stackingLimit = itemConfig.StackingLimit;
+            int remaining = count;
+            Unit unit = self.Parent.GetParent<Unit>();
 
-            for ( int i = 0; i < count; i++ )
+            foreach (EntityRef<Item> itemRef in self.Items.Values)
             {
-                Item newItem = ItemFactory.CreateItem(self, configId);
-              
-                if (!self.AddItem(newItem))
+                Item item = itemRef;
+                if (item == null || item.IsDisposed || item.ConfigId != configId)
                 {
-                    Log.Error("添加物品失败！");
+                    continue;
+                }
+
+                int space = stackingLimit - item.Count;
+                //超过了上限不做处理
+                if (space <= 0)
+                {
+                    continue;
+                }
+
+                int take = remaining < space ? remaining : space;//记录空位置
+                item.Count += take;
+                remaining -= take;
+                ItemNoticeHelper.SyncItemInfo(unit, item, ItemOpType.Update);
+                if (remaining <= 0)
+                {
+                    return true;
+                }
+            }
+
+            while (remaining > 0)
+            {
+                int chunk = remaining < stackingLimit ? remaining : stackingLimit;
+                Item newItem = ItemFactory.CreateItem(self, configId, chunk);
+                if (newItem == null || !self.AddItem(newItem))
+                {
+                    Log.Error("AddItemByConfigId 创建或添加失败，与预检不一致");
                     newItem?.Dispose();
                     return false;
                 }
+
+                remaining -= chunk;
             }
 
             return true;

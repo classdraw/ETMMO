@@ -69,6 +69,8 @@ namespace ET
 		public string Name { get; set; }
 		/// <summary>品质</summary>
 		public int Quality { get; set; }
+		/// <summary>堆叠上限</summary>
+		public int StackingLimit { get; set; }
 
 	}
 }

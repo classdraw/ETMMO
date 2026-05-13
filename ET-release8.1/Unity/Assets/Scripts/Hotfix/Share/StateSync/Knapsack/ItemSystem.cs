@@ -61,7 +61,7 @@ namespace ET
 
             return message;
              */
-            return null;
+            return message;
         }
     }
 }
