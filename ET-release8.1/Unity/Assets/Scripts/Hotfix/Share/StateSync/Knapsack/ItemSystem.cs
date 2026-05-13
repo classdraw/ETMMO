@@ -42,10 +42,11 @@ namespace ET
         public static ItemProto ToMessage(this Item self,bool isAllInfo = true)
         {
             ItemProto message = ItemProto.Create(true);
+            message.Id = self.Id;
             message.ConfigId = self.ConfigId;
             message.ContainerType = self.ContainerType;
-            message.Id = self.Id;
             message.Count = self.Count;
+            message.ItemQuality = self.Quality;
             
             if (!isAllInfo)
             {

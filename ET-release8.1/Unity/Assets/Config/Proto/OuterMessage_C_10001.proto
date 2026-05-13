@@ -471,6 +471,26 @@ message ItemProto
 	EquipInfoProto EquipInfo = 6;
 }
 
+message M2C_UpdateItemInfo // IMessage
+{
+	int32 Op = 1;
+	ItemProto ItemInfo = 2;
+}
+
+// ResponseType M2C_GetAllKnapsack
+message C2M_GetAllKnapsack // ILocationRequest
+{
+	int32 RpcId = 1;
+}
+
+message M2C_GetAllKnapsack // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	repeated ItemProto ItemList = 4;
+}
+
 message AttributeEntryProto
 {
 	int64 Id = 1;

@@ -2072,6 +2072,98 @@ namespace ET
     }
 
     [MemoryPackable]
+    [Message(OuterMessage.M2C_UpdateItemInfo)]
+    public partial class M2C_UpdateItemInfo : MessageObject, IMessage
+    {
+        public static M2C_UpdateItemInfo Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_UpdateItemInfo), isFromPool) as M2C_UpdateItemInfo;
+        }
+
+        [MemoryPackOrder(0)]
+        public int Op { get; set; }
+
+        [MemoryPackOrder(1)]
+        public ItemProto ItemInfo { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Op = default;
+            this.ItemInfo = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_GetAllKnapsack)]
+    [ResponseType(nameof(M2C_GetAllKnapsack))]
+    public partial class C2M_GetAllKnapsack : MessageObject, ILocationRequest
+    {
+        public static C2M_GetAllKnapsack Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_GetAllKnapsack), isFromPool) as C2M_GetAllKnapsack;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_GetAllKnapsack)]
+    public partial class M2C_GetAllKnapsack : MessageObject, ILocationResponse
+    {
+        public static M2C_GetAllKnapsack Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_GetAllKnapsack), isFromPool) as M2C_GetAllKnapsack;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public List<ItemProto> ItemList { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ItemList.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
     [Message(OuterMessage.AttributeEntryProto)]
     public partial class AttributeEntryProto : MessageObject
     {
@@ -2205,7 +2297,10 @@ namespace ET
         public const ushort M2C_NoticeNumericMsg = 10058;
         public const ushort M2C_NoticeUnitNumericList = 10059;
         public const ushort ItemProto = 10060;
-        public const ushort AttributeEntryProto = 10061;
-        public const ushort EquipInfoProto = 10062;
+        public const ushort M2C_UpdateItemInfo = 10061;
+        public const ushort C2M_GetAllKnapsack = 10062;
+        public const ushort M2C_GetAllKnapsack = 10063;
+        public const ushort AttributeEntryProto = 10064;
+        public const ushort EquipInfoProto = 10065;
     }
 }
