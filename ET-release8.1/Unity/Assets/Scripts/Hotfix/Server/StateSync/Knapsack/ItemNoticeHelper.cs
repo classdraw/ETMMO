@@ -11,5 +11,19 @@ namespace ET.Server
             m2CUpdateItemInfo.ItemInfo = item.ToMessage();
             MapMessageHelper.SendClient(unit,m2CUpdateItemInfo,NoticeClientType.Self);
         }
+        
+        public static void SyncAllKnapsackItems(Unit unit)
+        {
+            M2C_SyncAllKnapsackItems m2CSyncAllKnapsackItems = M2C_SyncAllKnapsackItems.Create();
+            using (ListComponent<Item> items = ListComponent<Item>.Create())
+            {
+                unit.GetComponent<KnapsackComponent>().GetAllItems(items);
+                foreach (Item item in items)
+                {
+                    m2CSyncAllKnapsackItems.ItemList.Add(item.ToMessage());
+                }
+            }
+            MapMessageHelper.SendClient(unit,m2CSyncAllKnapsackItems,NoticeClientType.Self);
+        }
     }
 }

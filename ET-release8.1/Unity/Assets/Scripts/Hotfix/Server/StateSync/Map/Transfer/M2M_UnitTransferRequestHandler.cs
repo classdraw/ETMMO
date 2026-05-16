@@ -53,6 +53,8 @@ namespace ET.Server
             M2C_CreateMyUnit m2CCreateUnits = M2C_CreateMyUnit.Create();
             m2CCreateUnits.Unit = UnitHelper.CreateUnitInfo(unit);
             await unit.SendToClient(m2CCreateUnits);
+            
+            ItemNoticeHelper.SyncAllKnapsackItems(unit);
 
             // 加入aoi
             unit.AddComponent<AOIEntity, int, float3>(6 * 1000, unit.Position);

@@ -14,7 +14,6 @@ namespace ET.Client
             var resourcesLoaderComponent = root.AddComponent<ResourcesLoaderComponent>();
             //显示层框架入口 资源加载用到ResourcesLoaderComponent 在这个后面
             await root.AddComponent<TEngineComponent>().Init(resourcesLoaderComponent);
-            
             root.AddComponent<UIGlobalComponent>();
             root.AddComponent<UIComponent>();
             
@@ -22,7 +21,7 @@ namespace ET.Client
             root.AddComponent<NetworkCacheComponent>();
             root.AddComponent<CurrentScenesComponent>();
 
-            root.AddComponent<ComputersComponent>();
+            root.AddComponent<ClientKnapsackComponent>();
             
             // 根据配置修改掉Main Fiber的SceneType
             SceneType sceneType = EnumHelper.FromString<SceneType>(globalComponent.GlobalConfig.AppType.ToString());

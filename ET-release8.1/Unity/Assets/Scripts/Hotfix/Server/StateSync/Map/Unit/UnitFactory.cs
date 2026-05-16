@@ -43,9 +43,10 @@ namespace ET.Server
                     numericComponent.Set(NumericType.MaxHp, sp);
                     
                     //背包组件
-                    //unit.AddComponent<KnapsackComponent>();
+                    unit.AddComponent<KnapsackComponent>();
                     
                     unitComponent.Add(unit);
+                    //装备组件后面加
                     // 加入aoi
                     var aoiEntity=unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
                     return unit;
