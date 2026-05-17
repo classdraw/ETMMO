@@ -1,6 +1,7 @@
 namespace ET.Server
 {
-    
+    [FriendOf(typeof(KnapsackComponent))]
+    [FriendOf(typeof(KnapsackContainerComponent))]
     public static class ItemNoticeHelper
     {
         //同步物品信息
@@ -15,14 +16,29 @@ namespace ET.Server
         public static void SyncAllKnapsackItems(Unit unit)
         {
             M2C_SyncAllKnapsackItems m2CSyncAllKnapsackItems = M2C_SyncAllKnapsackItems.Create();
-            using (ListComponent<Item> items = ListComponent<Item>.Create())
+            KnapsackComponent knapsack = unit.GetComponent<KnapsackComponent>();
+            if (knapsack != null)
             {
-                unit.GetComponent<KnapsackComponent>().GetAllItems(items);
-                foreach (Item item in items)
+                foreach (KnapsackContainerComponent container in knapsack.ContainerInfoDic.Values)
                 {
-                    m2CSyncAllKnapsackItems.ItemList.Add(item.ToMessage());
+                    if (container == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (EntityRef<Item> itemRef in container.Items.Values)
+                    {
+                        Item item = itemRef;
+                        if (item == null || item.IsDisposed)
+                        {
+                            continue;
+                        }
+
+                        m2CSyncAllKnapsackItems.ItemList.Add(item.ToMessage());
+                    }
                 }
             }
+
             MapMessageHelper.SendClient(unit,m2CSyncAllKnapsackItems,NoticeClientType.Self);
         }
     }

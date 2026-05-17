@@ -6,7 +6,7 @@ namespace ET.Client
     public static class LoginHelper
     {
         //总登录流程 现在拆解
-        public static async ETTask LoginOld(Scene root, string account, string password,int configId)
+        public static async ETTask LoginOld(Scene root, string account, string password,int configId,string name)
         {
             //root是客户端 main fiber 
             root.RemoveComponent<ClientSenderComponent>();//移除链接gate的组建 相当于重新链接
@@ -86,7 +86,7 @@ namespace ET.Client
                 return;
             }
             //r2CGetRealmKey.Key 是随机64位+时间的hashcode
-            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address,configId);
+            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(account, r2CGetRealmKey.Key, roleInfoProto.Id, r2CGetRealmKey.Address,configId,name);
             if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
             {
                 Log.Error($"进入游戏失败;{netClient2MainLoginGame.Error}");
@@ -256,7 +256,7 @@ namespace ET.Client
             return LoginOperationResult.Success();
         }
 
-        public static async ETTask<LoginOperationResult> LoginRoleEnterGame(Scene root, long roleId,int baseAvatar)
+        public static async ETTask<LoginOperationResult> LoginRoleEnterGame(Scene root, long roleId,int configId,string name)
         {
             NetworkCacheComponent cache = root.GetComponent<NetworkCacheComponent>();
             if (cache == null)
@@ -285,7 +285,7 @@ namespace ET.Client
                 return LoginOperationResult.Fail(err);
             }
             //r2CGetRealmKey.Key 是随机64位+时间的hashcode
-            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(cache.Account, r2CGetRealmKey.Key, roleId, r2CGetRealmKey.Address,baseAvatar);
+            var netClient2MainLoginGame=await clientSenderComponent.LoginGameAsync(cache.Account, r2CGetRealmKey.Key, roleId, r2CGetRealmKey.Address,configId,name);
             if (netClient2MainLoginGame==null||netClient2MainLoginGame.Error!=ErrorCode.ERR_Success)
             {
                 int err = netClient2MainLoginGame?.Error ?? ErrorCode.ERR_None;

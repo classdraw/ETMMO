@@ -14,6 +14,7 @@ namespace ET.Client
 		public Button m_btnTap4;
 		public InputField m_inputAll;
 		public GameObject m_goP1;
+		public Button m_btnP1rankList;
 		public GameObject m_goP2;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;
@@ -21,7 +22,7 @@ namespace ET.Client
 		public Button m_btnP3removeItem;
 		public GameObject m_goP4;
 		public Button m_btnGM;
-
+		
 		public List<GameObject> m_GOs = new List<GameObject>();
 	}
 	

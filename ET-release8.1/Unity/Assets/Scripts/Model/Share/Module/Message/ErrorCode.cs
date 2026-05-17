@@ -33,6 +33,7 @@ namespace ET
         public const int ERR_ErrorEnterGame = 200019;//玩家进入游戏逻辑服异常
         public const int ERR_AddKnapsackItemError = 200020;//背包增加物品异常
         public const int ERR_RemoveKnapsackItemError = 200021;//背包移除物品异常
+        public const int ERR_NetWorkError = 200022;//一些网络异常
         
         public const int ERR_None = 300000;//占位
     }

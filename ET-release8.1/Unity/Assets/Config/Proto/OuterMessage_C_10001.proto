@@ -53,12 +53,13 @@ message MoveInfo
 message UnitInfo
 {
 	int64 UnitId = 1;
-	int32 ConfigId = 2;
-	int32 Type = 3;
-	Unity.Mathematics.float3 Position = 4;
-	Unity.Mathematics.float3 Forward = 5;
-	map<int32, int64> KV = 6;
-	MoveInfo MoveInfo = 7;
+	string Name = 2;
+	int32 ConfigId = 3;
+	int32 Type = 4;
+	Unity.Mathematics.float3 Position = 5;
+	Unity.Mathematics.float3 Forward = 6;
+	map<int32, int64> KV = 7;
+	MoveInfo MoveInfo = 8;
 }
 
 message M2C_CreateUnits // IMessage
@@ -395,7 +396,8 @@ message C2G_LoginGameGate // ISessionRequest
 	int64 Key = 2; // realmkey
 	string AccountName = 3; // 帐号
 	int64 RoleId = 4; //角色id
-	int32 ConfigId = 5; //初始角色
+	int32 ConfigId = 5; //初始角色配置id
+	string Name = 6;//角色名字
 }
 
 message G2C_LoginGameGate // ISessionResponse
@@ -543,3 +545,27 @@ message EquipInfoProto
 }
 
 //////////////////////背包///////////////////////////////////////////
+//////////////////////排行榜///////////////////////////////////////////
+message RankInfoProto
+{
+	int64 Id      = 1;
+	int64 UnitId  = 2;
+	string Name   = 4;
+	int64  RankValue  = 5;
+}
+
+//ResponseType Rank2C_GetRanksInfo
+message C2Rank_GetRanksInfo // IRankInfoRequest
+{
+	int32 RpcId        = 1;
+}
+
+
+message Rank2C_GetRanksInfo // IRankInfoResponse
+{
+	int32 RpcId    = 1;
+	int32 Error    = 2;
+	string Message = 3;
+	repeated RankInfoProto RankInfoProtoList = 4;
+}
+//////////////////////排行榜///////////////////////////////////////////

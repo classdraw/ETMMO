@@ -82,7 +82,7 @@ namespace ET.Server
                         // 这里可以从DB中加载Unit
                        // unit = UnitFactory.Create(scene, player.Id, UnitType.Player);
                        // long unitId = unit.Id;
-
+                        
                        (bool isNewPlayer,Unit unit1) = await UnitLoadHelper.LoadUnit(player);
                        unit = unit1;
                        

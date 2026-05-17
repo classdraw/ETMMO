@@ -15,6 +15,7 @@ namespace ET
         public StartSceneConfig LocationConfig;
         
         public StartSceneConfig LoginCenterConfig;//登录服配置
+        public StartSceneConfig RankCenterConfig;//rank服务器
         public List<StartSceneConfig> Realms = new();
         
         
@@ -78,6 +79,9 @@ namespace ET
                         break;
                     case SceneType.LoginCenter:
                         this.LoginCenterConfig = startSceneConfig;
+                        break;
+                    case SceneType.Rank:
+                        this.RankCenterConfig = startSceneConfig;
                         break;
                 }
             }

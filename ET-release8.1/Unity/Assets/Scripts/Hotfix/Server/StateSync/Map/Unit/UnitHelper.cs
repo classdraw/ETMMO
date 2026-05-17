@@ -88,6 +88,7 @@ namespace ET.Server
             UnitInfo unitInfo = UnitInfo.Create();
             NumericComponent nc = unit.GetComponent<NumericComponent>();
             unitInfo.UnitId = unit.Id;
+            unitInfo.Name = unit.Name;
             unitInfo.ConfigId = unit.ConfigId;
             unitInfo.Type = (int)unit.Type();
             unitInfo.Position = unit.Position;

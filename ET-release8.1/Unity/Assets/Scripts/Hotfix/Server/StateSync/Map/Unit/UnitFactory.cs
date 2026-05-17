@@ -10,7 +10,7 @@ namespace ET.Server
             return UnitConfigCategory.Instance.Get(configId);
         }
 
-        public static Unit  Create(Scene scene, long id,int configId, UnitType unitType)
+        public static Unit  Create(Scene scene, long id,int configId,string name, UnitType unitType)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             switch (unitType)
@@ -18,15 +18,14 @@ namespace ET.Server
                 case UnitType.Player:
                 {
                     UnitConfig unitConfig=UnitConfigCategory.Instance.Get(configId);
-                    
-                    
-                    Unit unit = unitComponent.AddChildWithId<Unit, int>(id, configId);
+
+                    Unit unit = unitComponent.AddChildWithId<Unit, int,string>(id, configId,name);
                     unit.AddComponent<MoveComponent>();
                     unit.Position = new float3(-8.7f, 0f, -15.5f);//最好给新手村第一个场景的坐标 或者新手安全区随机一个 可以写死
                     NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
                     
                     numericComponent.Set(NumericType.AOI, unitConfig.Aoi); // 视野6米
-                    numericComponent.Set(NumericType.Level,0);//等级
+                    numericComponent.Set(NumericType.Level,1);//等级
 
                     int hp = NumericHelper.CalcHpResult(0, unitConfig.Vit, unitConfig.JobHp/1000f);
                     int sp = NumericHelper.CalcSpResult(0,unitConfig.Intell,unitConfig.JobSp/1000f);

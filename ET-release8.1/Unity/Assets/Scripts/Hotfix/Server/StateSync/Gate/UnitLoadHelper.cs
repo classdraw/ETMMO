@@ -11,7 +11,7 @@ namespace ET.Server
             bool isNewUnit = unit == null;
             if (isNewUnit)
             {
-                unit=UnitFactory.Create(gateMapComponent.Scene, player.Id,player.ConfigId, UnitType.Player);
+                unit=UnitFactory.Create(gateMapComponent.Scene, player.Id,player.ConfigId,player.Name, UnitType.Player);
                 unit.AddComponent<UnitDBSaveComponent>();
                 UnitCacheHelper.AddOrUpdateUnitAllCache(unit);//新角色把这个角色身上所有组件更新到缓存和数据库
             }

@@ -1,4 +1,6 @@
-﻿namespace ET.Client
+﻿using System;
+
+namespace ET.Client
 {
     [Invoke((long)SceneType.Robot)]
     public class FiberInit_Robot: AInvokeHandler<FiberInit, ETTask>
@@ -17,8 +19,10 @@
             root.SceneType = SceneType.StateSync;
 
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
+
+            var rand = new Random();
             
-            await LoginHelper.LoginOld(root, root.Name, "", DefaultAvatarHelper.DefaultRoleUnitConfigId0);
+            await LoginHelper.LoginOld(root, root.Name, "", DefaultAvatarHelper.DefaultRoleUnitConfigId0,"Test"+rand.Next(1000));
             
             await EnterMapHelper.EnterMapAsync(root);
             

@@ -59,7 +59,7 @@ namespace ET.Client
             return null;
         }
 
-        public static async ETTask<NetClient2Main_LoginGame> LoginGameAsync(this ClientSenderComponent self,string account,long key,long roleId,string address,int configId)
+        public static async ETTask<NetClient2Main_LoginGame> LoginGameAsync(this ClientSenderComponent self,string account,long key,long roleId,string address,int configId,string name)
         {
             if (self.IScene!=null)
             {
@@ -69,6 +69,7 @@ namespace ET.Client
                 main2NetClientLoginGame.RoleId = roleId;
                 main2NetClientLoginGame.GateAddress = address;
                 main2NetClientLoginGame.ConfigId = configId;
+                main2NetClientLoginGame.Name = name;
                 NetClient2Main_LoginGame netClient2MainLoginGame= await self.Root().GetComponent<ProcessInnerSender>().Call(
                     self.netClientActorId, main2NetClientLoginGame) as NetClient2Main_LoginGame;
                 return netClient2MainLoginGame;

@@ -9,6 +9,7 @@ namespace ET.Client
         protected override async ETTask Run(Scene scene, AfterUnitCreate args)
         {
             Unit unit = args.Unit;
+            string name = string.IsNullOrEmpty(unit.Name) ? "Empty" : unit.Name;
             // Unit View层
             string assetsName = $"Assets/Bundles/Unit/Unit.prefab";
             GameObject bundleGameObject = await scene.GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
@@ -18,7 +19,7 @@ namespace ET.Client
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
             NetworkCacheComponent netCache = scene.Root().GetComponent<NetworkCacheComponent>();
             bool isMainPlayerUnit = netCache != null && netCache.LoginGamePlayerId != 0 && unit.Id == netCache.LoginGamePlayerId;
-            go.name = isMainPlayerUnit ? $"unit_{unit.Id}*" : $"unit_{unit.Id}";
+            go.name = isMainPlayerUnit ? $"unit_{unit.Id}_{name}*" : $"unit_{unit.Id}_{name}";
             go.transform.position = unit.Position;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();

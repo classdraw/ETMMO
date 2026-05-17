@@ -116,6 +116,9 @@ namespace ET
         [MemoryPackOrder(5)]
         public int ConfigId { get; set; }
 
+        [MemoryPackOrder(6)]
+        public string Name { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -129,6 +132,7 @@ namespace ET
             this.RoleId = default;
             this.GateAddress = default;
             this.ConfigId = default;
+            this.Name = default;
 
             ObjectPool.Instance.Recycle(this);
         }

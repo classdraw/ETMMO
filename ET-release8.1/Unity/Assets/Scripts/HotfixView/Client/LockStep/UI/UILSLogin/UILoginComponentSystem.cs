@@ -22,10 +22,11 @@ namespace ET.Client
 
         public static void OnLogin(this UILSLoginComponent self)
         {
+            var rand = new System.Random();
             LoginHelper.LoginOld(
                 self.Root(),
                self.account.GetComponent<InputField>().text,
-               self.password.GetComponent<InputField>().text,DefaultAvatarHelper.DefaultRoleUnitConfigId0).Coroutine();
+               self.password.GetComponent<InputField>().text,DefaultAvatarHelper.DefaultRoleUnitConfigId0,"Test"+rand.Next(1000)).Coroutine();
         }
     }
 }

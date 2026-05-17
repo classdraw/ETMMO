@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ET;
-using ET.Server;
 using UnityEngine;
 using UnityEngine.UI;
 using GameLogic;
@@ -28,16 +27,18 @@ namespace ET.Client
 			self.m_btnTap4.onClick.AddListener(() => { self.OnTap4(); });
 			self.m_inputAll = m_bindComponent.GetComponent<InputField>(5);
 			self.m_goP1 = m_bindComponent.GetComponent<RectTransform>(6).gameObject;
-			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(7).gameObject;
-			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(9);
+			self.m_btnP1rankList = m_bindComponent.GetComponent<Button>(7);
+			self.m_btnP1rankList.onClick.AddListener(() => { self.OnP1rankList(); });
+			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
+			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(9).gameObject;
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(10);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(10);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(11);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(12);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(12).gameObject;
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(13);
+			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(14);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 			
 			self.m_GOs.Clear();
@@ -93,6 +94,14 @@ namespace ET.Client
 			self.m_goP4.SetActive(true);
 		}
 
+		#region P1
+		public static void OnP1rankList(this UIHelpComponent self)
+		{
+			RankHelper.GetRankInfo(self.Root()).Coroutine();
+		}
+		
+
+		#endregion
 
 		#region p3
 		//背包按钮

@@ -55,6 +55,8 @@ namespace ET.Server
             await unit.SendToClient(m2CCreateUnits);
             
             ItemNoticeHelper.SyncAllKnapsackItems(unit);
+            
+            RankHelper.AddOrUpdateLevelRank(unit);
 
             // 加入aoi
             unit.AddComponent<AOIEntity, int, float3>(6 * 1000, unit.Position);

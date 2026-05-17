@@ -240,21 +240,24 @@ namespace ET
         public long UnitId { get; set; }
 
         [MemoryPackOrder(1)]
-        public int ConfigId { get; set; }
+        public string Name { get; set; }
 
         [MemoryPackOrder(2)]
-        public int Type { get; set; }
+        public int ConfigId { get; set; }
 
         [MemoryPackOrder(3)]
-        public Unity.Mathematics.float3 Position { get; set; }
+        public int Type { get; set; }
 
         [MemoryPackOrder(4)]
+        public Unity.Mathematics.float3 Position { get; set; }
+
+        [MemoryPackOrder(5)]
         public Unity.Mathematics.float3 Forward { get; set; }
 
         [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
-        [MemoryPackOrder(5)]
-        public Dictionary<int, long> KV { get; set; } = new();
         [MemoryPackOrder(6)]
+        public Dictionary<int, long> KV { get; set; } = new();
+        [MemoryPackOrder(7)]
         public MoveInfo MoveInfo { get; set; }
 
         public override void Dispose()
@@ -265,6 +268,7 @@ namespace ET
             }
 
             this.UnitId = default;
+            this.Name = default;
             this.ConfigId = default;
             this.Type = default;
             this.Position = default;
@@ -1731,10 +1735,16 @@ namespace ET
         public long RoleId { get; set; }
 
         /// <summary>
-        /// 初始角色
+        /// 初始角色配置id
         /// </summary>
         [MemoryPackOrder(4)]
         public int ConfigId { get; set; }
+
+        /// <summary>
+        /// 角色名字
+        /// </summary>
+        [MemoryPackOrder(5)]
+        public string Name { get; set; }
 
         public override void Dispose()
         {
@@ -1748,6 +1758,7 @@ namespace ET
             this.AccountName = default;
             this.RoleId = default;
             this.ConfigId = default;
+            this.Name = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -2395,6 +2406,112 @@ namespace ET
     /// <summary>
     /// 背包///////////////////////////////////////////
     /// </summary>
+    /// <summary>
+    /// 排行榜///////////////////////////////////////////
+    /// </summary>
+    [MemoryPackable]
+    [Message(OuterMessage.RankInfoProto)]
+    public partial class RankInfoProto : MessageObject
+    {
+        public static RankInfoProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(RankInfoProto), isFromPool) as RankInfoProto;
+        }
+
+        [MemoryPackOrder(0)]
+        public long Id { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(3)]
+        public string Name { get; set; }
+
+        [MemoryPackOrder(4)]
+        public long RankValue { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Id = default;
+            this.UnitId = default;
+            this.Name = default;
+            this.RankValue = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2Rank_GetRanksInfo)]
+    [ResponseType(nameof(Rank2C_GetRanksInfo))]
+    public partial class C2Rank_GetRanksInfo : MessageObject, IRankInfoRequest
+    {
+        public static C2Rank_GetRanksInfo Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2Rank_GetRanksInfo), isFromPool) as C2Rank_GetRanksInfo;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.Rank2C_GetRanksInfo)]
+    public partial class Rank2C_GetRanksInfo : MessageObject, IRankInfoResponse
+    {
+        public static Rank2C_GetRanksInfo Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Rank2C_GetRanksInfo), isFromPool) as Rank2C_GetRanksInfo;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public List<RankInfoProto> RankInfoProtoList { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.RankInfoProtoList.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// 排行榜///////////////////////////////////////////
+    /// </summary>
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -2466,5 +2583,8 @@ namespace ET
         public const ushort M2C_SyncAllKnapsackItems = 10068;
         public const ushort AttributeEntryProto = 10069;
         public const ushort EquipInfoProto = 10070;
+        public const ushort RankInfoProto = 10071;
+        public const ushort C2Rank_GetRanksInfo = 10072;
+        public const ushort Rank2C_GetRanksInfo = 10073;
     }
 }

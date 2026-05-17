@@ -23,6 +23,27 @@ namespace ET.Server
                     MessageSessionDispatcher.Instance.Handle(session, message);
                     break;
                 }
+                case IRankInfoRequest actorRankInfoRequest:
+                {
+                    ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Rank").ActorId;
+                    int rpcId = actorRankInfoRequest.RpcId;
+                    long instanceId = session.InstanceId;
+                    
+                    IResponse response = await root.GetComponent<MessageSender>().Call(rankActorId, actorRankInfoRequest);
+                    response.RpcId = rpcId;
+
+                    if (session.InstanceId == instanceId)
+                    {
+                        session.Send(response);
+                    }
+                    break;
+                }
+                case IRankInfoMessage actorRankInfoMessage:
+                {
+                    ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Rank").ActorId;
+                    root.GetComponent<MessageSender>().Send(rankActorId, actorRankInfoMessage);
+                    break;
+                }
                 case FrameMessage frameMessage:
                 {
                     Player player = session.GetComponent<SessionPlayerComponent>().Player;

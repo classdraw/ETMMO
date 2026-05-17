@@ -380,7 +380,8 @@ namespace ET.Client
 
 			long roleId = roles.RoleInfoList[0].Id;
 			int configId = roles.RoleInfoList[0].ConfigId;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId);
+			string name = roles.RoleInfoList[0].Name;
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId,name);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftEnter");
@@ -403,7 +404,8 @@ namespace ET.Client
 
 			long roleId = roles.RoleInfoList[1].Id;
 			int configId = roles.RoleInfoList[1].ConfigId;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId);
+			string name = roles.RoleInfoList[1].Name;
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId,name);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightEnter");

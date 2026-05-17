@@ -309,3 +309,11 @@ message UnitCache2Other_GetUnit // IResponse
 	repeated string ComponentNameList = 5;
 }
 //-------------缓存服-------------
+
+//---------------------排行榜--------------------
+message Map2Rank_AddOrUpdateRankInfo //IMessage
+{
+	int32 RpcId = 1;
+	RankInfoProto RankInfoProto = 2;
+}
+//-------------排行榜-------------
