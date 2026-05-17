@@ -12,8 +12,10 @@ namespace ET.Client
                 return m2CGetAllKnapsack.Error;
             }
             root.GetComponent<ClientKnapsackComponent>().ClearAllItems();
+            Log.Info($"Knapsack GetAllItems count={m2CGetAllKnapsack.ItemList.Count}");
             foreach (var itemProto in m2CGetAllKnapsack.ItemList)
             {
+                Log.Info($"Knapsack Item Id={itemProto.Id} Count={itemProto.Count} ContainerType={itemProto.ContainerType}");
                 root.GetComponent<ClientKnapsackComponent>().GetContainer(itemProto.ContainerType).AddItemFromMessage(itemProto);
             }
             return ErrorCode.ERR_Success;
@@ -25,6 +27,11 @@ namespace ET.Client
             c2MAddKnapsackItem.ContainerType = (int)containerType;
             c2MAddKnapsackItem.ConfigId = configId;
             M2C_AddKnapsackItem m2CAddKnapsackItem = (M2C_AddKnapsackItem)await root.GetComponent<ClientSenderComponent>().Call(c2MAddKnapsackItem);
+            if (m2CAddKnapsackItem.Error==ErrorCode.ERR_Success)
+            {
+                Log.Info($"RequestAddItem Id={configId} ContainerType={containerType} Success");
+            }
+
             return m2CAddKnapsackItem.Error;
         }
         
@@ -34,6 +41,11 @@ namespace ET.Client
             c2MRemoveKnapsackItem.ContainerType = (int)containerType;
             c2MRemoveKnapsackItem.ItemId = itemId;
             M2C_RemoveKnapsackItem m2CRemoveKnapsackItem = (M2C_RemoveKnapsackItem)await root.GetComponent<ClientSenderComponent>().Call(c2MRemoveKnapsackItem);
+            if (m2CRemoveKnapsackItem.Error==ErrorCode.ERR_Success)
+            {
+                Log.Info($"RequestRemoveItem itemId={itemId} ContainerType={containerType} Success");
+            }
+            
             return m2CRemoveKnapsackItem.Error;
         }
     }

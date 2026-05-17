@@ -1,0 +1,103 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UIHelpComponent : Entity, IAwake, IDestroy
+	{
+		public GameObject m_goPanel;
+		public Button m_btnTap1;
+		public Button m_btnTap2;
+		public Button m_btnTap3;
+		public Button m_btnTap4;
+		public InputField m_inputAll;
+		public GameObject m_goP1;
+		public GameObject m_goP2;
+		public GameObject m_goP3;
+		public Button m_btnP3bag;
+		public Button m_btnP3addItem;
+		public Button m_btnP3removeItem;
+		public GameObject m_goP4;
+		public Button m_btnGM;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UIHelpComponent))]
+	[FriendOf(typeof(UIHelpComponent))]
+	public static partial class UIHelpComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UIHelpComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_goPanel = m_bindComponent.GetComponent<RectTransform>(0).gameObject;
+			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
+			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
+			self.m_btnTap2 = m_bindComponent.GetComponent<Button>(2);
+			self.m_btnTap2.onClick.AddListener(() => { self.OnTap2(); });
+			self.m_btnTap3 = m_bindComponent.GetComponent<Button>(3);
+			self.m_btnTap3.onClick.AddListener(() => { self.OnTap3(); });
+			self.m_btnTap4 = m_bindComponent.GetComponent<Button>(4);
+			self.m_btnTap4.onClick.AddListener(() => { self.OnTap4(); });
+			self.m_inputAll = m_bindComponent.GetComponent<InputField>(5);
+			self.m_goP1 = m_bindComponent.GetComponent<RectTransform>(6).gameObject;
+			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(7).gameObject;
+			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(9);
+			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(10);
+			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
+			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(12).gameObject;
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(13);
+			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnTap1(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnTap2(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnTap3(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnTap4(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnP3bag(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnP3addItem(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnP3removeItem(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnGM(this UIHelpComponent self)
+		{
+		}
+	}
+}
