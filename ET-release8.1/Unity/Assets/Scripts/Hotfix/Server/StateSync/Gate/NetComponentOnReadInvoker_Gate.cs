@@ -9,7 +9,7 @@ namespace ET.Server
         {
             HandleAsync(args).Coroutine();
         }
-
+        //网关协议直接转发到某个需要服务器，走这里配置 根据message类型来判断
         private async ETTask HandleAsync(NetComponentOnRead args)
         {
             Session session = args.Session;
