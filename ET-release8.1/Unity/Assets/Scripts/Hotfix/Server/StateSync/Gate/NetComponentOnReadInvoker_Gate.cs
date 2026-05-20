@@ -23,15 +23,16 @@ namespace ET.Server
                     MessageSessionDispatcher.Instance.Handle(session, message);
                     break;
                 }
+#region 拓展部分
                 case IRankInfoRequest actorRankInfoRequest:
                 {
-                    ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Rank").ActorId;
+                    ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneType(session.Zone(), SceneType.Rank).ActorId;
                     int rpcId = actorRankInfoRequest.RpcId;
                     long instanceId = session.InstanceId;
                     
                     IResponse response = await root.GetComponent<MessageSender>().Call(rankActorId, actorRankInfoRequest);
                     response.RpcId = rpcId;
-
+                    //等待rank服务器返回后进行response丢给前端
                     if (session.InstanceId == instanceId)
                     {
                         session.Send(response);
@@ -40,10 +41,12 @@ namespace ET.Server
                 }
                 case IRankInfoMessage actorRankInfoMessage:
                 {
-                    ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Rank").ActorId;
+                    ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneType(session.Zone(),SceneType.Rank).ActorId;
                     root.GetComponent<MessageSender>().Send(rankActorId, actorRankInfoMessage);
                     break;
                 }
+#endregion
+#region 旧的消息派发
                 case FrameMessage frameMessage:
                 {
                     Player player = session.GetComponent<SessionPlayerComponent>().Player;
@@ -88,7 +91,7 @@ namespace ET.Server
                 {
                     break;
                 }
-				
+#endregion
                 default:
                 {
                     throw new Exception($"not found handler: {message}");

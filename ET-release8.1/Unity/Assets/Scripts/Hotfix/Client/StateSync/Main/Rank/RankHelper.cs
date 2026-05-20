@@ -22,6 +22,10 @@ namespace ET.Client
                 return rank2CGetRanksInfo.Error;
             }
             Log.Console(rank2CGetRanksInfo.RankInfoProtoList.Count+"");
+            for (int i = 0; i < rank2CGetRanksInfo.RankInfoProtoList.Count; i++)
+            {
+                Log.Console(rank2CGetRanksInfo.RankInfoProtoList[i].Name+"++"+rank2CGetRanksInfo.RankInfoProtoList[i].RankValue);
+            }
             return rank2CGetRanksInfo.Error;
         }
     }
