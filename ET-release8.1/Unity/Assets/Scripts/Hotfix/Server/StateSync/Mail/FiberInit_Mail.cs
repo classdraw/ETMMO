@@ -13,7 +13,12 @@ namespace ET.Server
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ProcessInnerSender>();
             root.AddComponent<MessageSender>();
-
+            root.AddComponent<LocationProxyComponent>();
+            root.AddComponent<MessageLocationSenderComponent>();
+            root.AddComponent<DBManagerComponent>();
+            
+            //mailcenter
+            //mailunit
             await ETTask.CompletedTask;
         }
     }
