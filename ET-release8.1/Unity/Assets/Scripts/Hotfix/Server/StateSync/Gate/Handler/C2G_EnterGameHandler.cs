@@ -85,8 +85,8 @@ namespace ET.Server
                         
                        (bool isNewPlayer,Unit unit1) = await UnitLoadHelper.LoadUnit(player);
                        unit = unit1;
-                       
                         //登陆邮箱服务器
+                        await LoginMailServer(player, unit);
                         long unitId = unit.Id;
                         
                         StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
@@ -109,11 +109,22 @@ namespace ET.Server
                 }
 
             }
-            
-            
-            /*
+        }
+        
+        /// <summary>
+        /// 登陆邮件服
+        /// </summary>
+        public static async ETTask<int> LoginMailServer(Player player, Unit unit)
+        {
+            StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(player.Zone(), "Mail");
 
-                    */
+            G2Mail_LoginMailServer g2MailLoginMailServer = G2Mail_LoginMailServer.Create();
+            g2MailLoginMailServer.UnitId = unit.Id;
+
+            Mail2G_LoginMailServer mail2GGetMail = (Mail2G_LoginMailServer)await player.Root().GetComponent<MessageSender>()
+                    .Call(startSceneConfig.ActorId, g2MailLoginMailServer);
+
+            return mail2GGetMail.Error;
         }
     }
 }

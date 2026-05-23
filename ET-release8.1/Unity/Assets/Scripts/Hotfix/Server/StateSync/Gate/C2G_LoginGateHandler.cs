@@ -46,6 +46,7 @@ namespace ET.Server
             }
             else
             {
+                player.RemoveComponent<PlayerOfflineOutTimeComponent>();
                 // 判断是否在战斗
                 //帧同步 房间匹配
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();

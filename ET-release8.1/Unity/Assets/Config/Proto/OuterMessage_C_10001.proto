@@ -569,3 +569,63 @@ message Rank2C_GetRanksInfo // IRankInfoResponse
 	repeated RankInfoProto RankInfoProtoList = 4;
 }
 //////////////////////排行榜///////////////////////////////////////////
+
+//////////////////////邮件///////////////////////////////////////////
+message MailInfoProto
+{
+	int64 MailId = 1;
+	int32 ConfigId = 2;
+	string Title = 3;
+	string Message = 4;
+	repeated ItemProto RewardList = 5;
+	bool IsRead = 6;
+	bool IsCollected = 7;
+}
+
+//ResponseType Mail2C_GetAllMailList
+message  C2Mail_GetAllMailList // IMailInfoRequest
+{
+	int32 RpcId        = 1;
+}
+
+message Mail2C_GetAllMailList // IMailInfoResponse
+{
+	int32 RpcId    = 90;
+	int32 Error    = 91;
+	string Message = 92;
+	repeated MailInfoProto MailInfoList = 1;
+}
+
+message Mail2C_NewMail // IMessage
+{
+	MailInfoProto MailInfo = 1;
+}
+
+//ResponseType Mail2C_CollectAttachment
+message C2Mail_CollectAttachment // IMailInfoRequest
+{
+	int32 RpcId        = 1;
+	int64 MailId = 2;
+}
+
+message Mail2C_CollectAttachment // IMailInfoResponse
+{
+	int32 RpcId    = 1;
+	int32 Error    = 2;
+	string Message = 3;
+}
+
+
+
+message Mail2C_UpdateMailInfo // IMessage
+{
+	MailInfoProto MailInfo = 1;
+}
+
+message C2Mail_ReadMail // IMailInfoMessage
+{
+	int64 MailId = 1;
+}
+
+
+//////////////////////邮件///////////////////////////////////////////

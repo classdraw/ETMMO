@@ -18,7 +18,9 @@ namespace ET.Server
             root.AddComponent<DBManagerComponent>();
             
             //mailcenter
+            root.AddComponent<MailCenterComponent>();
             //mailunit
+            root.AddComponent<MailUnitsComponent>();
             await ETTask.CompletedTask;
         }
     }

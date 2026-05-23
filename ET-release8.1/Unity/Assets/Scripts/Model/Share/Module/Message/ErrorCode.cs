@@ -35,6 +35,8 @@ namespace ET
         public const int ERR_RemoveKnapsackItemError = 200021;//背包移除物品异常
         public const int ERR_NetWorkError = 200022;//一些网络异常
         
+        public const int ERR_MailNotExist = 200023; //邮件不存在
+        public const int ERR_MailCollected = 200024; //邮件已领取
         public const int ERR_None = 300000;//占位
     }
 }

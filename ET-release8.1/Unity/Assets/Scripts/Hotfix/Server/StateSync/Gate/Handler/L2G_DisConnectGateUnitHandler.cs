@@ -23,17 +23,15 @@ namespace ET.Server
                     A2C_Disconnet a2CDisconnet = A2C_Disconnet.Create();
                     a2CDisconnet.Error = 2;//0重复登陆 1超时 2顶号
                     gateSession.Send(a2CDisconnet);
-                    gateSession?.Disconnect().Coroutine();
-                }
-
-                if (player.GetComponent<PlayerSessionComponent>()?.Session!=null)
-                {
+                    // 主动断线：先移除 SessionPlayerComponent，避免 Session Dispose 时重复进入离线流程
+                    gateSession.RemoveComponent<SessionPlayerComponent>();
                     player.GetComponent<PlayerSessionComponent>().Session = null;
+                    SessionPlayerComponentSystem.TryStartPlayerOfflineOutTime(player);
+                    gateSession.Disconnect().Coroutine();
                 }
-
-                if (player.GetComponent<PlayerOfflineOutTimeComponent>() == null)
+                else
                 {
-                    player.AddComponent<PlayerOfflineOutTimeComponent>();
+                    SessionPlayerComponentSystem.TryStartPlayerOfflineOutTime(player);
                 }
             }
         }

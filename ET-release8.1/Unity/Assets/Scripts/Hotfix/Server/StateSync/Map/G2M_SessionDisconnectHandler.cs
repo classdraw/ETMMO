@@ -9,6 +9,7 @@
 	{
 		protected override async ETTask Run(Unit unit, G2M_SessionDisconnect message)
 		{
+			//这里不发送了  由disconnectHelper处理
 			await UnitHelper.ForceUnitOfflineFromMapAsync(unit, "SessionDisconnect");
 		}
 	}

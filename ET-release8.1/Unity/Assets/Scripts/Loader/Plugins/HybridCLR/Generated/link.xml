@@ -86,6 +86,7 @@
     <type fullname="ET.CoroutineLock" preserve="all" />
     <type fullname="ET.CoroutineLockComponent" preserve="all" />
     <type fullname="ET.CoroutineLockComponentSystem" preserve="all" />
+    <type fullname="ET.DeserializeSystem`1" preserve="all" />
     <type fullname="ET.DestroySystem`1" preserve="all" />
     <type fullname="ET.DisposeObject" preserve="all" />
     <type fullname="ET.DoubleMap`2" preserve="all" />
@@ -113,6 +114,7 @@
     <type fullname="ET.IAwake`2" preserve="all" />
     <type fullname="ET.IAwake`3" preserve="all" />
     <type fullname="ET.IConfig" preserve="all" />
+    <type fullname="ET.IDeserialize" preserve="all" />
     <type fullname="ET.IDestroy" preserve="all" />
     <type fullname="ET.IGetComponentSys" preserve="all" />
     <type fullname="ET.IKcpTransport" preserve="all" />
@@ -122,8 +124,13 @@
     <type fullname="ET.ILocationResponse" preserve="all" />
     <type fullname="ET.ILog" preserve="all" />
     <type fullname="ET.IMHandler" preserve="all" />
+    <type fullname="ET.IMailInfoMessage" preserve="all" />
+    <type fullname="ET.IMailInfoRequest" preserve="all" />
+    <type fullname="ET.IMailInfoResponse" preserve="all" />
     <type fullname="ET.IMerge" preserve="all" />
     <type fullname="ET.IMessage" preserve="all" />
+    <type fullname="ET.IRankInfoRequest" preserve="all" />
+    <type fullname="ET.IRankInfoResponse" preserve="all" />
     <type fullname="ET.IRequest" preserve="all" />
     <type fullname="ET.IResponse" preserve="all" />
     <type fullname="ET.IScene" preserve="all" />
@@ -337,6 +344,7 @@
     <type fullname="System.Int64" preserve="all" />
     <type fullname="System.Math" preserve="all" />
     <type fullname="System.Object" preserve="all" />
+    <type fullname="System.Random" preserve="all" />
     <type fullname="System.Reflection.BindingFlags" preserve="all" />
     <type fullname="System.Reflection.DefaultMemberAttribute" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />

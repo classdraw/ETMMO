@@ -43,17 +43,16 @@ namespace ET.Server
                         Log.Error($"离开Map游戏逻辑服时发生错误 : {m2GRequestExitGame.Error}");
                     }
                     
-                    /**
-            //通知邮件服下线MailUnit
+                    //通知邮件服下线MailUnit
                     Mail2G_ExitMailServer mail2GExitMailServer = (Mail2G_ExitMailServer)await player.Root().GetComponent<MessageLocationSenderComponent>()
-                                                                            .Get(LocationType.Mail).Call(player.UnitId,  G2Mail_ExitMailServer.Create());
+                            .Get(LocationType.Mail).Call(player.UnitId,  G2Mail_ExitMailServer.Create());
                     if (mail2GExitMailServer.Error != ErrorCode.ERR_Success)
                     {
                         Log.Error($"离开邮件中心服时发生错误 : {mail2GExitMailServer.Error}");
                     }
                     player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Mail)?.Remove(player.UnitId);
-                    
-                    player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Trade)?.Remove(player.UnitId);
+                    /**
+                     *                    player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Trade)?.Remove(player.UnitId);
                     
                     //通知聊天服下线ChatUnit
                     Chat2G_RequestExitChat chat2GRequestExitChat = (Chat2G_RequestExitChat)await player.Root().GetComponent<MessageLocationSenderComponent>()
@@ -64,6 +63,7 @@ namespace ET.Server
                     }
                     player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Chat)?.Remove(player.UnitId);
 
+                     * 
                      */
                     //通知移除账号角色登陆信息
                     G2L_RemoveLoginRecord g2LRemoveLoginRecord = G2L_RemoveLoginRecord.Create();

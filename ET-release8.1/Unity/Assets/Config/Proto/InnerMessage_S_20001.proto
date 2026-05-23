@@ -317,3 +317,51 @@ message Map2Rank_AddOrUpdateRankInfo //IMessage
 	RankInfoProto RankInfoProto = 2;
 }
 //-------------排行榜-------------
+
+//---------------------邮箱--------------------
+//ResponseType M2Mail_CollectAttachment
+message Mail2M_CollectAttachment // ILocationRequest
+{
+	int32 RpcId = 1;
+	repeated ItemProto AttachItems = 2;
+}
+
+message M2Mail_CollectAttachment // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+
+// ResponseType Mail2G_LoginMailServer
+message G2Mail_LoginMailServer // IRequest
+{
+	int32 RpcId = 1;
+	int64 UnitId = 2;
+}
+
+message Mail2G_LoginMailServer // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+// ResponseType Mail2G_ExitMailServer
+message G2Mail_ExitMailServer // IRequest
+{
+	int32 RpcId = 1;
+	int64 UnitId = 2;
+}
+
+message Mail2G_ExitMailServer // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+
+
+//-------------邮箱-------------

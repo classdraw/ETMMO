@@ -30,7 +30,7 @@ namespace ET.Server
                     int rpcId = actorRankInfoRequest.RpcId;
                     long instanceId = session.InstanceId;
                     
-                    IResponse response = await root.GetComponent<MessageSender>().Call(rankActorId, actorRankInfoRequest);
+                    IRankInfoResponse response = await root.GetComponent<MessageSender>().Call(rankActorId, actorRankInfoRequest) as IRankInfoResponse;
                     response.RpcId = rpcId;
                     //等待rank服务器返回后进行response丢给前端
                     if (session.InstanceId == instanceId)
@@ -43,6 +43,29 @@ namespace ET.Server
                 {
                     ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneType(session.Zone(),SceneType.Rank).ActorId;
                     root.GetComponent<MessageSender>().Send(rankActorId, actorRankInfoMessage);
+                    break;
+                }                
+                case IMailInfoRequest actorMailInfoRequest:
+                {
+                    Player player = session.GetComponent<SessionPlayerComponent>().Player;
+                    int rpcId = actorMailInfoRequest.RpcId; // 这里要保存客户端的rpcId
+                    long instanceId = session.InstanceId;
+                    IMailInfoResponse actorMailInfoResponse = await root.GetComponent<MessageLocationSenderComponent>()
+                            .Get(LocationType.Mail)
+                            .Call(player.UnitId, actorMailInfoRequest) as IMailInfoResponse;
+                    
+                    actorMailInfoResponse.RpcId = rpcId;
+                    // session可能已经断开了，所以这里需要判断
+                    if (session.InstanceId == instanceId)
+                    {
+                        session.Send(actorMailInfoResponse);
+                    }
+                    break;
+                }
+                case IMailInfoMessage actorMailInfoMessage:
+                {
+                    Player player = session.GetComponent<SessionPlayerComponent>().Player;
+                    root.GetComponent<MessageLocationSenderComponent>().Get(LocationType.Mail).Send(player.UnitId, actorMailInfoMessage).Coroutine();
                     break;
                 }
 #endregion
