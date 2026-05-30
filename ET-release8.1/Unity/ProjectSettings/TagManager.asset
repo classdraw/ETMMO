@@ -6,6 +6,8 @@ TagManager:
   tags:
   - NavMesh
   - Attack
+  - Entity/Enemy
+  - Entity/Summoned
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Hidden
   - Ground
   - Obstacle
-  - 
+  - Post-Processing
   - 
   - 
   - 

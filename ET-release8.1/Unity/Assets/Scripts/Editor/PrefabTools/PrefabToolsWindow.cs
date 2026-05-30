@@ -68,6 +68,20 @@ namespace ET
                 SetNavMeshTagOnEditorActiveSceneColliderObjects();
             }
 
+            EditorGUILayout.Space(6);
+            GameObject activeSceneSelection = GetActiveSceneGameObjectSelection();
+            EditorGUILayout.LabelField("Hierarchy 选中物体", activeSceneSelection != null ? activeSceneSelection.name : "（无）");
+            EditorGUILayout.HelpBox(
+                "在 Hierarchy 选中一个场景物体：若其下已有「Colliders」子节点会先删除，再于选中节点下新建 Colliders，并为其子树中所有带 BoxCollider 的物体各生成一个 Cube 代理（Tag=NavMesh，Layer=Obstacle）。Cube 的 BoxCollider.size 保持 (1,1,1)，仅用 Scale 匹配原碰撞体世界尺寸（BoxCollider.size × 节点 LossyScale）。",
+                MessageType.Info);
+            using (new EditorGUI.DisabledScope(activeSceneSelection == null || EditorApplication.isPlaying))
+            {
+                if (GUILayout.Button("选中物体：生成 Colliders 碰撞体代理（BoxCollider → Cube）", GUILayout.Height(34)))
+                {
+                    GenerateColliderProxiesForSelectedSceneObject();
+                }
+            }
+
             EditorGUILayout.Space(12);
             EditorGUILayout.LabelField("Avatar 精灵预制体", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
@@ -121,6 +135,8 @@ namespace ET
         }
 
         private const string NavMeshColliderTag = "NavMesh";
+        private const string ColliderProxyLayerName = "Obstacle";
+        private const float MinColliderProxyScaleY = 3f;
 
         /// <summary>
         /// 仅处理编辑器当前活动场景（与 Hierarchy 加粗场景一致），不用 SceneManager，避免与 ET.Scene 类型名冲突须写全名。
@@ -197,6 +213,186 @@ namespace ET
             EditorUtility.DisplayDialog("预制体处理工具",
                 $"活动场景：{unityScene.name}\n带 Collider 的物体（去重）：{colliderObjectCount} 个\nTag 已改为「{NavMeshColliderTag}」：{tagChanged} 个",
                 "确定");
+        }
+
+        private static GameObject GetActiveSceneGameObjectSelection()
+        {
+            GameObject go = Selection.activeGameObject;
+            if (go == null || !go.scene.IsValid() || EditorUtility.IsPersistent(go))
+            {
+                return null;
+            }
+
+            return go;
+        }
+
+        /// <summary>
+        /// 在选中物体下创建 Colliders 子节点，并把其子树中所有 BoxCollider 转为等尺寸 Cube 代理（Collider size 1，仅改 Scale）。
+        /// </summary>
+        private static void GenerateColliderProxiesForSelectedSceneObject()
+        {
+            if (EditorApplication.isPlaying)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    "请在退出 Play 模式后使用。",
+                    "确定");
+                return;
+            }
+
+            GameObject selected = GetActiveSceneGameObjectSelection();
+            if (selected == null)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    "请先在 Hierarchy 中选中一个场景里的 GameObject。",
+                    "确定");
+                return;
+            }
+
+            Transform selectedTransform = selected.transform;
+
+            Undo.IncrementCurrentGroup();
+            RemoveExistingCollidersChild(selectedTransform);
+
+            BoxCollider[] boxColliders = selected.GetComponentsInChildren<BoxCollider>(true);
+            if (boxColliders.Length == 0)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    $"「{selected.name}」及其子节点中没有 BoxCollider。",
+                    "确定");
+                return;
+            }
+
+            GameObject collidersGo = CreateCollidersChild(selectedTransform);
+
+            int created = 0;
+            foreach (BoxCollider boxCollider in boxColliders)
+            {
+                if (boxCollider == null)
+                {
+                    continue;
+                }
+
+                CreateColliderProxyCube(collidersGo.transform, selectedTransform, boxCollider);
+                created++;
+            }
+
+            EditorSceneManager.MarkSceneDirty(selected.scene);
+            Undo.SetCurrentGroupName("Generate Colliders Proxies");
+            EditorUtility.DisplayDialog("预制体处理工具",
+                $"已为「{selected.name}」生成 Colliders 节点。\nBoxCollider 代理 Cube 数量：{created}",
+                "确定");
+        }
+
+        private static void RemoveExistingCollidersChild(Transform selectedTransform)
+        {
+            for (int i = selectedTransform.childCount - 1; i >= 0; i--)
+            {
+                Transform child = selectedTransform.GetChild(i);
+                if (child.name == "Colliders")
+                {
+                    Undo.DestroyObjectImmediate(child.gameObject);
+                }
+            }
+        }
+
+        private static GameObject CreateCollidersChild(Transform selectedTransform)
+        {
+            GameObject collidersGo = new GameObject("Colliders");
+            Undo.RegisterCreatedObjectUndo(collidersGo, "Create Colliders");
+            Undo.SetTransformParent(collidersGo.transform, selectedTransform, "Parent Colliders");
+            collidersGo.transform.localPosition = Vector3.zero;
+            collidersGo.transform.localRotation = Quaternion.identity;
+            collidersGo.transform.localScale = Vector3.one;
+            return collidersGo;
+        }
+
+        private static void CreateColliderProxyCube(Transform collidersRoot, Transform selectedRoot, BoxCollider sourceCollider)
+        {
+            Transform sourceTransform = sourceCollider.transform;
+            Vector3 worldCenter = sourceTransform.TransformPoint(sourceCollider.center);
+            Quaternion worldRotation = sourceTransform.rotation;
+            Vector3 lossyScale = sourceTransform.lossyScale;
+            Vector3 worldScale = Vector3.Scale(sourceCollider.size, new Vector3(
+                Mathf.Abs(lossyScale.x),
+                Mathf.Abs(lossyScale.y),
+                Mathf.Abs(lossyScale.z)));
+            worldScale.y = Mathf.Max(worldScale.y, MinColliderProxyScaleY);
+
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            Undo.RegisterCreatedObjectUndo(cube, "Create Collider Proxy Cube");
+            cube.name = BuildColliderProxyName(selectedRoot, sourceTransform);
+
+            BoxCollider cubeCollider = cube.GetComponent<BoxCollider>();
+            if (cubeCollider != null)
+            {
+                cubeCollider.size = Vector3.one;
+                cubeCollider.center = Vector3.zero;
+            }
+
+            Undo.SetTransformParent(cube.transform, collidersRoot, "Parent Collider Proxy Cube");
+            cube.transform.SetPositionAndRotation(worldCenter, worldRotation);
+            ApplyWorldScale(cube.transform, worldScale);
+
+            Undo.RecordObject(cube, "Set Collider Proxy Tag/Layer");
+            try
+            {
+                cube.tag = NavMeshColliderTag;
+            }
+            catch (UnityException e)
+            {
+                Debug.LogWarning($"[预制体工具] Tag「{NavMeshColliderTag}」不存在，Cube「{cube.name}」保持默认 Tag。\n{e.Message}");
+            }
+
+            int obstacleLayer = LayerMask.NameToLayer(ColliderProxyLayerName);
+            if (obstacleLayer >= 0)
+            {
+                cube.layer = obstacleLayer;
+            }
+            else
+            {
+                Debug.LogWarning($"[预制体工具] Layer「{ColliderProxyLayerName}」不存在，Cube「{cube.name}」保持默认 Layer。");
+            }
+        }
+
+        private static void ApplyWorldScale(Transform target, Vector3 worldScale)
+        {
+            Transform parent = target.parent;
+            if (parent == null)
+            {
+                target.localScale = worldScale;
+                return;
+            }
+
+            Vector3 parentLossyScale = parent.lossyScale;
+            target.localScale = new Vector3(
+                DivideWorldScaleAxis(worldScale.x, parentLossyScale.x),
+                DivideWorldScaleAxis(worldScale.y, parentLossyScale.y),
+                DivideWorldScaleAxis(worldScale.z, parentLossyScale.z));
+        }
+
+        private static float DivideWorldScaleAxis(float worldAxis, float parentLossyAxis)
+        {
+            return Mathf.Approximately(parentLossyAxis, 0f) ? worldAxis : worldAxis / parentLossyAxis;
+        }
+
+        private static string BuildColliderProxyName(Transform selectedRoot, Transform sourceTransform)
+        {
+            if (sourceTransform == selectedRoot)
+            {
+                return sourceTransform.name + "_Box";
+            }
+
+            var segments = new List<string>();
+            Transform current = sourceTransform;
+            while (current != null && current != selectedRoot)
+            {
+                segments.Insert(0, current.name);
+                current = current.parent;
+            }
+
+            return segments.Count == 0
+                ? sourceTransform.name + "_Box"
+                : string.Join("_", segments) + "_Box";
         }
 
         private static void RemoveMissingScriptsFromSelectedPrefabs()
