@@ -66,6 +66,7 @@ namespace ET.Client
 
         public static void RefreshSetting(this TEngineComponent self)
         {
+            //VolumeManager.
             /***
             bool enablePostProcessing = self.SettingValues.TryGetValue(Setting_Key_Enum.PostProcessingKey, out float cacheValue)
                 ? cacheValue >= 0.5f
