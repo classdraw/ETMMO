@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using TEngine;
 
@@ -14,5 +15,12 @@ namespace ET.Client
         public TEngineGlobal EngineGlobal;
         
         //UIModule
+
+
+
+        #region Setting的key
+
+        public Dictionary<Setting_Key_Enum, float> SettingValues = new Dictionary<Setting_Key_Enum, float>();
+        #endregion
     }
 }
