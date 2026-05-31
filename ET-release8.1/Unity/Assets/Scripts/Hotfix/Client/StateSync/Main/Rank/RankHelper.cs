@@ -17,7 +17,7 @@ namespace ET.Client
                 Log.Error(e.ToString());
                 return ErrorCode.ERR_NetWorkError;
             }
-            if (rank2CGetRanksInfo.Error != ErrorCode.ERR_Success)
+            if (rank2CGetRanksInfo.Error != ErrorCode.ERR_Success) 
             {
                 return rank2CGetRanksInfo.Error;
             }

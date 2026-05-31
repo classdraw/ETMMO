@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace ET.Server
 {
     [EntitySystemOf(typeof(MailCenterComponent))]
@@ -18,9 +16,14 @@ namespace ET.Server
         }
         
         //发送邮件
-        public static async ETTask<int> SendMail(this MailCenterComponent self, long receiverId, string title, string content,
-        List<ItemProto> rewardList)
+        public static async ETTask<int> SendMail(this MailCenterComponent self, long receiverId, int configId)
         {
+            var mailConfig = MailConfigCategory.Instance.Get(configId);
+            if (mailConfig == null)
+            {
+                return ErrorCode.ERR_MailConfigNotExist;
+            }
+
             using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.OperateEmail, receiverId))
             {
                 var mailUnitsComponent = self.Root().GetComponent<MailUnitsComponent>();
@@ -30,15 +33,10 @@ namespace ET.Server
                     MailUnit receiver = (MailUnit)mailUnitRef;
                     var mailComponent = receiver.GetComponent<MailComponent>();
                     MailInfo mailInfo = mailComponent.AddChild<MailInfo>();
-                    mailInfo.Title = title;
-                    mailInfo.Message = content;
-                    foreach (ItemProto itemProto in rewardList)
-                    {
-                        Item item = mailInfo.AddChild<Item, int>(itemProto.ConfigId);
-                        item.Count = itemProto.Count;
-                        item.FromMessage(itemProto);
-                        mailInfo.RewardList.Add(item);
-                    }
+                    mailInfo.Title = mailConfig.Title;
+                    mailInfo.Message = mailConfig.Message;
+                    mailInfo.ConfigId = configId;
+                    AddMailRewards(mailInfo, mailConfig.RewardArray);
 
                     mailComponent.MailInfosList.Add(mailInfo);
 
@@ -63,15 +61,10 @@ namespace ET.Server
                     }
 
                     MailInfo mailInfo = mailComponent.AddChild<MailInfo>();
-                    mailInfo.Title = title;
-                    mailInfo.Message = content;
-                    foreach (ItemProto itemProto in rewardList)
-                    {
-                        Item item = mailInfo.AddChild<Item, int>(itemProto.ConfigId);
-                        item.Count = itemProto.Count;
-                        item.FromMessage(itemProto);
-                        mailInfo.RewardList.Add(item);
-                    }
+                    mailInfo.Title = mailConfig.Title;
+                    mailInfo.Message = mailConfig.Message;
+                    mailInfo.ConfigId = configId;
+                    AddMailRewards(mailInfo, mailConfig.RewardArray);
 
                     mailComponent.MailInfosList.Add(mailInfo);
                     mailInfo.BeginInit();
@@ -83,6 +76,29 @@ namespace ET.Server
 
             await ETTask.CompletedTask;
             return ErrorCode.ERR_Success;
+        }
+
+        private static void AddMailRewards(MailInfo mailInfo, int[] rewardArray)
+        {
+            if (rewardArray == null || rewardArray.Length == 0)
+            {
+                return;
+            }
+
+            if (rewardArray.Length % 2 != 0)
+            {
+                Log.Error($"MailConfig RewardArray 长度非法：{rewardArray.Length}");
+                return;
+            }
+
+            for (int i = 0; i < rewardArray.Length; i += 2)
+            {
+                int itemId = rewardArray[i];
+                int itemCount = rewardArray[i + 1];
+                Item item = mailInfo.AddChild<Item, int>(itemId);
+                item.Count = itemCount;
+                mailInfo.RewardList.Add(item);
+            }
         }
     }
 }

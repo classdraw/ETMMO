@@ -15,6 +15,10 @@ namespace ET.Client
 		public InputField m_inputAll;
 		public GameObject m_goP1;
 		public Button m_btnP1rankList;
+		public Button m_btnP1addMail;
+		public Button m_btnP1GetMail;
+		public Button m_btnP1ReadMail;
+		public Button m_btnP1CollectMail;
 		public GameObject m_goP2;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;

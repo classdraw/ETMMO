@@ -29,16 +29,24 @@ namespace ET.Client
 			self.m_goP1 = m_bindComponent.GetComponent<RectTransform>(6).gameObject;
 			self.m_btnP1rankList = m_bindComponent.GetComponent<Button>(7);
 			self.m_btnP1rankList.onClick.AddListener(() => { self.OnP1rankList(); });
-			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
-			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(9).gameObject;
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(10);
+			self.m_btnP1addMail = m_bindComponent.GetComponent<Button>(8);
+			self.m_btnP1addMail.onClick.AddListener(() => { self.OnP1addMail(); });
+			self.m_btnP1GetMail = m_bindComponent.GetComponent<Button>(9);
+			self.m_btnP1GetMail.onClick.AddListener(() => { self.OnP1GetMail(); });
+			self.m_btnP1ReadMail = m_bindComponent.GetComponent<Button>(10);
+			self.m_btnP1ReadMail.onClick.AddListener(() => { self.OnP1ReadMail(); });
+			self.m_btnP1CollectMail = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnP1CollectMail.onClick.AddListener(() => { self.OnP1CollectMail(); });
+			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(12).gameObject;
+			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(14);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(15);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(14);
+			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(18);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 			
 			self.m_GOs.Clear();
@@ -100,6 +108,54 @@ namespace ET.Client
 			RankHelper.GetRankInfo(self.Root()).Coroutine();
 		}
 		
+		public static void OnP1addMail(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrEmpty(val))
+			{
+				return;
+			}
+
+			if (int.TryParse(val,out int result))
+			{
+				MailHelper.GMAddMail(self.Root(),result).Coroutine();
+			}
+		}
+
+		public static void OnP1GetMail(this UIHelpComponent self)
+		{
+			MailHelper.GMGetMail(self.Root()).Coroutine();
+		}
+
+		public static void OnP1ReadMail(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrEmpty(val))
+			{
+				return;
+			}
+
+			if (long.TryParse(val,out long result))
+			{
+				MailHelper.GMReadMail(self.Root(),result).Coroutine();
+			}
+			
+		}
+
+		public static void OnP1CollectMail(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrEmpty(val))
+			{
+				return;
+			}
+
+			if (long.TryParse(val,out long result))
+			{
+				MailHelper.GMCollectAttachmentMail(self.Root(),result).Coroutine();
+			}
+
+		}
 
 		#endregion
 

@@ -1584,6 +1584,8 @@ namespace ET
     }
 
     // -------------邮箱-------------
+    // -------------相关GM-------------
+    // -------------相关GM-------------
     public static class InnerMessage
     {
         public const ushort ObjectQueryRequest = 20002;

@@ -628,4 +628,23 @@ message C2Mail_ReadMail // IMailInfoMessage
 }
 
 
+
+
 //////////////////////邮件///////////////////////////////////////////
+
+//////////////////////相关GM///////////////////////////////////////////
+// ResponseType Mail2C_GMAddMail
+message C2Mail_GMAddMail // IMailInfoRequest
+{
+	int32 RpcId = 1;
+	int32 ConfigId = 2;
+}
+
+message Mail2C_GMAddMail // IMailInfoResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+//////////////////////相关GM///////////////////////////////////////////

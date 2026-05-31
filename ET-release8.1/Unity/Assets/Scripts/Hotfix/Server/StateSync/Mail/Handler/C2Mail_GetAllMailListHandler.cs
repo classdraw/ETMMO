@@ -6,8 +6,6 @@ namespace ET.Server
     {
         protected override async ETTask Run(MailUnit mailUnit, C2Mail_GetAllMailList request, Mail2C_GetAllMailList response)
         {
-            await ETTask.CompletedTask;
-
             MailComponent mailComponent = mailUnit.GetComponent<MailComponent>();
             foreach (var entityRef in mailComponent.MailInfosList)
             {

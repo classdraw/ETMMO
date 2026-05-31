@@ -2768,6 +2768,75 @@ namespace ET
     /// <summary>
     /// 邮件///////////////////////////////////////////
     /// </summary>
+    /// <summary>
+    /// 相关GM///////////////////////////////////////////
+    /// </summary>
+    [MemoryPackable]
+    [Message(OuterMessage.C2Mail_GMAddMail)]
+    [ResponseType(nameof(Mail2C_GMAddMail))]
+    public partial class C2Mail_GMAddMail : MessageObject, IMailInfoRequest
+    {
+        public static C2Mail_GMAddMail Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2Mail_GMAddMail), isFromPool) as C2Mail_GMAddMail;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int ConfigId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.ConfigId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.Mail2C_GMAddMail)]
+    public partial class Mail2C_GMAddMail : MessageObject, IMailInfoResponse
+    {
+        public static Mail2C_GMAddMail Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Mail2C_GMAddMail), isFromPool) as Mail2C_GMAddMail;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// 相关GM///////////////////////////////////////////
+    /// </summary>
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -2850,5 +2919,7 @@ namespace ET
         public const ushort Mail2C_CollectAttachment = 10079;
         public const ushort Mail2C_UpdateMailInfo = 10080;
         public const ushort C2Mail_ReadMail = 10081;
+        public const ushort C2Mail_GMAddMail = 10082;
+        public const ushort Mail2C_GMAddMail = 10083;
     }
 }

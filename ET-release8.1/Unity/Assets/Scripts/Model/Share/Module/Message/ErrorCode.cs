@@ -37,6 +37,7 @@ namespace ET
         
         public const int ERR_MailNotExist = 200023; //邮件不存在
         public const int ERR_MailCollected = 200024; //邮件已领取
+        public const int ERR_MailConfigNotExist = 200025; //邮件配置不存在
         public const int ERR_None = 300000;//占位
     }
 }

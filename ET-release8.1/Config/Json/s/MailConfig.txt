@@ -1,0 +1,7 @@
+{"dict": [
+[8800001, {"_t":"MailConfig","_id":8800001,"Type":1,"Title":"测试1","Message":"信息1","RewardArray":[1001,1]}],
+[8800002, {"_t":"MailConfig","_id":8800002,"Type":1,"Title":"测试2","Message":"信息2","RewardArray":[1001,2,1002,3]}],
+[8800003, {"_t":"MailConfig","_id":8800003,"Type":1,"Title":"测试3","Message":"信息3","RewardArray":[1002,1]}],
+[8800004, {"_t":"MailConfig","_id":8800004,"Type":1,"Title":"测试4","Message":"信息4","RewardArray":[1003,1]}],
+[8800005, {"_t":"MailConfig","_id":8800005,"Type":1,"Title":"测试5","Message":"信息5","RewardArray":[1002,1]}],
+]}
