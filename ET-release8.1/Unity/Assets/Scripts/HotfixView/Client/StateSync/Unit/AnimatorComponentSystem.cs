@@ -65,8 +65,8 @@ namespace ET.Client
 				//self.Animator.SetFloat("MotionSpeed", self.MontionSpeed);
 				//Log.Console("____"+self.MotionType);
 				//self.Animator.SetTrigger(self.MotionType.ToString());
-				//self.Animator.CrossFade(self.MotionType.ToString(),0f);
-				self.Animator.SetBool("isMoveing",self.MotionType==MotionType.Run);
+				self.Animator.CrossFade(self.MotionType.ToString().ToLower(),0.1f);
+				//self.Animator.SetBool("isMoveing",self.MotionType==MotionType.Run);
 				self.MontionSpeed = 1;
 				self.MotionType = MotionType.None;
 			}
