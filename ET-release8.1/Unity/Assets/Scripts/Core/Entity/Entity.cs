@@ -949,7 +949,7 @@ namespace ET
                 ObjectPool objectPool = ObjectPool.Instance;
                 foreach (Entity entity in this.components.Values)
                 {
-                    if (entity is not ISerializeToEntity)
+                    if (entity is not (ISerializeToEntity or ISerializeToWeb))
                     {
                         continue;
                     }
@@ -967,7 +967,7 @@ namespace ET
                 ObjectPool objectPool = ObjectPool.Instance;
                 foreach (Entity entity in this.children.Values)
                 {
-                    if (entity is not ISerializeToEntity)
+                    if (entity is not (ISerializeToEntity or ISerializeToWeb))
                     {
                         continue;
                     }
