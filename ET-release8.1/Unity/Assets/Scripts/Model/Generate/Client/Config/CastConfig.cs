@@ -65,6 +65,10 @@ namespace ET
 		public int Type { get; set; }
 		/// <summary>名字</summary>
 		public string Name { get; set; }
+		/// <summary>目标选择方式</summary>
+		public int selectType { get; set; }
+		/// <summary>目标选择参数</summary>
+		public string[] SelectParam { get; set; }
 
 	}
 }
