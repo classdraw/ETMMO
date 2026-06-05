@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ET.Server
@@ -22,6 +23,9 @@ namespace ET.Server
         [BsonIgnore]
         public List<long> Targets = new List<long>();//技能目标
 
+
+        public long inputUnitId;//输入的id
+        public Vector3 inputPos;
         public long StartTime;//技能开始时间
     }
 }

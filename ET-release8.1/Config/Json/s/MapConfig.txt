@@ -1,0 +1,4 @@
+{"dict": [
+[11001, {"_t":"MapConfig","_id":11001,"Type":1,"Title":"普隆德拉1","LogicName":"Map1"}],
+[11002, {"_t":"MapConfig","_id":11002,"Type":1,"Title":"普隆德拉2","LogicName":"Map2"}],
+]}

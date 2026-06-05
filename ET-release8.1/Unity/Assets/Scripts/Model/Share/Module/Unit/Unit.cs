@@ -57,7 +57,15 @@ namespace ET
         public int LastMapId { get; set; }
 
         public int MapUid { get; set; }
-        
+        /// <summary>
+        /// 角色类型
+        /// </summary>
+        public int UnitType { get; set; }
+        /// <summary>
+        /// 阵营
+        /// </summary>
+        public int CampType { get; set; }
+
 
         protected override string ViewName
         {

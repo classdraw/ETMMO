@@ -7,28 +7,28 @@ using System.ComponentModel;
 namespace ET
 {
     [Config]
-    public partial class StartSceneConfigCategory : Singleton<StartSceneConfigCategory>, IMerge
+    public partial class MapConfigCategory : Singleton<MapConfigCategory>, IMerge
     {
         [BsonElement]
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
-        private Dictionary<int, StartSceneConfig> dict = new();
+        private Dictionary<int, MapConfig> dict = new();
 		
         public void Merge(object o)
         {
-            StartSceneConfigCategory s = o as StartSceneConfigCategory;
+            MapConfigCategory s = o as MapConfigCategory;
             foreach (var kv in s.dict)
             {
                 this.dict.Add(kv.Key, kv.Value);
             }
         }
 		
-        public StartSceneConfig Get(int id)
+        public MapConfig Get(int id)
         {
-            this.dict.TryGetValue(id, out StartSceneConfig item);
+            this.dict.TryGetValue(id, out MapConfig item);
 
             if (item == null)
             {
-                throw new Exception($"配置找不到，配置表名: {nameof (StartSceneConfig)}，配置id: {id}");
+                throw new Exception($"配置找不到，配置表名: {nameof (MapConfig)}，配置id: {id}");
             }
 
             return item;
@@ -39,12 +39,12 @@ namespace ET
             return this.dict.ContainsKey(id);
         }
 
-        public Dictionary<int, StartSceneConfig> GetAll()
+        public Dictionary<int, MapConfig> GetAll()
         {
             return this.dict;
         }
 
-        public StartSceneConfig GetOne()
+        public MapConfig GetOne()
         {
             if (this.dict == null || this.dict.Count <= 0)
             {
@@ -57,22 +57,16 @@ namespace ET
         }
     }
 
-	public partial class StartSceneConfig: ProtoObject, IConfig
+	public partial class MapConfig: ProtoObject, IConfig
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
-		/// <summary>所属进程</summary>
-		public int Process { get; set; }
-		/// <summary>所属区</summary>
-		public int Zone { get; set; }
-		/// <summary>类型</summary>
-		public string SceneType { get; set; }
+		/// <summary>Type</summary>
+		public int Type { get; set; }
 		/// <summary>名字</summary>
-		public string Name { get; set; }
-		/// <summary>外网端口</summary>
-		public int Port { get; set; }
-		/// <summary>参数</summary>
-		public string Param { get; set; }
+		public string Title { get; set; }
+		/// <summary>地图逻辑名</summary>
+		public string LogicName { get; set; }
 
 	}
 }

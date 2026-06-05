@@ -71,6 +71,8 @@ namespace ET
 		public string Name { get; set; }
 		/// <summary>外网端口</summary>
 		public int Port { get; set; }
+		/// <summary>参数</summary>
+		public string Param { get; set; }
 
 	}
 }

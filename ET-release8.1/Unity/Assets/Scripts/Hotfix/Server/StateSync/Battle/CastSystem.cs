@@ -15,6 +15,8 @@ namespace ET.Server
             self.ConfigId = 0;
             self.Caster = null;
             self.Targets.Clear();
+            self.inputUnitId = 0;
+            self.inputPos = default;
             self.StartTime = 0;
         }
 
@@ -65,6 +67,28 @@ namespace ET.Server
                 return ErrorCode.ERR_CastConfigError;
             }
 
+            if (selectType==SelectType.Self||selectType==SelectType.Position)
+            {
+                return ErrorCode.ERR_Success;
+            }
+
+
+            Unit inputUnit = caster.Scene().GetComponent<UnitComponent>().Get(cast.inputUnitId);
+            if (inputUnit == null || inputUnit.IsDisposed)
+            {
+                return ErrorCode.ERR_CastInputUnitError;
+            }
+            
+            switch (selectType)
+            {
+                //需要一个目标，那么前端需要给一个目标
+                case SelectType.FriendlyTarget:
+
+                case SelectType.EnemyTarget:
+                    
+                    break;
+            }
+
             return ErrorCode.ERR_Success;
         }
 
@@ -102,26 +126,11 @@ namespace ET.Server
                 case SelectType.Self:
                     CastHelper.SelectTargetsSelf(cast);
                     break;
-                case SelectType.Single:
+                case SelectType.FriendlyTarget:
                     CastHelper.SelectTargetsSingle(cast);
                     break;
-                case SelectType.SelfFan:
+                case SelectType.EnemyTarget:
                     CastHelper.SelectTargetsSelfFan(cast);
-                    break;
-                case SelectType.SelfRectangle:
-                    CastHelper.SelectTargetsSelfRectangle(cast);
-                    break;
-                case SelectType.SelfFanRectangle:
-                    CastHelper.SelectTargetsSelfFanRectangle(cast);
-                    break;
-                case SelectType.DstFan:
-                    CastHelper.SelectTargetsDstFan(cast);
-                    break;
-                case SelectType.DstRectangle:
-                    CastHelper.SelectTargetsDstRectangle(cast);
-                    break;
-                case SelectType.DstFanRectangle:
-                    CastHelper.SelectTargetsDstFanRectangle(cast);
                     break;
                 case SelectType.Position:
                     CastHelper.SelectTargetsPosition(cast);

@@ -91,7 +91,7 @@ namespace ET.Server
                         
                         StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
                         // 等到一帧的最后面再传送，先让G2C_EnterMap返回，否则传送消息可能比G2C_EnterMap还早
-                        TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name,true).Coroutine();
+                        TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name,int.Parse(startSceneConfig.Param),true).Coroutine();
 
                         player.UnitId = unitId;
                         response.MyUnitId = unitId;

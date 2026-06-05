@@ -4,15 +4,17 @@ namespace ET
     {
         None=0,
         Self=1,//自身
-        Single=2,//单一目标 参数配置阵营  客户端传入
-        SelfFan=3,//自身扇形
-        SelfRectangle=4,//自身矩形
-        SelfFanRectangle=5,//自身扇形的直线矩形
-        DstFan=6,//目标扇形
-        DstRectangle=7,//目标矩形
-        DstFanRectangle=8,//目标扇形的直线矩形
+        FriendlyTarget=2,//友方目标
+        EnemyTarget=3,//敌方目标
         Position=9,//坐标 客户端传入
     }
 
+    public enum CampType
+    {
+        None=0,
+        CampA=1,//玩家阵营
+        CampB=2,//怪物阵营
+        CampOther=3//自由攻击模式就用到
+    }
 }
 
