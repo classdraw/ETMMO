@@ -30,26 +30,6 @@ namespace ET.Server
 
             return cast.Cast();
         }
-
-        public static void SelectTargetsNone(Cast cast)
-        {
-        }
-
-        public static void SelectTargetsSelf(Cast cast)
-        {
-        }
-
-        public static void SelectTargetsSingle(Cast cast)
-        {
-        }
-
-        public static void SelectTargetsSelfFan(Cast cast)
-        {
-        }
-
-        public static void SelectTargetsPosition(Cast cast)
-        {
-        }
     }
 }
 

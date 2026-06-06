@@ -49,17 +49,11 @@ namespace ET.Server
             unit.AddComponent<NumericNoticeComponent>();//数值同步组件
             unit.AddComponent<MoveComponent>();
             unit.AddComponent<PathfindingComponent, string>(root.Name);
-            if (root.Name.Equals(("Map1")))
-            {
-                unit.Position = new float3(10f, 0f, 25.5f);
-                
-            }
-            else
-            {
-                unit.Position = new float3(9f, 0f,-16f);
-            }
-            
 
+            MapConfig mapConfig = MapConfigCategory.Instance.Get(request.MapId);
+            float[] startPoint = mapConfig.StartPoint;
+            unit.Position = new float3(startPoint[0], startPoint[1], startPoint[2]);
+            
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
             if (request.IsEnterGame)
             {

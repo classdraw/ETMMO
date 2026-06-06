@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Options;
@@ -46,6 +47,11 @@ namespace ET
             BsonSerializer.RegisterSerializer(
                 typeof(Dictionary<int, int>),
                 new DictionaryInterfaceImplementerSerializer<Dictionary<int, int>>(DictionaryRepresentation.ArrayOfArrays));
+
+            RepresentationConverter floatConverter = new (allowOverflow: false, allowTruncation: true);
+            SingleSerializer floatSerializer = new (BsonType.Double, floatConverter);
+            BsonSerializer.RegisterSerializer(typeof(float), floatSerializer);
+            BsonSerializer.RegisterSerializer(typeof(float[]), new ArraySerializer<float>(floatSerializer));
 
             Dictionary<string, Type> types = CodeTypes.Instance.GetTypes();
             foreach (Type type in types.Values)

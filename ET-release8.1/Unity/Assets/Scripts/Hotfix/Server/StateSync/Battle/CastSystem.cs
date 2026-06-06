@@ -124,21 +124,37 @@ namespace ET.Server
             {
                 //不处理none，属于异常
                 case SelectType.Self:
-                    CastHelper.SelectTargetsSelf(cast);
+                    SelectTargetsSelf(cast);
                     break;
                 case SelectType.FriendlyTarget:
-                    CastHelper.SelectTargetsSingle(cast);
+                    SelectTargetsSingle(cast);
                     break;
                 case SelectType.EnemyTarget:
-                    CastHelper.SelectTargetsSelfFan(cast);
+                    SelectTargetsSelfFan(cast);
                     break;
                 case SelectType.Position:
-                    CastHelper.SelectTargetsPosition(cast);
+                    SelectTargetsPosition(cast);
                     break;
                 default:
                     Log.Error($"未知目标选择类型: {selectType}");
                     break;
             }
+        }
+
+        private static void SelectTargetsSelf(Cast cast)
+        {
+        }
+
+        private static void SelectTargetsSingle(Cast cast)
+        {
+        }
+
+        private static void SelectTargetsSelfFan(Cast cast)
+        {
+        }
+
+        private static void SelectTargetsPosition(Cast cast)
+        {
         }
     }
 }

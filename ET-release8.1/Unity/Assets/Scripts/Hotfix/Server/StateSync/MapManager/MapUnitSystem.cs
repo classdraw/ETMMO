@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 
 namespace ET.Server
 {

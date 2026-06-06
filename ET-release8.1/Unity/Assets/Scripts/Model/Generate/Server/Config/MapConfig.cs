@@ -75,6 +75,8 @@ namespace ET
 		public bool Div { get; set; }
 		/// <summary>有效时间（秒）</summary>
 		public int ValidTime { get; set; }
+		/// <summary>初始点</summary>
+		public float[] StartPoint { get; set; }
 		/// <summary>地图脚本</summary>
 		public string[] CmdList { get; set; }
 

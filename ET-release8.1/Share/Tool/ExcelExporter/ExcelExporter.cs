@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -11,6 +12,8 @@ using Microsoft.CodeAnalysis.Emit;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
+using MongoDB.Bson.Serialization.Serializers;
 using OfficeOpenXml;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
@@ -102,6 +105,7 @@ namespace ET
         {
             try
             {
+                RegisterFloatSerializers();
                 template = File.ReadAllText("Template.txt");
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -569,13 +573,16 @@ namespace ET
 
         private static string Convert(string type, string value)
         {
+            type = type.Trim();
             switch (type)
             {
                 case "uint[]":
                 case "int[]":
                 case "int32[]":
                 case "long[]":
-                    return $"[{value}]";
+                case "float[]":
+                case "double[]":
+                    return ConvertFloatArray(value);
                 case "string[]":
                 case "int[][]":
                     return $"[{value}]";
@@ -612,6 +619,56 @@ namespace ET
                 default:
                     throw new Exception($"不支持此类型: {type}");
             }
+        }
+
+        /// <summary>
+        /// float[] 导出为 JSON 数组时，整数必须带小数点（如 0.0），否则 BSON 反序列化 float[] 会报 TruncationException。
+        /// </summary>
+        private static string ConvertFloatArray(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "[]";
+            }
+
+            string[] parts = value.Split(',');
+            StringBuilder sb = new StringBuilder("[");
+            bool first = true;
+            foreach (string part in parts)
+            {
+                string p = part.Trim();
+                if (p == "")
+                {
+                    continue;
+                }
+
+                if (!first)
+                {
+                    sb.Append(',');
+                }
+
+                first = false;
+                if (!double.TryParse(p, NumberStyles.Float, CultureInfo.InvariantCulture, out double num))
+                {
+                    throw new Exception($"float[] 格式错误: {p}");
+                }
+
+                sb.Append(num.ToString("0.0#############################", CultureInfo.InvariantCulture));
+            }
+
+            sb.Append(']');
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// JSON 数字默认按 double 读取，写入 float/float[] 时 MongoDB 默认不允许精度截断。
+        /// </summary>
+        private static void RegisterFloatSerializers()
+        {
+            RepresentationConverter converter = new (allowOverflow: false, allowTruncation: true);
+            SingleSerializer floatSerializer = new (BsonType.Double, converter);
+            BsonSerializer.RegisterSerializer(typeof(float), floatSerializer);
+            BsonSerializer.RegisterSerializer(typeof(float[]), new ArraySerializer<float>(floatSerializer));
         }
 
         #endregion
