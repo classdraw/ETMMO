@@ -186,6 +186,7 @@ namespace ET.Server
                         //15S后销毁
                         unit.validTime = unit.closeTime + 15000;
                         Log.Console($"[Map]地图MapId: {unit.MapConfigId}, Id: {unit.Id} ActorId:{unit.actorId} 准备{15000}毫秒后关闭");
+                        self.ForceTransferPlayersFromMap(unit).Coroutine();
                     }
 
                     if (unit.validTime > 0 && TimeInfo.Instance.FrameTime >= unit.validTime)
@@ -216,10 +217,50 @@ namespace ET.Server
             }
         }
         
+        /// <summary>
+        /// 地图进入关闭倒计时，强制将地图内玩家传送到默认地图
+        /// </summary>
+        private static async ETTask ForceTransferPlayersFromMap(this MapManagerComponent self, MapUnit unit)
+        {
+            int defaultMapId = TransferHelper.GetDefaultScene();//后续可能有逻辑，比如我在C地图，传送出来默认是B地图，我在M地图，传送出来默认是K地图
+            (int errno, ActorId targetActorId) = await self.GetMapActorId(defaultMapId);
+            if (errno != ErrorCode.ERR_Success)
+            {
+                Log.Error($"[Map]地图关闭传送失败 找不到默认地图: {defaultMapId}, MapUnitId: {unit.Id}");
+                return;
+            }
+
+            if (unit.count <= 0)
+            {
+                return;
+            }
+
+            Log.Console($"[Map]地图MapId: {unit.MapConfigId}, Id: {unit.Id} 强制传送 {unit.count} 名玩家到默认地图: {defaultMapId}");
+
+            M2M_MapCloseTransfer message = M2M_MapCloseTransfer.Create();
+            message.MapConfigId = defaultMapId;
+            message.TargetActorId = targetActorId;
+            self.Root().GetComponent<MessageSender>().Send(unit.actorId, message);
+        }
+
         private static void Remove(this MapManagerComponent self, long id)
         {
             MapUnit unit = self.GetChild<MapUnit>(id);
             Log.Console($"[Map]地图MapId: {unit.MapConfigId}, Id: {unit.Id} 正式销毁");
+            using var roleIds = ListComponent<long>.Create();
+            foreach ((long roleId, long mapUnitId) in self.roleMapDict)
+            {
+                if (mapUnitId == id)
+                {
+                    roleIds.Add(roleId);
+                }
+            }
+
+            foreach (long roleId in roleIds)
+            {
+                self.roleMapDict.Remove(roleId);
+            }
+
             FiberManager.Instance.Remove(unit.fiberId).Coroutine();
             if (self.mapCfgDict.TryGetValue(unit.MapConfigId, out var list))
             {

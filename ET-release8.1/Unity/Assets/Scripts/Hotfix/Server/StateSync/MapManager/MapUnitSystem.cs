@@ -30,11 +30,13 @@ namespace ET.Server
 
         public static void AddCount(this MapUnit self)
         {
+            Log.Console("[Map]一个玩家进入地图"+self.MapConfigId);
             self.count++;
         }
         
         public static void RemoveCount(this MapUnit self)
         {
+            Log.Console("[Map]一个玩家离开地图"+self.MapConfigId);
             self.count--;
         }
 

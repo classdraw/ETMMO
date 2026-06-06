@@ -186,6 +186,14 @@ message M2M_InitMap // IMessage
 	CreateMapCtx Ctx = 3;
 }
 
+// 地图关闭前强制传送玩家
+message M2M_MapCloseTransfer // IMessage
+{
+	int32 RpcId = 1;
+	int32 MapConfigId = 2;
+	ActorId TargetActorId = 3;
+}
+
 //获取地图地址
 //ResponseType M2O_GetMapActorIdResponse
 message O2M_GetMapActorIdRequest // IRequest

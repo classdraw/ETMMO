@@ -89,6 +89,7 @@ namespace ET.Server
             unit.Dispose();
             
             await root.GetComponent<LocationProxyComponent>().Lock(LocationType.Unit, unitId, request.OldActorId);
+            MapManagerHelper.EnterMap(root, unit.Id, request.MapId, sceneInstanceId);
             await root.GetComponent<MessageSender>().Call(sceneInstanceId, request);
         }
     }

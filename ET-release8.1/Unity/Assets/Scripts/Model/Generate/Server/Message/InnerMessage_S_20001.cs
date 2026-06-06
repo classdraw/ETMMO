@@ -842,6 +842,40 @@ namespace ET
         }
     }
 
+    // 地图关闭前强制传送玩家
+    [MemoryPackable]
+    [Message(InnerMessage.M2M_MapCloseTransfer)]
+    public partial class M2M_MapCloseTransfer : MessageObject, IMessage
+    {
+        public static M2M_MapCloseTransfer Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2M_MapCloseTransfer), isFromPool) as M2M_MapCloseTransfer;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public ActorId TargetActorId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.MapConfigId = default;
+            this.TargetActorId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     // 获取地图地址
     [MemoryPackable]
     [Message(InnerMessage.O2M_GetMapActorIdRequest)]
@@ -1827,33 +1861,34 @@ namespace ET
         public const ushort M2M_UnitTransferRequest = 20023;
         public const ushort M2M_UnitTransferResponse = 20024;
         public const ushort M2M_InitMap = 20025;
-        public const ushort O2M_GetMapActorIdRequest = 20026;
-        public const ushort M2O_GetMapActorIdResponse = 20027;
-        public const ushort O2M_EnterMap = 20028;
-        public const ushort O2M_CreateMapRequest = 20029;
-        public const ushort M2O_CreateMapResponse = 20030;
-        public const ushort R2L_LoginAccount = 20031;
-        public const ushort L2R_LoginAccount = 20032;
-        public const ushort L2G_DisConnectGateUnit = 20033;
-        public const ushort G2L_DisConnectGateUnit = 20034;
-        public const ushort G2L_AddLoginRecord = 20035;
-        public const ushort L2G_AddLoginRecord = 20036;
-        public const ushort G2L_RemoveLoginRecord = 20037;
-        public const ushort L2G_RemoveLoginRecord = 20038;
-        public const ushort G2M_RequestExitGame = 20039;
-        public const ushort M2G_RequestExitGame = 20040;
-        public const ushort G2M_SecondLogin = 20041;
-        public const ushort M2G_SecondLogin = 20042;
-        public const ushort Other2UnitCache_AddOrUpdateUnit = 20043;
-        public const ushort UnitCache2Other_AddOrUpdateUnit = 20044;
-        public const ushort Other2UnitCache_GetUnit = 20045;
-        public const ushort UnitCache2Other_GetUnit = 20046;
-        public const ushort Map2Rank_AddOrUpdateRankInfo = 20047;
-        public const ushort Mail2M_CollectAttachment = 20048;
-        public const ushort M2Mail_CollectAttachment = 20049;
-        public const ushort G2Mail_LoginMailServer = 20050;
-        public const ushort Mail2G_LoginMailServer = 20051;
-        public const ushort G2Mail_ExitMailServer = 20052;
-        public const ushort Mail2G_ExitMailServer = 20053;
+        public const ushort M2M_MapCloseTransfer = 20026;
+        public const ushort O2M_GetMapActorIdRequest = 20027;
+        public const ushort M2O_GetMapActorIdResponse = 20028;
+        public const ushort O2M_EnterMap = 20029;
+        public const ushort O2M_CreateMapRequest = 20030;
+        public const ushort M2O_CreateMapResponse = 20031;
+        public const ushort R2L_LoginAccount = 20032;
+        public const ushort L2R_LoginAccount = 20033;
+        public const ushort L2G_DisConnectGateUnit = 20034;
+        public const ushort G2L_DisConnectGateUnit = 20035;
+        public const ushort G2L_AddLoginRecord = 20036;
+        public const ushort L2G_AddLoginRecord = 20037;
+        public const ushort G2L_RemoveLoginRecord = 20038;
+        public const ushort L2G_RemoveLoginRecord = 20039;
+        public const ushort G2M_RequestExitGame = 20040;
+        public const ushort M2G_RequestExitGame = 20041;
+        public const ushort G2M_SecondLogin = 20042;
+        public const ushort M2G_SecondLogin = 20043;
+        public const ushort Other2UnitCache_AddOrUpdateUnit = 20044;
+        public const ushort UnitCache2Other_AddOrUpdateUnit = 20045;
+        public const ushort Other2UnitCache_GetUnit = 20046;
+        public const ushort UnitCache2Other_GetUnit = 20047;
+        public const ushort Map2Rank_AddOrUpdateRankInfo = 20048;
+        public const ushort Mail2M_CollectAttachment = 20049;
+        public const ushort M2Mail_CollectAttachment = 20050;
+        public const ushort G2Mail_LoginMailServer = 20051;
+        public const ushort Mail2G_LoginMailServer = 20052;
+        public const ushort G2Mail_ExitMailServer = 20053;
+        public const ushort Mail2G_ExitMailServer = 20054;
     }
 }
