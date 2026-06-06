@@ -19,6 +19,7 @@ namespace ET.Client
 		public Button m_btnP1GetMail;
 		public Button m_btnP1ReadMail;
 		public Button m_btnP1CollectMail;
+		public Button m_btnP1TransferMap;
 		public GameObject m_goP2;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;

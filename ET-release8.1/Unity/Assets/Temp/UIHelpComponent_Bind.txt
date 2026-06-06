@@ -24,6 +24,7 @@ namespace ET.Client
 		public Button m_btnP1GetMail;
 		public Button m_btnP1ReadMail;
 		public Button m_btnP1CollectMail;
+		public Button m_btnP1TransferMap;
 		public GameObject m_goP2;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;
@@ -65,16 +66,18 @@ namespace ET.Client
 			self.m_btnP1ReadMail.onClick.AddListener(() => { self.OnP1ReadMail(); });
 			self.m_btnP1CollectMail = m_bindComponent.GetComponent<Button>(11);
 			self.m_btnP1CollectMail.onClick.AddListener(() => { self.OnP1CollectMail(); });
-			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(12).gameObject;
-			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(14);
+			self.m_btnP1TransferMap = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnP1TransferMap.onClick.AddListener(() => { self.OnP1TransferMap(); });
+			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
+			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(14).gameObject;
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(15);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(15);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(16);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(17);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(18);
+			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(18).gameObject;
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(19);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 		}
 
@@ -116,6 +119,10 @@ namespace ET.Client
 		}
 
 		public static void OnP1CollectMail(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnP1TransferMap(this UIHelpComponent self)
 		{
 		}
 

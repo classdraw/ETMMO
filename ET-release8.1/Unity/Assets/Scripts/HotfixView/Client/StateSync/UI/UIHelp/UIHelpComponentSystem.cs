@@ -37,16 +37,18 @@ namespace ET.Client
 			self.m_btnP1ReadMail.onClick.AddListener(() => { self.OnP1ReadMail(); });
 			self.m_btnP1CollectMail = m_bindComponent.GetComponent<Button>(11);
 			self.m_btnP1CollectMail.onClick.AddListener(() => { self.OnP1CollectMail(); });
-			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(12).gameObject;
-			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(14);
+			self.m_btnP1TransferMap = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnP1TransferMap.onClick.AddListener(() => { self.OnP1TransferMap(); });
+			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(13).gameObject;
+			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(14).gameObject;
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(15);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(15);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(16);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(17);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(18);
+			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(18).gameObject;
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(19);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 			
 			self.m_GOs.Clear();
@@ -153,6 +155,25 @@ namespace ET.Client
 			if (long.TryParse(val,out long result))
 			{
 				MailHelper.GMCollectAttachmentMail(self.Root(),result).Coroutine();
+			}
+
+		}
+
+		public static void OnP1TransferMap(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrEmpty(val))
+			{
+				return;
+			}
+
+			if (int.TryParse(val,out int result))
+			{
+				C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
+				c2MTransferMap.MapConfigId = result;
+				c2MTransferMap.MapFiberId = 0;//去指定分区地图用到
+                
+				self.Root().GetComponent<ClientSenderComponent>().Call(c2MTransferMap).Coroutine();
 			}
 
 		}
