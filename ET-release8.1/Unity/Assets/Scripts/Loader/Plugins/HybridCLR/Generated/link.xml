@@ -21,6 +21,7 @@
     <type fullname="MemoryPack.MemoryPackableAttribute" preserve="all" />
   </assembly>
   <assembly fullname="MongoDB.Bson">
+    <type fullname="MongoDB.Bson.BsonType" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptionsAttribute" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Attributes.BsonElementAttribute" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Attributes.BsonIgnoreAttribute" preserve="all" />
@@ -32,8 +33,12 @@
     <type fullname="MongoDB.Bson.Serialization.Conventions.IConventionPack" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Conventions.IgnoreExtraElementsConvention" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.IBsonSerializer" preserve="all" />
+    <type fullname="MongoDB.Bson.Serialization.IBsonSerializer`1" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Options.DictionaryRepresentation" preserve="all" />
+    <type fullname="MongoDB.Bson.Serialization.Options.RepresentationConverter" preserve="all" />
+    <type fullname="MongoDB.Bson.Serialization.Serializers.ArraySerializer`1" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Serializers.DictionaryInterfaceImplementerSerializer`1" preserve="all" />
+    <type fullname="MongoDB.Bson.Serialization.Serializers.SingleSerializer" preserve="all" />
   </assembly>
   <assembly fullname="System">
     <type fullname="System.CodeDom.Compiler.GeneratedCodeAttribute" preserve="all" />
@@ -333,8 +338,11 @@
     <type fullname="System.Console" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
+    <type fullname="System.Diagnostics.DebuggerBrowsableAttribute" preserve="all" />
+    <type fullname="System.Diagnostics.DebuggerBrowsableState" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerDisplayAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerHiddenAttribute" preserve="all" />
+    <type fullname="System.Diagnostics.DebuggerStepThroughAttribute" preserve="all" />
     <type fullname="System.Double" preserve="all" />
     <type fullname="System.Enum" preserve="all" />
     <type fullname="System.Environment" preserve="all" />

@@ -211,7 +211,6 @@ Shader "Universal Render Pipeline/Bumped Diffuse"
             {
                 Varyings output;
                 UNITY_SETUP_INSTANCE_ID(input);
-                UNITY_TRANSFER_INSTANCE_ID(input, output);
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 return output;
             }
