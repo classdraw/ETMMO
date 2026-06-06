@@ -49,12 +49,11 @@ namespace ET.Server
             unit.AddComponent<NumericNoticeComponent>();//数值同步组件
             unit.AddComponent<MoveComponent>();
             unit.AddComponent<PathfindingComponent, string>(root.Name);
-
-            MapConfig mapConfig = MapConfigCategory.Instance.Get(request.MapId);
-            float[] startPoint = mapConfig.StartPoint;
-            unit.Position = new float3(startPoint[0], startPoint[1], startPoint[2]);
-            
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
+
+
+            SetUnitDataAfterTransfer(unit,request.MapId);
+            
             if (request.IsEnterGame)
             {
 
@@ -62,7 +61,33 @@ namespace ET.Server
                 EventSystem.Instance.Publish(unit.Scene(), new UnitReEffect() { Unit = unit });
             }
         }
-        
+
+        private static void SetUnitDataAfterTransfer(Unit unit,int mapConfigId)
+        {
+            MapConfig mapConfig = MapConfigCategory.Instance.Get(mapConfigId);
+            float[] startPoint = mapConfig.StartPoint;
+            unit.Position = new float3(startPoint[0], startPoint[1], startPoint[2]);//坐标设置
+
+            if (mapConfig.Type==(int)MapType.SafeZone)//安全区都是一个阵营
+            {
+                unit.CampType = (int)CampType.CampA;
+            }else if (mapConfig.Type==(int)MapType.Normal)//普通地图 怪物一个阵营 其他都一个阵营
+            {
+                if (unit.IsMonster())
+                {
+                    unit.CampType = (int)CampType.CampB;
+                }
+                else
+                {
+                    unit.CampType = (int)CampType.CampA;
+                }
+            }else if (mapConfig.Type==(int)MapType.FreePK)
+            {
+                unit.CampType = (int)CampType.CampPK;
+            }
+
+        }
+
         /// <summary>
         /// 处理离线消息
         /// </summary>
@@ -86,6 +111,7 @@ namespace ET.Server
             unitInfo.Name = unit.Name;
             unitInfo.ConfigId = unit.ConfigId;
             unitInfo.Type = (int)unit.Type();
+            unitInfo.CampType = unit.CampType;
             unitInfo.Position = unit.Position;
             unitInfo.Forward = unit.Forward;
 

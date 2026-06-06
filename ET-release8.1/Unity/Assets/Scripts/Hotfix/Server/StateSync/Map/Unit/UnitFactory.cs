@@ -20,7 +20,6 @@ namespace ET.Server
                     UnitConfig unitConfig=UnitConfigCategory.Instance.Get(configId);
 
                     Unit unit = unitComponent.AddChildWithId<Unit, int,string>(id, configId,name);
-                    unit.UnitType = (int)unitType;
                     unit.CampType = 0;//创建时候默认阵营是0
                     
                     unit.AddComponent<MoveComponent>();

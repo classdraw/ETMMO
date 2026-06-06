@@ -249,15 +249,18 @@ namespace ET
         public int Type { get; set; }
 
         [MemoryPackOrder(4)]
-        public Unity.Mathematics.float3 Position { get; set; }
+        public int CampType { get; set; }
 
         [MemoryPackOrder(5)]
+        public Unity.Mathematics.float3 Position { get; set; }
+
+        [MemoryPackOrder(6)]
         public Unity.Mathematics.float3 Forward { get; set; }
 
         [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
-        [MemoryPackOrder(6)]
-        public Dictionary<int, long> KV { get; set; } = new();
         [MemoryPackOrder(7)]
+        public Dictionary<int, long> KV { get; set; } = new();
+        [MemoryPackOrder(8)]
         public MoveInfo MoveInfo { get; set; }
 
         public override void Dispose()
@@ -271,6 +274,7 @@ namespace ET
             this.Name = default;
             this.ConfigId = default;
             this.Type = default;
+            this.CampType = default;
             this.Position = default;
             this.Forward = default;
             this.KV.Clear();

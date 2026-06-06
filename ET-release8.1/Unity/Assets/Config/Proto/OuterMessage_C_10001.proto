@@ -56,10 +56,11 @@ message UnitInfo
 	string Name = 2;
 	int32 ConfigId = 3;
 	int32 Type = 4;
-	Unity.Mathematics.float3 Position = 5;
-	Unity.Mathematics.float3 Forward = 6;
-	map<int32, int64> KV = 7;
-	MoveInfo MoveInfo = 8;
+	int32 CampType = 5;
+	Unity.Mathematics.float3 Position = 6;
+	Unity.Mathematics.float3 Forward = 7;
+	map<int32, int64> KV = 8;
+	MoveInfo MoveInfo = 9;
 }
 
 message M2C_CreateUnits // IMessage

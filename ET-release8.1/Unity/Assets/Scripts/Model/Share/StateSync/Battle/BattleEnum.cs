@@ -9,12 +9,13 @@ namespace ET
         Position=9,//坐标 客户端传入
     }
 
+        
     public enum CampType
     {
         None=0,
         CampA=1,//玩家阵营
         CampB=2,//怪物阵营
-        CampOther=3//自由攻击模式就用到
+        CampPK=3//自由攻击模式就用到
     }
 }
 
