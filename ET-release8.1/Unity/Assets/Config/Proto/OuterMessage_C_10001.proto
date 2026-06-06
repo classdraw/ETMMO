@@ -213,6 +213,9 @@ message M2C_TestRobotCase2 // ILocationMessage
 message C2M_TransferMap // ILocationRequest
 {
 	int32 RpcId = 1;
+	int32 MapConfigId = 1;
+	//地图唯一ID(可选)
+	int64 MapFiberId = 2;
 }
 
 message M2C_TransferMap // ILocationResponse

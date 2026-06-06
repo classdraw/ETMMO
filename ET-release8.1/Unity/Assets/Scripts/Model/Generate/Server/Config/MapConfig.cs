@@ -67,6 +67,16 @@ namespace ET
 		public string Title { get; set; }
 		/// <summary>地图逻辑名</summary>
 		public string LogicName { get; set; }
+		/// <summary>最大人数</summary>
+		public int MaxPlayer { get; set; }
+		/// <summary>是否自动创建</summary>
+		public bool AutoCreate { get; set; }
+		/// <summary>是否分线</summary>
+		public bool Div { get; set; }
+		/// <summary>有效时间（秒）</summary>
+		public int ValidTime { get; set; }
+		/// <summary>地图脚本</summary>
+		public string[] CmdList { get; set; }
 
 	}
 }

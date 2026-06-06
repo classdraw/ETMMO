@@ -46,6 +46,16 @@ namespace ET.Client
             if (Input.GetKeyDown(KeyCode.T))
             {
                 C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
+                c2MTransferMap.MapConfigId = 10002;
+                c2MTransferMap.MapFiberId = 0;//去指定分区地图用到
+                
+                self.Root().GetComponent<ClientSenderComponent>().Call(c2MTransferMap).Coroutine();
+            }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
+                c2MTransferMap.MapConfigId = 10001;
+                c2MTransferMap.MapFiberId = 0;//去指定分区地图用到
                 self.Root().GetComponent<ClientSenderComponent>().Call(c2MTransferMap).Coroutine();
             }
         }

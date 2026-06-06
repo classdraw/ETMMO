@@ -16,6 +16,9 @@ namespace ET
         
         public StartSceneConfig LoginCenterConfig;//登录服配置
         public StartSceneConfig RankCenterConfig;//rank服务器
+        
+        public Dictionary<int, StartSceneConfig> MapManagerConfigs = new Dictionary<int, StartSceneConfig>();
+        
         public List<StartSceneConfig> Realms = new();
         
         
@@ -68,9 +71,9 @@ namespace ET
                     case SceneType.Router:
                         this.Routers.Add(startSceneConfig);
                         break;
-                    case SceneType.Map:
-                        this.Maps.Add(startSceneConfig);
-                        break;
+                    //case SceneType.Map: 帧同步用到，这里不需要都给MapManager管理
+                    //    this.Maps.Add(startSceneConfig);
+                    //    break;
                     case SceneType.Match:
                         this.Match = startSceneConfig;
                         break;
@@ -82,6 +85,9 @@ namespace ET
                         break;
                     case SceneType.Rank:
                         this.RankCenterConfig = startSceneConfig;
+                        break;
+                    case SceneType.MapManager:
+                        this.MapManagerConfigs.Add(startSceneConfig.Zone,startSceneConfig);
                         break;
                 }
             }

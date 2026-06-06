@@ -25,11 +25,12 @@ namespace ET
 		RoomRoot = 1 << 18,
 		Watcher = 1 << 19,
 		
-		//角色缓存服
-		UnitCache = 1 << 20,
+		
+		UnitCache = 1 << 20,//角色缓存服
 		LoginCenter= 1 << 21,//登录中心服
 		Mail = 1 << 22,//邮箱服务器
 		Rank = 1 << 23,//rank服务器
+		MapManager = 1 << 24,//地图服务器
 		// 客户端
 		StateSync = 1 << 30,
 		Current = 1L << 31,

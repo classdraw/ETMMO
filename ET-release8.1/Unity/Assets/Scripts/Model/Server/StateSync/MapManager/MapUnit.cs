@@ -2,6 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ET.Server
 {
+    [ChildOf(typeof(MapManagerComponent))]
     public class MapUnit: Entity, IAwake<int>, IDestroy, ISerializeToWeb
     {
         /// <summary>

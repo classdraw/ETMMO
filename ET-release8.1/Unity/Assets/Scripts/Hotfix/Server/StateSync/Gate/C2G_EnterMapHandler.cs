@@ -19,8 +19,18 @@
 			StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
 			response.MyId = player.Id;
 
+			(int errno, ActorId actorId, int mapId) r = await TransferHelper.GetValidMap(session.Scene(), unit);
+			if (r.errno != ErrorCode.ERR_Success)
+			{
+				response.Error = r.errno;
+				return;
+			}
+
+			TransferHelper.TransferAtFrameFinish(unit, r.actorId, r.mapId, true).Coroutine();
+			
+			
 			// 等到一帧的最后面再传送，先让G2C_EnterMap返回，否则传送消息可能比G2C_EnterMap还早
-			TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name,int.Parse(startSceneConfig.Param),true).Coroutine();
+			//TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name,0,true).Coroutine();
 		}
 	}
 }

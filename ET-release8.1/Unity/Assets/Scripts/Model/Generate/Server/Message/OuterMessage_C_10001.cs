@@ -981,6 +981,15 @@ namespace ET
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
 
+        [MemoryPackOrder(0)]
+        public int MapConfigId { get; set; }
+
+        /// <summary>
+        /// 地图唯一ID(可选)
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public long MapFiberId { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -989,6 +998,8 @@ namespace ET
             }
 
             this.RpcId = default;
+            this.MapConfigId = default;
+            this.MapFiberId = default;
 
             ObjectPool.Instance.Recycle(this);
         }

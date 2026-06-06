@@ -15,12 +15,13 @@
         public const int SessionAcceptTimeout = 203;
         
         public const int RoomUpdate = 301;
-        
+        public const int MapCloseCheck = 302;//地图是否关闭检测
         
         public const int PlayerOfflineOutTime = 401;//玩家超时
         public const int SaveChangeDBDate = 402;
         
         public const int NumericSync = 403;//数值同步
         public const int AccountChectOutTime = 404;//账号超时
+        
     }
 }

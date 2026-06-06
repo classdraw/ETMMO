@@ -179,6 +179,53 @@ message M2M_UnitTransferResponse // IResponse
 	string Message = 3;
 }
 
+message M2M_InitMap // IMessage
+{
+	int32 RpcId = 1;
+	int32 MapConfigId = 2;
+	CreateMapCtx Ctx = 3;
+}
+
+//获取地图地址
+//ResponseType M2O_GetMapActorIdResponse
+message O2M_GetMapActorIdRequest // IRequest
+{
+	int32 RpcId = 1;
+	int32 MapConfigId = 2;
+	int64 Id = 3;
+}
+message M2O_GetMapActorIdResponse // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	ActorId ActorId = 4;
+}
+
+//进入地图
+message O2M_EnterMap // IMessage
+{
+	int32 RpcId = 1;
+	int32 MapConfigId = 2;
+	int64 Id = 3;
+	ActorId MapActorId = 4;
+}
+
+//创建地图
+//ResponseType M2O_CreateMapResponse
+message O2M_CreateMapRequest // IRequest
+{
+	int32 RpcId = 1;
+	int32 MapConfigId = 2;
+	CreateMapCtx Ctx = 3;
+}
+message M2O_CreateMapResponse // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	ActorId ActorId = 4;
+}
 
 // ResponseType L2R_LoginAccount
 message R2L_LoginAccount // IRequest

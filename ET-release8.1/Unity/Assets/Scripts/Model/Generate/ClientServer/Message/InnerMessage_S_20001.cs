@@ -810,6 +810,221 @@ namespace ET
     }
 
     [MemoryPackable]
+    [Message(InnerMessage.M2M_InitMap)]
+    public partial class M2M_InitMap : MessageObject, IMessage
+    {
+        public static M2M_InitMap Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2M_InitMap), isFromPool) as M2M_InitMap;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public CreateMapCtx Ctx { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.MapConfigId = default;
+            this.Ctx = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // 获取地图地址
+    [MemoryPackable]
+    [Message(InnerMessage.O2M_GetMapActorIdRequest)]
+    [ResponseType(nameof(M2O_GetMapActorIdResponse))]
+    public partial class O2M_GetMapActorIdRequest : MessageObject, IRequest
+    {
+        public static O2M_GetMapActorIdRequest Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(O2M_GetMapActorIdRequest), isFromPool) as O2M_GetMapActorIdRequest;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long Id { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.MapConfigId = default;
+            this.Id = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2O_GetMapActorIdResponse)]
+    public partial class M2O_GetMapActorIdResponse : MessageObject, IResponse
+    {
+        public static M2O_GetMapActorIdResponse Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2O_GetMapActorIdResponse), isFromPool) as M2O_GetMapActorIdResponse;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public ActorId ActorId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ActorId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // 进入地图
+    [MemoryPackable]
+    [Message(InnerMessage.O2M_EnterMap)]
+    public partial class O2M_EnterMap : MessageObject, IMessage
+    {
+        public static O2M_EnterMap Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(O2M_EnterMap), isFromPool) as O2M_EnterMap;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long Id { get; set; }
+
+        [MemoryPackOrder(3)]
+        public ActorId MapActorId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.MapConfigId = default;
+            this.Id = default;
+            this.MapActorId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // 创建地图
+    [MemoryPackable]
+    [Message(InnerMessage.O2M_CreateMapRequest)]
+    [ResponseType(nameof(M2O_CreateMapResponse))]
+    public partial class O2M_CreateMapRequest : MessageObject, IRequest
+    {
+        public static O2M_CreateMapRequest Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(O2M_CreateMapRequest), isFromPool) as O2M_CreateMapRequest;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public CreateMapCtx Ctx { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.MapConfigId = default;
+            this.Ctx = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2O_CreateMapResponse)]
+    public partial class M2O_CreateMapResponse : MessageObject, IResponse
+    {
+        public static M2O_CreateMapResponse Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2O_CreateMapResponse), isFromPool) as M2O_CreateMapResponse;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public ActorId ActorId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ActorId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
     [Message(InnerMessage.R2L_LoginAccount)]
     [ResponseType(nameof(L2R_LoginAccount))]
     public partial class R2L_LoginAccount : MessageObject, IRequest
@@ -1611,28 +1826,34 @@ namespace ET
         public const ushort ObjectQueryResponse = 20022;
         public const ushort M2M_UnitTransferRequest = 20023;
         public const ushort M2M_UnitTransferResponse = 20024;
-        public const ushort R2L_LoginAccount = 20025;
-        public const ushort L2R_LoginAccount = 20026;
-        public const ushort L2G_DisConnectGateUnit = 20027;
-        public const ushort G2L_DisConnectGateUnit = 20028;
-        public const ushort G2L_AddLoginRecord = 20029;
-        public const ushort L2G_AddLoginRecord = 20030;
-        public const ushort G2L_RemoveLoginRecord = 20031;
-        public const ushort L2G_RemoveLoginRecord = 20032;
-        public const ushort G2M_RequestExitGame = 20033;
-        public const ushort M2G_RequestExitGame = 20034;
-        public const ushort G2M_SecondLogin = 20035;
-        public const ushort M2G_SecondLogin = 20036;
-        public const ushort Other2UnitCache_AddOrUpdateUnit = 20037;
-        public const ushort UnitCache2Other_AddOrUpdateUnit = 20038;
-        public const ushort Other2UnitCache_GetUnit = 20039;
-        public const ushort UnitCache2Other_GetUnit = 20040;
-        public const ushort Map2Rank_AddOrUpdateRankInfo = 20041;
-        public const ushort Mail2M_CollectAttachment = 20042;
-        public const ushort M2Mail_CollectAttachment = 20043;
-        public const ushort G2Mail_LoginMailServer = 20044;
-        public const ushort Mail2G_LoginMailServer = 20045;
-        public const ushort G2Mail_ExitMailServer = 20046;
-        public const ushort Mail2G_ExitMailServer = 20047;
+        public const ushort M2M_InitMap = 20025;
+        public const ushort O2M_GetMapActorIdRequest = 20026;
+        public const ushort M2O_GetMapActorIdResponse = 20027;
+        public const ushort O2M_EnterMap = 20028;
+        public const ushort O2M_CreateMapRequest = 20029;
+        public const ushort M2O_CreateMapResponse = 20030;
+        public const ushort R2L_LoginAccount = 20031;
+        public const ushort L2R_LoginAccount = 20032;
+        public const ushort L2G_DisConnectGateUnit = 20033;
+        public const ushort G2L_DisConnectGateUnit = 20034;
+        public const ushort G2L_AddLoginRecord = 20035;
+        public const ushort L2G_AddLoginRecord = 20036;
+        public const ushort G2L_RemoveLoginRecord = 20037;
+        public const ushort L2G_RemoveLoginRecord = 20038;
+        public const ushort G2M_RequestExitGame = 20039;
+        public const ushort M2G_RequestExitGame = 20040;
+        public const ushort G2M_SecondLogin = 20041;
+        public const ushort M2G_SecondLogin = 20042;
+        public const ushort Other2UnitCache_AddOrUpdateUnit = 20043;
+        public const ushort UnitCache2Other_AddOrUpdateUnit = 20044;
+        public const ushort Other2UnitCache_GetUnit = 20045;
+        public const ushort UnitCache2Other_GetUnit = 20046;
+        public const ushort Map2Rank_AddOrUpdateRankInfo = 20047;
+        public const ushort Mail2M_CollectAttachment = 20048;
+        public const ushort M2Mail_CollectAttachment = 20049;
+        public const ushort G2Mail_LoginMailServer = 20050;
+        public const ushort Mail2G_LoginMailServer = 20051;
+        public const ushort G2Mail_ExitMailServer = 20052;
+        public const ushort Mail2G_ExitMailServer = 20053;
     }
 }

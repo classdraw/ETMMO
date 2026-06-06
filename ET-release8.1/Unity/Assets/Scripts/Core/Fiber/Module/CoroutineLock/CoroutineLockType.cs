@@ -18,6 +18,7 @@ namespace ET
         public const int UnitCacheGet = 12;//缓存服务器锁
         
         public const int OperateEmail = 13;//邮件操作
+        public const int CreateMap = 14;//创建地图
 
         public const int Max = 100; // 这个必须最大
     }

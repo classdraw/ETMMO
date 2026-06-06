@@ -48,6 +48,8 @@ namespace ET
         public const int ERR_CastConfigError = 200053;//释放技能配置错误
         public const int ERR_CastInputUnitError = 200054;//释放技能目标错误
         
+        //地图
+        public const int ERR_EnterMapError = 200100;//地图进入错误
         
         public const int ERR_None = 300000;//占位
     }

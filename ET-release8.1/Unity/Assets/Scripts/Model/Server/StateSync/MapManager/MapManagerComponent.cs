@@ -7,7 +7,7 @@ namespace ET.Server
     [ComponentOf(typeof(Scene))]
     public class MapManagerComponent:Entity,IAwake,IDestroy
     {
-        public long timer;
+        public long Timer;
         /// <summary>
         /// 地图Id对应分线列表
         /// </summary>

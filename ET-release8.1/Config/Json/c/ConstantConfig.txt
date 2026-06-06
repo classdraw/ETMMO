@@ -1,3 +1,4 @@
 {"dict": [
 [90001, {"_t":"ConstantConfig","_id":90001,"Name":"","StringValue":"","IntValue":240}],
+[90002, {"_t":"ConstantConfig","_id":90002,"Name":"","StringValue":"","IntValue":10001}],
 ]}

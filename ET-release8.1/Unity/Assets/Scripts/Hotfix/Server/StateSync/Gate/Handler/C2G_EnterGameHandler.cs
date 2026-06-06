@@ -89,9 +89,15 @@ namespace ET.Server
                         await LoginMailServer(player, unit);
                         long unitId = unit.Id;
                         
-                        StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
+                        (int errno, ActorId mapActorId, int mapId) r = await TransferHelper.GetValidMap(session.Scene(), unit);
+                        if (r.errno != ErrorCode.ERR_Success)
+                        {
+                            response.Error = r.errno;
+                            return;
+                        }
+                        
                         // 等到一帧的最后面再传送，先让G2C_EnterMap返回，否则传送消息可能比G2C_EnterMap还早
-                        TransferHelper.TransferAtFrameFinish(unit, startSceneConfig.ActorId, startSceneConfig.Name,int.Parse(startSceneConfig.Param),true).Coroutine();
+                        TransferHelper.TransferAtFrameFinish(unit,r.mapActorId, r.mapId,true).Coroutine();
 
                         player.UnitId = unitId;
                         response.MyUnitId = unitId;
