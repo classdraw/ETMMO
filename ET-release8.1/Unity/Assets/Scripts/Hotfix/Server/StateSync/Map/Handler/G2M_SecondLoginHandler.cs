@@ -9,6 +9,8 @@ namespace ET.Server
             Scene scene = unit.Scene();
             EventSystem.Instance.Publish(unit.Scene(), new UnitCheckCfg() { Unit = unit });
             EventSystem.Instance.Publish(unit.Scene(), new UnitReEffect() { Unit = unit });
+            await MailHelper.LoginMailServer(scene, unit);
+            await RelationshipHelper.LoginRelationshipServer(scene, unit);
 
             // 通知客户端开始切场景
             M2C_StartSceneChange m2CStartSceneChange = M2C_StartSceneChange.Create();

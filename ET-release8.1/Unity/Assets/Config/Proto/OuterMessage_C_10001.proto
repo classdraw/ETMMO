@@ -57,10 +57,12 @@ message UnitInfo
 	int32 ConfigId = 3;
 	int32 Type = 4;
 	int32 CampType = 5;
-	Unity.Mathematics.float3 Position = 6;
-	Unity.Mathematics.float3 Forward = 7;
-	map<int32, int64> KV = 8;
-	MoveInfo MoveInfo = 9;
+	int64 OwnerId = 6;
+	int64 TeamId = 7;
+	Unity.Mathematics.float3 Position = 8;
+	Unity.Mathematics.float3 Forward = 9;
+	map<int32, int64> KV = 10;
+	MoveInfo MoveInfo = 11;
 }
 
 message M2C_CreateUnits // IMessage
@@ -636,6 +638,36 @@ message C2Mail_ReadMail // IMailInfoMessage
 
 //////////////////////邮件///////////////////////////////////////////
 
+//////////////////////组队///////////////////////////////////////////
+// ResponseType G2C_CreateTeam
+message C2G_CreateTeam // ISessionRequest
+{
+	int32 RpcId = 1;
+	string TeamName = 2;//队伍名
+}
+
+message G2C_CreateTeam // ISessionResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+// ResponseType G2C_LeaveTeam
+message C2G_LeaveTeam // ISessionRequest
+{
+	int32 RpcId = 1;
+	int64 Dissolve = 2;
+}
+
+message G2C_LeaveTeam // ISessionResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+//////////////////////组队///////////////////////////////////////////
 //////////////////////相关GM///////////////////////////////////////////
 // ResponseType Mail2C_GMAddMail
 message C2Mail_GMAddMail // IMailInfoRequest

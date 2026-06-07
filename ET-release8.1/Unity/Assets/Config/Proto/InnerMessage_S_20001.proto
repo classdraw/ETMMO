@@ -420,6 +420,101 @@ message Mail2G_ExitMailServer // IResponse
 
 
 //-------------邮箱-------------
+//-------------关系服-------------
+
+// ResponseType Relationship2G_LoginRelationshipServer
+message G2Relationship_LoginRelationshipServer // IRequest
+{
+	int32 RpcId = 1;
+	int64 UnitId = 2;
+	int64 TeamId = 3;
+}
+
+message Relationship2G_LoginRelationshipServer // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 ClearUnitTeamId = 4;
+}
+
+// ResponseType Relationship2G_ExitRelationshipServer
+message G2Relationship_ExitRelationshipServer // IRequest
+{
+	int32 RpcId = 1;
+	int64 UnitId = 2;
+	int64 TeamId = 3;
+}
+
+message Relationship2G_ExitRelationshipServer // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+// ResponseType M2G_GetUnitTeamId
+message G2M_GetUnitTeamId // ILocationRequest
+{
+	int32 RpcId = 1;
+}
+
+message M2G_GetUnitTeamId // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 TeamId = 4;
+}
+
+// ResponseType Relationship2G_CreateTeam
+message G2Relationship_CreateTeam // IRequest
+{
+	int32 RpcId = 1;
+	int64 UnitId = 2;
+	string TeamName = 3;
+}
+
+message Relationship2G_CreateTeam // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 TeamId = 4;
+}
+
+// ResponseType M2G_SetUnitTeamId
+message G2M_SetUnitTeamId // ILocationRequest
+{
+	int32 RpcId = 1;
+	int64 TeamId = 2;
+}
+
+message M2G_SetUnitTeamId // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+// ResponseType Relationship2G_LeaveTeam
+message G2Relationship_LeaveTeam // IRequest
+{
+	int32 RpcId = 1;
+	int64 UnitId = 2;
+	int64 TeamId = 3;
+	int64 Dissolve = 4;
+}
+
+message Relationship2G_LeaveTeam // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	repeated int64 ClearUnitIds = 4;
+}
+
+//-------------关系服-------------
 
 //-------------相关GM-------------
 

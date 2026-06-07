@@ -8,28 +8,33 @@ namespace ET.Server
             await ETTask.CompletedTask;
 
             MailUnitsComponent mailUnitsComponent = root.GetComponent<MailUnitsComponent>();
-            mailUnitsComponent.Children.TryGetValue(request.UnitId, out var mail);
-            MailUnit mailUnit = (MailUnit)mail;
-            if (mailUnit != null)
+            using (await root.GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.OperateEmail,request.UnitId))
             {
-                return;
+                mailUnitsComponent.Children.TryGetValue(request.UnitId, out var mail);
+                MailUnit mailUnit = (MailUnit)mail;
+                if (mailUnit != null)
+                {
+                    return;
+                }
+
+                mailUnit = mailUnitsComponent.AddChildWithId<MailUnit>(request.UnitId);
+                mailUnit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
+
+                MailComponent mailComponent = await root.GetComponent<DBManagerComponent>().GetZoneDB(root.Zone()).Query<MailComponent>(request.UnitId);
+
+                if (mailComponent == null)
+                {
+                    mailUnit.AddComponent<MailComponent>();
+                }
+                else
+                {
+                    mailUnit.AddComponent(mailComponent);
+                }
+
+                await mailUnit.AddLocation(LocationType.Mail);
             }
-
-            mailUnit = mailUnitsComponent.AddChildWithId<MailUnit>(request.UnitId);
-            mailUnit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
-
-            MailComponent mailComponent = await root.GetComponent<DBManagerComponent>().GetZoneDB(root.Zone()).Query<MailComponent>(request.UnitId);
-
-            if (mailComponent == null)
-            {
-                mailUnit.AddComponent<MailComponent>();
-            }
-            else
-            {
-                mailUnit.AddComponent(mailComponent);
-            }
-
-            await mailUnit.AddLocation(LocationType.Mail);
+            
+            
         }
     }
 }

@@ -15,9 +15,14 @@ namespace ET
         public StartSceneConfig LocationConfig;
         
         public StartSceneConfig LoginCenterConfig;//登录服配置
-        public StartSceneConfig RankCenterConfig;//rank服务器
+        public Dictionary<int,StartSceneConfig> RankCenterConfigs=new Dictionary<int, StartSceneConfig>();//rank服务器
         
         public Dictionary<int, StartSceneConfig> MapManagerConfigs = new Dictionary<int, StartSceneConfig>();
+
+        public Dictionary<int, StartSceneConfig> RelationshipConfigs = new Dictionary<int, StartSceneConfig>();
+        
+        public Dictionary<int,StartSceneConfig> MailConfigs=new Dictionary<int, StartSceneConfig>();//rank服务器
+
         
         public List<StartSceneConfig> Realms = new();
         
@@ -84,10 +89,16 @@ namespace ET
                         this.LoginCenterConfig = startSceneConfig;
                         break;
                     case SceneType.Rank:
-                        this.RankCenterConfig = startSceneConfig;
+                        this.RankCenterConfigs.Add(startSceneConfig.Zone,startSceneConfig);
                         break;
                     case SceneType.MapManager:
                         this.MapManagerConfigs.Add(startSceneConfig.Zone,startSceneConfig);
+                        break;
+                    case SceneType.Relationship:
+                        this.RelationshipConfigs.Add(startSceneConfig.Zone,startSceneConfig);
+                        break;
+                    case SceneType.Mail:
+                        this.MailConfigs.Add(startSceneConfig.Zone,startSceneConfig);
                         break;
                 }
             }

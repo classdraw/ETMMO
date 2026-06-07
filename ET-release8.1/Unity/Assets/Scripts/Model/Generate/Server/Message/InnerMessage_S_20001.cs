@@ -1833,6 +1833,418 @@ namespace ET
     }
 
     // -------------邮箱-------------
+    // -------------关系服-------------
+    [MemoryPackable]
+    [Message(InnerMessage.G2Relationship_LoginRelationshipServer)]
+    [ResponseType(nameof(Relationship2G_LoginRelationshipServer))]
+    public partial class G2Relationship_LoginRelationshipServer : MessageObject, IRequest
+    {
+        public static G2Relationship_LoginRelationshipServer Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2Relationship_LoginRelationshipServer), isFromPool) as G2Relationship_LoginRelationshipServer;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long TeamId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.UnitId = default;
+            this.TeamId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.Relationship2G_LoginRelationshipServer)]
+    public partial class Relationship2G_LoginRelationshipServer : MessageObject, IResponse
+    {
+        public static Relationship2G_LoginRelationshipServer Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Relationship2G_LoginRelationshipServer), isFromPool) as Relationship2G_LoginRelationshipServer;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long ClearUnitTeamId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ClearUnitTeamId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2Relationship_ExitRelationshipServer)]
+    [ResponseType(nameof(Relationship2G_ExitRelationshipServer))]
+    public partial class G2Relationship_ExitRelationshipServer : MessageObject, IRequest
+    {
+        public static G2Relationship_ExitRelationshipServer Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2Relationship_ExitRelationshipServer), isFromPool) as G2Relationship_ExitRelationshipServer;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long TeamId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.UnitId = default;
+            this.TeamId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.Relationship2G_ExitRelationshipServer)]
+    public partial class Relationship2G_ExitRelationshipServer : MessageObject, IResponse
+    {
+        public static Relationship2G_ExitRelationshipServer Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Relationship2G_ExitRelationshipServer), isFromPool) as Relationship2G_ExitRelationshipServer;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2M_GetUnitTeamId)]
+    [ResponseType(nameof(M2G_GetUnitTeamId))]
+    public partial class G2M_GetUnitTeamId : MessageObject, ILocationRequest
+    {
+        public static G2M_GetUnitTeamId Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2M_GetUnitTeamId), isFromPool) as G2M_GetUnitTeamId;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2G_GetUnitTeamId)]
+    public partial class M2G_GetUnitTeamId : MessageObject, ILocationResponse
+    {
+        public static M2G_GetUnitTeamId Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2G_GetUnitTeamId), isFromPool) as M2G_GetUnitTeamId;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long TeamId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.TeamId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2Relationship_CreateTeam)]
+    [ResponseType(nameof(Relationship2G_CreateTeam))]
+    public partial class G2Relationship_CreateTeam : MessageObject, IRequest
+    {
+        public static G2Relationship_CreateTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2Relationship_CreateTeam), isFromPool) as G2Relationship_CreateTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string TeamName { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.UnitId = default;
+            this.TeamName = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.Relationship2G_CreateTeam)]
+    public partial class Relationship2G_CreateTeam : MessageObject, IResponse
+    {
+        public static Relationship2G_CreateTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Relationship2G_CreateTeam), isFromPool) as Relationship2G_CreateTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long TeamId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.TeamId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2M_SetUnitTeamId)]
+    [ResponseType(nameof(M2G_SetUnitTeamId))]
+    public partial class G2M_SetUnitTeamId : MessageObject, ILocationRequest
+    {
+        public static G2M_SetUnitTeamId Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2M_SetUnitTeamId), isFromPool) as G2M_SetUnitTeamId;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long TeamId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.TeamId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2G_SetUnitTeamId)]
+    public partial class M2G_SetUnitTeamId : MessageObject, ILocationResponse
+    {
+        public static M2G_SetUnitTeamId Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2G_SetUnitTeamId), isFromPool) as M2G_SetUnitTeamId;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2Relationship_LeaveTeam)]
+    [ResponseType(nameof(Relationship2G_LeaveTeam))]
+    public partial class G2Relationship_LeaveTeam : MessageObject, IRequest
+    {
+        public static G2Relationship_LeaveTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2Relationship_LeaveTeam), isFromPool) as G2Relationship_LeaveTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long TeamId { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long Dissolve { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.UnitId = default;
+            this.TeamId = default;
+            this.Dissolve = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.Relationship2G_LeaveTeam)]
+    public partial class Relationship2G_LeaveTeam : MessageObject, IResponse
+    {
+        public static Relationship2G_LeaveTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(Relationship2G_LeaveTeam), isFromPool) as Relationship2G_LeaveTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public List<long> ClearUnitIds { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.ClearUnitIds.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // -------------关系服-------------
     // -------------相关GM-------------
     // -------------相关GM-------------
     public static class InnerMessage
@@ -1890,5 +2302,17 @@ namespace ET
         public const ushort Mail2G_LoginMailServer = 20052;
         public const ushort G2Mail_ExitMailServer = 20053;
         public const ushort Mail2G_ExitMailServer = 20054;
+        public const ushort G2Relationship_LoginRelationshipServer = 20055;
+        public const ushort Relationship2G_LoginRelationshipServer = 20056;
+        public const ushort G2Relationship_ExitRelationshipServer = 20057;
+        public const ushort Relationship2G_ExitRelationshipServer = 20058;
+        public const ushort G2M_GetUnitTeamId = 20059;
+        public const ushort M2G_GetUnitTeamId = 20060;
+        public const ushort G2Relationship_CreateTeam = 20061;
+        public const ushort Relationship2G_CreateTeam = 20062;
+        public const ushort G2M_SetUnitTeamId = 20063;
+        public const ushort M2G_SetUnitTeamId = 20064;
+        public const ushort G2Relationship_LeaveTeam = 20065;
+        public const ushort Relationship2G_LeaveTeam = 20066;
     }
 }

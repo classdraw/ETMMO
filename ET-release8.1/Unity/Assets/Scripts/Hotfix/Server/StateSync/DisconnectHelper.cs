@@ -35,6 +35,12 @@ namespace ET.Server
                     break;
                 case PlayerState.Game:
                 {
+                    (int getTeamIdError, long teamId) = await RelationshipHelper.GetUnitTeamId(player.Root(), player.UnitId);
+                    if (getTeamIdError != ErrorCode.ERR_Success)
+                    {
+                        Log.Error($"获取 Unit TeamId 时发生错误 : {getTeamIdError}");
+                    }
+
                     //通知游戏逻辑层下线unit角色，并将数据存入数据库
                     var m2GRequestExitGame = (M2G_RequestExitGame)await player.Root().GetComponent<MessageLocationSenderComponent>()
                             .Get(LocationType.Unit).Call(player.UnitId,G2M_RequestExitGame.Create());
@@ -51,6 +57,16 @@ namespace ET.Server
                         Log.Error($"离开邮件中心服时发生错误 : {mail2GExitMailServer.Error}");
                     }
                     player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Mail)?.Remove(player.UnitId);
+
+                    int exitRelationshipError = await RelationshipHelper.ExitRelationshipServer(player.Root(), player.UnitId, teamId);
+                    if (exitRelationshipError != ErrorCode.ERR_Success)
+                    {
+                        Log.Error($"离开 Relationship 服时发生错误 : {exitRelationshipError}");
+                    }
+                    if (teamId > 0)
+                    {
+                        player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Team)?.Remove(player.UnitId);
+                    }
                     /**
                      *                    player.Root()?.GetComponent<MessageLocationSenderComponent>()?.Get(LocationType.Trade)?.Remove(player.UnitId);
                     

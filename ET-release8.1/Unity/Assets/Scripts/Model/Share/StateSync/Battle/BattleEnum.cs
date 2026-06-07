@@ -12,10 +12,17 @@ namespace ET
         
     public enum CampType
     {
-        None=0,
-        CampA=1,//玩家阵营
-        CampB=2,//怪物阵营
-        CampPK=3//自由攻击模式就用到
+        CampA=1,//玩家/友方统一阵营（安全区、常规图）
+        CampB=2,//怪物阵营（常规图）
+        CampPK=3,//自由PK模式：CampType 仅表示关系模式，实际敌友由 OwnerId/TeamId 判定
+    }
+    
+    /// <summary>
+    /// 队伍人数上限（自由PK小队伍）
+    /// </summary>
+    public static class TeamConst
+    {
+        public const int MaxMemberCount = 5;
     }
 }
 

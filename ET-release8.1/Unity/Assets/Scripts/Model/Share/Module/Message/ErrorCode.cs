@@ -40,6 +40,13 @@ namespace ET
         public const int ERR_MailNotExist = 200023; //邮件不存在
         public const int ERR_MailCollected = 200024; //邮件已领取
         public const int ERR_MailConfigNotExist = 200025; //邮件配置不存在
+
+        //队伍
+        public const int ERR_TeamNameNull = 200026; //队伍名为空
+        public const int ERR_TeamAlreadyExist = 200027; //已在队伍中
+        public const int ERR_TeamNotExist = 200028; //不在队伍中
+        public const int ERR_TeamNotInTeam = 200029; //不是该队伍成员
+        public const int ERR_TeamNotLeader = 200030; //不是队长
         
         //技能
         public const int ERR_CastSkillError = 200050;//释放技能失败

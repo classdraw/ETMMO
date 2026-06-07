@@ -79,6 +79,7 @@ namespace TEngine.Editor.UI
                 new ScriptGenerateRuler("m_text", UIComponentName.Text),
                 new ScriptGenerateRuler("m_richText", UIComponentName.RichTextItem),
                 new ScriptGenerateRuler("m_btn", UIComponentName.Button),
+                new ScriptGenerateRuler("m_toggle", UIComponentName.Toggle),
                 new ScriptGenerateRuler("m_img", UIComponentName.Image),
                 new ScriptGenerateRuler("m_rimg", UIComponentName.RawImage),
                 new ScriptGenerateRuler("m_scrollBar", UIComponentName.Scrollbar),

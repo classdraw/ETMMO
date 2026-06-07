@@ -19,6 +19,7 @@ namespace ET
         
         public const int OperateEmail = 13;//邮件操作
         public const int CreateMap = 14;//创建地图
+        public const int OperateTeam = 15;//队伍操作
 
         public const int Max = 100; // 这个必须最大
     }

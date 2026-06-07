@@ -56,6 +56,14 @@ namespace ET
         {
             return self.Type() == UnitType.Pet;
         }
+
+        /// <summary>
+        /// 是否是召唤物
+        /// </summary>
+        public static bool IsSummon(this Unit self)
+        {
+            return self.Type() == UnitType.Summon;
+        }
         
         [EntitySystem]
         private static void GetComponentSys(this ET.Unit unit, System.Type type)

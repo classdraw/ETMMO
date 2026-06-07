@@ -252,15 +252,21 @@ namespace ET
         public int CampType { get; set; }
 
         [MemoryPackOrder(5)]
-        public Unity.Mathematics.float3 Position { get; set; }
+        public long OwnerId { get; set; }
 
         [MemoryPackOrder(6)]
+        public long TeamId { get; set; }
+
+        [MemoryPackOrder(7)]
+        public Unity.Mathematics.float3 Position { get; set; }
+
+        [MemoryPackOrder(8)]
         public Unity.Mathematics.float3 Forward { get; set; }
 
         [MongoDB.Bson.Serialization.Attributes.BsonDictionaryOptions(MongoDB.Bson.Serialization.Options.DictionaryRepresentation.ArrayOfArrays)]
-        [MemoryPackOrder(7)]
+        [MemoryPackOrder(9)]
         public Dictionary<int, long> KV { get; set; } = new();
-        [MemoryPackOrder(8)]
+        [MemoryPackOrder(10)]
         public MoveInfo MoveInfo { get; set; }
 
         public override void Dispose()
@@ -275,6 +281,8 @@ namespace ET
             this.ConfigId = default;
             this.Type = default;
             this.CampType = default;
+            this.OwnerId = default;
+            this.TeamId = default;
             this.Position = default;
             this.Forward = default;
             this.KV.Clear();
@@ -2784,6 +2792,141 @@ namespace ET
     /// 邮件///////////////////////////////////////////
     /// </summary>
     /// <summary>
+    /// 组队///////////////////////////////////////////
+    /// </summary>
+    [MemoryPackable]
+    [Message(OuterMessage.C2G_CreateTeam)]
+    [ResponseType(nameof(G2C_CreateTeam))]
+    public partial class C2G_CreateTeam : MessageObject, ISessionRequest
+    {
+        public static C2G_CreateTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2G_CreateTeam), isFromPool) as C2G_CreateTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        /// <summary>
+        /// 队伍名
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public string TeamName { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.TeamName = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.G2C_CreateTeam)]
+    public partial class G2C_CreateTeam : MessageObject, ISessionResponse
+    {
+        public static G2C_CreateTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2C_CreateTeam), isFromPool) as G2C_CreateTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2G_LeaveTeam)]
+    [ResponseType(nameof(G2C_LeaveTeam))]
+    public partial class C2G_LeaveTeam : MessageObject, ISessionRequest
+    {
+        public static C2G_LeaveTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2G_LeaveTeam), isFromPool) as C2G_LeaveTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long Dissolve { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Dissolve = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.G2C_LeaveTeam)]
+    public partial class G2C_LeaveTeam : MessageObject, ISessionResponse
+    {
+        public static G2C_LeaveTeam Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2C_LeaveTeam), isFromPool) as G2C_LeaveTeam;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// 组队///////////////////////////////////////////
+    /// </summary>
+    /// <summary>
     /// 相关GM///////////////////////////////////////////
     /// </summary>
     [MemoryPackable]
@@ -2934,7 +3077,11 @@ namespace ET
         public const ushort Mail2C_CollectAttachment = 10079;
         public const ushort Mail2C_UpdateMailInfo = 10080;
         public const ushort C2Mail_ReadMail = 10081;
-        public const ushort C2Mail_GMAddMail = 10082;
-        public const ushort Mail2C_GMAddMail = 10083;
+        public const ushort C2G_CreateTeam = 10082;
+        public const ushort G2C_CreateTeam = 10083;
+        public const ushort C2G_LeaveTeam = 10084;
+        public const ushort G2C_LeaveTeam = 10085;
+        public const ushort C2Mail_GMAddMail = 10086;
+        public const ushort Mail2C_GMAddMail = 10087;
     }
 }

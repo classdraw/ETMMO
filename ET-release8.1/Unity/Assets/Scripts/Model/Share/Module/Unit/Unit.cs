@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using MongoDB.Bson.Serialization.Attributes;
 using Unity.Mathematics;
 
@@ -59,9 +59,17 @@ namespace ET
         public int MapUid { get; set; }
 
         /// <summary>
-        /// 阵营
+        /// 阵营关系模式（见 <see cref="CampType"/>）
         /// </summary>
         public int CampType { get; set; }
+        /// <summary>
+        /// 主人 UnitId；召唤物/宠物指向玩家，其余为 0
+        /// </summary>
+        public long OwnerId { get; set; }
+        /// <summary>
+        /// 队伍 Id；0 表示无队伍，同一非 0 值为盟友（自由PK）
+        /// </summary>
+        public long TeamId { get; set; }
 
 
         protected override string ViewName

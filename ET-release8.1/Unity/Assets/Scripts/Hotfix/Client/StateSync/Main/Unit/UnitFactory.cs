@@ -1,4 +1,4 @@
-﻿using Unity.Mathematics;
+using Unity.Mathematics;
 
 namespace ET.Client
 {
@@ -13,6 +13,8 @@ namespace ET.Client
 	        unit.Position = unitInfo.Position;
 	        unit.Forward = unitInfo.Forward;
 	        unit.CampType = unitInfo.CampType;
+	        unit.OwnerId = unitInfo.OwnerId;
+	        unit.TeamId = unitInfo.TeamId;
 	        
 	        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
 

@@ -9,8 +9,9 @@ namespace ET.Server
             {
                 mailUnit.GetComponent<MailComponent>().BeginInit();
                 await mailUnit.Root().GetComponent<DBManagerComponent>().GetZoneDB(mailUnit.Zone()).Save(mailUnit.GetComponent<MailComponent>());
+                await MailUnitExit(mailUnit);
             }
-            MailUnitExit(mailUnit).Coroutine();
+
             await ETTask.CompletedTask;
         }
 

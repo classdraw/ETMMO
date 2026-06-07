@@ -13,6 +13,7 @@ namespace ET.Client
 		public Button m_btnTap3;
 		public Button m_btnTap4;
 		public InputField m_inputAll;
+		public Toggle m_toggle1;
 		public GameObject m_goP1;
 		public Button m_btnP1rankList;
 		public Button m_btnP1addMail;
@@ -20,6 +21,9 @@ namespace ET.Client
 		public Button m_btnP1ReadMail;
 		public Button m_btnP1CollectMail;
 		public Button m_btnP1TransferMap;
+		public Button m_btnP1CreateTeam;
+		public Button m_btnP1LeaveTeam;
+		public Button m_btnP1DissolveTeam;
 		public GameObject m_goP2;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;

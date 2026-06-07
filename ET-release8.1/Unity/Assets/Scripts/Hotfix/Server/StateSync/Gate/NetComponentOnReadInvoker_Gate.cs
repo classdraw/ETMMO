@@ -24,6 +24,7 @@ namespace ET.Server
                     break;
                 }
 #region 拓展部分
+                //排行榜
                 case IRankInfoRequest actorRankInfoRequest:
                 {
                     ActorId rankActorId = StartSceneConfigCategory.Instance.GetBySceneType(session.Zone(), SceneType.Rank).ActorId;
@@ -45,6 +46,7 @@ namespace ET.Server
                     root.GetComponent<MessageSender>().Send(rankActorId, actorRankInfoMessage);
                     break;
                 }                
+                //邮箱
                 case IMailInfoRequest actorMailInfoRequest:
                 {
                     Player player = session.GetComponent<SessionPlayerComponent>().Player;
@@ -68,7 +70,36 @@ namespace ET.Server
                     root.GetComponent<MessageLocationSenderComponent>().Get(LocationType.Mail).Send(player.UnitId, actorMailInfoMessage).Coroutine();
                     break;
                 }
-#endregion
+                //组队
+                case IRelationshipRequest actorRelationshipRequest:
+                {
+                    Player player = session.GetComponent<SessionPlayerComponent>().Player;
+                    int rpcId = actorRelationshipRequest.RpcId; // 这里要保存客户端的rpcId
+                    long instanceId = session.InstanceId;
+                    if (StartSceneConfigCategory.Instance.RelationshipConfigs.TryGetValue(player.Zone(), out StartSceneConfig startSceneConfig))
+                    {
+                        IRelationshipResponse relationshipResponse=await root.Root().GetComponent<MessageSender>()
+                                .Call(startSceneConfig.ActorId, actorRelationshipRequest) as IRelationshipResponse;
+                        relationshipResponse.RpcId = rpcId;
+                        // session可能已经断开了，所以这里需要判断
+                        if (session.InstanceId == instanceId)
+                        {
+                            session.Send(relationshipResponse);
+                        }
+                    }
+                    break;
+                }
+                case IRelationshipMessage actorRelationshipMessage:
+                {
+                    Player player = session.GetComponent<SessionPlayerComponent>().Player;
+                    if (StartSceneConfigCategory.Instance.RelationshipConfigs.TryGetValue(player.Zone(), out StartSceneConfig startSceneConfig))
+                    {
+                        root.GetComponent<MessageSender>().Send(startSceneConfig.ActorId, actorRelationshipMessage);
+                    }
+                    break;
+                }
+
+                #endregion
 #region 旧的消息派发
                 case FrameMessage frameMessage:
                 {

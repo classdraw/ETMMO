@@ -31,6 +31,7 @@ namespace ET
 		Mail = 1 << 22,//邮箱服务器
 		Rank = 1 << 23,//rank服务器
 		MapManager = 1 << 24,//地图服务器
+		Relationship = 1 << 25,//关系服务器 包括组件，包括联盟 包括结拜等等
 		// 客户端
 		StateSync = 1 << 30,
 		Current = 1L << 31,
