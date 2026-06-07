@@ -41,6 +41,12 @@ namespace ET.Server
             self.EntityChangeTypeSet.Clear();
             self.TransferChanges.Clear();
             self.Bytes.Clear();
+            self.UnitDirty = false;
+        }
+
+        public static void MarkUnitDirty(this UnitDBSaveComponent self)
+        {
+            self.UnitDirty = true;
         }
         //这里的type只能是IUnitCache ITransfer
         public static void AddToBytes(this UnitDBSaveComponent self, Type type, byte[] bytes)
@@ -92,7 +98,7 @@ namespace ET.Server
                 return;
             }
 
-            if (self.EntityChangeTypeSet.Count <= 0)
+            if (self.EntityChangeTypeSet.Count <= 0 && !self.UnitDirty)
             {
                 return;
             }
@@ -118,7 +124,7 @@ namespace ET.Server
             }
             
             self.EntityChangeTypeSet.Clear();
-            
+            self.UnitDirty = false;
             
             //通知缓存服更新数据   这里会更新缓存 也会更新数据库数据 最终在AddOrUpdate处理
             StartSceneConfig unitCacheCfg = StartSceneConfigCategory.Instance.GetBySceneType(unit.Zone(), SceneType.UnitCache);

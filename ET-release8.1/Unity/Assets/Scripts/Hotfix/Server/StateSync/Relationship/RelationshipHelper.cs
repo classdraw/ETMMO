@@ -38,7 +38,7 @@ namespace ET.Server
             if (response.ClearUnitTeamId > 0)
             {
                 unit.TeamId = 0;
-                unit.GetComponent<UnitDBSaveComponent>()?.SaveChangeNoWait();
+                unit.GetComponent<UnitDBSaveComponent>()?.MarkUnitDirty();
             }
 
             return ErrorCode.ERR_Success;

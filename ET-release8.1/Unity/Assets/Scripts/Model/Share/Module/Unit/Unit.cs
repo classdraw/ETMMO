@@ -57,19 +57,21 @@ namespace ET
         public int LastMapId { get; set; }
 
         public int MapUid { get; set; }
-
-        /// <summary>
-        /// 阵营关系模式（见 <see cref="CampType"/>）
-        /// </summary>
-        public int CampType { get; set; }
-        /// <summary>
-        /// 主人 UnitId；召唤物/宠物指向玩家，其余为 0
-        /// </summary>
-        public long OwnerId { get; set; }
         /// <summary>
         /// 队伍 Id；0 表示无队伍，同一非 0 值为盟友（自由PK）
         /// </summary>
         public long TeamId { get; set; }
+        /// <summary>
+        /// 阵营关系模式（见 <see cref="CampType"/>） 不用存 因为是动态的
+        /// </summary>
+        [BsonIgnore]
+        public int CampType { get; set; }
+        /// <summary>
+        /// 主人 UnitId；召唤物/宠物指向玩家，其余为 0
+        /// </summary>
+        [BsonIgnore]
+        public long OwnerId { get; set; }
+
 
 
         protected override string ViewName

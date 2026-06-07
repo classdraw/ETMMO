@@ -16,6 +16,11 @@ namespace ET.Server
 
         public Dictionary<Type, byte[]> Bytes { get; } = new Dictionary<Type, byte[]>();
 
+        /// <summary>
+        /// Unit 本体字段（如 TeamId）发生变化，待下次存档时一并写入
+        /// </summary>
+        public bool UnitDirty;
+
         //[BsonIgnore]
         //public HashSet<Type> ComponentTypes { get; } = new HashSet<Type>();
     }

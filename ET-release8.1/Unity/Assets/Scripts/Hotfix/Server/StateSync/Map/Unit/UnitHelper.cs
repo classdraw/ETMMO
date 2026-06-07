@@ -6,6 +6,7 @@ namespace ET.Server
 {
     [FriendOf(typeof(MoveComponent))]
     [FriendOf(typeof(NumericComponent))]
+    [FriendOf(typeof(UnitDBSaveComponent))]
     public static partial class UnitHelper
     {
         /// <summary>
@@ -22,6 +23,11 @@ namespace ET.Server
             string tag = string.IsNullOrEmpty(reasonTag) ? "Offline" : reasonTag;
             Log.Console($"ForceUnitOfflineFromMap [{tag}] roleId:{unit.Id}");
             unit.RemoveComponent<AOIEntity>();
+            UnitDBSaveComponent dbSave = unit.GetComponent<UnitDBSaveComponent>();
+            if (dbSave != null)
+            {
+                await dbSave.SaveChange();
+            }
             await EventSystem.Instance.PublishAsync(unit.Scene(), new UnitOfflinePersist { Unit = unit });
             await unit.Fiber().WaitFrameFinish();
             await unit.RemoveLocation(LocationType.Unit);
@@ -133,6 +139,12 @@ namespace ET.Server
             return self.GetComponent<AOIEntity>().GetBeSeePlayers();
         }
         
-        
+        public static void ChangeMap(Unit unit,int mapConfigId,int mapFiberId)
+        {
+            unit.LastMapId = unit.MapId;
+            unit.MapId = mapConfigId;
+            unit.MapUid = mapFiberId;
+            unit.GetComponent<UnitDBSaveComponent>()?.MarkUnitDirty();
+        }
     }
 }

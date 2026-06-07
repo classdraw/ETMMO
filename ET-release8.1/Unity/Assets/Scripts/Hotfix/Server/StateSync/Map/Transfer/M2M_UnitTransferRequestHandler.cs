@@ -33,9 +33,7 @@ namespace ET.Server
                 unit.GetComponent<UnitDBSaveComponent>().AddToBytes(t,v);
             }
             
-            unit.LastMapId = unit.MapId;
-            unit.MapId = request.MapId;
-            unit.MapUid = root.Fiber.Id;
+            UnitHelper.ChangeMap(unit,request.MapId,root.Fiber.Id);
             
             UnitHelper.AfterTransfer(unit, root,request);
             if (request.IsEnterGame)
