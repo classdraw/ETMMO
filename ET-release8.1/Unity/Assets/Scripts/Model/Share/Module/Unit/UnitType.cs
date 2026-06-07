@@ -2,15 +2,15 @@
 {
     public enum UnitType: byte
     {
-        Player = 1,
-        Monster = 2,
+        Player = 1,//b
+        Monster = 2,//b
         NPC = 3,
-        Pet=4,//宠物
+        Pet=4,//宠物b
         Collect=5,//采集物
         Drop=6,//掉落物
         Mount=7,//坐骑
-        Summon=8,//召唤物
-        Robot=9,//机器人
+        Summon=8,//召唤物b
+        Robot=9,//机器人b
         Env=10,//环境生物
     }
     

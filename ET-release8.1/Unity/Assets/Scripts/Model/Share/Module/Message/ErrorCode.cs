@@ -54,7 +54,7 @@ namespace ET
         public const int ERR_CastCasterIsNullError = 200052;//释放者为空
         public const int ERR_CastConfigError = 200053;//释放技能配置错误
         public const int ERR_CastInputUnitError = 200054;//释放技能目标错误
-        
+        public const int ERR_CastNoTargetError = 200055;//释放技能没有目标
         //地图
         public const int ERR_EnterMapError = 200100;//地图进入错误
         

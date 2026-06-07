@@ -2927,6 +2927,180 @@ namespace ET
     /// 组队///////////////////////////////////////////
     /// </summary>
     /// <summary>
+    /// 技能///////////////////////////////////////////
+    /// </summary>
+    // cast开头
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_CastStart)]
+    [ResponseType(nameof(M2C_CastStart))]
+    public partial class C2M_CastStart : MessageObject, ILocationRequest
+    {
+        public static C2M_CastStart Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_CastStart), isFromPool) as C2M_CastStart;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        /// <summary>
+        /// 技能配表id
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public int CastConfigId { get; set; }
+
+        /// <summary>
+        /// 输入坐标
+        /// </summary>
+        [MemoryPackOrder(2)]
+        public Unity.Mathematics.float3 InputPos { get; set; }
+
+        /// <summary>
+        /// 目标对象id
+        /// </summary>
+        [MemoryPackOrder(3)]
+        public long InputUnitId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.CastConfigId = default;
+            this.InputPos = default;
+            this.InputUnitId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // cast回调
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CastStart)]
+    public partial class M2C_CastStart : MessageObject, ILocationResponse
+    {
+        public static M2C_CastStart Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CastStart), isFromPool) as M2C_CastStart;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        /// <summary>
+        /// 技能uuid
+        /// </summary>
+        [MemoryPackOrder(3)]
+        public long CastId { get; set; }
+
+        /// <summary>
+        /// 释放者id
+        /// </summary>
+        [MemoryPackOrder(4)]
+        public long CasterId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.CastId = default;
+            this.CasterId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // cast结束
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CastFinish)]
+    public partial class M2C_CastFinish : MessageObject, IMessage
+    {
+        public static M2C_CastFinish Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CastFinish), isFromPool) as M2C_CastFinish;
+        }
+
+        /// <summary>
+        /// 技能uuid
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public long CastId { get; set; }
+
+        /// <summary>
+        /// 释放者id
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public long CasterId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.CastId = default;
+            this.CasterId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // cast打断
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CastBreak)]
+    public partial class M2C_CastBreak : MessageObject, IMessage
+    {
+        public static M2C_CastBreak Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CastBreak), isFromPool) as M2C_CastBreak;
+        }
+
+        /// <summary>
+        /// 技能uuid
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public long CastId { get; set; }
+
+        /// <summary>
+        /// 释放者id
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public long CasterId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.CastId = default;
+            this.CasterId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// 技能///////////////////////////////////////////
+    /// </summary>
+    /// <summary>
     /// 相关GM///////////////////////////////////////////
     /// </summary>
     [MemoryPackable]
@@ -3081,7 +3255,11 @@ namespace ET
         public const ushort G2C_CreateTeam = 10083;
         public const ushort C2G_LeaveTeam = 10084;
         public const ushort G2C_LeaveTeam = 10085;
-        public const ushort C2Mail_GMAddMail = 10086;
-        public const ushort Mail2C_GMAddMail = 10087;
+        public const ushort C2M_CastStart = 10086;
+        public const ushort M2C_CastStart = 10087;
+        public const ushort M2C_CastFinish = 10088;
+        public const ushort M2C_CastBreak = 10089;
+        public const ushort C2Mail_GMAddMail = 10090;
+        public const ushort Mail2C_GMAddMail = 10091;
     }
 }

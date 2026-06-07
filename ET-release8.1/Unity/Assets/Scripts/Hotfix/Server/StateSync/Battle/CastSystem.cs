@@ -75,12 +75,12 @@ namespace ET.Server
                 ShapeType shapeType =(ShapeType)cast.Config.SelectParam[0];
                 if (shapeType==ShapeType.Single)//选的是坐标 必须有选择器
                 {
-                    return ErrorCode.ERR_CastConfigError;
+                    return ErrorCode.ERR_Success;
                 }
             }
             
             Unit inputUnit = caster.Scene().GetComponent<UnitComponent>().Get(cast.InputUnitId);
-            if (inputUnit == null || inputUnit.IsDisposed)
+            if (inputUnit == null || inputUnit.IsDisposed||!inputUnit.IsBattleUnit())
             {
                 return ErrorCode.ERR_CastInputUnitError;
             }
@@ -119,6 +119,21 @@ namespace ET.Server
         /// <returns></returns>
         public static int CastCheckBeforeBegin(this Cast cast)
         {
+            SelectType selectType = (SelectType)cast.Config.SelectType;
+            switch (selectType)
+            {
+                case SelectType.Self:
+                case SelectType.FriendlyTarget:
+                case SelectType.EnemyTarget:
+                    if (cast.Targets.Count<=0)
+                    {
+                        return ErrorCode.ERR_CastNoTargetError;
+                        
+                    }
+                    break;
+                case SelectType.Position:
+                    break;
+            }
             return ErrorCode.ERR_Success;
         }
         
@@ -128,6 +143,7 @@ namespace ET.Server
         /// <param name="cast"></param>
         public static async ETTask CastBeginAsync(this Cast cast)
         {
+            cast.StartTime = TimeInfo.Instance.ServerNow();
             await ETTask.CompletedTask;
         }
 
@@ -167,12 +183,20 @@ namespace ET.Server
             ShapeType shapeType =(ShapeType)cast.Config.SelectParam[0];
             if (shapeType==ShapeType.Single)
             {
-                if (unit!=null)
+                if (unit!=null&&unit.IsBattleUnit())
                 {
-                    if (IsMatchSelectCampType(caster, unit, GetSingleSelectCampType(cast)))
+                    float radius = cast.Config.SelectParam[1] / 1000f;
+                    float radiusSqr = radius * radius;
+                    float disSqr = math.lengthsq(pos - unit.Position);
+                    if (disSqr<=radiusSqr)
                     {
                         cast.Targets.Add(unit.Id);
                     }
+                    else
+                    {
+                        //玩家首选目标不符合标准
+                    }
+
                 }
                 else
                 {
@@ -199,13 +223,18 @@ namespace ET.Server
                     foreach (AOIEntity aoiEntity in caster.GetBeSeePlayers().Values)
                     {
                         Unit targetUnit = aoiEntity.GetParent<Unit>();
-                        if (targetUnit==caster)
+                        if (targetUnit==caster||!targetUnit.IsBattleUnit())
                         {//不需要是自己，如果一定要自己，自己配置self和single就可以了
                             continue;
                         }
 
+                        if (!IsMatchSelectCampType(caster, targetUnit, selectCampType))
+                        {
+                            continue;
+                        }
+
                         float disSqr = math.lengthsq(pos-targetUnit.Position);
-                        if (disSqr<=radiusSqr && IsMatchSelectCampType(caster, targetUnit, selectCampType))
+                        if (disSqr<=radiusSqr)
                         {
                             cast.Targets.Add(targetUnit.Id);
                             nowCount++;
@@ -234,7 +263,6 @@ namespace ET.Server
                     bool axisAligned = val == 0;
                     float3 forward = new float3(0, 0, 1);
                     float3 right = new float3(1, 0, 0);
-
                     if (val == 1)
                     {
                         float3 direction = pos - caster.Position;
@@ -253,7 +281,14 @@ namespace ET.Server
                     foreach (AOIEntity aoiEntity in caster.GetBeSeePlayers().Values)
                     {
                         Unit targetUnit = aoiEntity.GetParent<Unit>();
-                        if (targetUnit == caster)
+                        //自己不算
+                        if (targetUnit == caster||!targetUnit.IsBattleUnit())
+                        {
+                            continue;
+                        }
+
+                        //阵营不匹配
+                        if (!IsMatchSelectCampType(caster, targetUnit, selectCampType))
                         {
                             continue;
                         }
@@ -273,7 +308,7 @@ namespace ET.Server
                             inside = math.abs(localLength) <= halfLength && math.abs(localHeight) <= halfHeight;
                         }
 
-                        if (inside && IsMatchSelectCampType(caster, targetUnit, selectCampType))
+                        if (inside)
                         {
                             cast.Targets.Add(targetUnit.Id);
                             nowCount++;
@@ -323,7 +358,12 @@ namespace ET.Server
                     foreach (AOIEntity aoiEntity in caster.GetBeSeePlayers().Values)
                     {
                         Unit targetUnit = aoiEntity.GetParent<Unit>();
-                        if (targetUnit == caster)
+                        if (targetUnit == caster||!targetUnit.IsBattleUnit())
+                        {
+                            continue;
+                        }
+
+                        if (!IsMatchSelectCampType(caster, targetUnit, selectCampType))
                         {
                             continue;
                         }
@@ -338,7 +378,7 @@ namespace ET.Server
                         float3 toTargetDir = math.normalize(toTarget);
                         float dot = math.clamp(math.dot(forward, toTargetDir), -1f, 1f);
                         float angleToTarget = math.degrees(math.acos(dot));
-                        if (angleToTarget <= halfAngle && IsMatchSelectCampType(caster, targetUnit, selectCampType))
+                        if (angleToTarget <= halfAngle)
                         {
                             cast.Targets.Add(targetUnit.Id);
                             nowCount++;
@@ -355,22 +395,7 @@ namespace ET.Server
             }
 
         }
-
-        private static SelectCampType GetSingleSelectCampType(Cast cast)
-        {
-            if (cast.Config.SelectParam != null && cast.Config.SelectParam.Length > 1)
-            {
-                return (SelectCampType)cast.Config.SelectParam[1];
-            }
-
-            return (SelectType)cast.Config.SelectType switch
-            {
-                SelectType.FriendlyTarget => SelectCampType.Ally,
-                SelectType.EnemyTarget => SelectCampType.Hostile,
-                _ => SelectCampType.Ally,
-            };
-        }
-
+        
         private static bool IsMatchSelectCampType(Unit caster, Unit target, SelectCampType selectCampType)
         {
             return selectCampType switch

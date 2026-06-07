@@ -19,6 +19,22 @@ namespace ET
         {
             return (UnitType)self.Config().Type;
         }
+
+        public static bool IsBattleUnit(this Unit self)
+        {
+            var tt = self.Type();
+            if (tt==UnitType.Player||
+                tt==UnitType.Monster||
+                tt==UnitType.Pet||
+                tt==UnitType.Summon||
+                tt==UnitType.Robot)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// 是否是玩家
         /// </summary>

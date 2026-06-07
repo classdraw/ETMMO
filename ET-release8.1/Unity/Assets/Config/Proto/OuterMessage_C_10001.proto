@@ -668,6 +668,41 @@ message G2C_LeaveTeam // ISessionResponse
 }
 
 //////////////////////组队///////////////////////////////////////////
+//////////////////////技能///////////////////////////////////////////
+//cast开头
+// ResponseType M2C_CastStart
+message C2M_CastStart // ILocationRequest
+{
+	int32 RpcId = 1;
+	int32 CastConfigId = 2;//技能配表id
+	Unity.Mathematics.float3 InputPos = 3;//输入坐标
+	int64 InputUnitId = 4;//目标对象id
+}
+
+//cast回调
+message M2C_CastStart // ILocationResponse
+{
+  	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 CastId = 4;//技能uuid
+	int64 CasterId = 5;//释放者id
+}
+//cast结束
+message M2C_CastFinish // IMessage
+{
+	int64 CastId = 1;//技能uuid 
+	int64 CasterId = 2;//释放者id
+}
+//cast打断
+message M2C_CastBreak // IMessage
+{
+	int64 CastId = 1;//技能uuid 
+	int64 CasterId = 2;//释放者id
+}
+
+
+//////////////////////技能///////////////////////////////////////////
 //////////////////////相关GM///////////////////////////////////////////
 // ResponseType Mail2C_GMAddMail
 message C2Mail_GMAddMail // IMailInfoRequest
