@@ -5,7 +5,7 @@ namespace ET
     /// </summary>
     public static class CampHelper
     {
-
+        //同盟关系
         public static bool IsAlly(Unit a, Unit b)
         {
             if (a == null || b == null || a.IsDisposed || b.IsDisposed)
@@ -30,7 +30,7 @@ namespace ET
 
             return true;
         }
-
+        //敌对关系
         public static bool IsHostile(Unit a, Unit b)
         {
             return !IsAlly(a, b);

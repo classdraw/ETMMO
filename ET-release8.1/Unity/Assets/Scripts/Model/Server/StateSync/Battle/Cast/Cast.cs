@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Numerics;
 using MongoDB.Bson.Serialization.Attributes;
+using Unity.Mathematics;
 
 namespace ET.Server
 {
@@ -21,11 +21,14 @@ namespace ET.Server
         [BsonIgnore]
         public EntityRef<Unit> Caster;//释放者
         [BsonIgnore]
+        public EntityRef<Unit> InputUnit;//释放者
+        
+        [BsonIgnore]
         public List<long> Targets = new List<long>();//技能目标
 
 
-        public long inputUnitId;//输入的id
-        public Vector3 inputPos;
+        public long InputUnitId;//输入的id
+        public float3 InputPos;
         public long StartTime;//技能开始时间
     }
 }
