@@ -30,11 +30,13 @@ namespace ET
         Hostile=1,//敌人
     }
 
+    /// <summary>
+    /// 常规地图静态阵营 Id，用于 <see cref="FactionKeyType.Static"/>。
+    /// </summary>
     public enum CampType
     {
-        CampA=1,//玩家/友方统一阵营（安全区、常规图）
-        CampB=2,//怪物阵营（常规图）
-        CampPK=3,//自由PK模式：CampType 仅表示关系模式，实际敌友由 OwnerId/TeamId 判定
+        CampA = 1, // 玩家/友方统一阵营（安全区、常规图）
+        CampB = 2, // 怪物阵营（常规图、PK 图）
     }
     
     /// <summary>

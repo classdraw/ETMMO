@@ -44,6 +44,11 @@ namespace ET
         {
             return self.Type() == UnitType.Player;
         }
+        
+        public static bool IsRobot(this Unit self)
+        {
+            return self.Type() == UnitType.Robot;
+        }
         /// <summary>
         /// 是否是怪物
         /// </summary>

@@ -12,7 +12,6 @@ namespace ET.Client
 	        
 	        unit.Position = unitInfo.Position;
 	        unit.Forward = unitInfo.Forward;
-	        unit.CampType = unitInfo.CampType;
 	        unit.OwnerId = unitInfo.OwnerId;
 	        unit.TeamId = unitInfo.TeamId;
 	        

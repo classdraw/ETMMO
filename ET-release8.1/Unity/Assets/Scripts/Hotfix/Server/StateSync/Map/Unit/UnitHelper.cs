@@ -73,7 +73,6 @@ namespace ET.Server
             MapConfig mapConfig = MapConfigCategory.Instance.Get(mapConfigId);
             float[] startPoint = mapConfig.StartPoint;
             unit.Position = new float3(startPoint[0], startPoint[1], startPoint[2]);
-            CampHelper.ApplyMapTransferData(unit, mapConfigId);
         }
 
         /// <summary>
@@ -99,7 +98,6 @@ namespace ET.Server
             unitInfo.Name = unit.Name;
             unitInfo.ConfigId = unit.ConfigId;
             unitInfo.Type = (int)unit.Type();
-            unitInfo.CampType = unit.CampType;
             unitInfo.OwnerId = unit.OwnerId;
             unitInfo.TeamId = unit.TeamId;
             unitInfo.Position = unit.Position;
