@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -137,15 +138,7 @@ namespace ET.Server
             return ErrorCode.ERR_Success;
         }
         
-        /// <summary>
-        /// 技能释放
-        /// </summary>
-        /// <param name="cast"></param>
-        public static async ETTask CastBeginAsync(this Cast cast)
-        {
-            cast.StartTime = TimeInfo.Instance.ServerNow();
-            await ETTask.CompletedTask;
-        }
+
 
         
         /// <summary>
@@ -406,5 +399,26 @@ namespace ET.Server
             };
         }
 
+        
+        /// <summary>
+        /// 技能释放
+        /// </summary>
+        /// <param name="cast"></param>
+        public static async ETTask CastBeginAsync(this Cast cast)
+        {
+            Unit caster = cast.Caster;
+            //技能开始消息
+            cast.StartTime = TimeInfo.Instance.ServerNow();
+            M2C_CastStart m2CCastStart = M2C_CastStart.Create();
+            m2CCastStart.CasterId = caster.Id;
+            m2CCastStart.CastId = cast.Id;
+            m2CCastStart.CastConfigId = cast.ConfigId;
+            m2CCastStart.TargetsId = new List<long>();
+            m2CCastStart.TargetsId.AddRange(cast.Targets);
+            
+            
+            
+            await ETTask.CompletedTask;
+        }
     }
 }

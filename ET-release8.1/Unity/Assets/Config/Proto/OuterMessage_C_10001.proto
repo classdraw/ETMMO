@@ -687,6 +687,8 @@ message M2C_CastStart // ILocationResponse
 	string Message = 3;
 	int64 CastId = 4;//技能uuid
 	int64 CasterId = 5;//释放者id
+	int32 CastConfigId = 6;//技能配置表id
+	repeated int64 TargetsId = 7;//所有目标
 }
 //cast结束
 message M2C_CastFinish // IMessage

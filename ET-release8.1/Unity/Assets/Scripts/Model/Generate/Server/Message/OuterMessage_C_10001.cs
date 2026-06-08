@@ -3008,6 +3008,18 @@ namespace ET
         [MemoryPackOrder(4)]
         public long CasterId { get; set; }
 
+        /// <summary>
+        /// 技能配置表id
+        /// </summary>
+        [MemoryPackOrder(5)]
+        public int CastConfigId { get; set; }
+
+        /// <summary>
+        /// 所有目标
+        /// </summary>
+        [MemoryPackOrder(6)]
+        public List<long> TargetsId { get; set; } = new();
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -3020,6 +3032,8 @@ namespace ET
             this.Message = default;
             this.CastId = default;
             this.CasterId = default;
+            this.CastConfigId = default;
+            this.TargetsId.Clear();
 
             ObjectPool.Instance.Recycle(this);
         }
