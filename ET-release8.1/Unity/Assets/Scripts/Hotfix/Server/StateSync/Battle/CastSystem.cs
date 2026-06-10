@@ -430,13 +430,88 @@ namespace ET.Server
             {
                 castInstaceId = cast.InstanceId;
                 casterInstanceId = caster.InstanceId;
-                //技能时间点
+                //技能事件时间点
                 await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + time);
-                //创建技能行为实体
                 
+                if (!cast.CheckAsyncInvalid(castInstaceId,casterInstanceId))
+                {
+                    Log.Error($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Action");
+                    return;
+                }
+                //创建技能行为实体
+                foreach (CastActionTimes castActionTimes in config.TimesDict[time])
+                {
+                    if (castActionTimes.IsSelfHit)
+                    {
+                        cast.HandleSelfHit(castActionTimes.Index);
+                    }
+                    else
+                    {
+                        cast.HandleTargetHit(castActionTimes.Index);
+                    }
+                }
+            }
+
+            if (config.TotalTime>0)
+            {
+                castInstaceId = cast.InstanceId;
+                casterInstanceId = caster.InstanceId;
+                await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + config.TotalTime);
+                if (!cast.CheckAsyncInvalid(castInstaceId,casterInstanceId))
+                {
+                    Log.Error($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Over");
+                    return;
+                }
+                cast.CastFinish();
             }
 
             await ETTask.CompletedTask;
+        }
+
+
+        public static void HandleSelfHit(this Cast cast,int index)
+        {
+            
+        }
+
+        public static void HandleTargetHit(this Cast cast,int index)
+        {
+            //没有持续事件，瞬发技能，不用通知
+            if (cast.Config.TotalTime>0)
+            {
+                Unit caster = cast.Caster;
+                M2C_CastFinish castFinish = M2C_CastFinish.Create();
+                castFinish.CasterId = caster.Id;
+                castFinish.CastId = cast.Id;
+                MapMessageHelper.SendClient(caster,castFinish,(NoticeClientType)cast.Config.NoticeClientType);
+            }
+            cast?.Dispose();
+        }
+
+        public static void CastFinish(this Cast cast)
+        {
+            
+        }
+
+        //检测技能异步结束后是否合法
+        public static bool CheckAsyncInvalid(this Cast cast,long castInstanceId,long casterInstanceId)
+        {
+            if (cast==null||cast.IsDisposed)
+            {
+                return false;
+            }
+            Unit caster = cast.Caster;
+            if (caster==null||caster.IsDisposed)
+            {
+                return false;
+            }
+
+            if (cast.InstanceId!=castInstanceId||caster.InstanceId!=casterInstanceId)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

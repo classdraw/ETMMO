@@ -75,6 +75,8 @@ namespace ET
 		public int[] HitActionTimes { get; set; }
 		/// <summary>技能命中自身时间点</summary>
 		public int[] SelfHitActionTimes { get; set; }
+		/// <summary>技能总时长</summary>
+		public int TotalTime { get; set; }
 
 	}
 }

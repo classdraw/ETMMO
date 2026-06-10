@@ -53,7 +53,13 @@ namespace ET
         {
             return (DateTime.UtcNow.Ticks - this.dt1970.Ticks) / 10000;
         }
-        
+        /**
+            用 ServerNow() — 业务/持久化时间，要记录「真实发生时刻」：
+            登录时间、离线时间、创建角色
+            Token、Key 生成
+            网络超时、限流（如 NumericNotice 100ms 节流）
+         * 
+         */
         public long ServerNow()
         {
             return ClientNow() + this.ServerMinusClientTime;
@@ -63,7 +69,14 @@ namespace ET
         {
             return this.FrameTime;
         }
-        
+        /**
+            用 ServerFrameTime() — 游戏逻辑/帧同步，要和 Timer、Update 对齐：
+
+            WaitTillAsync / WaitAsync / NewOnceTimer 的时间基准
+            技能时间轴（CastBeginAsync 的 StartTime）
+            LockStep 帧同步
+         *
+         */
         public long ServerFrameTime()
         {
             return this.FrameTime + this.ServerMinusClientTime;
