@@ -60,7 +60,7 @@ namespace ET.Server
         
         public static void SendClient(Unit unit, IMessage message, NoticeClientType noticeClientType)
         {
-            if (unit.IsDisposed)
+            if (unit==null||unit.IsDisposed)
             {
                 return;
             }

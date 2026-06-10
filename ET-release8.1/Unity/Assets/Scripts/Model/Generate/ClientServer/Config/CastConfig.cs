@@ -69,6 +69,12 @@ namespace ET
 		public int SelectType { get; set; }
 		/// <summary>目标选择参数</summary>
 		public int[] SelectParam { get; set; }
+		/// <summary>通知客户端类型</summary>
+		public int NoticeClientType { get; set; }
+		/// <summary>技能命中目标时间点</summary>
+		public int[] HitActionTimes { get; set; }
+		/// <summary>技能命中自身时间点</summary>
+		public int[] SelfHitActionTimes { get; set; }
 
 	}
 }

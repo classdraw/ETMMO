@@ -408,7 +408,7 @@ namespace ET.Server
         {
             Unit caster = cast.Caster;
             //技能开始消息
-            cast.StartTime = TimeInfo.Instance.ServerNow();
+            cast.StartTime = TimeInfo.Instance.ServerFrameTime();
             M2C_CastStart m2CCastStart = M2C_CastStart.Create();
             m2CCastStart.CasterId = caster.Id;
             m2CCastStart.CastId = cast.Id;
@@ -416,8 +416,26 @@ namespace ET.Server
             m2CCastStart.TargetsId = new List<long>();
             m2CCastStart.TargetsId.AddRange(cast.Targets);
             
-            
-            
+            MapMessageHelper.SendClient(caster,m2CCastStart,(NoticeClientType)cast.Config.NoticeClientType);
+
+            CastConfig config = cast.Config;
+            if (config.Times.Count<=0)
+            {
+                return;
+            }
+
+            long castInstaceId = 0;
+            long casterInstanceId = 0;
+            foreach (int time in config.Times)
+            {
+                castInstaceId = cast.InstanceId;
+                casterInstanceId = caster.InstanceId;
+                //技能时间点
+                await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + time);
+                //创建技能行为实体
+                
+            }
+
             await ETTask.CompletedTask;
         }
     }
