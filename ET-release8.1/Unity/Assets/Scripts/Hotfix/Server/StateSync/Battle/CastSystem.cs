@@ -11,6 +11,7 @@ namespace ET.Server
         private static void Awake(this ET.Server.Cast self,int configId)
         {
             self.ConfigId = configId;
+            self.AddComponent<ActionsTempComponent>();
         }
         [EntitySystem]
         private static void Destroy(this ET.Server.Cast self)
