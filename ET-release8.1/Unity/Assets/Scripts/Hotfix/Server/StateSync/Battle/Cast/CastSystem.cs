@@ -24,6 +24,8 @@ namespace ET.Server
             self.StartTime = 0;
             self.InputUnit = null;
         }
+        
+
 
         /// <summary>
         /// 释放技能
@@ -477,6 +479,11 @@ namespace ET.Server
 
         public static void HandleTargetHit(this Cast cast,int index)
         {
+
+        }
+
+        public static void CastFinish(this Cast cast)
+        {
             //没有持续事件，瞬发技能，不用通知
             if (cast.Config.TotalTime>0)
             {
@@ -487,11 +494,6 @@ namespace ET.Server
                 MapMessageHelper.SendClient(caster,castFinish,(NoticeClientType)cast.Config.NoticeClientType);
             }
             cast?.Dispose();
-        }
-
-        public static void CastFinish(this Cast cast)
-        {
-            
         }
 
         //检测技能异步结束后是否合法

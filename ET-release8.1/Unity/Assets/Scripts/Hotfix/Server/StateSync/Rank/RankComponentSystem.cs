@@ -33,6 +33,7 @@ namespace ET.Server
                 self.SortedRankInfoList.Add(rankInfo, rankInfo.UnitId);
             }
         }
+        
         public static void AddOrUpdate(this RankComponent self, RankInfo newRankInfo)
         {
             if (self.RankInfosDictionary.ContainsKey(newRankInfo.UnitId))

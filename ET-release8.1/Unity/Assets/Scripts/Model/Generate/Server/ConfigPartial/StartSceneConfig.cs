@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 
 namespace ET
@@ -13,23 +12,33 @@ namespace ET
         public Dictionary<long, Dictionary<string, StartSceneConfig>> ClientScenesByName = new();
 
         public StartSceneConfig LocationConfig;
+        
         public StartSceneConfig LoginCenterConfig;
+        public Dictionary<int, StartSceneConfig> RankCenterConfigs = new Dictionary<int, StartSceneConfig>();
+        
+        public Dictionary<int, StartSceneConfig> MapManagerConfigs = new Dictionary<int, StartSceneConfig>();
 
+        public Dictionary<int, StartSceneConfig> RelationshipConfigs = new Dictionary<int, StartSceneConfig>();
+        
+        public Dictionary<int, StartSceneConfig> MailConfigs = new Dictionary<int, StartSceneConfig>();
+
+        
         public List<StartSceneConfig> Realms = new();
+        
         
         public List<StartSceneConfig> Routers = new();
         
         public List<StartSceneConfig> Maps = new();
 
         public StartSceneConfig Match;
-
+        
         public StartSceneConfig Benchmark;
         
         public List<StartSceneConfig> GetByProcess(int process)
         {
             return this.ProcessScenes[process];
         }
-
+        
         public StartSceneConfig GetBySceneType(int zone, SceneType sceneType)
         {
             return this.ClientScenesByName[zone][sceneType.ToString()];
@@ -66,9 +75,6 @@ namespace ET
                     case SceneType.Router:
                         this.Routers.Add(startSceneConfig);
                         break;
-                    case SceneType.Map:
-                        this.Maps.Add(startSceneConfig);
-                        break;
                     case SceneType.Match:
                         this.Match = startSceneConfig;
                         break;
@@ -78,12 +84,24 @@ namespace ET
                     case SceneType.LoginCenter:
                         this.LoginCenterConfig = startSceneConfig;
                         break;
+                    case SceneType.Rank:
+                        this.RankCenterConfigs.Add(startSceneConfig.Zone, startSceneConfig);
+                        break;
+                    case SceneType.MapManager:
+                        this.MapManagerConfigs.Add(startSceneConfig.Zone, startSceneConfig);
+                        break;
+                    case SceneType.Relationship:
+                        this.RelationshipConfigs.Add(startSceneConfig.Zone, startSceneConfig);
+                        break;
+                    case SceneType.Mail:
+                        this.MailConfigs.Add(startSceneConfig.Zone, startSceneConfig);
+                        break;
                 }
             }
         }
     }
     
-    public partial class StartSceneConfig: ISupportInitialize
+    public partial class StartSceneConfig
     {
         public ActorId ActorId;
         
@@ -105,14 +123,13 @@ namespace ET
             }
         }
 
-        // 内网地址外网端口，通过防火墙映射端口过来
         private IPEndPoint innerIPPort;
 
         public IPEndPoint InnerIPPort
         {
             get
             {
-                if (this.innerIPPort == null)
+                if (innerIPPort == null)
                 {
                     this.innerIPPort = NetworkHelper.ToIPEndPoint($"{this.StartProcessConfig.InnerIP}:{this.Port}");
                 }
@@ -123,7 +140,6 @@ namespace ET
 
         private IPEndPoint outerIPPort;
 
-        // 外网地址外网端口
         public IPEndPoint OuterIPPort
         {
             get

@@ -24,6 +24,9 @@ namespace ET.Server
             root.AddComponent<AOIManagerComponent>();
             //root.AddComponent<RoomManagerComponent>();
             root.AddComponent<MapComponent>();
+
+            root.AddComponent<ActionsDispatcherComponent>();//所有技能actions
+            
             await ETTask.CompletedTask;
         }
     }
