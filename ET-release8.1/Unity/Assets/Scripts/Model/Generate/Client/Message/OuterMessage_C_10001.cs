@@ -3111,6 +3111,49 @@ namespace ET
         }
     }
 
+    // cast命中
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CastHit)]
+    public partial class M2C_CastHit : MessageObject, IMessage
+    {
+        public static M2C_CastHit Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CastHit), isFromPool) as M2C_CastHit;
+        }
+
+        /// <summary>
+        /// 技能uuid
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public long CastId { get; set; }
+
+        /// <summary>
+        /// 释放者id
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public long CasterId { get; set; }
+
+        /// <summary>
+        /// 所有目标
+        /// </summary>
+        [MemoryPackOrder(2)]
+        public List<long> TargetsId { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.CastId = default;
+            this.CasterId = default;
+            this.TargetsId.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 技能///////////////////////////////////////////
     /// </summary>
@@ -3273,7 +3316,8 @@ namespace ET
         public const ushort M2C_CastStart = 10087;
         public const ushort M2C_CastFinish = 10088;
         public const ushort M2C_CastBreak = 10089;
-        public const ushort C2Mail_GMAddMail = 10090;
-        public const ushort Mail2C_GMAddMail = 10091;
+        public const ushort M2C_CastHit = 10090;
+        public const ushort C2Mail_GMAddMail = 10091;
+        public const ushort Mail2C_GMAddMail = 10092;
     }
 }

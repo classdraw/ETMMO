@@ -702,7 +702,13 @@ message M2C_CastBreak // IMessage
 	int64 CastId = 1;//技能uuid 
 	int64 CasterId = 2;//释放者id
 }
-
+//cast命中
+message M2C_CastHit // IMessage
+{
+	int64 CastId = 1;//技能uuid 
+	int64 CasterId = 2;//释放者id
+	repeated int64 TargetsId = 3;//所有目标
+}
 
 //////////////////////技能///////////////////////////////////////////
 //////////////////////相关GM///////////////////////////////////////////

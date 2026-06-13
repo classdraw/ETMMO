@@ -60,12 +60,10 @@ namespace ET.Server
             if (typeof(IUnitCache).IsAssignableFrom(type))
             {
                 self.EntityChangeTypeSet.Add(type);
+            }else if (typeof(ITransfer).IsAssignableFrom(type))
+            {
+               self.TransferChanges.Add(type);
             }
-            
-            //else if (typeof(ITransfer).IsAssignableFrom(type))
-            //{
-            //   self.TransferChanges.Add(type);
-            //}
           
         }
         
@@ -130,19 +128,23 @@ namespace ET.Server
             StartSceneConfig unitCacheCfg = StartSceneConfigCategory.Instance.GetBySceneType(unit.Zone(), SceneType.UnitCache);
             self.Root()?.GetComponent<MessageSender>().Call(unitCacheCfg.ActorId,message).Coroutine();
         }
-        
+        //不能只依赖于TransferChanges，需要全便利，因为可能没有GetComponent 如果一个类又IUnitCache和ITransfer 那么不会有bug 但是会bytes两次 这里不做修改
         public static void SaveTransfer(this UnitDBSaveComponent unitSaver)
         {
             Unit unit = unitSaver.GetParent<Unit>();
-            // Transfer组件需要序列化
-            foreach (Type type in unitSaver.TransferChanges)
+            if (unit == null || unit.IsDisposed)
             {
-                Entity component = unit.GetComponent(type);
-                if (component == null)
+                return;
+            }
+
+            foreach (Entity component in unit.Components.Values)
+            {
+                if (component is not ITransfer)
                 {
                     continue;
                 }
 
+                Type type = component.GetType();
                 try
                 {
                     unitSaver.AddToBytes(type, component.ToBson());

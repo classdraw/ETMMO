@@ -34,28 +34,32 @@ namespace ET.Server
         /// <returns></returns>
         public static int Cast(this Cast cast)
         {
-            int err = cast.CastCheck();//释放条件判断
-            if (err!=ErrorCode.ERR_Success)
+            int err = cast.RefreshTargets();
+            if (err != ErrorCode.ERR_Success)
             {
                 return err;
             }
-            cast.SelectTargets();//选择目标
-            err = cast.CastCheckBeforeBegin();//开始释放条件判断
-            if (err!=ErrorCode.ERR_Success)
-            {
-                return err;
-            }
-            
-            cast.CastBeginAsync().Coroutine();//释放
+
+            cast.CastBeginAsync().Coroutine();
             return ErrorCode.ERR_Success;
         }
 
         /// <summary>
-        /// 释放技能前置判断
+        /// 校验输入、重新选目标、校验目标数量
         /// </summary>
-        /// <param name="cast"></param>
-        /// <returns></returns>
-        public static int CastCheck(this Cast cast)
+        public static int RefreshTargets(this Cast cast)
+        {
+            int err = cast.CastCheck();
+            if (err != ErrorCode.ERR_Success)
+            {
+                return err;
+            }
+
+            cast.SelectTargets();
+            return cast.CastCheckBeforeBegin();
+        }
+
+        private static int CastCheck(this Cast cast)
         {
             if (cast==null||cast.IsDisposed)
             {
@@ -116,12 +120,7 @@ namespace ET.Server
             return ErrorCode.ERR_Success;
         }
 
-        /// <summary>
-        /// 释放前检测
-        /// </summary>
-        /// <param name="cast"></param>
-        /// <returns></returns>
-        public static int CastCheckBeforeBegin(this Cast cast)
+        private static int CastCheckBeforeBegin(this Cast cast)
         {
             SelectType selectType = (SelectType)cast.Config.SelectType;
             switch (selectType)
@@ -144,11 +143,7 @@ namespace ET.Server
 
 
         
-        /// <summary>
-        /// 选择目标
-        /// </summary>
-        /// <param name="cast"></param>
-        public static void SelectTargets(this Cast cast)
+        private static void SelectTargets(this Cast cast)
         {
             Unit caster = cast.Caster;
             cast.Targets.Clear();
@@ -465,20 +460,72 @@ namespace ET.Server
                     Log.Error($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Over");
                     return;
                 }
-                cast.CastFinish();
+                
             }
+            cast?.CastFinish();
 
             await ETTask.CompletedTask;
         }
 
 
-        public static void HandleSelfHit(this Cast cast,int index)
+        public static void HandleSelfHit(this Cast cast, int index)
         {
-            
+            int[] actions = cast.Config.SelfHitAction;
+            if (index < 0 || index >= actions.Length)
+            {
+                Log.Error($"Cast HandleSelfHit Error {index}/{actions.Length}");
+                return;
+            }
+
+            cast.HandleHit(actions[index], selfHit: true);
         }
 
-        public static void HandleTargetHit(this Cast cast,int index)
+        public static void HandleTargetHit(this Cast cast, int index)
         {
+            int[] actions = cast.Config.HitAction;
+            if (index < 0 || index >= actions.Length)
+            {
+                Log.Error($"Cast HandleTargetHit Error {index}/{actions.Length}");
+                return;
+            }
+
+            cast.HandleHit(actions[index], selfHit: false);
+        }
+
+        private static void HandleHit(this Cast cast, int actionId, bool selfHit)
+        {
+            if (cast.RefreshTargets() != ErrorCode.ERR_Success)
+            {
+                return;
+            }
+
+            Unit caster = cast.Caster;
+            M2C_CastHit m2CCastHit = M2C_CastHit.Create();
+            m2CCastHit.CasterId = caster.Id;
+            m2CCastHit.CastId = cast.Id;
+            m2CCastHit.TargetsId = new List<long>();
+            m2CCastHit.TargetsId.AddRange(cast.Targets);
+            MapMessageHelper.SendClient(caster,m2CCastHit,(NoticeClientType)cast.Config.NoticeClientType);
+            
+            if (selfHit)
+            {
+                cast.CreateActions(actionId, caster, ActionsRunType.CastHit);
+            }
+            else
+            {
+                UnitComponent unitComponent = caster.Scene().GetComponent<UnitComponent>();
+                foreach (long targetId in cast.Targets)
+                {
+                    Unit target = unitComponent.Get(targetId);
+                    if (target == null || target.IsDisposed || !target.IsBattleUnit())
+                    {
+                        continue;
+                    }
+                    
+                    cast.CreateActions(actionId, target, ActionsRunType.CastHit);
+                }
+            }
+
 
         }
 

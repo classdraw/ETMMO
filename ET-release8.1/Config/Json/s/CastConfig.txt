@@ -1,7 +1,7 @@
 {"dict": [
-[6600001, {"_t":"CastConfig","_id":6600001,"Type":1,"Name":"技能名字1","SelectType":0,"SelectParam":[0.0],"NoticeClientType":0,"HitActionTimes":[0.0],"SelfHitActionTimes":[0.0],"TotalTime":0}],
-[6600002, {"_t":"CastConfig","_id":6600002,"Type":1,"Name":"技能名字2","SelectType":2,"SelectParam":[0.0],"NoticeClientType":0,"HitActionTimes":[0.0],"SelfHitActionTimes":[0.0],"TotalTime":0}],
-[6600003, {"_t":"CastConfig","_id":6600003,"Type":1,"Name":"技能名字3","SelectType":1,"SelectParam":[0.0],"NoticeClientType":0,"HitActionTimes":[0.0],"SelfHitActionTimes":[0.0],"TotalTime":0}],
-[6600004, {"_t":"CastConfig","_id":6600004,"Type":1,"Name":"技能名字4","SelectType":2,"SelectParam":[1.0,3000.0,3.0,1.0],"NoticeClientType":0,"HitActionTimes":[0.0],"SelfHitActionTimes":[0.0],"TotalTime":0}],
-[6600005, {"_t":"CastConfig","_id":6600005,"Type":1,"Name":"技能名字5","SelectType":3,"SelectParam":[0.0],"NoticeClientType":0,"HitActionTimes":[0.0],"SelfHitActionTimes":[0.0],"TotalTime":0}],
+[6600001, {"_t":"CastConfig","_id":6600001,"Type":1,"Name":"技能名字1","SelectType":0,"SelectParam":[0.0],"NoticeClientType":0,"HitAction":[],"HitActionTimes":[],"SelfHitAction":[],"SelfHitActionTimes":[],"TotalTime":0}],
+[6600002, {"_t":"CastConfig","_id":6600002,"Type":1,"Name":"技能名字2","SelectType":2,"SelectParam":[0.0],"NoticeClientType":0,"HitAction":[],"HitActionTimes":[],"SelfHitAction":[],"SelfHitActionTimes":[],"TotalTime":0}],
+[6600003, {"_t":"CastConfig","_id":6600003,"Type":1,"Name":"技能名字3","SelectType":1,"SelectParam":[0.0],"NoticeClientType":0,"HitAction":[],"HitActionTimes":[],"SelfHitAction":[],"SelfHitActionTimes":[],"TotalTime":0}],
+[6600004, {"_t":"CastConfig","_id":6600004,"Type":1,"Name":"技能名字4","SelectType":2,"SelectParam":[1.0,3000.0,3.0,1.0],"NoticeClientType":0,"HitAction":[],"HitActionTimes":[],"SelfHitAction":[],"SelfHitActionTimes":[],"TotalTime":0}],
+[6600005, {"_t":"CastConfig","_id":6600005,"Type":1,"Name":"技能名字5","SelectType":3,"SelectParam":[0.0],"NoticeClientType":0,"HitAction":[],"HitActionTimes":[],"SelfHitAction":[],"SelfHitActionTimes":[],"TotalTime":0}],
 ]}

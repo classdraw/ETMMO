@@ -61,6 +61,8 @@ namespace ET
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
+		/// <summary>技能行为类型</summary>
+		public int Type { get; set; }
 
 	}
 }

@@ -7,28 +7,28 @@ using System.ComponentModel;
 namespace ET
 {
     [Config]
-    public partial class ActionsConfigCategory : Singleton<ActionsConfigCategory>, IMerge
+    public partial class BuffConfigCategory : Singleton<BuffConfigCategory>, IMerge
     {
         [BsonElement]
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
-        private Dictionary<int, ActionsConfig> dict = new();
+        private Dictionary<int, BuffConfig> dict = new();
 		
         public void Merge(object o)
         {
-            ActionsConfigCategory s = o as ActionsConfigCategory;
+            BuffConfigCategory s = o as BuffConfigCategory;
             foreach (var kv in s.dict)
             {
                 this.dict.Add(kv.Key, kv.Value);
             }
         }
 		
-        public ActionsConfig Get(int id)
+        public BuffConfig Get(int id)
         {
-            this.dict.TryGetValue(id, out ActionsConfig item);
+            this.dict.TryGetValue(id, out BuffConfig item);
 
             if (item == null)
             {
-                throw new Exception($"配置找不到，配置表名: {nameof (ActionsConfig)}，配置id: {id}");
+                throw new Exception($"配置找不到，配置表名: {nameof (BuffConfig)}，配置id: {id}");
             }
 
             return item;
@@ -39,12 +39,12 @@ namespace ET
             return this.dict.ContainsKey(id);
         }
 
-        public Dictionary<int, ActionsConfig> GetAll()
+        public Dictionary<int, BuffConfig> GetAll()
         {
             return this.dict;
         }
 
-        public ActionsConfig GetOne()
+        public BuffConfig GetOne()
         {
             if (this.dict == null || this.dict.Count <= 0)
             {
@@ -57,12 +57,14 @@ namespace ET
         }
     }
 
-	public partial class ActionsConfig: ProtoObject, IConfig
+	public partial class BuffConfig: ProtoObject, IConfig
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
 		/// <summary>技能行为类型</summary>
 		public int Type { get; set; }
+		/// <summary>名字</summary>
+		public string Name { get; set; }
 
 	}
 }

@@ -63,7 +63,9 @@ namespace ET.Server
             long unitId = unit.Id;
             
             //传送就存档一份数据库
-            unit.GetComponent<UnitDBSaveComponent>()?.SaveChangeNoWait();
+            UnitDBSaveComponent unitDBSaveComponent = unit.GetComponent<UnitDBSaveComponent>();
+            unitDBSaveComponent?.SaveChangeNoWait();
+            unitDBSaveComponent?.SaveTransfer();
             
             M2M_UnitTransferRequest request = M2M_UnitTransferRequest.Create();
             request.IsEnterGame = isEnterGame;
@@ -71,19 +73,14 @@ namespace ET.Server
             request.OldActorId = unit.GetActorId();
             request.Unit = unit.ToBson();
             
-            //foreach (Entity entity in unit.Components.Values)
-            //{
-            //    if (entity is ITransfer)
-            //    {
-            //        request.Entitys.Add(entity.ToBson());
-            //    }
-            //}
-            //
             //传送序列化存储
-            foreach (var keyValuePair in unit.GetComponent<UnitDBSaveComponent>().Bytes)
+            if (unitDBSaveComponent != null)
             {
-                request.Types.Add(keyValuePair.Key.FullName);
-                request.Entitys.Add(keyValuePair.Value);
+                foreach (var keyValuePair in unitDBSaveComponent.Bytes)
+                {
+                    request.Types.Add(keyValuePair.Key.FullName);
+                    request.Entitys.Add(keyValuePair.Value);
+                }
             }
             
             unit.Dispose();
