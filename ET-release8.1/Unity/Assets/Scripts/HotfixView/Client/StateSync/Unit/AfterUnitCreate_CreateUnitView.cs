@@ -25,9 +25,9 @@ namespace ET.Client
             unit.AddComponent<AnimatorComponent>();
             //Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);
             
-            if (isMainPlayerUnit==true&&CameraTestCtrl.Instance!=null)
+            if (isMainPlayerUnit)
             {
-                CameraTestCtrl.Instance.SetUnit(go.transform);
+                EventSystem.Instance.Publish(scene.Root(), new MainPlayerUnitViewCreate { Unit = unit });
             }
 
 			//await avatar2D.InitPartsFromBaseAvatarAsync(unit, unit.BaseAvatar);

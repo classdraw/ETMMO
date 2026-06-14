@@ -13,13 +13,14 @@ namespace ET.Client
 
         }
 
-        public static async ETTask Init(this TEngineComponent self,ResourcesLoaderComponent resourcesLoaderComponent)
+        public static async ETTask Init(this TEngineComponent self)
         {
             //框架必须要加载的东西丢这里
             var resLoader = self.Root().GetComponent<ResourcesLoaderComponent>();
             
             GameObject gameEntry = await LoadGameObjectInstance(resLoader, self.GameEntryPath);
             GameObject.DontDestroyOnLoad(gameEntry);
+            gameEntry.name = "TEngineComponent(Object)";
             self.GameEntryObj = gameEntry;
             self.EngineGlobal = gameEntry.GetComponent<TEngineGlobal>();
             await self.EngineGlobal.StartEngine();//框架初始化
@@ -47,8 +48,6 @@ namespace ET.Client
                 GameObject.Destroy(self.GameEntryObj);
                 self.GameEntryObj = null;
             }
-            
-
         }
 
 

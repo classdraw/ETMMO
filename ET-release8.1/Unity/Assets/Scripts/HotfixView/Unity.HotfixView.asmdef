@@ -13,7 +13,8 @@
         "YooAsset",
         "Unity.CustomFrame",
         "Unity.TEngine",
-        "UniTask"
+        "UniTask",
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

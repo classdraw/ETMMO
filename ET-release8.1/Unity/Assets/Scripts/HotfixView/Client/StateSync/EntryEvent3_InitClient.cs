@@ -11,9 +11,12 @@ namespace ET.Client
         {
             GlobalComponent globalComponent = root.AddComponent<GlobalComponent>();
 
-            var resourcesLoaderComponent = root.AddComponent<ResourcesLoaderComponent>();
+            root.AddComponent<ResourcesLoaderComponent>();
             //显示层框架入口 资源加载用到ResourcesLoaderComponent 在这个后面
-            await root.AddComponent<TEngineComponent>().Init(resourcesLoaderComponent);
+            await root.AddComponent<TEngineComponent>().Init();
+            //相机需要一些准备
+            await root.AddComponent<CameraPlayComponent>().Init();
+            
             root.AddComponent<UIGlobalComponent>();
             root.AddComponent<UIComponent>();
             

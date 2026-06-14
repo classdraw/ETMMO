@@ -35,6 +35,14 @@ namespace ET
         public Unit Unit;
     }
 
+    /// <summary>
+    /// 主角 Unit View 创建完成，供相机等全局显示层组件绑定。
+    /// </summary>
+    public struct MainPlayerUnitViewCreate
+    {
+        public Unit Unit;
+    }
+
     public struct TestEventSee
     {
         public int TestValue;
