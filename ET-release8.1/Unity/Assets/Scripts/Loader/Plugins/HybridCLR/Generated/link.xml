@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <linker>
+  <assembly fullname="Cinemachine">
+    <type fullname="Cinemachine.CinemachineFreeLook" preserve="all" />
+    <type fullname="Cinemachine.CinemachineVirtualCameraBase" preserve="all" />
+  </assembly>
+  <assembly fullname="CommandLine">
+    <type fullname="CommandLine.Error" preserve="all" />
+    <type fullname="CommandLine.OptionAttribute" preserve="all" />
+    <type fullname="CommandLine.Parser" preserve="all" />
+    <type fullname="CommandLine.ParserResultExtensions" preserve="all" />
+    <type fullname="CommandLine.ParserResult`1" preserve="all" />
+  </assembly>
   <assembly fullname="MemoryPack">
     <type fullname="MemoryPack.Formatters.ArrayFormatter`1" preserve="all" />
     <type fullname="MemoryPack.Formatters.DictionaryFormatter`2" preserve="all" />
@@ -40,23 +51,62 @@
     <type fullname="MongoDB.Bson.Serialization.Serializers.DictionaryInterfaceImplementerSerializer`1" preserve="all" />
     <type fullname="MongoDB.Bson.Serialization.Serializers.SingleSerializer" preserve="all" />
   </assembly>
+  <assembly fullname="MongoDB.Driver">
+    <type fullname="MongoDB.Driver.DeleteResult" preserve="all" />
+    <type fullname="MongoDB.Driver.FilterDefinition`1" preserve="all" />
+    <type fullname="MongoDB.Driver.FindOptions`2" preserve="all" />
+    <type fullname="MongoDB.Driver.IMongoCollectionExtensions" preserve="all" />
+    <type fullname="MongoDB.Driver.IMongoCollection`1" preserve="all" />
+    <type fullname="MongoDB.Driver.IMongoDatabase" preserve="all" />
+    <type fullname="MongoDB.Driver.InsertManyOptions" preserve="all" />
+    <type fullname="MongoDB.Driver.JsonFilterDefinition`1" preserve="all" />
+    <type fullname="MongoDB.Driver.MongoClient" preserve="all" />
+    <type fullname="MongoDB.Driver.MongoClientBase" preserve="all" />
+    <type fullname="MongoDB.Driver.MongoCollectionSettings" preserve="all" />
+    <type fullname="MongoDB.Driver.MongoDatabaseSettings" preserve="all" />
+    <type fullname="MongoDB.Driver.ReplaceOneResult" preserve="all" />
+    <type fullname="MongoDB.Driver.ReplaceOptions" preserve="all" />
+  </assembly>
+  <assembly fullname="MongoDB.Driver.Core">
+    <type fullname="MongoDB.Driver.IAsyncCursorExtensions" preserve="all" />
+    <type fullname="MongoDB.Driver.IAsyncCursor`1" preserve="all" />
+  </assembly>
   <assembly fullname="System">
     <type fullname="System.CodeDom.Compiler.GeneratedCodeAttribute" preserve="all" />
+    <type fullname="System.Collections.Generic.LinkedListNode`1" preserve="all" />
+    <type fullname="System.Collections.Generic.LinkedList`1" preserve="all" />
+    <type fullname="System.Collections.Generic.Queue`1" preserve="all" />
     <type fullname="System.Collections.Generic.SortedDictionary`2" preserve="all" />
     <type fullname="System.Collections.Generic.SortedDictionary`2/Enumerator" preserve="all" />
     <type fullname="System.Collections.Generic.SortedDictionary`2/ValueCollection" preserve="all" />
     <type fullname="System.Collections.Generic.SortedDictionary`2/ValueCollection/Enumerator" preserve="all" />
+    <type fullname="System.Collections.Generic.SortedList`2" preserve="all" />
     <type fullname="System.ComponentModel.EditorBrowsableAttribute" preserve="all" />
     <type fullname="System.ComponentModel.EditorBrowsableState" preserve="all" />
+    <type fullname="System.Diagnostics.Process" preserve="all" />
     <type fullname="System.Net.EndPoint" preserve="all" />
+    <type fullname="System.Net.HttpListener" preserve="all" />
+    <type fullname="System.Net.HttpListenerContext" preserve="all" />
+    <type fullname="System.Net.HttpListenerException" preserve="all" />
+    <type fullname="System.Net.HttpListenerPrefixCollection" preserve="all" />
+    <type fullname="System.Net.HttpListenerRequest" preserve="all" />
+    <type fullname="System.Net.HttpListenerResponse" preserve="all" />
     <type fullname="System.Net.IPAddress" preserve="all" />
     <type fullname="System.Net.IPEndPoint" preserve="all" />
     <type fullname="System.Net.Sockets.AddressFamily" preserve="all" />
+    <type fullname="System.Text.RegularExpressions.Regex" preserve="all" />
+    <type fullname="System.Uri" preserve="all" />
   </assembly>
   <assembly fullname="System.Core">
     <type fullname="System.Collections.Generic.HashSet`1" preserve="all" />
     <type fullname="System.Collections.Generic.HashSet`1/Enumerator" preserve="all" />
     <type fullname="System.Linq.Enumerable" preserve="all" />
+    <type fullname="System.Linq.Expressions.BinaryExpression" preserve="all" />
+    <type fullname="System.Linq.Expressions.ConstantExpression" preserve="all" />
+    <type fullname="System.Linq.Expressions.Expression" preserve="all" />
+    <type fullname="System.Linq.Expressions.Expression`1" preserve="all" />
+    <type fullname="System.Linq.Expressions.MemberExpression" preserve="all" />
+    <type fullname="System.Linq.Expressions.ParameterExpression" preserve="all" />
   </assembly>
   <assembly fullname="System.Net.Http">
     <type fullname="System.Net.Http.HttpClient" preserve="all" />
@@ -109,6 +159,7 @@
     <type fullname="ET.EventAttribute" preserve="all" />
     <type fullname="ET.EventSystem" preserve="all" />
     <type fullname="ET.Fiber" preserve="all" />
+    <type fullname="ET.FiberHelper" preserve="all" />
     <type fullname="ET.FiberInit" preserve="all" />
     <type fullname="ET.FiberManager" preserve="all" />
     <type fullname="ET.FriendOfAttribute" preserve="all" />
@@ -132,14 +183,20 @@
     <type fullname="ET.IMailInfoMessage" preserve="all" />
     <type fullname="ET.IMailInfoRequest" preserve="all" />
     <type fullname="ET.IMailInfoResponse" preserve="all" />
+    <type fullname="ET.IMapMessage" preserve="all" />
     <type fullname="ET.IMerge" preserve="all" />
     <type fullname="ET.IMessage" preserve="all" />
+    <type fullname="ET.IRankInfoMessage" preserve="all" />
     <type fullname="ET.IRankInfoRequest" preserve="all" />
     <type fullname="ET.IRankInfoResponse" preserve="all" />
+    <type fullname="ET.IRelationshipMessage" preserve="all" />
+    <type fullname="ET.IRelationshipRequest" preserve="all" />
+    <type fullname="ET.IRelationshipResponse" preserve="all" />
     <type fullname="ET.IRequest" preserve="all" />
     <type fullname="ET.IResponse" preserve="all" />
     <type fullname="ET.IScene" preserve="all" />
     <type fullname="ET.ISerializeToEntity" preserve="all" />
+    <type fullname="ET.ISerializeToWeb" preserve="all" />
     <type fullname="ET.ISingletonAwake" preserve="all" />
     <type fullname="ET.ISystemType" preserve="all" />
     <type fullname="ET.ITransfer" preserve="all" />
@@ -160,10 +217,14 @@
     <type fullname="ET.MessageDispatcher" preserve="all" />
     <type fullname="ET.MessageHandlerAttribute" preserve="all" />
     <type fullname="ET.MessageHelper" preserve="all" />
+    <type fullname="ET.MessageLocationHandlerAttribute" preserve="all" />
     <type fullname="ET.MessageObject" preserve="all" />
     <type fullname="ET.MessageQueue" preserve="all" />
+    <type fullname="ET.MessageResponse" preserve="all" />
+    <type fullname="ET.MessageSenderStruct" preserve="all" />
     <type fullname="ET.MessageSerializeHelper" preserve="all" />
     <type fullname="ET.MongoHelper" preserve="all" />
+    <type fullname="ET.MultiMap`2" preserve="all" />
     <type fullname="ET.NavmeshComponent" preserve="all" />
     <type fullname="ET.NetServices" preserve="all" />
     <type fullname="ET.NetworkHelper" preserve="all" />
@@ -172,6 +233,8 @@
     <type fullname="ET.ObjectHelper" preserve="all" />
     <type fullname="ET.ObjectPool" preserve="all" />
     <type fullname="ET.OpcodeType" preserve="all" />
+    <type fullname="ET.Options" preserve="all" />
+    <type fullname="ET.ProcessHelper" preserve="all" />
     <type fullname="ET.ProcessInnerSender" preserve="all" />
     <type fullname="ET.ProcessInnerSenderSystem" preserve="all" />
     <type fullname="ET.ProtoObject" preserve="all" />
@@ -189,11 +252,14 @@
     <type fullname="ET.StringHelper" preserve="all" />
     <type fullname="ET.StructBsonSerialize`1" preserve="all" />
     <type fullname="ET.SystemObject" preserve="all" />
+    <type fullname="ET.TService" preserve="all" />
+    <type fullname="ET.TcpTransport" preserve="all" />
     <type fullname="ET.TimeInfo" preserve="all" />
     <type fullname="ET.TimerComponent" preserve="all" />
     <type fullname="ET.TimerComponentSystem" preserve="all" />
     <type fullname="ET.TypeSystems" preserve="all" />
     <type fullname="ET.TypeSystems/OneTypeSystems" preserve="all" />
+    <type fullname="ET.UdpTransport" preserve="all" />
     <type fullname="ET.UnOrderMultiMap`2" preserve="all" />
     <type fullname="ET.UniqueIdAttribute" preserve="all" />
     <type fullname="ET.UpdateSystem`1" preserve="all" />
@@ -204,7 +270,6 @@
     <type fullname="ET.CodeLoader" preserve="all" />
     <type fullname="ET.GlobalComponent" preserve="all" />
     <type fullname="ET.GlobalConfig" preserve="all" />
-    <type fullname="GameLogic.CameraTestCtrl" preserve="all" />
     <type fullname="GameLogic.UIBindComponent" preserve="all" />
     <type fullname="ReferenceCollector" preserve="all" />
     <type fullname="ReferenceSpriteCollector" preserve="all" />
@@ -316,17 +381,22 @@
     <type fullname="System.Action`2" preserve="all" />
     <type fullname="System.Activator" preserve="all" />
     <type fullname="System.ArgumentNullException" preserve="all" />
+    <type fullname="System.ArgumentOutOfRangeException" preserve="all" />
     <type fullname="System.Array" preserve="all" />
     <type fullname="System.Attribute" preserve="all" />
     <type fullname="System.AttributeTargets" preserve="all" />
     <type fullname="System.AttributeUsageAttribute" preserve="all" />
+    <type fullname="System.BitConverter" preserve="all" />
     <type fullname="System.Boolean" preserve="all" />
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.Char" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2/Enumerator" preserve="all" />
+    <type fullname="System.Collections.Generic.Dictionary`2/KeyCollection" preserve="all" />
+    <type fullname="System.Collections.Generic.Dictionary`2/KeyCollection/Enumerator" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2/ValueCollection" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2/ValueCollection/Enumerator" preserve="all" />
+    <type fullname="System.Collections.Generic.IComparer`1" preserve="all" />
     <type fullname="System.Collections.Generic.IEnumerable`1" preserve="all" />
     <type fullname="System.Collections.Generic.IEnumerator`1" preserve="all" />
     <type fullname="System.Collections.Generic.KeyNotFoundException" preserve="all" />
@@ -335,12 +405,16 @@
     <type fullname="System.Collections.Generic.List`1/Enumerator" preserve="all" />
     <type fullname="System.Collections.IEnumerable" preserve="all" />
     <type fullname="System.Collections.IEnumerator" preserve="all" />
+    <type fullname="System.Collections.IList" preserve="all" />
     <type fullname="System.Comparison`1" preserve="all" />
     <type fullname="System.Console" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
+    <type fullname="System.Diagnostics.DebuggerBrowsableAttribute" preserve="all" />
+    <type fullname="System.Diagnostics.DebuggerBrowsableState" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerDisplayAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggerHiddenAttribute" preserve="all" />
+    <type fullname="System.Diagnostics.DebuggerStepThroughAttribute" preserve="all" />
     <type fullname="System.Double" preserve="all" />
     <type fullname="System.Enum" preserve="all" />
     <type fullname="System.Environment" preserve="all" />
@@ -349,6 +423,7 @@
     <type fullname="System.Func`2" preserve="all" />
     <type fullname="System.HashCode" preserve="all" />
     <type fullname="System.IDisposable" preserve="all" />
+    <type fullname="System.IEquatable`1" preserve="all" />
     <type fullname="System.IO.BinaryReader" preserve="all" />
     <type fullname="System.IO.File" preserve="all" />
     <type fullname="System.IO.MemoryStream" preserve="all" />
@@ -357,12 +432,16 @@
     <type fullname="System.IO.TextReader" preserve="all" />
     <type fullname="System.Int32" preserve="all" />
     <type fullname="System.Int64" preserve="all" />
+    <type fullname="System.IntPtr" preserve="all" />
     <type fullname="System.Math" preserve="all" />
     <type fullname="System.NotSupportedException" preserve="all" />
+    <type fullname="System.Nullable`1" preserve="all" />
     <type fullname="System.Object" preserve="all" />
+    <type fullname="System.ObjectDisposedException" preserve="all" />
     <type fullname="System.Random" preserve="all" />
     <type fullname="System.Reflection.BindingFlags" preserve="all" />
     <type fullname="System.Reflection.DefaultMemberAttribute" preserve="all" />
+    <type fullname="System.Reflection.FieldInfo" preserve="all" />
     <type fullname="System.Reflection.MemberInfo" preserve="all" />
     <type fullname="System.Reflection.MethodBase" preserve="all" />
     <type fullname="System.Reflection.MethodInfo" preserve="all" />
@@ -377,7 +456,9 @@
     <type fullname="System.Runtime.CompilerServices.RuntimeHelpers" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.TaskAwaiter" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.TaskAwaiter`1" preserve="all" />
+    <type fullname="System.Runtime.CompilerServices.TupleElementNamesAttribute" preserve="all" />
     <type fullname="System.RuntimeFieldHandle" preserve="all" />
+    <type fullname="System.RuntimeMethodHandle" preserve="all" />
     <type fullname="System.RuntimeTypeHandle" preserve="all" />
     <type fullname="System.Security.Permissions.SecurityAction" preserve="all" />
     <type fullname="System.Security.Permissions.SecurityPermissionAttribute" preserve="all" />
@@ -385,6 +466,8 @@
     <type fullname="System.Single" preserve="all" />
     <type fullname="System.String" preserve="all" />
     <type fullname="System.StringSplitOptions" preserve="all" />
+    <type fullname="System.Text.Encoding" preserve="all" />
+    <type fullname="System.Text.StringBuilder" preserve="all" />
     <type fullname="System.Threading.CancellationToken" preserve="all" />
     <type fullname="System.Threading.CancellationTokenSource" preserve="all" />
     <type fullname="System.Threading.Monitor" preserve="all" />
@@ -395,6 +478,7 @@
     <type fullname="System.UInt16" preserve="all" />
     <type fullname="System.UInt32" preserve="all" />
     <type fullname="System.ValueTuple`2" preserve="all" />
+    <type fullname="System.ValueTuple`3" preserve="all" />
     <type fullname="System.ValueType" preserve="all" />
   </assembly>
 </linker>

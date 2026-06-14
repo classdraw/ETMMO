@@ -87,7 +87,7 @@ namespace ET.Server
                 self.BuffsDict.Remove(buff.ConfigId);
                 buff.Dispose();
             }
-            catch(Exception ex)
+            catch
             {
                 Log.Error($"Remove Buff {buffId} Error!!!");
             }
