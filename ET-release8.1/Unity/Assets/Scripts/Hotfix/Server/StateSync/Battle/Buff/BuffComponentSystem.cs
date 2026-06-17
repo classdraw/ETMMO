@@ -41,7 +41,7 @@ namespace ET.Server
             }
         }
 
-        public static BuffCreateInfo Create(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId)
+        public static BuffCreateInfo CreateBuffInfo(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId)
         {
             BuffCreateInfo buffCreateInfo = self.GetComponent<BuffTempComponent>().AddChild<BuffCreateInfo, int>(configId);
             buffCreateInfo.AddUnitId = addUnitId;
@@ -51,7 +51,7 @@ namespace ET.Server
 
         public static bool CreateAddAdd(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId)
         {
-            using (BuffCreateInfo buffCreateInfo = self.Create(configId, addUnitId, addSkillId))
+            using (BuffCreateInfo buffCreateInfo = self.CreateBuffInfo(configId, addUnitId, addSkillId))
             {
                 return self.Add(buffCreateInfo);
             }
