@@ -7,7 +7,7 @@ namespace ET.Server
     public class BuffComponent:Entity,IAwake,IDestroy,IDeserialize,ITransfer
     {
         [BsonIgnore]
-        public Dictionary<int, EntityRef<Buff>> BuffsDict = new Dictionary<int, EntityRef<Buff>>();
+        public Dictionary<long, EntityRef<Buff>> BuffsDict = new Dictionary<long, EntityRef<Buff>>();
     }
 }
 

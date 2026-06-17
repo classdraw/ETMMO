@@ -61,10 +61,14 @@ namespace ET
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
-		/// <summary>技能行为类型</summary>
+		/// <summary>Buff类型</summary>
 		public int Type { get; set; }
 		/// <summary>名字</summary>
 		public string Name { get; set; }
+		/// <summary>Buff覆盖方式</summary>
+		public int ConverType { get; set; }
+		/// <summary>时长(毫秒)</summary>
+		public int Duration { get; set; }
 
 	}
 }

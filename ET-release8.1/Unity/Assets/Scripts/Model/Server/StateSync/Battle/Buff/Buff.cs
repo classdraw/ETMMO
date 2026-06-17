@@ -7,6 +7,8 @@ namespace ET.Server
     {
         public int ConfigId;
         //有很多变量  辅助创建buff
+        public long AddUnitId;//创建者UnitId
+        public int AddSkillId;//增加的技能id
     }
 
     [ChildOf(typeof(BuffComponent))]
@@ -22,7 +24,10 @@ namespace ET.Server
             }
         }
         [BsonIgnore]
-        public EntityRef<Unit> Owner;//释放者
+        public EntityRef<Unit> Owner;//作用者
+
+        public long AddUnitId;//创建者UnitId
+        public int AddSkillId;//添加的技能id
 
         public long CreateTime;//创建时间
         public int TickTime;//间隔时间

@@ -1,4 +1,4 @@
 {"dict": [
-[5500001, {"_t":"BuffConfig","_id":5500001,"Type":0,"Name":""}],
-[5500002, {"_t":"BuffConfig","_id":5500002,"Type":0,"Name":""}],
+[5500001, {"_t":"BuffConfig","_id":5500001,"Type":0,"Name":"","ConverType":1,"Duration":3000}],
+[5500002, {"_t":"BuffConfig","_id":5500002,"Type":0,"Name":"","ConverType":3,"Duration":3000}],
 ]}
