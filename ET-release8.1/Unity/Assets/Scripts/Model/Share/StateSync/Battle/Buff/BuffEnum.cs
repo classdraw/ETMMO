@@ -11,7 +11,7 @@ namespace ET
         ResetTime=4,//重置持续时长
         SelfMutex=5,//自身互斥
         Role=6,//角色互斥：同ConfigId+同创建者唯一，不同创建者可并存
-        ClassifyMutex=7,//类型互斥
+        ClassifyMutex=7,//类型互斥：同Type已存在则拒绝添加
     }
     
     /// <summary>

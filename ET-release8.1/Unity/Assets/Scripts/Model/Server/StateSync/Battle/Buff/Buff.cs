@@ -41,5 +41,14 @@ namespace ET.Server
         [BsonIgnore]
         public long ExpireTimer;//过期迭代器
     }
+
+    [EnableClass]
+    public class BuffExtraData
+    {
+        public long AddUnitId;
+        public int AddSkillId;
+        public int TickTime;
+        public long TickBeginTime;
+    }
 }
 

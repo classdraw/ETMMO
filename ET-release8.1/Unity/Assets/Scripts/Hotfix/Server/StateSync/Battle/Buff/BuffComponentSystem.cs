@@ -36,7 +36,7 @@ namespace ET.Server
             {
                 if (entity is Buff buff)
                 {
-                    self.RegisterBuff(buff);
+                    self.BuffsDict.Add(buff.Id,buff);
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace ET.Server
                 {
                     if (oldBuff != null)
                     {
-                        self.RemoveBuff(oldBuff);
+                        self.UnregisterBuff(oldBuff);
                     }
 
                     return BuffCoverHandleResult.NeedCreate;
@@ -144,8 +144,9 @@ namespace ET.Server
                     return BuffCoverHandleResult.Handled;
                 }
                 case BuffCoverType.ClassifyMutex:
-                    self.RemoveByClassifyType(buffConfig.Type);
-                    return BuffCoverHandleResult.NeedCreate;
+                    return self.HasClassifyTypeBuff(buffConfig.Type)
+                        ? BuffCoverHandleResult.Rejected
+                        : BuffCoverHandleResult.NeedCreate;
                 default:
                     Log.Error($"未知BuffCoverType: {coverType}, configId: {configId}");
                     return BuffCoverHandleResult.Rejected;
@@ -163,7 +164,7 @@ namespace ET.Server
                 return;
             }
 
-            self.RemoveBuff(buff);
+            self.UnregisterBuff(buff);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace ET.Server
                 return;
             }
 
-            self.RemoveBuff(buff);
+            self.UnregisterBuff(buff);
         }
 
         /// <summary>
@@ -228,16 +229,19 @@ namespace ET.Server
             return null;
         }
 
-        private static Buff FindCoverTarget(this BuffComponent self, int configId, BuffCoverType coverType, BuffCreateInfo buffCreateInfo)
+        private static bool HasClassifyTypeBuff(this BuffComponent self, int classifyType)
         {
-            return coverType switch
+            foreach (Entity entity in self.Children.Values)
             {
-                BuffCoverType.Role => self.GetByRole(configId, buffCreateInfo.AddUnitId),
-                BuffCoverType.New => null,
-                _ => self.GetByConfigId(configId),
-            };
-        }
+                if (entity is Buff buff && buff.Config.Type == classifyType)
+                {
+                    return true;
+                }
+            }
 
+            return false;
+        }
+        
         private static void RemoveByClassifyType(this BuffComponent self, int classifyType)
         {
             using (ListComponent<Buff> removeList = ListComponent<Buff>.Create())
@@ -249,25 +253,46 @@ namespace ET.Server
                         removeList.Add(buff);
                     }
                 }
-
                 foreach (Buff buff in removeList)
                 {
-                    self.RemoveBuff(buff);
+                    self.UnregisterBuff(buff);
                 }
             }
         }
 
+
+        private static Buff FindCoverTarget(this BuffComponent self, int configId, BuffCoverType coverType, BuffCreateInfo buffCreateInfo)
+        {
+            return coverType switch
+            {
+                BuffCoverType.Role => self.GetByRole(configId, buffCreateInfo.AddUnitId),
+                BuffCoverType.New => null,
+                _ => self.GetByConfigId(configId),
+            };
+        }
+
         private static void RegisterBuff(this BuffComponent self, Buff buff)
         {
-            self.BuffsDict[buff.Id] = buff;
+            if (buff == null || buff.IsDisposed)
+            {
+                return;
+            }
+            self.BuffsDict.Add(buff.Id,buff);
+
+            Unit owner = buff.Owner;
+            if (owner!=null&&!owner.IsDisposed)
+            {
+                M2C_BuffAdd m2CBuffAdd = M2C_BuffAdd.Create();
+                m2CBuffAdd.BuffData = buff.ToMessage();
+                m2CBuffAdd.UnitId = owner.Id;
+                MapMessageHelper.SendClient(owner,m2CBuffAdd,(NoticeClientType)buff.Config.NoticeClientType);
+                //处理buff实体添加具体行为逻辑
+                      
+            }
         }
+        
 
         private static void UnregisterBuff(this BuffComponent self, Buff buff)
-        {
-            self.BuffsDict.Remove(buff.Id);
-        }
-
-        private static void RemoveBuff(this BuffComponent self, Buff buff)
         {
             if (buff == null || buff.IsDisposed)
             {
@@ -276,7 +301,19 @@ namespace ET.Server
 
             try
             {
-                self.UnregisterBuff(buff);
+                
+                self.BuffsDict.Remove(buff.Id);
+                Unit owner = buff.Owner;
+                if (owner!=null&&!owner.IsDisposed)
+                {
+                    M2C_BuffRemove m2CBuffRemove = M2C_BuffRemove.Create();
+                    m2CBuffRemove.BuffId = buff.Id;
+                    m2CBuffRemove.UnitId = owner.Id;
+                    MapMessageHelper.SendClient(owner,m2CBuffRemove,(NoticeClientType)buff.Config.NoticeClientType);
+                }
+                
+                //处理buff实体移除具体行为逻辑
+                
                 buff.Dispose();
             }
             catch (Exception e)

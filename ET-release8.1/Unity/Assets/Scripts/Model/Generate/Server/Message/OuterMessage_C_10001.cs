@@ -3158,6 +3158,174 @@ namespace ET
     /// 技能///////////////////////////////////////////
     /// </summary>
     /// <summary>
+    /// Buff///////////////////////////////////////////
+    /// </summary>
+    // buff
+    [MemoryPackable]
+    [Message(OuterMessage.BuffProto)]
+    public partial class BuffProto : MessageObject
+    {
+        public static BuffProto Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(BuffProto), isFromPool) as BuffProto;
+        }
+
+        [MemoryPackOrder(0)]
+        public long Id { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int ConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long ExpireTime { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long CreateTime { get; set; }
+
+        [MemoryPackOrder(4)]
+        public byte[] ExtraData { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.Id = default;
+            this.ConfigId = default;
+            this.ExpireTime = default;
+            this.CreateTime = default;
+            this.ExtraData = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // buff添加
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_BuffAdd)]
+    public partial class M2C_BuffAdd : MessageObject, IMessage
+    {
+        public static M2C_BuffAdd Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_BuffAdd), isFromPool) as M2C_BuffAdd;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public BuffProto BuffData { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.BuffData = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // buff迭代
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_BuffTick)]
+    public partial class M2C_BuffTick : MessageObject, IMessage
+    {
+        public static M2C_BuffTick Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_BuffTick), isFromPool) as M2C_BuffTick;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long BuffId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.BuffId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // buff更新
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_BuffUpdate)]
+    public partial class M2C_BuffUpdate : MessageObject, IMessage
+    {
+        public static M2C_BuffUpdate Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_BuffUpdate), isFromPool) as M2C_BuffUpdate;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public BuffProto BuffData { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.BuffData = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // buff移除
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_BuffRemove)]
+    public partial class M2C_BuffRemove : MessageObject, IMessage
+    {
+        public static M2C_BuffRemove Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_BuffRemove), isFromPool) as M2C_BuffRemove;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long BuffId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.BuffId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    /// <summary>
+    /// Buff///////////////////////////////////////////
+    /// </summary>
+    /// <summary>
     /// 相关GM///////////////////////////////////////////
     /// </summary>
     [MemoryPackable]
@@ -3317,7 +3485,12 @@ namespace ET
         public const ushort M2C_CastFinish = 10088;
         public const ushort M2C_CastBreak = 10089;
         public const ushort M2C_CastHit = 10090;
-        public const ushort C2Mail_GMAddMail = 10091;
-        public const ushort Mail2C_GMAddMail = 10092;
+        public const ushort BuffProto = 10091;
+        public const ushort M2C_BuffAdd = 10092;
+        public const ushort M2C_BuffTick = 10093;
+        public const ushort M2C_BuffUpdate = 10094;
+        public const ushort M2C_BuffRemove = 10095;
+        public const ushort C2Mail_GMAddMail = 10096;
+        public const ushort Mail2C_GMAddMail = 10097;
     }
 }

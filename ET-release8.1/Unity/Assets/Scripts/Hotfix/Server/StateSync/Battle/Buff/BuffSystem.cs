@@ -58,5 +58,59 @@ namespace ET.Server
             self.TickBeginTime = now;
             self.ExpireTime = durationMs > 0 ? now + durationMs : 0;
         }
+
+        public static BuffProto ToMessage(this Buff self)
+        {
+            BuffProto buffProto = BuffProto.Create(true);
+            buffProto.Id = self.Id;
+            buffProto.ConfigId = self.ConfigId;
+            buffProto.ExpireTime = self.ExpireTime;
+            buffProto.CreateTime = self.CreateTime;
+            buffProto.ExtraData = self.ToExtraDataBytes();
+            return buffProto;
+        }
+
+        public static void FromMessage(this Buff self, BuffProto buffProto)
+        {
+            if (buffProto == null)
+            {
+                return;
+            }
+
+            self.ConfigId = buffProto.ConfigId;
+            self.CreateTime = buffProto.CreateTime;
+            self.ExpireTime = buffProto.ExpireTime;
+            self.FromExtraDataBytes(buffProto.ExtraData);
+        }
+
+        private static byte[] ToExtraDataBytes(this Buff self)
+        {
+            BuffExtraData extraData = new BuffExtraData
+            {
+                AddUnitId = self.AddUnitId,
+                AddSkillId = self.AddSkillId,
+                TickTime = self.TickTime,
+                TickBeginTime = self.TickBeginTime,
+            };
+            return MongoHelper.Serialize(extraData);
+        }
+
+        private static void FromExtraDataBytes(this Buff self, byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0)
+            {
+                self.AddUnitId = 0;
+                self.AddSkillId = 0;
+                self.TickTime = 0;
+                self.TickBeginTime = 0;
+                return;
+            }
+
+            BuffExtraData extraData = MongoHelper.Deserialize<BuffExtraData>(bytes);
+            self.AddUnitId = extraData.AddUnitId;
+            self.AddSkillId = extraData.AddSkillId;
+            self.TickTime = extraData.TickTime;
+            self.TickBeginTime = extraData.TickBeginTime;
+        }
     }
 }

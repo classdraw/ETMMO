@@ -711,6 +711,44 @@ message M2C_CastHit // IMessage
 }
 
 //////////////////////技能///////////////////////////////////////////
+
+
+//////////////////////Buff///////////////////////////////////////////
+//buff
+message BuffProto 
+{
+	int64 Id = 1;
+	int32 ConfigId = 2;
+	int64 ExpireTime = 3;
+	int64 CreateTime = 4;
+	byte[] ExtraData = 5;
+}
+//buff添加
+message M2C_BuffAdd // IMessage
+{
+	int64 UnitId = 1;
+	BuffProto BuffData = 2;
+}
+//buff迭代
+message M2C_BuffTick // IMessage
+{
+  	int64 UnitId = 1;
+	int64 BuffId = 2;
+}
+//buff更新
+message M2C_BuffUpdate // IMessage
+{
+    int64 UnitId = 1;
+	BuffProto BuffData = 2;
+}
+//buff移除
+message M2C_BuffRemove // IMessage
+{
+    int64 UnitId = 1;
+	int64 BuffId = 2;
+}
+//////////////////////Buff///////////////////////////////////////////
+
 //////////////////////相关GM///////////////////////////////////////////
 // ResponseType Mail2C_GMAddMail
 message C2Mail_GMAddMail // IMailInfoRequest

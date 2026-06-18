@@ -67,6 +67,8 @@ namespace ET
 		public string Name { get; set; }
 		/// <summary>Buff覆盖方式</summary>
 		public int ConverType { get; set; }
+		/// <summary>Buff通知客户端方式</summary>
+		public int NoticeClientType { get; set; }
 		/// <summary>时长(毫秒)</summary>
 		public int Duration { get; set; }
 
