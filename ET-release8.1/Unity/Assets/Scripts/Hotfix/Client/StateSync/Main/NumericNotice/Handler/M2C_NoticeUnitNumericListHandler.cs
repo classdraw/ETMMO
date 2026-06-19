@@ -26,7 +26,7 @@ namespace ET.Client
                 int numericType = message.NumericTypeList[i];
                 long newValue = message.NewValueList[i];
                 numericComponent?.Set(numericType, newValue);
-                //Log.Console($"{numericType}_____{newValue}");
+//                Log.Console($"{numericType}__BB___{newValue}");
             }
 
             await ETTask.CompletedTask;

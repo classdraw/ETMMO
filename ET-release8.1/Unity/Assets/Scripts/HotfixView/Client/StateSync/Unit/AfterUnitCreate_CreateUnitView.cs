@@ -23,6 +23,7 @@ namespace ET.Client
             go.transform.position = unit.Position;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();
+            unit.AddComponent<UnitTopUIComponent>();
             //Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);
             
             if (isMainPlayerUnit)

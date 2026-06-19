@@ -1,0 +1,627 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4ab69a285dd79b4c9268192d31fb367, type: 3}
+  m_Name: HudAtlas
+  m_EditorClassIdentifier: 
+  m_sHpBg: hpbg
+  m_sHpGreen: hpgreen
+  m_sHpBlue: hpred
+  m_sHpRed: hpred
+  m_iWidth: 1024
+  m_iHeight: 512
+  m_kTexture: {fileID: 2800000, guid: 8eced310bfbcd5e4194500e4d2eacc45, type: 3}
+  m_eRenderPassEvent: 500
+  m_kSprites:
+  - m_iIndex: 0
+    m_sSpriteName: 2000
+    m_kRect:
+      serializedVersion: 2
+      x: 222
+      y: 420
+      width: 64
+      height: 64
+    m_kUV: {x: 0.21679688, y: 0.8203125, z: 0.27929688, w: 0.9453125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 1
+    m_sSpriteName: 2001
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 276
+      width: 72
+      height: 72
+    m_kUV: {x: 0.001953125, y: 0.5390625, z: 0.072265625, w: 0.6796875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 2
+    m_sSpriteName: 2003
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 192
+      width: 80
+      height: 80
+    m_kUV: {x: 0.001953125, y: 0.375, z: 0.080078125, w: 0.53125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 3
+    m_sSpriteName: 2004
+    m_kRect:
+      serializedVersion: 2
+      x: 290
+      y: 192
+      width: 64
+      height: 64
+    m_kUV: {x: 0.28320312, y: 0.375, z: 0.34570312, w: 0.5}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 4
+    m_sSpriteName: 2005
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 352
+      width: 72
+      height: 72
+    m_kUV: {x: 0.001953125, y: 0.6875, z: 0.072265625, w: 0.828125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 5
+    m_sSpriteName: AxeT1
+    m_kRect:
+      serializedVersion: 2
+      x: 290
+      y: 260
+      width: 64
+      height: 64
+    m_kUV: {x: 0.28320312, y: 0.5078125, z: 0.34570312, w: 0.6328125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 6
+    m_sSpriteName: AxeT2
+    m_kRect:
+      serializedVersion: 2
+      x: 290
+      y: 328
+      width: 64
+      height: 64
+    m_kUV: {x: 0.28320312, y: 0.640625, z: 0.34570312, w: 0.765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 7
+    m_sSpriteName: BowT1
+    m_kRect:
+      serializedVersion: 2
+      x: 290
+      y: 396
+      width: 64
+      height: 64
+    m_kUV: {x: 0.28320312, y: 0.7734375, z: 0.34570312, w: 0.8984375}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 8
+    m_sSpriteName: CNum0
+    m_kRect:
+      serializedVersion: 2
+      x: 308
+      y: 489
+      width: 14
+      height: 21
+    m_kUV: {x: 0.30078125, y: 0.9550781, z: 0.31445312, w: 0.99609375}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 9
+    m_sSpriteName: CNum1
+    m_kRect:
+      serializedVersion: 2
+      x: 1010
+      y: 2
+      width: 11
+      height: 21
+    m_kUV: {x: 0.9863281, y: 0.00390625, z: 0.9970703, w: 0.044921875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 10
+    m_sSpriteName: CNum2
+    m_kRect:
+      serializedVersion: 2
+      x: 1003
+      y: 66
+      width: 14
+      height: 21
+    m_kUV: {x: 0.9794922, y: 0.12890625, z: 0.99316406, w: 0.16992188}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 11
+    m_sSpriteName: CNum3
+    m_kRect:
+      serializedVersion: 2
+      x: 1003
+      y: 91
+      width: 14
+      height: 21
+    m_kUV: {x: 0.9794922, y: 0.17773438, z: 0.99316406, w: 0.21875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 12
+    m_sSpriteName: CNum4
+    m_kRect:
+      serializedVersion: 2
+      x: 222
+      y: 488
+      width: 14
+      height: 21
+    m_kUV: {x: 0.21679688, y: 0.953125, z: 0.23046875, w: 0.9941406}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 13
+    m_sSpriteName: CNum5
+    m_kRect:
+      serializedVersion: 2
+      x: 240
+      y: 488
+      width: 14
+      height: 21
+    m_kUV: {x: 0.234375, y: 0.953125, z: 0.24804688, w: 0.9941406}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 14
+    m_sSpriteName: CNum6
+    m_kRect:
+      serializedVersion: 2
+      x: 258
+      y: 488
+      width: 14
+      height: 21
+    m_kUV: {x: 0.25195312, y: 0.953125, z: 0.265625, w: 0.9941406}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 15
+    m_sSpriteName: CNum7
+    m_kRect:
+      serializedVersion: 2
+      x: 308
+      y: 464
+      width: 14
+      height: 21
+    m_kUV: {x: 0.30078125, y: 0.90625, z: 0.31445312, w: 0.9472656}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 16
+    m_sSpriteName: CNum8
+    m_kRect:
+      serializedVersion: 2
+      x: 290
+      y: 489
+      width: 14
+      height: 21
+    m_kUV: {x: 0.28320312, y: 0.9550781, z: 0.296875, w: 0.99609375}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 17
+    m_sSpriteName: CNum9
+    m_kRect:
+      serializedVersion: 2
+      x: 290
+      y: 464
+      width: 14
+      height: 21
+    m_kUV: {x: 0.28320312, y: 0.90625, z: 0.296875, w: 0.9472656}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 18
+    m_sSpriteName: Coin
+    m_kRect:
+      serializedVersion: 2
+      x: 358
+      y: 328
+      width: 64
+      height: 64
+    m_kUV: {x: 0.34960938, y: 0.640625, z: 0.41210938, w: 0.765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 19
+    m_sSpriteName: GNum0
+    m_kRect:
+      serializedVersion: 2
+      x: 934
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.9121094, y: 0.00390625, z: 0.9453125, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 20
+    m_sSpriteName: GNum1
+    m_kRect:
+      serializedVersion: 2
+      x: 896
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.875, y: 0.00390625, z: 0.9082031, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 21
+    m_sSpriteName: GNum2
+    m_kRect:
+      serializedVersion: 2
+      x: 858
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.8378906, y: 0.00390625, z: 0.87109375, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 22
+    m_sSpriteName: GNum3
+    m_kRect:
+      serializedVersion: 2
+      x: 782
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.7636719, y: 0.00390625, z: 0.796875, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 23
+    m_sSpriteName: GNum4
+    m_kRect:
+      serializedVersion: 2
+      x: 744
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.7265625, y: 0.00390625, z: 0.7597656, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 24
+    m_sSpriteName: GNum5
+    m_kRect:
+      serializedVersion: 2
+      x: 616
+      y: 192
+      width: 34
+      height: 48
+    m_kUV: {x: 0.6015625, y: 0.375, z: 0.6347656, w: 0.46875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 25
+    m_sSpriteName: GNum6
+    m_kRect:
+      serializedVersion: 2
+      x: 578
+      y: 192
+      width: 34
+      height: 48
+    m_kUV: {x: 0.5644531, y: 0.375, z: 0.59765625, w: 0.46875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 26
+    m_sSpriteName: GNum7
+    m_kRect:
+      serializedVersion: 2
+      x: 464
+      y: 192
+      width: 34
+      height: 48
+    m_kUV: {x: 0.453125, y: 0.375, z: 0.48632812, w: 0.46875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 27
+    m_sSpriteName: GNum8
+    m_kRect:
+      serializedVersion: 2
+      x: 972
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.94921875, y: 0.00390625, z: 0.9824219, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 28
+    m_sSpriteName: GNum9
+    m_kRect:
+      serializedVersion: 2
+      x: 737
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.71972656, y: 0.12890625, z: 0.7529297, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 29
+    m_sSpriteName: GreenAdd
+    m_kRect:
+      serializedVersion: 2
+      x: 699
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.6826172, y: 0.12890625, z: 0.7158203, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 30
+    m_sSpriteName: GreenSub
+    m_kRect:
+      serializedVersion: 2
+      x: 820
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.80078125, y: 0.00390625, z: 0.8339844, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 31
+    m_sSpriteName: hpbg
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 66
+      width: 693
+      height: 59
+    m_kUV: {x: 0.001953125, y: 0.12890625, z: 0.67871094, w: 0.24414062}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 32
+    m_sSpriteName: hpgreen
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 129
+      width: 693
+      height: 59
+    m_kUV: {x: 0.001953125, y: 0.25195312, z: 0.67871094, w: 0.3671875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 33
+    m_sSpriteName: hpred
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 2
+      width: 700
+      height: 60
+    m_kUV: {x: 0.001953125, y: 0.00390625, z: 0.6855469, w: 0.12109375}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 34
+    m_sSpriteName: Letter
+    m_kRect:
+      serializedVersion: 2
+      x: 358
+      y: 192
+      width: 64
+      height: 64
+    m_kUV: {x: 0.34960938, y: 0.375, z: 0.41210938, w: 0.5}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 35
+    m_sSpriteName: Map
+    m_kRect:
+      serializedVersion: 2
+      x: 358
+      y: 260
+      width: 64
+      height: 64
+    m_kUV: {x: 0.34960938, y: 0.5078125, z: 0.41210938, w: 0.6328125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 36
+    m_sSpriteName: RedAdd
+    m_kRect:
+      serializedVersion: 2
+      x: 775
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.75683594, y: 0.12890625, z: 0.79003906, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 37
+    m_sSpriteName: RedSub
+    m_kRect:
+      serializedVersion: 2
+      x: 813
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.7939453, y: 0.12890625, z: 0.82714844, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 38
+    m_sSpriteName: RNum0
+    m_kRect:
+      serializedVersion: 2
+      x: 851
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.8310547, y: 0.12890625, z: 0.8642578, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 39
+    m_sSpriteName: RNum1
+    m_kRect:
+      serializedVersion: 2
+      x: 889
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.86816406, y: 0.12890625, z: 0.9013672, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 40
+    m_sSpriteName: RNum2
+    m_kRect:
+      serializedVersion: 2
+      x: 927
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.90527344, y: 0.12890625, z: 0.93847656, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 41
+    m_sSpriteName: RNum3
+    m_kRect:
+      serializedVersion: 2
+      x: 965
+      y: 66
+      width: 34
+      height: 48
+    m_kUV: {x: 0.9423828, y: 0.12890625, z: 0.97558594, w: 0.22265625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 42
+    m_sSpriteName: RNum4
+    m_kRect:
+      serializedVersion: 2
+      x: 358
+      y: 396
+      width: 34
+      height: 48
+    m_kUV: {x: 0.34960938, y: 0.7734375, z: 0.3828125, w: 0.8671875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 43
+    m_sSpriteName: RNum5
+    m_kRect:
+      serializedVersion: 2
+      x: 706
+      y: 2
+      width: 34
+      height: 48
+    m_kUV: {x: 0.6894531, y: 0.00390625, z: 0.72265625, w: 0.09765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 44
+    m_sSpriteName: RNum6
+    m_kRect:
+      serializedVersion: 2
+      x: 426
+      y: 192
+      width: 34
+      height: 48
+    m_kUV: {x: 0.41601562, y: 0.375, z: 0.44921875, w: 0.46875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 45
+    m_sSpriteName: RNum7
+    m_kRect:
+      serializedVersion: 2
+      x: 358
+      y: 448
+      width: 34
+      height: 48
+    m_kUV: {x: 0.34960938, y: 0.875, z: 0.3828125, w: 0.96875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 46
+    m_sSpriteName: RNum8
+    m_kRect:
+      serializedVersion: 2
+      x: 502
+      y: 192
+      width: 34
+      height: 48
+    m_kUV: {x: 0.49023438, y: 0.375, z: 0.5234375, w: 0.46875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 47
+    m_sSpriteName: RNum9
+    m_kRect:
+      serializedVersion: 2
+      x: 540
+      y: 192
+      width: 34
+      height: 48
+    m_kUV: {x: 0.52734375, y: 0.375, z: 0.5605469, w: 0.46875}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 48
+    m_sSpriteName: TNum0
+    m_kRect:
+      serializedVersion: 2
+      x: 154
+      y: 344
+      width: 64
+      height: 72
+    m_kUV: {x: 0.15039062, y: 0.671875, z: 0.21289062, w: 0.8125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 49
+    m_sSpriteName: TNum1
+    m_kRect:
+      serializedVersion: 2
+      x: 154
+      y: 268
+      width: 64
+      height: 72
+    m_kUV: {x: 0.15039062, y: 0.5234375, z: 0.21289062, w: 0.6640625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 50
+    m_sSpriteName: TNum2
+    m_kRect:
+      serializedVersion: 2
+      x: 154
+      y: 192
+      width: 64
+      height: 72
+    m_kUV: {x: 0.15039062, y: 0.375, z: 0.21289062, w: 0.515625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 51
+    m_sSpriteName: TNum3
+    m_kRect:
+      serializedVersion: 2
+      x: 86
+      y: 420
+      width: 64
+      height: 72
+    m_kUV: {x: 0.083984375, y: 0.8203125, z: 0.14648438, w: 0.9609375}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 52
+    m_sSpriteName: TNum4
+    m_kRect:
+      serializedVersion: 2
+      x: 154
+      y: 420
+      width: 64
+      height: 72
+    m_kUV: {x: 0.15039062, y: 0.8203125, z: 0.21289062, w: 0.9609375}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 53
+    m_sSpriteName: TNum5
+    m_kRect:
+      serializedVersion: 2
+      x: 86
+      y: 268
+      width: 64
+      height: 72
+    m_kUV: {x: 0.083984375, y: 0.5234375, z: 0.14648438, w: 0.6640625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 54
+    m_sSpriteName: TNum6
+    m_kRect:
+      serializedVersion: 2
+      x: 86
+      y: 192
+      width: 64
+      height: 72
+    m_kUV: {x: 0.083984375, y: 0.375, z: 0.14648438, w: 0.515625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 55
+    m_sSpriteName: TNum7
+    m_kRect:
+      serializedVersion: 2
+      x: 2
+      y: 428
+      width: 64
+      height: 72
+    m_kUV: {x: 0.001953125, y: 0.8359375, z: 0.064453125, w: 0.9765625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 56
+    m_sSpriteName: TNum8
+    m_kRect:
+      serializedVersion: 2
+      x: 222
+      y: 344
+      width: 64
+      height: 72
+    m_kUV: {x: 0.21679688, y: 0.671875, z: 0.27929688, w: 0.8125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 57
+    m_sSpriteName: TNum9
+    m_kRect:
+      serializedVersion: 2
+      x: 222
+      y: 268
+      width: 64
+      height: 72
+    m_kUV: {x: 0.21679688, y: 0.5234375, z: 0.27929688, w: 0.6640625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 58
+    m_sSpriteName: TNumAdd
+    m_kRect:
+      serializedVersion: 2
+      x: 222
+      y: 192
+      width: 64
+      height: 72
+    m_kUV: {x: 0.21679688, y: 0.375, z: 0.27929688, w: 0.515625}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  - m_iIndex: 59
+    m_sSpriteName: TNumSub
+    m_kRect:
+      serializedVersion: 2
+      x: 86
+      y: 344
+      width: 64
+      height: 72
+    m_kUV: {x: 0.083984375, y: 0.671875, z: 0.14648438, w: 0.8125}
+    m_kBorder: {x: 0, y: 0, z: 0, w: 0}
+  m_iHpBgId: 31
+  m_iHpRedId: 33
+  m_iHpGreenId: 32
+  m_iHpBlueId: 33

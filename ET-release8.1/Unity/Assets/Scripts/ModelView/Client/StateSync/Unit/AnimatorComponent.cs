@@ -10,7 +10,7 @@ namespace ET.Client
 		Run,
 	}
 
-	[ComponentOf]
+	[ComponentOf(typeof(Unit))]
 	public class AnimatorComponent : Entity, IAwake, IUpdate, IDestroy
 	{
 		public Dictionary<string, AnimationClip> animationClips = new();

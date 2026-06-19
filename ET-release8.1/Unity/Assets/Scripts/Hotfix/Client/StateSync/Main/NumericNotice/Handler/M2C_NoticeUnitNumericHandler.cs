@@ -7,7 +7,7 @@ namespace ET.Client
         {
             var numericComponent = root?.CurrentScene()?.GetComponent<UnitComponent>()?.Get(message.UnitId)?.GetComponent<NumericComponent>();
             numericComponent?.Set(message.NumericType,message.NewValue);
-            //Log.Console(message.NumericType+"_____"+message.NewValue);
+           // Log.Console(message.NumericType+"__AA___"+message.NewValue);
             await ETTask.CompletedTask;
         }
     }

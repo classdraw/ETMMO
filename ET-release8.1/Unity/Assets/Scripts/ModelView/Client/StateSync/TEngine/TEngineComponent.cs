@@ -17,7 +17,6 @@ namespace ET.Client
         //UIModule
 
 
-
         #region Setting的key
 
         public Dictionary<Setting_Key_Enum, float> SettingValues = new Dictionary<Setting_Key_Enum, float>();

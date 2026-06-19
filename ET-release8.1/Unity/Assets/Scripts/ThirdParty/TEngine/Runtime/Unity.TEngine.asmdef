@@ -6,7 +6,9 @@
         "UniTask",
         "Unity.TextMeshPro",
         "Unity.Core",
-        "Unity.ThirdParty"
+        "Unity.ThirdParty",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

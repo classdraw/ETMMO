@@ -1,0 +1,641 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca82dbdb6ada86947b3aa6bddc5b0ea7, type: 3}
+  m_Name: HudAniSetting
+  m_EditorClassIdentifier: 
+  m_fDurationTime: 0.8
+  m_fCallbackTime: 1
+  m_iBloodBkWidth: 80
+  m_iBloodBkHeight: 13
+  m_iBloodWidth: 76
+  m_iBloodHeight: 9
+  m_kNumberShader: {fileID: 4800000, guid: e37c9b6e5a031b043a2b6524c29a20bf, type: 3}
+  m_kSpriteShader: {fileID: 4800000, guid: 88cc0109fb896d7449f0a981e194d9a7, type: 3}
+  PlayerCorp:
+    m_eEffectType: 0
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 0
+    m_iOffsetX: 0
+    m_iOffsetY: 0
+    m_kColorLeftUp: {r: 1, g: 0.89299846, b: 0, a: 1}
+    m_kColorLeftDown: {r: 1, g: 0.8941177, b: 0, a: 1}
+    m_kColorRightUp: {r: 1, g: 0.8941177, b: 0, a: 1}
+    m_kColorRightDown: {r: 1, g: 0.8941177, b: 0, a: 1}
+    m_iCharGap: 0
+    m_iLineGap: 0
+    m_iHeight: 0
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 0
+  Blood:
+    m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 0
+    m_iOffsetX: 0
+    m_iOffsetY: 0
+    m_kColorLeftUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorLeftDown: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorRightUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorRightDown: {r: 1, g: 1, b: 1, a: 1}
+    m_iCharGap: 0
+    m_iLineGap: 3
+    m_iHeight: 0
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 0
+  HeadIcon:
+    m_eEffectType: 0
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 0
+    m_iOffsetX: 0
+    m_iOffsetY: 0
+    m_kColorLeftUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorLeftDown: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightDown: {r: 0, g: 0, b: 0, a: 0}
+    m_iCharGap: 30
+    m_iLineGap: 0
+    m_iHeight: 0
+    m_eAlignType: 0
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 0
+  PlayerTitle:
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 0.65882355, g: 0.89019614, b: 1, a: 1}
+    m_kColorLeftDown: {r: 0.65882355, g: 0.89019614, b: 1, a: 1}
+    m_kColorRightUp: {r: 0.65882355, g: 0.89019614, b: 1, a: 1}
+    m_kColorRightDown: {r: 0.65882355, g: 0.89019614, b: 1, a: 1}
+    m_iCharGap: 0
+    m_iLineGap: 8
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 5
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 0.9647059, g: 0.87058824, b: 0.23921569, a: 1}
+    m_kColorLeftDown: {r: 0.96470594, g: 0.8705883, b: 0.2392157, a: 1}
+    m_kColorRightUp: {r: 0.96470594, g: 0.8705883, b: 0.2392157, a: 1}
+    m_kColorRightDown: {r: 0.96470594, g: 0.8705883, b: 0.2392157, a: 1}
+    m_iCharGap: 0
+    m_iLineGap: 8
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 11
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 0
+    m_iOffsetY: 0
+    m_kColorLeftUp: {r: 0.92156863, g: 0.12156863, b: 0.12156863, a: 1}
+    m_kColorLeftDown: {r: 0.9215687, g: 0.121568635, b: 0.121568635, a: 1}
+    m_kColorRightUp: {r: 0.9215687, g: 0.121568635, b: 0.121568635, a: 1}
+    m_kColorRightDown: {r: 0.9215687, g: 0.121568635, b: 0.121568635, a: 1}
+    m_iCharGap: 0
+    m_iLineGap: 8
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 8
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 0
+    m_iOffsetY: 0
+    m_kColorLeftUp: {r: 0.45882353, g: 0, b: 0.69803923, a: 1}
+    m_kColorLeftDown: {r: 0.45882356, g: 0, b: 0.69803923, a: 1}
+    m_kColorRightUp: {r: 0.45882356, g: 0, b: 0.69803923, a: 1}
+    m_kColorRightDown: {r: 0.45882356, g: 0, b: 0.69803923, a: 1}
+    m_iCharGap: 0
+    m_iLineGap: 8
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 8
+  MonsterTitle:
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorLeftDown: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightDown: {r: 0, g: 0, b: 0, a: 0}
+    m_iCharGap: 0
+    m_iLineGap: 10
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 10
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorLeftDown: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightDown: {r: 0, g: 0, b: 0, a: 0}
+    m_iCharGap: 0
+    m_iLineGap: 10
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 10
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorLeftDown: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightDown: {r: 0, g: 0, b: 0, a: 0}
+    m_iCharGap: 0
+    m_iLineGap: 10
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 10
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorLeftDown: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightDown: {r: 0, g: 0, b: 0, a: 0}
+    m_iCharGap: 0
+    m_iLineGap: 10
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 10
+  - m_eEffectType: 2
+    m_kColorShadow:
+      serializedVersion: 2
+      rgba: 4278190080
+    m_iOffsetX: 1
+    m_iOffsetY: 1
+    m_kColorLeftUp: {r: 1, g: 1, b: 1, a: 1}
+    m_kColorLeftDown: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightUp: {r: 0, g: 0, b: 0, a: 0}
+    m_kColorRightDown: {r: 0, g: 0, b: 0, a: 0}
+    m_iCharGap: 0
+    m_iLineGap: 10
+    m_iHeight: 25
+    m_eAlignType: 1
+    m_iLockMaxHeight: 0
+    m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetY: 0
+    m_iFontOffsetY: 10
+  HurtAnimAttibute:
+    AlphaCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ScaleCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1.2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 1.2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: -0.096123315
+        outSlope: -0.096123315
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.15100726
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.60623074
+        value: 1
+        inSlope: -0.0005931265
+        outSlope: -0.0005931265
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.48588192
+        outWeight: 0.19085154
+      - serializedVersion: 3
+        time: 0.8
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MoveCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 45
+        inSlope: 1.4731429
+        outSlope: 1.4731429
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: -10
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MoveCurve1:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    RotateCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 10
+        inSlope: 0.41736168
+        outSlope: 0.41736168
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.18708874
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 10
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    RotateCurve1:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 360
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 360
+        inSlope: 0.42617074
+        outSlope: 0.42617074
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.20050466
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5
+        value: 350
+        inSlope: 0.38265476
+        outSlope: 0.38265476
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.19273458
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 350
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    OffsetX: 0
+    OffsetY: 180
+    GapTime: 0.2
+    SpriteGap: -15
+    AlignType: 1
+    ScreenAlign: 0
+    ScreenAlignType: 2
+    HurtColor: {r: 0.54509807, g: 0.101960786, b: 0.101960786, a: 1}
+    HurtCritColor: {r: 0.72156864, g: 0.5254902, b: 0.043137256, a: 1}
+  RecoverAnimAttibute:
+    AlphaCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ScaleCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MoveCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 45
+        inSlope: 1.4731429
+        outSlope: 1.4731429
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: -10
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    MoveCurve1:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.2
+        value: 45
+        inSlope: 1.4731429
+        outSlope: 1.4731429
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: -10
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    RotateCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    RotateCurve1:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.8
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    OffsetX: -200
+    OffsetY: 250
+    GapTime: 0.2
+    SpriteGap: 0
+    AlignType: 0
+    ScreenAlign: 0
+    ScreenAlignType: 0
+    HurtColor: {r: 1, g: 1, b: 1, a: 1}
+    HurtCritColor: {r: 1, g: 1, b: 1, a: 1}

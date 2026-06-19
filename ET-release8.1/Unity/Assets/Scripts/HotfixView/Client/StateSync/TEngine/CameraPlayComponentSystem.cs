@@ -17,7 +17,13 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this CameraPlayComponent self)
         {
+            if (self.CameraRootObj!=null)
+            {
+                GameObject.Destroy(self.CameraRootObj);
+            }
 
+            self.CameraRootObj = null;
+            self.CinemachineFreeLook = null;
         }
 
         public static async ETTask Init(this CameraPlayComponent self)
