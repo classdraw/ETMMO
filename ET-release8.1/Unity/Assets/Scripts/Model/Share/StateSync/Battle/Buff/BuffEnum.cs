@@ -5,11 +5,11 @@ namespace ET
     /// </summary>
     public enum BuffCoverType
     {
-        AddTime=1,//增加时长
+        AddTime=1,//增加时长：同ConfigId+同创建者叠加
         New=2,//新增独立
-        Replace=3,//替换
-        ResetTime=4,//重置持续时长
-        SelfMutex=5,//自身互斥
+        Replace=3,//替换：同ConfigId+同创建者比较层数
+        ResetTime=4,//重置持续时长：同ConfigId+同创建者
+        SelfMutex=5,//自身互斥：同ConfigId+同创建者互斥
         Role=6,//角色互斥：同ConfigId+同创建者唯一，不同创建者可并存
         ClassifyMutex=7,//类型互斥：同Type已存在则拒绝添加
     }

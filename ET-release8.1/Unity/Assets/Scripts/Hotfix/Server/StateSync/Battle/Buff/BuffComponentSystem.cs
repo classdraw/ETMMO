@@ -41,17 +41,18 @@ namespace ET.Server
             }
         }
 
-        public static BuffCreateInfo CreateBuffInfo(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId)
+        private static BuffCreateInfo CreateBuffInfo(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId, int firstLayer = 0)
         {
             BuffCreateInfo buffCreateInfo = self.GetComponent<BuffTempComponent>().AddChild<BuffCreateInfo, int>(configId);
             buffCreateInfo.AddUnitId = addUnitId;
             buffCreateInfo.AddSkillId = addSkillId;
+            buffCreateInfo.FirstLayer = firstLayer;
             return buffCreateInfo;
         }
 
-        public static bool CreateAddAdd(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId)
+        public static bool CreateAndAdd(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId, int firstLayer = 0)
         {
-            using (BuffCreateInfo buffCreateInfo = self.CreateBuffInfo(configId, addUnitId, addSkillId))
+            using (BuffCreateInfo buffCreateInfo = self.CreateBuffInfo(configId, addUnitId, addSkillId, firstLayer))
             {
                 return self.Add(buffCreateInfo);
             }
@@ -75,12 +76,17 @@ namespace ET.Server
                 return false;
             }
 
-            BuffCoverHandleResult result = self.HandleBuffCover(buffCreateInfo);
+            BuffCoverHandleResult result = self.HandleBuffCover(buffCreateInfo, out Buff handledBuff);
             switch (result)
             {
                 case BuffCoverHandleResult.Handled:
+                    if (handledBuff != null)//保持旧的buff，但是layer，time有变化需要通知客户端 
+                    {
+                        self.NotifyBuffUpdate(handledBuff);
+                    }
                     return true;
                 case BuffCoverHandleResult.Rejected:
+                    //某些逻辑阻挡这个buff创建
                     return false;
                 case BuffCoverHandleResult.NeedCreate:
                     self.CreateBuff(buffCreateInfo, owner);
@@ -90,11 +96,12 @@ namespace ET.Server
             }
         }
 
-        private static BuffCoverHandleResult HandleBuffCover(this BuffComponent self, BuffCreateInfo buffCreateInfo)
+        private static BuffCoverHandleResult HandleBuffCover(this BuffComponent self, BuffCreateInfo buffCreateInfo, out Buff handledBuff)
         {
+            handledBuff = null;
             BuffConfig buffConfig = BuffConfigCategory.Instance.Get(buffCreateInfo.ConfigId);
             int configId = buffCreateInfo.ConfigId;
-            int duration = buffConfig.Duration;
+            int totalTime = buffConfig.TotalTime;
             BuffCoverType coverType = (BuffCoverType)buffConfig.ConverType;
             Buff oldBuff = self.FindCoverTarget(configId, coverType, buffCreateInfo);
 
@@ -107,16 +114,25 @@ namespace ET.Server
                         return BuffCoverHandleResult.NeedCreate;
                     }
 
-                    oldBuff.AddDuration(duration);
+                    oldBuff.AddTotalTime(totalTime);
+                    oldBuff.AddLayer(self.GetFirstAddLayer(buffCreateInfo, buffConfig), buffConfig.LayerLimit);
+                    handledBuff = oldBuff;
                     return BuffCoverHandleResult.Handled;
                 }
                 case BuffCoverType.Replace:
                 {
-                    if (oldBuff != null)
+                    if (oldBuff == null)
                     {
-                        self.UnregisterBuff(oldBuff);
+                        return BuffCoverHandleResult.NeedCreate;
                     }
 
+                    int newLayer = self.GetInitialLayer(buffCreateInfo, buffConfig);
+                    if (newLayer <= oldBuff.Layer)
+                    {
+                        return BuffCoverHandleResult.Handled;
+                    }
+
+                    self.UnregisterBuff(oldBuff);
                     return BuffCoverHandleResult.NeedCreate;
                 }
                 case BuffCoverType.ResetTime:
@@ -126,7 +142,9 @@ namespace ET.Server
                         return BuffCoverHandleResult.NeedCreate;
                     }
 
-                    oldBuff.ResetDuration(duration);
+                    oldBuff.ResetTotalTime(totalTime);
+                    oldBuff.AddLayer(self.GetFirstAddLayer(buffCreateInfo, buffConfig), buffConfig.LayerLimit);
+                    handledBuff = oldBuff;
                     return BuffCoverHandleResult.Handled;
                 }
                 case BuffCoverType.New:
@@ -140,7 +158,9 @@ namespace ET.Server
                         return BuffCoverHandleResult.NeedCreate;
                     }
 
-                    oldBuff.ResetDuration(duration);
+                    oldBuff.ResetTotalTime(totalTime);
+                    oldBuff.AddLayer(self.GetFirstAddLayer(buffCreateInfo, buffConfig), buffConfig.LayerLimit);
+                    handledBuff = oldBuff;
                     return BuffCoverHandleResult.Handled;
                 }
                 case BuffCoverType.ClassifyMutex:
@@ -166,21 +186,7 @@ namespace ET.Server
 
             self.UnregisterBuff(buff);
         }
-
-        /// <summary>
-        /// 按 ConfigId 移除第一个匹配的 Buff（非 New 多实例场景）
-        /// </summary>
-        public static void RemoveByConfigId(this BuffComponent self, int configId)
-        {
-            Buff buff = self.GetByConfigId(configId);
-            if (buff == null)
-            {
-                return;
-            }
-
-            self.UnregisterBuff(buff);
-        }
-
+        
         /// <summary>
         /// 按 Buff 实例唯一 Id 获取
         /// </summary>
@@ -193,23 +199,7 @@ namespace ET.Server
 
             return buffRef;
         }
-
-        /// <summary>
-        /// 按 ConfigId 获取第一个匹配的 Buff
-        /// </summary>
-        public static Buff GetByConfigId(this BuffComponent self, int configId)
-        {
-            foreach (EntityRef<Buff> buffRef in self.BuffsDict.Values)
-            {
-                Buff buff = buffRef;
-                if (buff != null && buff.ConfigId == configId)
-                {
-                    return buff;
-                }
-            }
-
-            return null;
-        }
+        
 
         public static Buff GetByRole(this BuffComponent self, int configId, long addUnitId)
         {
@@ -263,12 +253,26 @@ namespace ET.Server
 
         private static Buff FindCoverTarget(this BuffComponent self, int configId, BuffCoverType coverType, BuffCreateInfo buffCreateInfo)
         {
-            return coverType switch
+            if (coverType == BuffCoverType.New)
             {
-                BuffCoverType.Role => self.GetByRole(configId, buffCreateInfo.AddUnitId),
-                BuffCoverType.New => null,
-                _ => self.GetByConfigId(configId),
-            };
+                return null;
+            }
+
+            return self.GetByRole(configId, buffCreateInfo.AddUnitId);
+        }
+
+        private static void NotifyBuffUpdate(this BuffComponent self, Buff buff)
+        {
+            Unit owner = buff.Owner;
+            if (owner == null || owner.IsDisposed)
+            {
+                return;
+            }
+
+            M2C_BuffUpdate m2CBuffUpdate = M2C_BuffUpdate.Create();
+            m2CBuffUpdate.UnitId = owner.Id;
+            m2CBuffUpdate.BuffData = buff.ToMessage();
+            MapMessageHelper.SendClient(owner, m2CBuffUpdate, (NoticeClientType)buff.Config.NoticeClientType);
         }
 
         private static void RegisterBuff(this BuffComponent self, Buff buff)
@@ -288,6 +292,7 @@ namespace ET.Server
                 MapMessageHelper.SendClient(owner,m2CBuffAdd,(NoticeClientType)buff.Config.NoticeClientType);
                 //处理buff实体添加具体行为逻辑
                       
+                buff.AddActions();//增加buff时行为处理
             }
         }
         
@@ -310,10 +315,10 @@ namespace ET.Server
                     m2CBuffRemove.BuffId = buff.Id;
                     m2CBuffRemove.UnitId = owner.Id;
                     MapMessageHelper.SendClient(owner,m2CBuffRemove,(NoticeClientType)buff.Config.NoticeClientType);
+                    //处理buff实体移除具体行为逻辑
+                    buff.RemoveActions();
+                    
                 }
-                
-                //处理buff实体移除具体行为逻辑
-                
                 buff.Dispose();
             }
             catch (Exception e)
@@ -329,9 +334,26 @@ namespace ET.Server
             buff.Owner = owner;
             buff.AddUnitId = buffCreateInfo.AddUnitId;
             buff.AddSkillId = buffCreateInfo.AddSkillId;
-            buff.InitTime(buffConfig.Duration);
+            buff.InitTime(buffConfig.TotalTime);
+            buff.InitLayer(self.GetFirstAddLayer(buffCreateInfo,buffConfig),buffConfig.LayerLimit);
             self.RegisterBuff(buff);
             return buff;
+        }
+
+        private static int GetFirstAddLayer(this BuffComponent self, BuffCreateInfo buffCreateInfo, BuffConfig buffConfig)
+        {
+            return buffCreateInfo.FirstLayer > 0 ? buffCreateInfo.FirstLayer : buffConfig.FirstAddLayer;
+        }
+
+        private static int GetInitialLayer(this BuffComponent self, BuffCreateInfo buffCreateInfo, BuffConfig buffConfig)
+        {
+            int layer = self.GetFirstAddLayer(buffCreateInfo, buffConfig);
+            if (buffConfig.LayerLimit > 0 && layer > buffConfig.LayerLimit)
+            {
+                return buffConfig.LayerLimit;
+            }
+
+            return layer;
         }
     }
 }
