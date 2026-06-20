@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fDurationTime: 0.8
   m_fCallbackTime: 1
-  m_iBloodBkWidth: 80
-  m_iBloodBkHeight: 13
-  m_iBloodWidth: 76
-  m_iBloodHeight: 9
+  m_iBloodBkWidth: 110
+  m_iBloodBkHeight: 16
+  m_iBloodWidth: 106
+  m_iBloodHeight: 12
   m_kNumberShader: {fileID: 4800000, guid: e37c9b6e5a031b043a2b6524c29a20bf, type: 3}
   m_kSpriteShader: {fileID: 4800000, guid: 88cc0109fb896d7449f0a981e194d9a7, type: 3}
   PlayerCorp:
@@ -37,6 +37,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 0
   Blood:
@@ -56,6 +57,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 0
   HeadIcon:
@@ -75,7 +77,8 @@ MonoBehaviour:
     m_eAlignType: 0
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
-    m_iSpriteOffsetY: 0
+    m_iSpriteOffsetX: -20
+    m_iSpriteOffsetY: 10
     m_iFontOffsetY: 0
   PlayerTitle:
   - m_eEffectType: 2
@@ -94,6 +97,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 5
   - m_eEffectType: 2
@@ -112,6 +116,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 11
   - m_eEffectType: 2
@@ -130,6 +135,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 8
   - m_eEffectType: 2
@@ -148,6 +154,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 8
   MonsterTitle:
@@ -167,6 +174,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 10
   - m_eEffectType: 2
@@ -185,6 +193,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 10
   - m_eEffectType: 2
@@ -203,6 +212,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 10
   - m_eEffectType: 2
@@ -221,6 +231,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 10
   - m_eEffectType: 2
@@ -239,6 +250,7 @@ MonoBehaviour:
     m_eAlignType: 1
     m_iLockMaxHeight: 0
     m_iSpriteReduceHeight: 0
+    m_iSpriteOffsetX: 0
     m_iSpriteOffsetY: 0
     m_iFontOffsetY: 10
   HurtAnimAttibute:

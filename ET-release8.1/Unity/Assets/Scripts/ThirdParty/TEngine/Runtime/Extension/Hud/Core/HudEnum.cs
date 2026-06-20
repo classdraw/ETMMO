@@ -112,6 +112,7 @@ namespace XEngine.Hud{
         public Enum_HudAlignType m_eAlignType;//对齐方式
         public int m_iLockMaxHeight;//锁定最大高度
         public int m_iSpriteReduceHeight;//图片缩减高度
+        public int m_iSpriteOffsetX;//图片左右移动距离
         public int m_iSpriteOffsetY;//图片上下移动距离
         public int m_iFontOffsetY;//文本上下移动距离
     }

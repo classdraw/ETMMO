@@ -18,6 +18,8 @@ namespace ET.Client
 
             var unit = self.GetParent<Unit>();
             self.HudInfoScript.DisplayPlayer(unit.Name);
+            
+            self.HudInfoScript.RefreshHpLv(unit.GetHpLv());
         }
         [EntitySystem]
         private static void Destroy(this UnitTopUIComponent self)

@@ -39,8 +39,9 @@ namespace ET.Server
                     numericComponent.Set(NumericType.DEXBase,unitConfig.Dex);
                     numericComponent.Set(NumericType.LUKBase,unitConfig.Luk);
                     
-                    numericComponent.Set(NumericType.Hp, hp);
-                    numericComponent.Set(NumericType.MaxHp, sp);
+                    numericComponent.Set(NumericType.HpBase, hp);
+                    numericComponent.Set(NumericType.MaxHpBase, hp);
+                    numericComponent.Set(NumericType.SpBase,sp);
                     
                     //背包组件
                     unit.AddComponent<KnapsackComponent>();

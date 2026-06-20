@@ -223,6 +223,9 @@
     <type fullname="ET.TEngineGlobal" preserve="all" />
     <type fullname="TEngine.IResourceModuleET" preserve="all" />
     <type fullname="TEngine.LayoutLoopList" preserve="all" />
+    <type fullname="XEngine.Hud.HudFacade" preserve="all" />
+    <type fullname="XEngine.Hud.HudInfo" preserve="all" />
+    <type fullname="XEngine.Utilities.MonoSingleton`1" preserve="all" />
   </assembly>
   <assembly fullname="Unity.ThirdParty">
     <type fullname="DotRecast.Core.RcVec3f" preserve="all" />
@@ -274,7 +277,6 @@
     <type fullname="UnityEngine.Ray" preserve="all" />
     <type fullname="UnityEngine.RectTransform" preserve="all" />
     <type fullname="UnityEngine.SceneManagement.LoadSceneMode" preserve="all" />
-    <type fullname="UnityEngine.Sprite" preserve="all" />
     <type fullname="UnityEngine.SpriteRenderer" preserve="all" />
     <type fullname="UnityEngine.Time" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />

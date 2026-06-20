@@ -13,14 +13,15 @@
 	    //public const int SpeedFinalPct = Speed * 10 + 5;
 
 	    public const int Hp = 1001;//血量
-	    //public const int HpBase = Hp * 10 + 1;
+	    public const int HpBase = Hp * 10 + 1;
+
 
 	    public const int MaxHp = 1002;
-	    //public const int MaxHpBase = MaxHp * 10 + 1;
-	    //public const int MaxHpAdd = MaxHp * 10 + 2;
-	    //public const int MaxHpPct = MaxHp * 10 + 3;
-	    //public const int MaxHpFinalAdd = MaxHp * 10 + 4;
-	    //public const int MaxHpFinalPct = MaxHp * 10 + 5;
+	    public const int MaxHpBase = MaxHp * 10 + 1;
+	    public const int MaxHpAdd = MaxHp * 10 + 2;
+	    public const int MaxHpPct = MaxHp * 10 + 3;
+	    public const int MaxHpFinalAdd = MaxHp * 10 + 4;
+	    public const int MaxHpFinalPct = MaxHp * 10 + 5;
 
 	    public const int AOI = 1003;//aoi范围
 	    //public const int AOIBase = AOI * 10 + 1;
@@ -57,6 +58,9 @@
 	    public const int LUK = 1010;//幸运
 	    public const int LUKBase = LUK * 10 + 1;
 	    public const int LUKAdd = LUK * 10 + 2;
+	    
+	    public const int Sp = 1011;//蓝量
+	    public const int SpBase = Sp * 10 + 1;
 
     }
 }

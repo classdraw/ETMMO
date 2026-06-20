@@ -33,10 +33,16 @@ namespace XEngine.Hud
             titleInfo.BeginTitle();
             titleInfo.PushBlood(Enum_HudBloodType.Blood_Green, 1f);
             titleInfo.EndTitle();
+            
+            titleInfo.BeginTitle();
+            titleInfo.PushIcon(Enum_HudTitleType.HeadIcon, 0);
+            titleInfo.EndTitle();
 
             titleInfo.BeginTitle();
             titleInfo.PushTitle(sname, Enum_HudTitleType.PlayerTitle, 0);
             titleInfo.EndTitle();
+            
+
         }
         public void DisplayMonster(string sname)
         {

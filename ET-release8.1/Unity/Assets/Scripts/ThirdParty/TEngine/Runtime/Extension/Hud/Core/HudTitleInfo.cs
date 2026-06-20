@@ -400,7 +400,7 @@ namespace XEngine.Hud
             {
                 width = (int)spriteSimple.m_kRect.width;
                 height = (int)spriteSimple.m_kRect.height;
-                PushSprite(spriteIndex, width, height, 0f, attr.m_iSpriteOffsetY);
+                PushSprite(spriteIndex, width, height, attr.m_iSpriteOffsetX, attr.m_iSpriteOffsetY);
             }
             if (m_kTitleLines[m_iTitleNumber] == null)
                 m_kTitleLines[m_iTitleNumber] = new HudTitleLine();

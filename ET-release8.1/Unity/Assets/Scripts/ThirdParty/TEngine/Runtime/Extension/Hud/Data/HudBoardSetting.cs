@@ -13,8 +13,8 @@ namespace XEngine.Hud{
         public float m_fDurationTime=2.0f;//动画持续时间
         public float m_fCallbackTime=1.0f;
         //最大最小缩放
-        public float m_fTitleScaleMin = 0.8f;
-        public float m_fTitleScaleMax = 0.8f;
+        public float m_fTitleScaleMin = 0.9f;
+        public float m_fTitleScaleMax = 0.9f;
 
         public float m_fNumberScaleMin = 0.4f;
         public float m_fNumberScaleMax = 0.4f;
