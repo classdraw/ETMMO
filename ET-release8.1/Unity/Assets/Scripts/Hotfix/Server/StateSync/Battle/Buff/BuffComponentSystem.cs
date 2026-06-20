@@ -334,8 +334,7 @@ namespace ET.Server
             buff.Owner = owner;
             buff.AddUnitId = buffCreateInfo.AddUnitId;
             buff.AddSkillId = buffCreateInfo.AddSkillId;
-            buff.InitTime(buffConfig.TotalTime);
-            buff.InitLayer(self.GetFirstAddLayer(buffCreateInfo,buffConfig),buffConfig.LayerLimit);
+            buff.Init(self.GetFirstAddLayer(buffCreateInfo,buffConfig));
             self.RegisterBuff(buff);
             return buff;
         }

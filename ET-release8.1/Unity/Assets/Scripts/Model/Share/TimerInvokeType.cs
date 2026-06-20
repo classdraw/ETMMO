@@ -22,6 +22,8 @@
         
         public const int NumericSync = 403;//数值同步
         public const int AccountChectOutTime = 404;//账号超时
-        
+
+        public const int BuffExpireTime = 405;//buff超时处理
+
     }
 }

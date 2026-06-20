@@ -7,7 +7,7 @@ namespace ET.Server
     public static partial class AccountChectOutTimeComponentSystem
     {
         [Invoke(TimerInvokeType.AccountChectOutTime)]
-        public class AccountChectOutTime: ATimer<AccountChectOutTimeComponent>
+        public class AccountChectOutTimeHandler: ATimer<AccountChectOutTimeComponent>
         {
             protected override void Run(AccountChectOutTimeComponent self)
             {

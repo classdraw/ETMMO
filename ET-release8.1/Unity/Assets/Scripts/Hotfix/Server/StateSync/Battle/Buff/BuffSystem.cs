@@ -2,8 +2,35 @@ using System;
 
 namespace ET.Server
 {
+    #region buff定时器
+    [Invoke(TimerInvokeType.BuffExpireTime)]
+    public class BuffExpireTimeHandler: ATimer<Buff>
+    {
+        protected override void Run(Buff self)
+        {
+            try
+            {
+                if (self == null || self.IsDisposed)
+                {
+                    return;
+                }
+                self.SetExpireTime(0);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Buff BuffExpireTime error: {self.Id}\n{e}");
+            }
+        }
+    }
+
+
+    #endregion
+    
+    
+    
     [EntitySystemOf(typeof(Buff))]
     [FriendOf(typeof(Buff))]
+    [FriendOf(typeof(BuffComponent))]
     public static partial class BuffSystem
     {
         [EntitySystem]
@@ -40,20 +67,23 @@ namespace ET.Server
         private static void Deserialize(this ET.Server.Buff self)
         {
             self.AddComponent<ActionsTempComponent>();
-            self.Owner = self.Parent?.GetComponent<Unit>();
+            self.Owner = self.GetParent<BuffComponent>()?.GetParent<Unit>();
+            if (self.ExpireTime > 0)
+            {
+                self.SetExpireTime(self.ExpireTime);
+            }
         }
 
-        public static void InitTime(this Buff self, int totalTime)
+        public static void Init(this Buff self,int firstAddLayer)
         {
+            
             long now = TimeInfo.Instance.ServerFrameTime();
             self.CreateTime = now;
             self.TickBeginTime = now;
-            self.ExpireTime = totalTime > 0 ? now + totalTime : 0;
+            self.Layer = ClampLayer(firstAddLayer, self.Config.LayerLimit);
+            self.SetExpireTime(self.Config.TotalTime > 0 ? now + self.Config.TotalTime : 0);
         }
-        public static void InitLayer(this Buff self, int firstAddLayer, int layerLimit)
-        {
-            self.Layer = ClampLayer(firstAddLayer, layerLimit);
-        }
+
         /// <summary>
         /// 时长叠加：在剩余时间基础上继续增加，可越叠越长。
         /// </summary>
@@ -66,7 +96,7 @@ namespace ET.Server
 
             long now = TimeInfo.Instance.ServerFrameTime();
             long baseTime = self.ExpireTime > now ? self.ExpireTime : now;
-            self.ExpireTime = baseTime + totalTime;
+            self.SetExpireTime(baseTime + totalTime);
         }
 
         /// <summary>
@@ -76,7 +106,7 @@ namespace ET.Server
         {
             long now = TimeInfo.Instance.ServerFrameTime();
             self.TickBeginTime = now;
-            self.ExpireTime = durationMs > 0 ? now + durationMs : 0;
+            self.SetExpireTime(durationMs > 0 ? now + durationMs : 0);
         }
 
         public static void AddLayer(this Buff self, int addLayer, int layerLimit)
@@ -125,7 +155,7 @@ namespace ET.Server
 
             self.ConfigId = buffProto.ConfigId;
             self.CreateTime = buffProto.CreateTime;
-            self.ExpireTime = buffProto.ExpireTime;
+            self.SetExpireTime(buffProto.ExpireTime);
             self.FromExtraDataBytes(buffProto.ExtraData);
         }
 
@@ -161,8 +191,83 @@ namespace ET.Server
             self.TickBeginTime = extraData.TickBeginTime;
             self.Layer = extraData.Layer;
         }
-        
-        
+
+        public static void SetTickTime(this Buff self, int tickTime)
+        {
+            
+        }
+
+        public static void SetExpireTime(this Buff self, long expireTime, bool noticeClient = false)
+        {
+            if (self.IsDisposed)
+            {
+                return;
+            }
+
+            long oldExpireTime = self.ExpireTime;
+            long newExpireTime = expireTime <= 0 ? 0 : expireTime;
+            bool expireTimeChanged = oldExpireTime != newExpireTime;
+            bool needRefreshTimer = expireTimeChanged || newExpireTime <= 0 || (newExpireTime > 0 && self.ExpireTimer == 0);
+
+            if (!needRefreshTimer)
+            {
+                return;
+            }
+
+            self.ExpireTime = newExpireTime;
+            self.RefreshExpireTimer();
+
+            if (newExpireTime <= 0 && oldExpireTime > 0)
+            {
+                self.TimeOut();
+            }
+
+            if (noticeClient && expireTimeChanged)
+            {
+                self.NoticeClientUpdateInfo();
+            }
+        }
+
+        private static void RefreshExpireTimer(this Buff self)
+        {
+            TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
+            if (self.ExpireTimer != 0)
+            {
+                timerComponent.Remove(ref self.ExpireTimer);
+            }
+
+            if (self.ExpireTime <= 0)
+            {
+                self.ExpireTimer = 0;
+                return;
+            }
+
+            self.ExpireTimer = timerComponent.NewOnceTimer(self.ExpireTime, (int)TimerInvokeType.BuffExpireTime, self);
+        }
+
+        public static void NoticeClientUpdateInfo(this Buff self)
+        {
+            Unit owner = self.Owner;
+            if (owner==null||owner.IsDisposed)
+            {
+                return;
+            }
+            M2C_BuffUpdate m2CBuffUpdate = M2C_BuffUpdate.Create();
+            m2CBuffUpdate.BuffData = self.ToMessage();
+            m2CBuffUpdate.UnitId = owner.Id;
+            MapMessageHelper.SendClient(owner,m2CBuffUpdate,(NoticeClientType)self.Config.NoticeClientType);
+        }
+
+        public static void TimeOut(this Buff self)
+        {
+            Unit owner = self.Owner;
+            
+            EventSystem.Instance.Publish(self.Scene(), new BuffTimeOut()
+            {
+                Unit = owner,BuffId = self.Id
+            });
+        }
+
         #region  buffActions逻辑
         //新增Buff 逻辑迭代
         public static void AddActions(this Buff self)
