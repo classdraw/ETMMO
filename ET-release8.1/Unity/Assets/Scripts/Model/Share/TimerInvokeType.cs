@@ -24,6 +24,7 @@
         public const int AccountChectOutTime = 404;//账号超时
 
         public const int BuffExpireTime = 405;//buff超时处理
+        public const int BuffTickTime = 406;//bufftick处理
 
     }
 }

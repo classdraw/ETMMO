@@ -23,7 +23,25 @@ namespace ET.Server
         }
     }
 
-
+    [Invoke(TimerInvokeType.BuffTickTime)]
+    public class BuffTickTimeHandler: ATimer<Buff>
+    {
+        protected override void Run(Buff self)
+        {
+            try
+            {
+                if (self == null || self.IsDisposed)
+                {
+                    return;
+                }
+                self.TickActions();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Buff BuffTickTime error: {self.Id}\n{e}");
+            }
+        }
+    }
     #endregion
     
     
@@ -72,6 +90,11 @@ namespace ET.Server
             {
                 self.SetExpireTime(self.ExpireTime);
             }
+
+            if (self.TickTime > 0)
+            {
+                self.RefreshTickTimer();
+            }
         }
 
         public static void Init(this Buff self,int firstAddLayer)
@@ -79,9 +102,10 @@ namespace ET.Server
             
             long now = TimeInfo.Instance.ServerFrameTime();
             self.CreateTime = now;
-            self.TickBeginTime = now;
+            self.TickBeginTime = 0;
             self.Layer = ClampLayer(firstAddLayer, self.Config.LayerLimit);
             self.SetExpireTime(self.Config.TotalTime > 0 ? now + self.Config.TotalTime : 0);
+            self.SetTickTime(self.Config.TickTime);
         }
 
         /// <summary>
@@ -105,7 +129,6 @@ namespace ET.Server
         public static void ResetTotalTime(this Buff self, int durationMs)
         {
             long now = TimeInfo.Instance.ServerFrameTime();
-            self.TickBeginTime = now;
             self.SetExpireTime(durationMs > 0 ? now + durationMs : 0);
         }
 
@@ -157,6 +180,10 @@ namespace ET.Server
             self.CreateTime = buffProto.CreateTime;
             self.SetExpireTime(buffProto.ExpireTime);
             self.FromExtraDataBytes(buffProto.ExtraData);
+            if (self.TickTime > 0)
+            {
+                self.RefreshTickTimer();
+            }
         }
 
         private static byte[] ToExtraDataBytes(this Buff self)
@@ -194,7 +221,44 @@ namespace ET.Server
 
         public static void SetTickTime(this Buff self, int tickTime)
         {
-            
+            if (self.IsDisposed)
+            {
+                return;
+            }
+
+            int newTickTime = tickTime <= 0 ? 0 : tickTime;
+            bool tickTimeChanged = self.TickTime != newTickTime;
+            bool needRefreshTimer = tickTimeChanged || newTickTime <= 0 || (newTickTime > 0 && self.TickTimer == 0);
+
+            if (!needRefreshTimer)
+            {
+                return;
+            }
+
+            if (newTickTime > 0)
+            {
+                self.TickBeginTime = TimeInfo.Instance.ServerFrameTime();
+            }
+
+            self.TickTime = newTickTime;
+            self.RefreshTickTimer();
+        }
+
+        private static void RefreshTickTimer(this Buff self)
+        {
+            TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
+            if (self.TickTimer != 0)
+            {
+                timerComponent.Remove(ref self.TickTimer);
+            }
+
+            if (self.TickTime <= 0)
+            {
+                self.TickTimer = 0;
+                return;
+            }
+
+            self.TickTimer = timerComponent.NewRepeatedTimer(self.TickTime, (int)TimerInvokeType.BuffTickTime, self);
         }
 
         public static void SetExpireTime(this Buff self, long expireTime, bool noticeClient = false)
