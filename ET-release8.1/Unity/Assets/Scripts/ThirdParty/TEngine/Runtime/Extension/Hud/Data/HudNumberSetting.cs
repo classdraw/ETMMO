@@ -10,12 +10,19 @@ namespace XEngine.Hud {
         public int m_iAddSpriteIndex = -1;//+号
         public int m_iSubSpriteIndex = -1;//-号
         public int[] m_iNumbers = new int[10];//数字的id 0~9
+        public Vector2 m_OffsetFirstSprite;
 
-        public void Init(string startNumStr,string addStr,string subStr,string firstStr) {
+        public void Init(string startNumStr, string addStr, string subStr, string firstStr)
+        {
+            Init(startNumStr, addStr, subStr, firstStr, Vector2.zero);
+        }
+
+        public void Init(string startNumStr, string addStr, string subStr, string firstStr, Vector2 offsetFirstSprite) {
             m_iFirstSpriteIndex = -1;
             m_iAddSpriteIndex = -1;
             m_iSubSpriteIndex = -1;
-            
+            m_OffsetFirstSprite = offsetFirstSprite;
+
             if (!string.IsNullOrEmpty(startNumStr)) {
                 for (int i=0; i<=9;i++) {
                     string numStr = startNumStr + i;

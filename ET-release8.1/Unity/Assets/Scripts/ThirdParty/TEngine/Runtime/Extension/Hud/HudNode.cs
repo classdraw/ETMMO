@@ -91,7 +91,7 @@ namespace XEngine.Hud {
             } else if (Input.GetKeyDown(KeyCode.W)) {
                 SetBloodPos(Random.Range(0f, 1f));
             } else if (Input.GetKeyDown(KeyCode.P)) {
-                HudNumberRender.GetInstance().ShowHurtNumber(transform,Enum_NumberRender_Type.HUD_SHOW_HP_HURT_NEW,1000,true);
+                HudNumberRender.GetInstance().ShowHurtNumber(transform,Enum_NumberRender_Type.HUD_SHOW_HP_Crit,1000,true);
             }
             
             if (m_iTitleUUID!=0) {
@@ -104,7 +104,7 @@ namespace XEngine.Hud {
 
             m_fTimeNumber -= UnityEngine.Time.deltaTime;
             if (m_fTimeNumber<=0f) {
-                Enum_NumberRender_Type r = (Enum_NumberRender_Type)Random.Range(0, 3);
+                Enum_NumberRender_Type r = (Enum_NumberRender_Type)Random.Range(0, 4);
                 
                 m_fTimeNumber = 0.3f;
                 HudNumberRender.GetInstance().ShowHurtNumber(transform, r, Random.Range(-9999, 9999), true);

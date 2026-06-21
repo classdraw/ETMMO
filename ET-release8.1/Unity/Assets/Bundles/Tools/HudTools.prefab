@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eda6f911e8d1b340a9d1e55907c896a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_kConfig: {fileID: 11400000, guid: 5a19ce2edbf76e94faa080faa05e2582, type: 2}
+  m_kConfig: {fileID: 11400000, guid: 5a16a32f94202ca43849b63fe33e1590, type: 2}
   m_kHudAniSetting: {fileID: 11400000, guid: ddce4bc74ce83434bb0fa832f00d0f5b, type: 2}
   m_kFont: {fileID: 1211120147703846811, guid: 3efc26efed314b344a479ce3ecb556c7, type: 3}

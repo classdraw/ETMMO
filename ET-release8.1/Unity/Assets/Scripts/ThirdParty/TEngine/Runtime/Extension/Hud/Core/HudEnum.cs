@@ -55,7 +55,7 @@ namespace XEngine.Hud{
         HUD_SHOW_TIP_NUM=2,
 
         //项目内用的
-        HUD_SHOW_HP_HURT_NEW=3,//新的受伤
+        HUD_SHOW_HP_Crit=3,//新的受伤
         
         HUD_SHOW_NUMBER
     }

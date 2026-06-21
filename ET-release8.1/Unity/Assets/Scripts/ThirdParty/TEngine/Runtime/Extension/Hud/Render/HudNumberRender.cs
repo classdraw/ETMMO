@@ -46,20 +46,20 @@ namespace XEngine.Hud
             //手动添加跳字样式
             m_kNumberSetting.Clear();
             HudNumberData info = new HudNumberData();
-            info.Init("RNum","RedAdd","RedSub",null);
+            info.Init("TNum", "TNumAdd", "TNumSub", null, Vector2.zero);
             m_kNumberSetting.Add(Enum_NumberRender_Type.HUD_SHOW_HP_HURT,info);
 
             info=new HudNumberData();
-            info.Init("GNum", "GreenAdd", "GreenSub", null);
+            info.Init("GNum", "GreenAdd", "GreenSub", null, Vector2.zero);
             m_kNumberSetting.Add(Enum_NumberRender_Type.HUD_SHOW_HP_ADD, info);
 
             info=new HudNumberData();
-            info.Init("CNum",null,null,"AxeT1");
+            info.Init("CNum",null,null,"AxeT1", Vector2.zero);
             m_kNumberSetting.Add(Enum_NumberRender_Type.HUD_SHOW_TIP_NUM, info);
 
             info = new HudNumberData();
-            info.Init("Num_N", "Num_NAdd", "Num_NSub", null);
-            m_kNumberSetting.Add(Enum_NumberRender_Type.HUD_SHOW_HP_HURT_NEW, info);
+            info.Init("TNum", "TNumAdd", "TNumSub","2006",new Vector2(0f,30f));
+            m_kNumberSetting.Add(Enum_NumberRender_Type.HUD_SHOW_HP_Crit, info);
 
             m_fCurrentDuration = HudBoardSetting.GetInstance().m_fDurationTime;
         }
@@ -331,8 +331,10 @@ namespace XEngine.Hud
 
             float y = 0f;
             var setting=m_kNumberSetting[numberRenderType];
+            int colorStartIndex = 0;
             if (showHead&&setting.m_iFirstSpriteIndex!=-1) {
-                node.PushSprite(y,setting.m_iFirstSpriteIndex);
+                node.PushSprite(y, setting.m_iFirstSpriteIndex, setting.m_OffsetFirstSprite);
+                colorStartIndex = node.m_kSprites.size;
             }
             bool haveNumber = true;
             //某些枚举没有数字 比如miss 抵抗等
@@ -376,7 +378,7 @@ namespace XEngine.Hud
                 }
                 // 申请纹理
                 OnPush(node);
-                node.ApplyVertexColor();
+                node.ApplyVertexColor(colorStartIndex);
 
                 if (!m_bCaleScreenScale)
                 {

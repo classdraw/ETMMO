@@ -48,10 +48,15 @@ namespace XEngine.Hud {
            // m_kNumberRenderType=Hudnum
         }
 
-        public void ApplyVertexColor()
+        public void ApplyVertexColor(int colorStartIndex = 0)
         {
+            if (colorStartIndex < 0)
+            {
+                colorStartIndex = 0;
+            }
+
             Color32 c = m_kColor;
-            for (int i = m_kSprites.size - 1; i >= 0; --i)
+            for (int i = m_kSprites.size - 1; i >= colorStartIndex; --i)
             {
                 HudVertex v = m_kSprites[i];
                 v.m_vColorLU = c;
@@ -134,11 +139,12 @@ namespace XEngine.Hud {
             m_fScale = Mathf.Lerp(maxScale, minScale, ratio);
         }
 
-        public void PushSprite(float y,int spriteIndex) {
+        public void PushSprite(float y, int spriteIndex, Vector2 extraOffset = default)
+        {
             HudVertex node = HudVertex.QueryVertex();
             node.m_vWorldPos = m_vWorldPos;
             node.m_vScenePos = m_vScreenPos;
-            node.m_vOffset.Set(m_iWidth,y);
+            node.m_vOffset.Set(m_iWidth + extraOffset.x, y + extraOffset.y);
             node.m_iSpriteIndex = spriteIndex;
             node.InitSprite();
             m_kSprites.Add(node);

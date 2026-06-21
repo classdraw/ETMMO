@@ -43,6 +43,7 @@ namespace XEngine.Hud{
         public SpriteAtlasConfig m_kSpriteAtlasConfig;
 
         public UIFont m_kFont;
+        public Shader m_kFontShader;
         public Shader m_kNumberShader;
         public Shader m_kSpriteShader;
 
@@ -82,7 +83,7 @@ namespace XEngine.Hud{
             NumberAttributes[(int)Enum_NumberRender_Type.HUD_SHOW_HP_HURT] = hudAniSetting.HurtAnimAttibute;
             NumberAttributes[(int)Enum_NumberRender_Type.HUD_SHOW_HP_ADD] = hudAniSetting.RecoverAnimAttibute;
             NumberAttributes[(int)Enum_NumberRender_Type.HUD_SHOW_TIP_NUM] = hudAniSetting.HurtAnimAttibute;
-            NumberAttributes[(int)Enum_NumberRender_Type.HUD_SHOW_HP_HURT_NEW] = hudAniSetting.HurtAnimAttibute;
+            NumberAttributes[(int)Enum_NumberRender_Type.HUD_SHOW_HP_Crit] = hudAniSetting.HurtAnimAttibute;
 
 
 
@@ -100,6 +101,7 @@ namespace XEngine.Hud{
             m_iBloodBkHeight = hudAniSetting.m_iBloodBkHeight;
             m_iBloodWidth=hudAniSetting.m_iBloodWidth;
             m_iBloodHeight = hudAniSetting.m_iBloodHeight;
+            m_kFontShader = hudAniSetting.m_kFontShader != null ? hudAniSetting.m_kFontShader : hudAniSetting.m_kNumberShader;
             m_kNumberShader = hudAniSetting.m_kNumberShader;
             m_kSpriteShader=hudAniSetting.m_kSpriteShader;
         }

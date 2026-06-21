@@ -91,6 +91,7 @@ Shader "Unlit/HUDSprite"
 			half4 frag(Varyings i) : SV_Target
 			{
 				half4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+				// 图集/跳字：贴图颜色与顶点色相乘，用于染色
 				return col * i.color;
 			}
 			ENDHLSL

@@ -14,6 +14,7 @@ namespace XEngine.Hud{
         public int m_iBloodBkHeight;
         public int m_iBloodWidth;
         public int m_iBloodHeight;
+        public Shader m_kFontShader;
         public Shader m_kNumberShader;
         public Shader m_kSpriteShader;
 

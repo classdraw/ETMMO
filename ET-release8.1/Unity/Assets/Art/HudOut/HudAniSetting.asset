@@ -18,6 +18,7 @@ MonoBehaviour:
   m_iBloodBkHeight: 16
   m_iBloodWidth: 106
   m_iBloodHeight: 12
+  m_kFontShader: {fileID: 4800000, guid: e37c9b6e5a031b043a2b6524c29a20bf, type: 3}
   m_kNumberShader: {fileID: 4800000, guid: e37c9b6e5a031b043a2b6524c29a20bf, type: 3}
   m_kSpriteShader: {fileID: 4800000, guid: 88cc0109fb896d7449f0a981e194d9a7, type: 3}
   PlayerCorp:

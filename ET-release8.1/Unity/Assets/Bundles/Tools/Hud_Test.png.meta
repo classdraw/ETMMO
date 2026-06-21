@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8eced310bfbcd5e4194500e4d2eacc45
+guid: e64a9148256ba084b91f13277be229cd
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -126,8 +126,8 @@ TextureImporter:
       name: 2000
       rect:
         serializedVersion: 2
-        x: 222
-        y: 420
+        x: 2
+        y: 446
         width: 64
         height: 64
       alignment: 0
@@ -148,7 +148,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2
-        y: 276
+        y: 218
         width: 72
         height: 72
       alignment: 0
@@ -169,7 +169,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2
-        y: 192
+        y: 134
         width: 80
         height: 80
       alignment: 0
@@ -189,8 +189,8 @@ TextureImporter:
       name: 2004
       rect:
         serializedVersion: 2
-        x: 290
-        y: 192
+        x: 109
+        y: 230
         width: 64
         height: 64
       alignment: 0
@@ -211,7 +211,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2
-        y: 352
+        y: 294
         width: 72
         height: 72
       alignment: 0
@@ -228,11 +228,32 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
+      name: 2006
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 103
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00000000000000000800000000000000
+      internalID: 0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
       name: AxeT1
       rect:
         serializedVersion: 2
-        x: 290
-        y: 260
+        x: 109
+        y: 298
         width: 64
         height: 64
       alignment: 0
@@ -252,8 +273,8 @@ TextureImporter:
       name: AxeT2
       rect:
         serializedVersion: 2
-        x: 290
-        y: 328
+        x: 245
+        y: 154
         width: 64
         height: 64
       alignment: 0
@@ -273,8 +294,8 @@ TextureImporter:
       name: BowT1
       rect:
         serializedVersion: 2
-        x: 290
-        y: 396
+        x: 109
+        y: 366
         width: 64
         height: 64
       alignment: 0
@@ -294,8 +315,8 @@ TextureImporter:
       name: CNum0
       rect:
         serializedVersion: 2
-        x: 308
-        y: 489
+        x: 78
+        y: 344
         width: 14
         height: 21
       alignment: 0
@@ -315,7 +336,7 @@ TextureImporter:
       name: CNum1
       rect:
         serializedVersion: 2
-        x: 1010
+        x: 487
         y: 2
         width: 11
         height: 21
@@ -336,8 +357,8 @@ TextureImporter:
       name: CNum2
       rect:
         serializedVersion: 2
-        x: 1003
-        y: 66
+        x: 86
+        y: 134
         width: 14
         height: 21
       alignment: 0
@@ -357,8 +378,8 @@ TextureImporter:
       name: CNum3
       rect:
         serializedVersion: 2
-        x: 1003
-        y: 91
+        x: 86
+        y: 159
         width: 14
         height: 21
       alignment: 0
@@ -378,8 +399,8 @@ TextureImporter:
       name: CNum4
       rect:
         serializedVersion: 2
-        x: 222
-        y: 488
+        x: 86
+        y: 184
         width: 14
         height: 21
       alignment: 0
@@ -399,8 +420,8 @@ TextureImporter:
       name: CNum5
       rect:
         serializedVersion: 2
-        x: 240
-        y: 488
+        x: 78
+        y: 218
         width: 14
         height: 21
       alignment: 0
@@ -420,8 +441,8 @@ TextureImporter:
       name: CNum6
       rect:
         serializedVersion: 2
-        x: 258
-        y: 488
+        x: 78
+        y: 243
         width: 14
         height: 21
       alignment: 0
@@ -441,8 +462,8 @@ TextureImporter:
       name: CNum7
       rect:
         serializedVersion: 2
-        x: 308
-        y: 464
+        x: 78
+        y: 268
         width: 14
         height: 21
       alignment: 0
@@ -462,8 +483,8 @@ TextureImporter:
       name: CNum8
       rect:
         serializedVersion: 2
-        x: 290
-        y: 489
+        x: 78
+        y: 294
         width: 14
         height: 21
       alignment: 0
@@ -483,8 +504,8 @@ TextureImporter:
       name: CNum9
       rect:
         serializedVersion: 2
-        x: 290
-        y: 464
+        x: 78
+        y: 319
         width: 14
         height: 21
       alignment: 0
@@ -504,8 +525,8 @@ TextureImporter:
       name: Coin
       rect:
         serializedVersion: 2
-        x: 358
-        y: 328
+        x: 177
+        y: 154
         width: 64
         height: 64
       alignment: 0
@@ -525,8 +546,8 @@ TextureImporter:
       name: GNum0
       rect:
         serializedVersion: 2
-        x: 934
-        y: 2
+        x: 177
+        y: 430
         width: 34
         height: 48
       alignment: 0
@@ -546,8 +567,8 @@ TextureImporter:
       name: GNum1
       rect:
         serializedVersion: 2
-        x: 896
-        y: 2
+        x: 177
+        y: 378
         width: 34
         height: 48
       alignment: 0
@@ -567,8 +588,8 @@ TextureImporter:
       name: GNum2
       rect:
         serializedVersion: 2
-        x: 858
-        y: 2
+        x: 177
+        y: 326
         width: 34
         height: 48
       alignment: 0
@@ -588,8 +609,8 @@ TextureImporter:
       name: GNum3
       rect:
         serializedVersion: 2
-        x: 782
-        y: 2
+        x: 177
+        y: 274
         width: 34
         height: 48
       alignment: 0
@@ -609,8 +630,8 @@ TextureImporter:
       name: GNum4
       rect:
         serializedVersion: 2
-        x: 744
-        y: 2
+        x: 177
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -630,8 +651,8 @@ TextureImporter:
       name: GNum5
       rect:
         serializedVersion: 2
-        x: 616
-        y: 192
+        x: 449
+        y: 2
         width: 34
         height: 48
       alignment: 0
@@ -651,8 +672,8 @@ TextureImporter:
       name: GNum6
       rect:
         serializedVersion: 2
-        x: 578
-        y: 192
+        x: 70
+        y: 446
         width: 34
         height: 48
       alignment: 0
@@ -672,8 +693,8 @@ TextureImporter:
       name: GNum7
       rect:
         serializedVersion: 2
-        x: 464
-        y: 192
+        x: 253
+        y: 430
         width: 34
         height: 48
       alignment: 0
@@ -693,8 +714,8 @@ TextureImporter:
       name: GNum8
       rect:
         serializedVersion: 2
-        x: 972
-        y: 2
+        x: 253
+        y: 378
         width: 34
         height: 48
       alignment: 0
@@ -714,8 +735,8 @@ TextureImporter:
       name: GNum9
       rect:
         serializedVersion: 2
-        x: 737
-        y: 66
+        x: 443
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -735,8 +756,8 @@ TextureImporter:
       name: GreenAdd
       rect:
         serializedVersion: 2
-        x: 699
-        y: 66
+        x: 449
+        y: 78
         width: 34
         height: 48
       alignment: 0
@@ -756,8 +777,8 @@ TextureImporter:
       name: GreenSub
       rect:
         serializedVersion: 2
-        x: 820
-        y: 2
+        x: 215
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -777,10 +798,10 @@ TextureImporter:
       name: hpbg
       rect:
         serializedVersion: 2
-        x: 2
-        y: 66
-        width: 693
-        height: 59
+        x: 381
+        y: 184
+        width: 128
+        height: 11
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -798,10 +819,10 @@ TextureImporter:
       name: hpgreen
       rect:
         serializedVersion: 2
-        x: 2
-        y: 129
-        width: 693
-        height: 59
+        x: 381
+        y: 154
+        width: 128
+        height: 11
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -819,10 +840,10 @@ TextureImporter:
       name: hpred
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 700
-        height: 60
+        x: 381
+        y: 169
+        width: 128
+        height: 11
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -840,8 +861,8 @@ TextureImporter:
       name: Letter
       rect:
         serializedVersion: 2
-        x: 358
-        y: 192
+        x: 313
+        y: 154
         width: 64
         height: 64
       alignment: 0
@@ -861,8 +882,8 @@ TextureImporter:
       name: Map
       rect:
         serializedVersion: 2
-        x: 358
-        y: 260
+        x: 109
+        y: 434
         width: 64
         height: 64
       alignment: 0
@@ -882,8 +903,8 @@ TextureImporter:
       name: RedAdd
       rect:
         serializedVersion: 2
-        x: 775
-        y: 66
+        x: 215
+        y: 274
         width: 34
         height: 48
       alignment: 0
@@ -903,8 +924,8 @@ TextureImporter:
       name: RedSub
       rect:
         serializedVersion: 2
-        x: 813
-        y: 66
+        x: 215
+        y: 326
         width: 34
         height: 48
       alignment: 0
@@ -924,8 +945,8 @@ TextureImporter:
       name: RNum0
       rect:
         serializedVersion: 2
-        x: 851
-        y: 66
+        x: 215
+        y: 378
         width: 34
         height: 48
       alignment: 0
@@ -945,8 +966,8 @@ TextureImporter:
       name: RNum1
       rect:
         serializedVersion: 2
-        x: 889
-        y: 66
+        x: 215
+        y: 430
         width: 34
         height: 48
       alignment: 0
@@ -966,8 +987,8 @@ TextureImporter:
       name: RNum2
       rect:
         serializedVersion: 2
-        x: 927
-        y: 66
+        x: 253
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -987,8 +1008,8 @@ TextureImporter:
       name: RNum3
       rect:
         serializedVersion: 2
-        x: 965
-        y: 66
+        x: 70
+        y: 370
         width: 34
         height: 48
       alignment: 0
@@ -1008,8 +1029,8 @@ TextureImporter:
       name: RNum4
       rect:
         serializedVersion: 2
-        x: 358
-        y: 396
+        x: 329
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -1029,8 +1050,8 @@ TextureImporter:
       name: RNum5
       rect:
         serializedVersion: 2
-        x: 706
-        y: 2
+        x: 367
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -1050,8 +1071,8 @@ TextureImporter:
       name: RNum6
       rect:
         serializedVersion: 2
-        x: 426
-        y: 192
+        x: 405
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -1071,8 +1092,8 @@ TextureImporter:
       name: RNum7
       rect:
         serializedVersion: 2
-        x: 358
-        y: 448
+        x: 291
+        y: 222
         width: 34
         height: 48
       alignment: 0
@@ -1092,8 +1113,8 @@ TextureImporter:
       name: RNum8
       rect:
         serializedVersion: 2
-        x: 502
-        y: 192
+        x: 253
+        y: 274
         width: 34
         height: 48
       alignment: 0
@@ -1113,8 +1134,8 @@ TextureImporter:
       name: RNum9
       rect:
         serializedVersion: 2
-        x: 540
-        y: 192
+        x: 253
+        y: 326
         width: 34
         height: 48
       alignment: 0
@@ -1134,8 +1155,8 @@ TextureImporter:
       name: TNum0
       rect:
         serializedVersion: 2
-        x: 154
-        y: 344
+        x: 109
+        y: 2
         width: 64
         height: 72
       alignment: 0
@@ -1155,8 +1176,8 @@ TextureImporter:
       name: TNum1
       rect:
         serializedVersion: 2
-        x: 154
-        y: 268
+        x: 2
+        y: 370
         width: 64
         height: 72
       alignment: 0
@@ -1176,8 +1197,8 @@ TextureImporter:
       name: TNum2
       rect:
         serializedVersion: 2
-        x: 154
-        y: 192
+        x: 109
+        y: 154
         width: 64
         height: 72
       alignment: 0
@@ -1197,8 +1218,8 @@ TextureImporter:
       name: TNum3
       rect:
         serializedVersion: 2
-        x: 86
-        y: 420
+        x: 381
+        y: 78
         width: 64
         height: 72
       alignment: 0
@@ -1218,8 +1239,8 @@ TextureImporter:
       name: TNum4
       rect:
         serializedVersion: 2
-        x: 154
-        y: 420
+        x: 313
+        y: 2
         width: 64
         height: 72
       alignment: 0
@@ -1239,8 +1260,8 @@ TextureImporter:
       name: TNum5
       rect:
         serializedVersion: 2
-        x: 86
-        y: 268
+        x: 313
+        y: 78
         width: 64
         height: 72
       alignment: 0
@@ -1260,8 +1281,8 @@ TextureImporter:
       name: TNum6
       rect:
         serializedVersion: 2
-        x: 86
-        y: 192
+        x: 245
+        y: 78
         width: 64
         height: 72
       alignment: 0
@@ -1281,8 +1302,8 @@ TextureImporter:
       name: TNum7
       rect:
         serializedVersion: 2
-        x: 2
-        y: 428
+        x: 177
+        y: 78
         width: 64
         height: 72
       alignment: 0
@@ -1302,8 +1323,8 @@ TextureImporter:
       name: TNum8
       rect:
         serializedVersion: 2
-        x: 222
-        y: 344
+        x: 109
+        y: 78
         width: 64
         height: 72
       alignment: 0
@@ -1323,8 +1344,8 @@ TextureImporter:
       name: TNum9
       rect:
         serializedVersion: 2
-        x: 222
-        y: 268
+        x: 381
+        y: 2
         width: 64
         height: 72
       alignment: 0
@@ -1344,8 +1365,8 @@ TextureImporter:
       name: TNumAdd
       rect:
         serializedVersion: 2
-        x: 222
-        y: 192
+        x: 177
+        y: 2
         width: 64
         height: 72
       alignment: 0
@@ -1365,8 +1386,8 @@ TextureImporter:
       name: TNumSub
       rect:
         serializedVersion: 2
-        x: 86
-        y: 344
+        x: 245
+        y: 2
         width: 64
         height: 72
       alignment: 0
@@ -1398,6 +1419,7 @@ TextureImporter:
       2003: -5468759986172396227
       2004: -975250947973818357
       2005: -4936521629143998787
+      2006: 0
       AxeT1: -8735386037683573026
       AxeT2: 431581430139996770
       BowT1: -9099431459001994831

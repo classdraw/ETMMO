@@ -86,8 +86,11 @@ Shader "Unlit/HUDFont"
 
 			half4 frag(Varyings i) : SV_Target
 			{
-				half4 col = i.color;
-				col.a *= SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv).a;
+				half4 tex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+				// 字体只取贴图 Alpha 做遮罩，颜色完全由顶点色决定
+				half4 col;
+				col.rgb = i.color.rgb;
+				col.a = tex.a * i.color.a;
 				return col;
 			}
 			ENDHLSL

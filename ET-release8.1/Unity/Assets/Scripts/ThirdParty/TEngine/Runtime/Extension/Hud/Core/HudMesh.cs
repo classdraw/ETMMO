@@ -43,6 +43,38 @@ namespace XEngine.Hud{
 
 
 
+        private static Shader GetFontShader()
+        {
+            HudBoardSetting setting = HudBoardSetting.GetInstance();
+            if (setting.m_kFontShader != null)
+            {
+                return setting.m_kFontShader;
+            }
+
+            if (setting.m_kNumberShader != null)
+            {
+                return setting.m_kNumberShader;
+            }
+
+            return Shader.Find("Unlit/HUDFont");
+        }
+
+        private static Shader GetSpriteShader()
+        {
+            HudBoardSetting setting = HudBoardSetting.GetInstance();
+            if (setting.m_kSpriteShader != null)
+            {
+                return setting.m_kSpriteShader;
+            }
+
+            if (setting.m_kNumberShader != null)
+            {
+                return setting.m_kNumberShader;
+            }
+
+            return Shader.Find("Unlit/HUDSprite");
+        }
+
         public void SetAtlasId(int atlasId, bool useNumberShader = false){
             if(AtlasId!=atlasId&&AtlasId!=0){
                 //旧的卸载
@@ -51,10 +83,8 @@ namespace XEngine.Hud{
             AtlasId=atlasId;
             if (m_kMaterial == null)
             {
-                var shader = useNumberShader
-                    ? HudBoardSetting.GetInstance().m_kNumberShader
-                    : HudBoardSetting.GetInstance().m_kSpriteShader;
-                m_kMaterial = new Material(shader);// new Material(Shader.Find("Unlit/HUDSprite"));
+                // 图集/跳字：纹理颜色 * 顶点色
+                m_kMaterial = new Material(GetSpriteShader());
                 /* m_kMaterial =new Material(Shader.Find("Unlit/HUDSprite"));
                  if(m_kMaterial != null && Application.platform != RuntimePlatform.WindowsEditor)
                  {
@@ -93,8 +123,7 @@ namespace XEngine.Hud{
                     Material mat = m_kFont.material;
                     if (m_kMaterial == null)
                     {
-                        var shader = HudBoardSetting.GetInstance().m_kNumberShader;
-                        m_kMaterial = new Material(shader);// new Material(Shader.Find("Unlit/HUDFont"));
+                        m_kMaterial = new Material(GetFontShader());
                     }
                     m_kMaterial.mainTexture=mat.mainTexture;
                     m_kMaterial.mainTextureOffset=mat.mainTextureOffset;
@@ -107,8 +136,7 @@ namespace XEngine.Hud{
 
         public void SetFont(UIFont font){
             if(m_kMaterial==null){
-                var shader = HudBoardSetting.GetInstance().m_kNumberShader;
-                m_kMaterial =new Material(shader);// new Material(Shader.Find("Unlit/HUDFont"));
+                m_kMaterial = new Material(GetFontShader());
             }
             m_kFont=font;
             Material mat=m_kFont.material;
