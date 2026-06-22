@@ -7,8 +7,8 @@ namespace ET.Server
     public static partial class PlayerOfflineOutTimeComponentSystem
     {
         
-        [Invoke(TimerInvokeType.PlayerOfflineOutTime)]
-        public class AccountChectOutTime: ATimer<PlayerOfflineOutTimeComponent>
+        [Invoke(TimerInvokeType.PlayerOfflineOutTimer)]
+        public class PlayerOfflineOutTimerHandler: ATimer<PlayerOfflineOutTimeComponent>
         {
             protected override void Run(PlayerOfflineOutTimeComponent self)
             {
@@ -29,7 +29,7 @@ namespace ET.Server
                 self.Root().GetComponent<TimerComponent>()?.Remove(ref self.Timer);
             //玩家10秒掉线
             self.Timer = self.Root().GetComponent<TimerComponent>()
-                    .NewOnceTimer(TimeInfo.Instance.ServerNow() + 10000, TimerInvokeType.PlayerOfflineOutTime, self);
+                    .NewOnceTimer(TimeInfo.Instance.ServerNow() + 10000, TimerInvokeType.PlayerOfflineOutTimer, self);
         }
         
         [EntitySystem]

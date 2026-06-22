@@ -8,7 +8,7 @@ namespace ET.Server
         public int ConfigId;
         //有很多变量  辅助创建buff
         public long AddUnitId;//创建者UnitId
-        public int AddSkillId;//增加的技能id
+        public int AddCastId;//增加的技能id
         public int FirstLayer;//>0时替代配置的FirstAddLayer
     }
 

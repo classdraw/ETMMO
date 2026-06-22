@@ -471,25 +471,61 @@ namespace ET.Server
         public static void HandleSelfHit(this Cast cast, int index)
         {
             int[] actions = cast.Config.SelfHitAction;
-            if (index < 0 || index >= actions.Length)
+            if (index >= 0 && index <= actions.Length-1)
             {
-                Log.Error($"Cast HandleSelfHit Error {index}/{actions.Length}");
-                return;
+                int actionId = actions[index];
+                if (actionId!=0)
+                {
+                    cast.HandleHit(actionId, selfHit: true);
+                }
             }
 
-            cast.HandleHit(actions[index], selfHit: true);
+            int[] selfHitBuffs = cast.Config.SelfHitBuffs;
+            if (index>=0&& index<=selfHitBuffs.Length-1)
+            {
+                int buffId = selfHitBuffs[index];
+                if (buffId!=0)
+                {
+                    Unit caster = cast.Caster;
+                    caster.GetComponent<BuffComponent>()?.CreateAndAdd(buffId,caster.Id,cast.ConfigId);
+                }
+            }
         }
 
         public static void HandleTargetHit(this Cast cast, int index)
         {
             int[] actions = cast.Config.HitAction;
-            if (index < 0 || index >= actions.Length)
+            if (index >=0 && index <= actions.Length-1)
             {
-                Log.Error($"Cast HandleTargetHit Error {index}/{actions.Length}");
-                return;
+                int actionId = actions[index];
+                if (actionId!=0)
+                {
+                    cast.HandleHit(actionId, selfHit: false);
+                }
+            }
+            
+            int[] hitBuffs = cast.Config.HitBuffs;
+            if (index>=0&&index<=hitBuffs.Length-1)
+            {
+                int buffId = hitBuffs[index];
+                if (buffId!=0)
+                { 
+                    Unit caster = cast.Caster;
+                    UnitComponent unitComponent = caster.Scene().GetComponent<UnitComponent>();
+                    foreach (long targetId in cast.Targets)
+                    {
+                        Unit target = unitComponent.Get(targetId);
+                        if (target == null || target.IsDisposed || !target.IsBattleUnit())
+                        {
+                            continue;
+                        }
+                    
+                        target.GetComponent<BuffComponent>()?.CreateAndAdd(buffId,caster.Id,cast.ConfigId);
+                    }
+
+                }
             }
 
-            cast.HandleHit(actions[index], selfHit: false);
         }
 
         private static void HandleHit(this Cast cast, int actionId, bool selfHit)

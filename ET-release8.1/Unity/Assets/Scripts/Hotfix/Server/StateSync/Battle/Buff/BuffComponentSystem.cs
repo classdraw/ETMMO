@@ -41,18 +41,18 @@ namespace ET.Server
             }
         }
 
-        private static BuffCreateInfo CreateBuffInfo(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId, int firstLayer = 0)
+        private static BuffCreateInfo CreateBuffInfo(this ET.Server.BuffComponent self, int configId, long addUnitId, int addCastId, int firstLayer = 0)
         {
             BuffCreateInfo buffCreateInfo = self.GetComponent<BuffTempComponent>().AddChild<BuffCreateInfo, int>(configId);
             buffCreateInfo.AddUnitId = addUnitId;
-            buffCreateInfo.AddSkillId = addSkillId;
+            buffCreateInfo.AddCastId = addCastId;
             buffCreateInfo.FirstLayer = firstLayer;
             return buffCreateInfo;
         }
 
-        public static bool CreateAndAdd(this ET.Server.BuffComponent self, int configId, long addUnitId, int addSkillId, int firstLayer = 0)
+        public static bool CreateAndAdd(this ET.Server.BuffComponent self, int configId, long addUnitId, int addCastId, int firstLayer = 0)
         {
-            using (BuffCreateInfo buffCreateInfo = self.CreateBuffInfo(configId, addUnitId, addSkillId, firstLayer))
+            using (BuffCreateInfo buffCreateInfo = self.CreateBuffInfo(configId, addUnitId, addCastId, firstLayer))
             {
                 return self.Add(buffCreateInfo);
             }
@@ -333,7 +333,7 @@ namespace ET.Server
             Buff buff = self.AddChild<Buff, int>(buffCreateInfo.ConfigId);
             buff.Owner = owner;
             buff.AddUnitId = buffCreateInfo.AddUnitId;
-            buff.AddSkillId = buffCreateInfo.AddSkillId;
+            buff.AddSkillId = buffCreateInfo.AddCastId;
             buff.Init(self.GetFirstAddLayer(buffCreateInfo,buffConfig));
             self.RegisterBuff(buff);
             return buff;

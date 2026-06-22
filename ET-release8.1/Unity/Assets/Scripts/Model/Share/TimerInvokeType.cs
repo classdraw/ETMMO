@@ -15,16 +15,16 @@
         public const int SessionAcceptTimeout = 203;
         
         public const int RoomUpdate = 301;
-        public const int MapCloseCheck = 302;//地图是否关闭检测
+        public const int MapCloseCheckTimer = 302;//地图是否关闭检测
         
-        public const int PlayerOfflineOutTime = 401;//玩家超时
-        public const int SaveChangeDBDate = 402;
+        public const int PlayerOfflineOutTimer = 401;//玩家超时
+        public const int SaveChangeDBDateTimer = 402;
         
-        public const int NumericSync = 403;//数值同步
-        public const int AccountChectOutTime = 404;//账号超时
+        public const int NumericSyncTimer = 403;//数值同步
+        public const int AccountChectOutTimer = 404;//账号超时
 
-        public const int BuffExpireTime = 405;//buff超时处理
-        public const int BuffTickTime = 406;//bufftick处理
+        public const int BuffExpireTimer = 405;//buff超时处理
+        public const int BuffTickTimer = 406;//bufftick处理
 
     }
 }

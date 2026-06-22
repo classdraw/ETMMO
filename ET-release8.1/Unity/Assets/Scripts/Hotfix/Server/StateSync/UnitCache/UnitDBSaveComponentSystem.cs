@@ -2,8 +2,8 @@ using System;
 
 namespace ET.Server
 {
-    [Invoke(TimerInvokeType.SaveChangeDBDate)]
-    public class UnitDBSaveComponentTimer : ATimer<UnitDBSaveComponent>
+    [Invoke(TimerInvokeType.SaveChangeDBDateTimer)]
+    public class UnitDBSaveComponentTimerHandler : ATimer<UnitDBSaveComponent>
     {
         protected override void Run(UnitDBSaveComponent self)
         {
@@ -29,7 +29,7 @@ namespace ET.Server
             //正式上线 每10-15分钟随机存储一次
             //long time = RandomGenerator.RandomNumber(10, 16) * 60 * 1000;
             long time = 10 * 1000;
-            self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(time, TimerInvokeType.SaveChangeDBDate, self);
+            self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(time, TimerInvokeType.SaveChangeDBDateTimer, self);
         }
         
         [EntitySystem]

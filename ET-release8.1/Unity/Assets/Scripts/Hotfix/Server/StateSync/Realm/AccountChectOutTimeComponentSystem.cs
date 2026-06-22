@@ -6,8 +6,8 @@ namespace ET.Server
     [FriendOf(typeof(AccountChectOutTimeComponent))]
     public static partial class AccountChectOutTimeComponentSystem
     {
-        [Invoke(TimerInvokeType.AccountChectOutTime)]
-        public class AccountChectOutTimeHandler: ATimer<AccountChectOutTimeComponent>
+        [Invoke(TimerInvokeType.AccountChectOutTimer)]
+        public class AccountChectOutTimerHandler: ATimer<AccountChectOutTimeComponent>
         {
             protected override void Run(AccountChectOutTimeComponent self)
             {
@@ -30,7 +30,7 @@ namespace ET.Server
             if(self.Timer!=0)
                 self.Root().GetComponent<TimerComponent>()?.Remove(ref self.Timer);
             
-            self.Timer = self.Root().GetComponent<TimerComponent>().NewOnceTimer(TimeInfo.Instance.ServerNow() + 600000, TimerInvokeType.AccountChectOutTime, self);
+            self.Timer = self.Root().GetComponent<TimerComponent>().NewOnceTimer(TimeInfo.Instance.ServerNow() + 600000, TimerInvokeType.AccountChectOutTimer, self);
         }
         
         [EntitySystem]

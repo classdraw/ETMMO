@@ -1,6 +1,6 @@
 namespace ET.Server
 {
-    [Invoke(TimerInvokeType.NumericSync)]
+    [Invoke(TimerInvokeType.NumericSyncTimer)]
     public class NumericSyncTimerHandler : ATimer<NumericNoticeComponent>
     {
         protected override void Run(NumericNoticeComponent self)
@@ -97,7 +97,7 @@ namespace ET.Server
                 }
 
                 self.SyncTime = TimeInfo.Instance.ServerNow() + 100;
-                self.SyncTimeId = self.Root().GetComponent<TimerComponent>().NewOnceTimer(self.SyncTime, TimerInvokeType.NumericSync, self);
+                self.SyncTimeId = self.Root().GetComponent<TimerComponent>().NewOnceTimer(self.SyncTime, TimerInvokeType.NumericSyncTimer, self);
             }
         }
         

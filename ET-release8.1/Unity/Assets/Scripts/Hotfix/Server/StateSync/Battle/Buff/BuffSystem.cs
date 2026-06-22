@@ -3,8 +3,8 @@ using System;
 namespace ET.Server
 {
     #region buff定时器
-    [Invoke(TimerInvokeType.BuffExpireTime)]
-    public class BuffExpireTimeHandler: ATimer<Buff>
+    [Invoke(TimerInvokeType.BuffExpireTimer)]
+    public class BuffExpireTimerHandler: ATimer<Buff>
     {
         protected override void Run(Buff self)
         {
@@ -23,8 +23,8 @@ namespace ET.Server
         }
     }
 
-    [Invoke(TimerInvokeType.BuffTickTime)]
-    public class BuffTickTimeHandler: ATimer<Buff>
+    [Invoke(TimerInvokeType.BuffTickTimer)]
+    public class BuffTickTimerHandler: ATimer<Buff>
     {
         protected override void Run(Buff self)
         {
@@ -104,8 +104,8 @@ namespace ET.Server
             self.CreateTime = now;
             self.TickBeginTime = 0;
             self.Layer = ClampLayer(firstAddLayer, self.Config.LayerLimit);
-            self.SetExpireTime(self.Config.TotalTime > 0 ? now + self.Config.TotalTime : 0);
             self.SetTickTime(self.Config.TickTime);
+            self.SetExpireTime(self.Config.TotalTime > 0 ? now + self.Config.TotalTime : 0);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace ET.Server
                 return;
             }
 
-            self.TickTimer = timerComponent.NewRepeatedTimer(self.TickTime, (int)TimerInvokeType.BuffTickTime, self);
+            self.TickTimer = timerComponent.NewRepeatedTimer(self.TickTime, (int)TimerInvokeType.BuffTickTimer, self);
         }
 
         public static void SetExpireTime(this Buff self, long expireTime, bool noticeClient = false)
@@ -279,6 +279,10 @@ namespace ET.Server
             }
 
             self.ExpireTime = newExpireTime;
+            if (noticeClient && expireTimeChanged)
+            {
+                self.NoticeClientUpdateInfo();
+            }
             self.RefreshExpireTimer();
 
             if (newExpireTime <= 0 && oldExpireTime > 0)
@@ -286,10 +290,7 @@ namespace ET.Server
                 self.TimeOut();
             }
 
-            if (noticeClient && expireTimeChanged)
-            {
-                self.NoticeClientUpdateInfo();
-            }
+
         }
 
         private static void RefreshExpireTimer(this Buff self)
@@ -306,7 +307,7 @@ namespace ET.Server
                 return;
             }
 
-            self.ExpireTimer = timerComponent.NewOnceTimer(self.ExpireTime, (int)TimerInvokeType.BuffExpireTime, self);
+            self.ExpireTimer = timerComponent.NewOnceTimer(self.ExpireTime, (int)TimerInvokeType.BuffExpireTimer, self);
         }
 
         public static void NoticeClientUpdateInfo(this Buff self)

@@ -5,8 +5,8 @@ using System;
 namespace ET.Server
 {
     
-    [Invoke(TimerInvokeType.MapCloseCheck)]
-    public class MapCloseCheckTimer : ATimer<MapManagerComponent>
+    [Invoke(TimerInvokeType.MapCloseCheckTimer)]
+    public class MapCloseCheckTimerHandler : ATimer<MapManagerComponent>
     {
         protected override void Run(MapManagerComponent self)
         {
@@ -30,7 +30,7 @@ namespace ET.Server
         private static void Awake(this MapManagerComponent self)
         {
             long time = 1000;
-            self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(time, TimerInvokeType.MapCloseCheck, self);
+            self.Timer = self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(time, TimerInvokeType.MapCloseCheckTimer, self);
             self.InitAllMap().Coroutine();
         }
         
