@@ -710,6 +710,14 @@ message M2C_CastHit // IMessage
 	repeated int64 TargetsId = 3;//所有目标
 }
 
+//战斗结果广播
+message M2C_BattleResult // IMessage
+{
+	int64 AttackerId = 1;//攻击者
+	int64 TargetId = 2;//被攻击者
+	int64 Damage = 3;//伤害
+}
+
 //////////////////////技能///////////////////////////////////////////
 
 

@@ -1,6 +1,6 @@
 namespace ET
 {
-    public enum SelectType
+    public enum SelectType:byte
     {
         Self=0,//自身
         FriendlyTarget=1,//友方目标
@@ -8,7 +8,7 @@ namespace ET
         Position=3,//坐标 客户端传入
     }
 
-    public enum ShapeType
+    public enum ShapeType:byte
     {
         //选的是啥就是啥，一个单位不做筛选 需要判断距离 合法性  0,5000
         //5000/1000f为距离
@@ -24,7 +24,7 @@ namespace ET
         Fan=3,//扇形
     }
 
-    public enum SelectCampType
+    public enum SelectCampType:byte
     {
         Ally=0,//盟友
         Hostile=1,//敌人
@@ -33,7 +33,7 @@ namespace ET
     /// <summary>
     /// 常规地图静态阵营 Id，用于 <see cref="FactionKeyType.Static"/>。
     /// </summary>
-    public enum CampType
+    public enum CampType:byte
     {
         CampA = 1, // 玩家/友方统一阵营（安全区、常规图）
         CampB = 2, // 怪物阵营（常规图、PK 图）

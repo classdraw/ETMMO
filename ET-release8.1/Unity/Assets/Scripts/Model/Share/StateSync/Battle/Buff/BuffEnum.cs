@@ -3,7 +3,7 @@ namespace ET
     /// <summary>
     /// buff覆盖叠加式
     /// </summary>
-    public enum BuffCoverType
+    public enum BuffCoverType:byte
     {
         AddTime=1,//增加时长：同ConfigId+同创建者叠加
         New=2,//新增独立
@@ -17,7 +17,7 @@ namespace ET
     /// <summary>
     /// Buff类型码
     /// </summary>
-    public enum BuffClassifyType
+    public enum BuffClassifyType:byte
     {
         /// <summary>
         /// 死亡删除
@@ -47,7 +47,7 @@ namespace ET
     /// <summary>
     /// Buff效果
     /// </summary>
-    public enum BuffEffectType
+    public enum BuffEffectType:byte
     {
         
     }

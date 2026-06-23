@@ -15,8 +15,8 @@ namespace ET.Client
                 return 0f;
             }
 
-            var curHp = numericComponent.GetAsInt(NumericType.Hp);
-            var maxHp = numericComponent.GetAsInt(NumericType.MaxHp);
+            var curHp = numericComponent[NumericType.Hp];
+            var maxHp = numericComponent[NumericType.MaxHp];
             if (maxHp==0)
             {
                 return 0f;

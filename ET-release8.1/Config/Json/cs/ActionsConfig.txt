@@ -1,4 +1,4 @@
 {"dict": [
-[7700001, {"_t":"ActionsConfig","_id":7700001,"Type":0}],
-[7700002, {"_t":"ActionsConfig","_id":7700002,"Type":0}],
+[7700001, {"_t":"ActionsConfig","_id":7700001,"Type":0,"ActionsParam":[]}],
+[7700002, {"_t":"ActionsConfig","_id":7700002,"Type":0,"ActionsParam":[]}],
 ]}

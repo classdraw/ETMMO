@@ -3154,6 +3154,49 @@ namespace ET
         }
     }
 
+    // 战斗结果广播
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_BattleResult)]
+    public partial class M2C_BattleResult : MessageObject, IMessage
+    {
+        public static M2C_BattleResult Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_BattleResult), isFromPool) as M2C_BattleResult;
+        }
+
+        /// <summary>
+        /// 攻击者
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public long AttackerId { get; set; }
+
+        /// <summary>
+        /// 被攻击者
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public long TargetId { get; set; }
+
+        /// <summary>
+        /// 伤害
+        /// </summary>
+        [MemoryPackOrder(2)]
+        public long Damage { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.AttackerId = default;
+            this.TargetId = default;
+            this.Damage = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 技能///////////////////////////////////////////
     /// </summary>
@@ -3485,12 +3528,13 @@ namespace ET
         public const ushort M2C_CastFinish = 10088;
         public const ushort M2C_CastBreak = 10089;
         public const ushort M2C_CastHit = 10090;
-        public const ushort BuffProto = 10091;
-        public const ushort M2C_BuffAdd = 10092;
-        public const ushort M2C_BuffTick = 10093;
-        public const ushort M2C_BuffUpdate = 10094;
-        public const ushort M2C_BuffRemove = 10095;
-        public const ushort C2Mail_GMAddMail = 10096;
-        public const ushort Mail2C_GMAddMail = 10097;
+        public const ushort M2C_BattleResult = 10091;
+        public const ushort BuffProto = 10092;
+        public const ushort M2C_BuffAdd = 10093;
+        public const ushort M2C_BuffTick = 10094;
+        public const ushort M2C_BuffUpdate = 10095;
+        public const ushort M2C_BuffRemove = 10096;
+        public const ushort C2Mail_GMAddMail = 10097;
+        public const ushort Mail2C_GMAddMail = 10098;
     }
 }
