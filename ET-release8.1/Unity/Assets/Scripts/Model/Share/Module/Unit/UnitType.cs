@@ -12,6 +12,7 @@
         Summon=8,//召唤物b
         Robot=9,//机器人b
         Env=10,//环境生物
+        Bullet=11,//子弹
     }
     
     /// <summary>
