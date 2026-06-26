@@ -715,7 +715,8 @@ message M2C_BattleResult // IMessage
 {
 	int64 AttackerId = 1;//攻击者
 	int64 TargetId = 2;//被攻击者
-	int64 Damage = 3;//伤害
+	int64 Damage = 3;//伤害 负数是掉血
+	bool IsCrit = 4;//是否暴击
 }
 
 //////////////////////技能///////////////////////////////////////////

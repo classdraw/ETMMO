@@ -8,6 +8,12 @@ namespace ET
         Position=3,//坐标 客户端传入
     }
 
+    public enum BulletShape : byte
+    {
+        //一个圆 1,1500,3,0
+        Circle=1,
+    }
+
     public enum ShapeType:byte
     {
         //选的是啥就是啥，一个单位不做筛选 需要判断距离 合法性  0,5000

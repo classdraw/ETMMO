@@ -8,7 +8,10 @@ namespace ET.Server
         BuffAdd,
         BuffTick,
         BuffRemove,
-        CastHit
+        CastHit,
+        BulletDestroy,
+        BulletAwake,
+        BulletTick
     }
 }
 

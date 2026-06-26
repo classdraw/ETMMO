@@ -14,6 +14,10 @@ namespace ET.Server
                 return BulletConfigCategory.Instance.Get(this.ConfigId);
             }
         }
+
+        public long OwnerId;
+        [BsonIgnore]
+        public long TickTimer;
     }
 }
 

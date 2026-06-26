@@ -174,25 +174,11 @@ namespace ET.Server
             ShapeType shapeType =(ShapeType)cast.Config.SelectParam[0];
             if (shapeType==ShapeType.Single)
             {
-                if (unit!=null&&unit.IsBattleUnit())
+                if (ShapeSelectHelper.TrySelectSingle(unit, pos, cast.Config.SelectParam[1]))
                 {
-                    float radius = cast.Config.SelectParam[1] / 1000f;
-                    float radiusSqr = radius * radius;
-                    float disSqr = math.lengthsq(pos - unit.Position);
-                    if (disSqr<=radiusSqr)
-                    {
-                        cast.Targets.Add(unit.Id);
-                    }
-                    else
-                    {
-                        //玩家首选目标不符合标准
-                    }
+                    cast.Targets.Add(unit.Id);
+                }
 
-                }
-                else
-                {
-                    //选一个坐标 就是没有目标
-                }
                 return;
             }
 
@@ -201,200 +187,34 @@ namespace ET.Server
                 pos = unit.Position;//根据这个坐标进行筛选
             }
 
+            using ListComponent<Unit> list = ListComponent<Unit>.Create();
             switch (shapeType)
             {
                 case ShapeType.Circle://圆形
                 {
-                    
-                    float radius = cast.Config.SelectParam[1] / 1000f;
-                    float radiusSqr = radius * radius; 
-                    int needCount = cast.Config.SelectParam[2];
-                    SelectCampType selectCampType = (SelectCampType)cast.Config.SelectParam[3];
-                    int nowCount = 0;
-                    foreach (AOIEntity aoiEntity in caster.GetBeSeePlayers().Values)
-                    {
-                        Unit targetUnit = aoiEntity.GetParent<Unit>();
-                        if (targetUnit==caster||!targetUnit.IsBattleUnit())
-                        {//不需要是自己，如果一定要自己，自己配置self和single就可以了
-                            continue;
-                        }
-
-                        if (!IsMatchSelectCampType(caster, targetUnit, selectCampType))
-                        {
-                            continue;
-                        }
-
-                        float disSqr = math.lengthsq(pos-targetUnit.Position);
-                        if (disSqr<=radiusSqr)
-                        {
-                            cast.Targets.Add(targetUnit.Id);
-                            nowCount++;
-                        }
-
-                        if (nowCount>=needCount)
-                        {
-                            break;
-                        }
-                    }
+                    ShapeSelectHelper.SelectCircle(caster, pos, cast.Config.SelectParam[1], cast.Config.SelectParam[2],
+                        (SelectCampType)cast.Config.SelectParam[3], caster.GetAoiUnits(), list);
                     break;
                 }
                 case ShapeType.Rectangle://矩形
                 {
-                    float length = cast.Config.SelectParam[1] / 1000f;
-                    float height = cast.Config.SelectParam[2] / 1000f;
-                    int val = cast.Config.SelectParam[3];
-                    int needCount = cast.Config.SelectParam[4];
-                    SelectCampType selectCampType = (SelectCampType)cast.Config.SelectParam[5];
-                    int nowCount = 0;
-
-                    float halfLength = length * 0.5f;
-                    float halfHeight = height * 0.5f;
-                    const float minDirectionSqr = 0.01f;
-
-                    bool axisAligned = val == 0;
-                    float3 forward = new float3(0, 0, 1);
-                    float3 right = new float3(1, 0, 0);
-                    if (val == 1)
-                    {
-                        float3 direction = pos - caster.Position;
-                        direction.y = 0;
-                        if (math.lengthsq(direction) > minDirectionSqr)
-                        {
-                            forward = math.normalize(direction);
-                            right = math.normalize(new float3(forward.z, 0, -forward.x));
-                        }
-                        else
-                        {
-                            axisAligned = true;
-                        }
-                    }
-
-                    foreach (AOIEntity aoiEntity in caster.GetBeSeePlayers().Values)
-                    {
-                        Unit targetUnit = aoiEntity.GetParent<Unit>();
-                        //自己不算
-                        if (targetUnit == caster||!targetUnit.IsBattleUnit())
-                        {
-                            continue;
-                        }
-
-                        //阵营不匹配
-                        if (!IsMatchSelectCampType(caster, targetUnit, selectCampType))
-                        {
-                            continue;
-                        }
-
-                        float3 offset = targetUnit.Position - pos;
-                        offset.y = 0;
-
-                        bool inside;
-                        if (axisAligned)
-                        {
-                            inside = math.abs(offset.x) <= halfLength && math.abs(offset.z) <= halfHeight;
-                        }
-                        else
-                        {
-                            float localLength = math.dot(offset, forward);
-                            float localHeight = math.dot(offset, right);
-                            inside = math.abs(localLength) <= halfLength && math.abs(localHeight) <= halfHeight;
-                        }
-
-                        if (inside)
-                        {
-                            cast.Targets.Add(targetUnit.Id);
-                            nowCount++;
-                        }
-
-                        if (nowCount >= needCount)
-                        {
-                            break;
-                        }
-                    }
-
+                    ShapeSelectHelper.SelectRectangle(caster, pos, cast.Config.SelectParam[1], cast.Config.SelectParam[2],
+                        cast.Config.SelectParam[3], cast.Config.SelectParam[4], (SelectCampType)cast.Config.SelectParam[5],
+                        caster.GetAoiUnits(), list);
                     break;
                 }
                 case ShapeType.Fan://扇形
                 {
-                    int val = cast.Config.SelectParam[1];
-                    float angle = cast.Config.SelectParam[2] / 1000f;
-                    int needCount = cast.Config.SelectParam[3];
-                    SelectCampType selectCampType = (SelectCampType)cast.Config.SelectParam[4];
-                    int nowCount = 0;
-                    const float minDirectionSqr = 0.01f;
-                    float halfAngle = angle * 0.5f;
-
-                    float3 forward;
-                    if (val == 1)
-                    {
-                        float3 direction = pos - caster.Position;
-                        direction.y = 0;
-                        if (math.lengthsq(direction) > minDirectionSqr)
-                        {
-                            forward = math.normalize(direction);
-                        }
-                        else
-                        {
-                            forward = caster.Forward;
-                            forward.y = 0;
-                            forward = math.lengthsq(forward) > minDirectionSqr ? math.normalize(forward) : new float3(0, 0, 1);
-                        }
-                    }
-                    else
-                    {
-                        forward = caster.Forward;
-                        forward.y = 0;
-                        forward = math.lengthsq(forward) > minDirectionSqr ? math.normalize(forward) : new float3(0, 0, 1);
-                    }
-
-                    foreach (AOIEntity aoiEntity in caster.GetBeSeePlayers().Values)
-                    {
-                        Unit targetUnit = aoiEntity.GetParent<Unit>();
-                        if (targetUnit == caster||!targetUnit.IsBattleUnit())
-                        {
-                            continue;
-                        }
-
-                        if (!IsMatchSelectCampType(caster, targetUnit, selectCampType))
-                        {
-                            continue;
-                        }
-
-                        float3 toTarget = targetUnit.Position - caster.Position;
-                        toTarget.y = 0;
-                        if (math.lengthsq(toTarget) <= minDirectionSqr)
-                        {
-                            continue;
-                        }
-
-                        float3 toTargetDir = math.normalize(toTarget);
-                        float dot = math.clamp(math.dot(forward, toTargetDir), -1f, 1f);
-                        float angleToTarget = math.degrees(math.acos(dot));
-                        if (angleToTarget <= halfAngle)
-                        {
-                            cast.Targets.Add(targetUnit.Id);
-                            nowCount++;
-                        }
-
-                        if (nowCount >= needCount)
-                        {
-                            break;
-                        }
-                    }
-
+                    ShapeSelectHelper.SelectFan(caster, pos, cast.Config.SelectParam[1], cast.Config.SelectParam[2],
+                        cast.Config.SelectParam[3], (SelectCampType)cast.Config.SelectParam[4], caster.GetAoiUnits(), list);
                     break;
                 }
             }
 
-        }
-        
-        private static bool IsMatchSelectCampType(Unit caster, Unit target, SelectCampType selectCampType)
-        {
-            return selectCampType switch
+            foreach (Unit targetUnit in list)
             {
-                SelectCampType.Ally => CampHelper.IsAlly(caster, target),
-                SelectCampType.Hostile => CampHelper.IsHostile(caster, target),
-                _ => false,
-            };
+                cast.Targets.Add(targetUnit.Id);
+            }
         }
 
         

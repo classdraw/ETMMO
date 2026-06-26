@@ -17,6 +17,13 @@ namespace ET.Client
         //增加item
         public static void AddItemFromMessage(this ClientKnapsackContainerComponent self, ItemProto itemProto)
         {
+            if (self.Items.TryGetValue(itemProto.Id, out EntityRef<Item> itemRef))
+            {
+                Item existItem = itemRef;
+                existItem.FromMessage(itemProto);
+                return;
+            }
+
             Item item = self.AddChildWithId<Item, int>(itemProto.Id, itemProto.ConfigId);
             item.FromMessage(itemProto);
             self.Items.Add(item.Id, item);

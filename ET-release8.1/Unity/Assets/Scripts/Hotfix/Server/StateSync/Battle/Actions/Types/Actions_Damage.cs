@@ -1,6 +1,6 @@
 namespace ET.Server
 {
-    [Actions(ActionsType.NumericChange)]
+    [Actions(ActionsType.Damage)]
     [FriendOf(typeof(Actions))]
     [FriendOf(typeof(Cast))]
     public class Actions_Damage:IActions
@@ -23,7 +23,7 @@ namespace ET.Server
             foreach (var unitId in cast.Targets)
             {
                 Unit target = unitComponent.Get(unitId);
-                if (target==null||target.IsDisposed)
+                if (target==null||target.IsDisposed||!target.IsBattleUnit())
                 {
                     continue;
                 }

@@ -7,7 +7,7 @@ namespace ET.Server
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
             Unit owner = actions.Owner;
-            if (owner==null||owner.IsDisposed)
+            if (owner==null||owner.IsDisposed||!owner.IsBattleUnit())
             {
                 return;
             }

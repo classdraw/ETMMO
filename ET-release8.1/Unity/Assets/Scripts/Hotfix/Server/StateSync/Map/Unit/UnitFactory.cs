@@ -3,6 +3,7 @@ using Unity.Mathematics;
 
 namespace ET.Server
 {
+    [FriendOf(typeof(BulletComponent))]
     public static partial class UnitFactory
     {
         public static UnitConfig GetUnitConfig(int configId)
@@ -55,6 +56,29 @@ namespace ET.Server
                 default:
                     throw new Exception($"not such unit type: {unitType}");
             }
+        }
+
+        public static Unit CreateBullet(Scene scene, long ownerId, int unitConfigId, int bulletId, float3 pos)
+        {
+            UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
+            Unit owner = unitComponent.Get(ownerId);
+            if (owner == null || owner.IsDisposed || !owner.IsBattleUnit())
+            {
+                Log.Error($"CreateBullet owner invalid: ownerId={ownerId}");
+                return null;
+            }
+
+            //UnitConfig unitConfig = UnitConfigCategory.Instance.Get(unitConfigId);
+            long id = IdGenerater.Instance.GenerateId();
+            Unit unit = unitComponent.AddChildWithId<Unit, int, string>(id, unitConfigId, string.Empty);
+            unit.Position = pos;
+            unit.OwnerId = ownerId;
+
+            BulletComponent bulletComponent = unit.AddComponent<BulletComponent, int>(bulletId);
+            bulletComponent.OwnerId = ownerId;
+
+            unitComponent.Add(unit);
+            return unit;
         }
     }
 }

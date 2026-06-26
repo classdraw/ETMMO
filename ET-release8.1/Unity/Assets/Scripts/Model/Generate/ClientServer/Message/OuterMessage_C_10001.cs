@@ -3177,10 +3177,16 @@ namespace ET
         public long TargetId { get; set; }
 
         /// <summary>
-        /// 伤害
+        /// 伤害 负数是掉血
         /// </summary>
         [MemoryPackOrder(2)]
         public long Damage { get; set; }
+
+        /// <summary>
+        /// 是否暴击
+        /// </summary>
+        [MemoryPackOrder(3)]
+        public bool IsCrit { get; set; }
 
         public override void Dispose()
         {
@@ -3192,6 +3198,7 @@ namespace ET
             this.AttackerId = default;
             this.TargetId = default;
             this.Damage = default;
+            this.IsCrit = default;
 
             ObjectPool.Instance.Recycle(this);
         }

@@ -101,10 +101,16 @@ namespace XEngine.Hud
             {
                 return;
             }
+            ClearSceneNumbers();
+            m_bStart =false;
+        }
+
+        public void ClearSceneNumbers()
+        {
             CleanCurrentNumber();
             CleanAllMeshRender();
             ReleaseCmmmandBuffer();
-            m_bStart =false;
+            m_bAddUpdateLogic = false;
         }
 
         // 功能：开始NPC对话

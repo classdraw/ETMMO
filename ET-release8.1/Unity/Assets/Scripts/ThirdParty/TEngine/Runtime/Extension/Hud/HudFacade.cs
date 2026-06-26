@@ -26,6 +26,12 @@ namespace XEngine.Hud {
             HudTitleRender.GetInstance().LeaveGame();
             HudNumberRender.GetInstance().LeaveGame();
         }
+
+        public void ClearSceneHud()
+        {
+            HudTitleRender.GetInstance().ClearAllTitles();
+            HudNumberRender.GetInstance().ClearSceneNumbers();
+        }
         private void Update()
         {
             HudTitleRender.GetInstance().Tick();

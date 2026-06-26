@@ -136,6 +136,14 @@ namespace ET.Server
         {
             return self.GetComponent<AOIEntity>().GetBeSeePlayers();
         }
+
+        public static IEnumerable<Unit> GetAoiUnits(this Unit self)
+        {
+            foreach (AOIEntity aoiEntity in self.GetBeSeePlayers().Values)
+            {
+                yield return aoiEntity.GetParent<Unit>();
+            }
+        }
         
         public static void ChangeMap(Unit unit,int mapConfigId,int mapFiberId)
         {

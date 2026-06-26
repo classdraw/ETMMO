@@ -24,7 +24,7 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this UnitTopUIComponent self)
         {
-
+            self.HudInfoScript?.Release();
             if (self.HudInfoObj!=null)
             {
                 GameObject.Destroy(self.HudInfoObj);

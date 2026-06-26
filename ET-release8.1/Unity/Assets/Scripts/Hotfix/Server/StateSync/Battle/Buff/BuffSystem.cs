@@ -18,7 +18,7 @@ namespace ET.Server
             }
             catch (Exception e)
             {
-                Log.Error($"Buff BuffExpireTime error: {self.Id}\n{e}");
+                Log.Error($"Buff BuffExpireTimer error: {self.Id}\n{e}");
             }
         }
     }
@@ -38,7 +38,7 @@ namespace ET.Server
             }
             catch (Exception e)
             {
-                Log.Error($"Buff BuffTickTime error: {self.Id}\n{e}");
+                Log.Error($"Buff BuffTickTimer error: {self.Id}\n{e}");
             }
         }
     }

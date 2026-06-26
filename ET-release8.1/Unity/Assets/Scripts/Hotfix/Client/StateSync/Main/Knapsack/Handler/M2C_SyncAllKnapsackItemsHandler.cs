@@ -6,9 +6,11 @@ namespace ET.Client
         //传送后服务器发送背包全量数据
         protected override async ETTask Run(Scene root, M2C_SyncAllKnapsackItems message)
         {
+            ClientKnapsackComponent knapsackComponent = root.GetComponent<ClientKnapsackComponent>();
+            knapsackComponent.ClearAllItems();
             foreach (ItemProto itemProto in message.ItemList)
             {
-                root.GetComponent<ClientKnapsackComponent>().GetContainer(itemProto.ContainerType).AddItemFromMessage(itemProto);
+                knapsackComponent.GetContainer(itemProto.ContainerType).AddItemFromMessage(itemProto);
             }
 
             await ETTask.CompletedTask;

@@ -115,20 +115,25 @@ namespace XEngine.Hud {
             {
                 return;
             }
-            foreach (var v in m_kHudTitles)
+            ClearAllTitles();
+            m_bStart = false;
+        }
+
+        public void ClearAllTitles()
+        {
+            m_kDelayReleaseTitles.Clear();
+            m_kTranMain = null;
+
+            List<int> titleIds = new List<int>(m_kHudTitles.Keys);
+            for (int i = 0; i < titleIds.Count; i++)
             {
-                HudTitleInfo title = v.Value;
-                if (title.m_kBatcher != null)
-                {
-                    title.m_kBatcher.EraseTitle(title);
-                    title.m_kBatcher = null;
-                }
+                ReleaseTitle(titleIds[i]);
             }
 
-            m_kDynamicBatcher.m_kMeshRender.Release();//mesh 字体 顶点清除
+            m_kDynamicBatcher.m_kMeshRender.Release();
             m_kStaticBatcher.m_kMeshRender.Release();
             ReleaseCmdBuffer();
-            m_bStart = false;
+            m_bMeshDirty = false;
         }
 
         public Camera GetMainCamera()

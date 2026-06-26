@@ -98,6 +98,11 @@ namespace XEngine.Hud
                 HudTitleRender.GetInstance().ReleaseTitle(titleUuid);
             }
         }
+
+        private void OnDestroy()
+        {
+            Release();
+        }
     }
 
 }

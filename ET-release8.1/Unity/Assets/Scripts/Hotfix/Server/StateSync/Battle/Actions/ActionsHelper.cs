@@ -21,6 +21,21 @@ namespace ET.Server
             return self.AddChild<Actions, int>(configId);
         }
 
+        public static Actions CreateActions(this BulletComponent bulletComponent,int configId,Unit owner,Unit caster, ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
+        {
+            //owner是目标
+            Actions actions = bulletComponent.GetComponent<ActionsTempComponent>().CreateActions(configId);
+            actions.Caster = caster;
+            actions.Owner = owner;
+            RunActions(bulletComponent.Root(), actions, actionsRunType, autoRun, autoDispose);
+            if (actions.IsDisposed)
+            {
+                return null;
+            }
+
+            return actions;
+        }
+
         public static Actions CreateActions(this Cast cast, int configId, Unit owner, ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
         {
             Actions actions = cast.GetComponent<ActionsTempComponent>().CreateActions(configId);

@@ -31,6 +31,7 @@ namespace ET.Server
                 m2CBattleResult.AttackerId = attacker.Id;
                 m2CBattleResult.TargetId = target.Id;
                 m2CBattleResult.Damage = realDamage;
+                m2CBattleResult.IsCrit = false;
                 MapMessageHelper.SendClient(target,m2CBattleResult,NoticeClientType.Broadcast);//客户端飘字
             }
             
