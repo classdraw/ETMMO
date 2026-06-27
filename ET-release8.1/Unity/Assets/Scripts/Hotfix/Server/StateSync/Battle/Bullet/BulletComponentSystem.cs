@@ -160,20 +160,20 @@ namespace ET.Server
         private static bool TrySelectTickTargets(this BulletComponent self, Unit bulletUnit, Unit owner, BulletConfig bulletConfig,
             ListComponent<Unit> list)
         {
-            BulletShape bulletShape = (BulletShape)bulletConfig.Shape;
+            BulletShape bulletShape = (BulletShape)bulletConfig.ShapeParam[0];
             switch (bulletShape)
             {
                 case BulletShape.Circle:
                 {
                     int[] shapeParam = bulletConfig.ShapeParam;
-                    if (shapeParam == null || shapeParam.Length < 3)
+                    if (shapeParam == null || shapeParam.Length != 4)
                     {
                         Log.Error($"BulletConfig {bulletConfig.Id} Circle ShapeParam invalid");
                         return false;
                     }
 
-                    ShapeSelectHelper.SelectCircle(owner, bulletUnit.Position, shapeParam[0], shapeParam[1],
-                        (SelectCampType)shapeParam[2], owner.GetAoiUnits(), list);
+                    ShapeSelectHelper.SelectCircle(owner, bulletUnit.Position, shapeParam[1], shapeParam[2],
+                        (SelectCampType)shapeParam[3], owner.GetAoiUnits(), list);
                     return true;
                 }
                 default:

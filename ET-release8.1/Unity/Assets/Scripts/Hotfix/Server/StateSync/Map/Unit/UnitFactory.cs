@@ -57,8 +57,16 @@ namespace ET.Server
                     throw new Exception($"not such unit type: {unitType}");
             }
         }
-
-        public static Unit CreateBullet(Scene scene, long ownerId, int unitConfigId, int bulletId, float3 pos)
+        /// <summary>
+        /// 创建子弹
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="ownerId">拥有者</param>
+        /// <param name="unitConfigId">一般写死9001 UnitConfig表</param>
+        /// <param name="bulletConfigId">BulletConfig表</param>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static Unit CreateBullet(Scene scene, long ownerId, int unitConfigId, int bulletConfigId, float3 pos)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             Unit owner = unitComponent.Get(ownerId);
@@ -68,13 +76,12 @@ namespace ET.Server
                 return null;
             }
 
-            //UnitConfig unitConfig = UnitConfigCategory.Instance.Get(unitConfigId);
-            long id = IdGenerater.Instance.GenerateId();
-            Unit unit = unitComponent.AddChildWithId<Unit, int, string>(id, unitConfigId, string.Empty);
+            UnitConfig unitConfig = UnitConfigCategory.Instance.Get(unitConfigId);
+            Unit unit = unitComponent.AddChild<Unit, int, string>(unitConfigId,unitConfig.Name);
             unit.Position = pos;
             unit.OwnerId = ownerId;
 
-            BulletComponent bulletComponent = unit.AddComponent<BulletComponent, int>(bulletId);
+            BulletComponent bulletComponent = unit.AddComponent<BulletComponent, int>(bulletConfigId);
             bulletComponent.OwnerId = ownerId;
 
             unitComponent.Add(unit);

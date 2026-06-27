@@ -19,7 +19,7 @@ namespace ET
 
         public static bool IsTargetValid(Unit sourceUnit, Unit targetUnit)
         {
-            return targetUnit != sourceUnit && targetUnit.IsBattleUnit();
+            return targetUnit != sourceUnit && targetUnit.IsBattleSelect();
         }
 
         public static bool IsInCircle(float3 center, float3 targetPos, int radiusMm)
@@ -31,7 +31,7 @@ namespace ET
 
         public static bool TrySelectSingle(Unit unit, float3 pos, int radiusMm)
         {
-            if (unit == null || !unit.IsBattleUnit())
+            if (unit == null || !unit.IsBattleSelect())
             {
                 return false;
             }

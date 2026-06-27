@@ -61,8 +61,6 @@ namespace ET
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
-		/// <summary>形状</summary>
-		public int Shape { get; set; }
 		/// <summary>形状参数</summary>
 		public int[] ShapeParam { get; set; }
 		/// <summary>持续时间(毫秒)</summary>

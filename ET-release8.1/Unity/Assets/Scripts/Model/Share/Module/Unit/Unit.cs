@@ -62,7 +62,7 @@ namespace ET
         /// </summary>
         public long TeamId { get; set; }
         /// <summary>
-        /// 主人 UnitId；召唤物/宠物指向主人 Unit，其余为 0
+        /// 主人 UnitId；召唤物/宠物/子弹指向主人 Unit，其余为 0
         /// </summary>
         [BsonIgnore]
         public long OwnerId { get; set; }
