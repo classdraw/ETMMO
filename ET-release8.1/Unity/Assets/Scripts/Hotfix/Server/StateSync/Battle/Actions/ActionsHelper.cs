@@ -21,12 +21,12 @@ namespace ET.Server
             return self.AddChild<Actions, int>(configId);
         }
 
-        public static Actions CreateActions(this BulletComponent bulletComponent,int configId,Unit owner,Unit caster, ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
+        public static Actions CreateActions(this BulletComponent bulletComponent, int configId, Unit target, Unit caster,
+            ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
         {
-            //owner是目标
             Actions actions = bulletComponent.GetComponent<ActionsTempComponent>().CreateActions(configId);
             actions.Caster = caster;
-            actions.Owner = owner;
+            actions.Owner = target;
             RunActions(bulletComponent.Root(), actions, actionsRunType, autoRun, autoDispose);
             if (actions.IsDisposed)
             {
@@ -36,11 +36,12 @@ namespace ET.Server
             return actions;
         }
 
-        public static Actions CreateActions(this Cast cast, int configId, Unit owner, ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
+        public static Actions CreateActions(this Cast cast, int configId, Unit target, ActionsRunType actionsRunType, bool autoRun = true,
+            bool autoDispose = true)
         {
             Actions actions = cast.GetComponent<ActionsTempComponent>().CreateActions(configId);
             actions.Caster = cast.Caster;
-            actions.Owner = owner;
+            actions.Owner = target;
             RunActions(cast.Root(), actions, actionsRunType, autoRun, autoDispose);
             if (actions.IsDisposed)
             {
@@ -49,10 +50,17 @@ namespace ET.Server
 
             return actions;
         }
-        public static Actions CreateActions(this Buff buff, int configId, ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
+
+        public static Actions CreateActions(this Buff buff, int configId, ActionsRunType actionsRunType, bool autoRun = true,
+            bool autoDispose = true)
         {
             Actions actions = buff.GetComponent<ActionsTempComponent>().CreateActions(configId);
             actions.Owner = buff.Owner;
+            if (buff.AddUnitId > 0)
+            {
+                actions.Caster = buff.Scene().GetComponent<UnitComponent>().Get(buff.AddUnitId);
+            }
+
             RunActions(buff.Root(), actions, actionsRunType, autoRun, autoDispose);
             if (actions.IsDisposed)
             {
@@ -61,7 +69,6 @@ namespace ET.Server
 
             return actions;
         }
-        
 
         public static void RunActions(Scene scene, Actions actions, ActionsRunType actionsRunType, bool autoRun = true, bool autoDispose = true)
         {
@@ -72,7 +79,7 @@ namespace ET.Server
 
             if (autoDispose)
             {
-                using (actions)//using会自动释放
+                using (actions)
                 {
                     RunActions(scene, actions, actionsRunType);
                 }

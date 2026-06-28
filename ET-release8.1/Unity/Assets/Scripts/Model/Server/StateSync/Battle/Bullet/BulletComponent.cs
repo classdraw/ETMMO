@@ -18,6 +18,8 @@ namespace ET.Server
         public long OwnerId;
         [BsonIgnore]
         public long TickTimer;
+        [BsonIgnore]
+        public long ExpireTimer;
     }
 }
 

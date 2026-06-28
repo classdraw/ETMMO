@@ -55,6 +55,9 @@ namespace ET
         public const int ERR_CastConfigError = 200053;//释放技能配置错误
         public const int ERR_CastInputUnitError = 200054;//释放技能目标错误
         public const int ERR_CastNoTargetError = 200055;//释放技能没有目标
+        public const int ERR_CastOutOfRangeError = 200056;//释放技能超出施法距离
+        //一些unit战斗状态
+        public const int ERR_Relive_Alive = 200090;//存活
         //地图
         public const int ERR_EnterMapError = 200100;//地图进入错误
         

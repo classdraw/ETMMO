@@ -7,26 +7,36 @@ namespace ET.Server
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
             Unit owner = actions.Owner;
-            if (owner==null||owner.IsDisposed||!owner.IsBattleUnit())
+            if (owner == null || owner.IsDisposed || !owner.IsBattleUnit())
             {
                 return;
             }
-            //第一个参数就是改变数值类型
-            int numericType = actions.Config.ActionsParam[0];
-            int numericValue = actions.Config.ActionsParam[1];
+
+            ActionsConfig config = actions.Config;
+            if (config.ActionsParam == null || config.ActionsParam.Length < 2)
+            {
+                Log.Error($"Actions_NumericChange ActionsParam invalid: configId={config.Id}");
+                return;
+            }
+
+            int numericType = config.ActionsParam[0];
+            int numericValue = config.ActionsParam[1];
+            NumericComponent numericComponent = owner.GetComponent<NumericComponent>();
+            if (numericComponent == null)
+            {
+                return;
+            }
+
             switch (actionsRunType)
             {
                 case ActionsRunType.CastHit:
                 case ActionsRunType.BuffAdd:
                 {
-                    //根据参数增加或者减少对应的属性数值
-                    NumericComponent numericComponent = owner.GetComponent<NumericComponent>();
                     numericComponent[numericType] += numericValue;
-                    break; 
+                    break;
                 }
                 case ActionsRunType.BuffRemove:
                 {
-                    NumericComponent numericComponent = owner.GetComponent<NumericComponent>();
                     numericComponent[numericType] -= numericValue;
                     break;
                 }
@@ -36,4 +46,3 @@ namespace ET.Server
         }
     }
 }
-

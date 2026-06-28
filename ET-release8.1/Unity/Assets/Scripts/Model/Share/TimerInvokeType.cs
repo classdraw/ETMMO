@@ -26,6 +26,7 @@
         public const int BuffExpireTimer = 405;//buff超时处理
         public const int BuffTickTimer = 406;//bufftick处理
         public const int BulletTickTimer = 407;//bullet定时器
+        public const int BulletExpireTimer = 408;//bullet超时销毁
 
     }
 }

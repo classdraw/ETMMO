@@ -37,6 +37,7 @@ namespace ET.Server
             int err = cast.RefreshTargets();
             if (err != ErrorCode.ERR_Success)
             {
+                cast.Dispose();
                 return err;
             }
 
@@ -73,34 +74,48 @@ namespace ET.Server
             }
             
             SelectType selectType = (SelectType)cast.Config.SelectType;
-            if (selectType==SelectType.Self)//选自己肯定没问题
+            if (selectType==SelectType.Self)
             {
                 return ErrorCode.ERR_Success;
             }
-            
+
+            int[] selectParam = cast.Config.SelectParam;
+
             if (selectType==SelectType.Position)
             {
-                ShapeType shapeType =(ShapeType)cast.Config.SelectParam[0];
-                if (shapeType==ShapeType.Single)//选的是坐标 必须有选择器
+                int[] shapeParam = cast.Config.ShapeParam;
+                if (shapeParam == null || shapeParam.Length < 1 || (ShapeType)shapeParam[0] == ShapeType.Single)
                 {
-                    return ErrorCode.ERR_Success;
+                    return ErrorCode.ERR_CastConfigError;
                 }
+
+                int err = CheckCastRange(caster, cast.InputPos, selectParam);
+                if (err != ErrorCode.ERR_Success)
+                {
+                    return err;
+                }
+
+                return ErrorCode.ERR_Success;
             }
-            
+
             Unit inputUnit = caster.Scene().GetComponent<UnitComponent>().Get(cast.InputUnitId);
             if (inputUnit == null || inputUnit.IsDisposed||!inputUnit.IsBattleUnit())
             {
                 return ErrorCode.ERR_CastInputUnitError;
             }
+
+            int rangeErr = CheckCastRange(caster, inputUnit.Position, selectParam);
+            if (rangeErr != ErrorCode.ERR_Success)
+            {
+                return rangeErr;
+            }
             
             switch (selectType)
             {
-                //需要一个目标，那么前端需要给一个目标
                 case SelectType.FriendlyTarget:
                 {
                     if (CampHelper.IsHostile(caster,inputUnit))
                     {
-                        //阵营不对
                         return ErrorCode.ERR_CastInputUnitError;
                     }
                     break;
@@ -109,7 +124,6 @@ namespace ET.Server
                 {
                     if (CampHelper.IsAlly(caster,inputUnit))
                     {
-                        //阵营不对
                         return ErrorCode.ERR_CastInputUnitError;
                     }
                     break;
@@ -117,6 +131,32 @@ namespace ET.Server
             }
 
             cast.InputUnit = inputUnit;
+            return ErrorCode.ERR_Success;
+        }
+
+        /// <summary>
+        /// 校验施法距离。SelectParam 为空或 SelectParam[0]==0 表示不限制距离。
+        /// </summary>
+        private static int CheckCastRange(Unit caster, float3 targetPos, int[] selectParam)
+        {
+            if (selectParam == null || selectParam.Length < 1 || selectParam[0] == 0)
+            {
+                return ErrorCode.ERR_Success;
+            }
+
+            if (selectParam[0] < 0)
+            {
+                return ErrorCode.ERR_CastConfigError;
+            }
+
+            float maxRange = selectParam[0] / 1000f;
+            float3 offset = targetPos - caster.Position;
+            offset.y = 0;
+            if (math.lengthsq(offset) > maxRange * maxRange)
+            {
+                return ErrorCode.ERR_CastOutOfRangeError;
+            }
+
             return ErrorCode.ERR_Success;
         }
 
@@ -152,11 +192,11 @@ namespace ET.Server
             {
                 //不处理none，属于异常
                 case SelectType.Self:
-                    cast.SelectTargetsInner(cast.InputUnit,float3.zero);
+                    cast.SelectTargetsInner(caster, caster.Position);
                     break;
                 case SelectType.FriendlyTarget:
                 case SelectType.EnemyTarget:
-                    cast.SelectTargetsInner(cast.InputUnit,float3.zero);
+                    cast.SelectTargetsInner(cast.InputUnit, caster.Position);
                     break;
                 case SelectType.Position:
                     cast.SelectTargetsInner(null,cast.InputPos);
@@ -171,10 +211,10 @@ namespace ET.Server
         private static void SelectTargetsInner(this Cast cast,Unit unit,float3 pos)
         {
             Unit caster = cast.Caster;
-            ShapeType shapeType =(ShapeType)cast.Config.SelectParam[0];
+            ShapeType shapeType =(ShapeType)cast.Config.ShapeParam[0];
             if (shapeType==ShapeType.Single)
             {
-                if (ShapeSelectHelper.TrySelectSingle(unit, pos, cast.Config.SelectParam[1]))
+                if (ShapeSelectHelper.TrySelectSingle(unit, pos, cast.Config.ShapeParam[1]))
                 {
                     cast.Targets.Add(unit.Id);
                 }
@@ -192,21 +232,21 @@ namespace ET.Server
             {
                 case ShapeType.Circle://圆形
                 {
-                    ShapeSelectHelper.SelectCircle(caster, pos, cast.Config.SelectParam[1], cast.Config.SelectParam[2],
-                        (SelectCampType)cast.Config.SelectParam[3], caster.GetAoiUnits(), list);
+                    ShapeSelectHelper.SelectCircle(caster, pos, cast.Config.ShapeParam[1], cast.Config.ShapeParam[2],
+                        (SelectCampType)cast.Config.ShapeParam[3], caster.GetAoiUnits(), list);
                     break;
                 }
                 case ShapeType.Rectangle://矩形
                 {
-                    ShapeSelectHelper.SelectRectangle(caster, pos, cast.Config.SelectParam[1], cast.Config.SelectParam[2],
-                        cast.Config.SelectParam[3], cast.Config.SelectParam[4], (SelectCampType)cast.Config.SelectParam[5],
+                    ShapeSelectHelper.SelectRectangle(caster, pos, cast.Config.ShapeParam[1], cast.Config.ShapeParam[2],
+                        cast.Config.ShapeParam[3], cast.Config.ShapeParam[4], (SelectCampType)cast.Config.ShapeParam[5],
                         caster.GetAoiUnits(), list);
                     break;
                 }
                 case ShapeType.Fan://扇形
                 {
-                    ShapeSelectHelper.SelectFan(caster, pos, cast.Config.SelectParam[1], cast.Config.SelectParam[2],
-                        cast.Config.SelectParam[3], (SelectCampType)cast.Config.SelectParam[4], caster.GetAoiUnits(), list);
+                    ShapeSelectHelper.SelectFan(caster, pos, cast.Config.ShapeParam[1], cast.Config.ShapeParam[2],
+                        cast.Config.ShapeParam[3], (SelectCampType)cast.Config.ShapeParam[4], caster.GetAoiUnits(), list);
                     break;
                 }
             }
@@ -237,17 +277,27 @@ namespace ET.Server
             MapMessageHelper.SendClient(caster,m2CCastStart,(NoticeClientType)cast.Config.NoticeClientType);
 
             CastConfig config = cast.Config;
-            if (config.Times.Count<=0)
+            if (config.Times.Count <= 0)
             {
+                if (config.TotalTime > 0)//如果没有配置times 理论上totaltime应该是0 如果配置，那么就是需要延迟销毁
+                {
+                    long castInstaceId = cast.InstanceId;
+                    long casterInstanceId = caster.InstanceId;
+                    await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + config.TotalTime);
+                    if (!cast.CheckAsyncInvalid(castInstaceId, casterInstanceId))
+                    {
+                        return;
+                    }
+                }
+
+                cast?.CastFinish();
                 return;
             }
-
-            long castInstaceId = 0;
-            long casterInstanceId = 0;
+            
             foreach (int time in config.Times)
             {
-                castInstaceId = cast.InstanceId;
-                casterInstanceId = caster.InstanceId;
+                long castInstaceId = cast.InstanceId;
+                long casterInstanceId = caster.InstanceId;
                 //技能事件时间点
                 await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + time);
                 
@@ -272,8 +322,8 @@ namespace ET.Server
 
             if (config.TotalTime>0)
             {
-                castInstaceId = cast.InstanceId;
-                casterInstanceId = caster.InstanceId;
+                long castInstaceId = cast.InstanceId;
+                long casterInstanceId = caster.InstanceId;
                 await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + config.TotalTime);
                 if (!cast.CheckAsyncInvalid(castInstaceId,casterInstanceId))
                 {
@@ -387,16 +437,24 @@ namespace ET.Server
 
         public static void CastFinish(this Cast cast)
         {
-            //没有持续事件，瞬发技能，不用通知
-            if (cast.Config.TotalTime>0)
+            if (cast == null || cast.IsDisposed)
+            {
+                return;
+            }
+
+            if (cast.Config.TotalTime > 0)
             {
                 Unit caster = cast.Caster;
-                M2C_CastFinish castFinish = M2C_CastFinish.Create();
-                castFinish.CasterId = caster.Id;
-                castFinish.CastId = cast.Id;
-                MapMessageHelper.SendClient(caster,castFinish,(NoticeClientType)cast.Config.NoticeClientType);
+                if (caster != null && !caster.IsDisposed)
+                {
+                    M2C_CastFinish castFinish = M2C_CastFinish.Create();
+                    castFinish.CasterId = caster.Id;
+                    castFinish.CastId = cast.Id;
+                    MapMessageHelper.SendClient(caster, castFinish, (NoticeClientType)cast.Config.NoticeClientType);
+                }
             }
-            cast?.Dispose();
+
+            cast.Dispose();
         }
 
         //检测技能异步结束后是否合法

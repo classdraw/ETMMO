@@ -67,8 +67,10 @@ namespace ET
 		public string Name { get; set; }
 		/// <summary>目标选择方式</summary>
 		public int SelectType { get; set; }
-		/// <summary>目标选择参数</summary>
+		/// <summary>形状</summary>
 		public int[] SelectParam { get; set; }
+		/// <summary>形状</summary>
+		public int[] ShapeParam { get; set; }
 		/// <summary>通知客户端类型</summary>
 		public int NoticeClientType { get; set; }
 		/// <summary>命中行为</summary>

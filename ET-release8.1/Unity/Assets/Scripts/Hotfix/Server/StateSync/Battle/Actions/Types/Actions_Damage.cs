@@ -8,28 +8,24 @@ namespace ET.Server
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
             Cast cast = actions.CastSelf;
-            if (cast==null||actionsRunType!=ActionsRunType.CastHit)
+            if (cast == null || actionsRunType != ActionsRunType.CastHit)
             {
                 return;
             }
 
-            Unit caster = cast.Caster;
-            if (cast.Targets.Count<=0||caster==null||caster.IsDisposed)
+            Unit caster = actions.Caster;
+            if (caster == null || caster.IsDisposed || !caster.IsBattleUnit())
             {
                 return;
             }
-            
-            UnitComponent unitComponent = cast.Scene().GetComponent<UnitComponent>();
-            foreach (var unitId in cast.Targets)
+
+            Unit target = actions.Owner;
+            if (target == null || target.IsDisposed || !target.IsBattleUnit())
             {
-                Unit target = unitComponent.Get(unitId);
-                if (target==null||target.IsDisposed||!target.IsBattleUnit())
-                {
-                    continue;
-                }
-                BattleHelper.CalcAttack(caster,target, actions);
+                return;
             }
+
+            BattleHelper.CalcAttack(caster, target, actions);
         }
     }
 }
-

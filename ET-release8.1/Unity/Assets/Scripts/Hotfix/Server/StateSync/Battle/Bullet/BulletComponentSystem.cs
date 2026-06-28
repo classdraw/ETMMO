@@ -23,6 +23,27 @@ namespace ET.Server
         }
     }
 
+    [Invoke(TimerInvokeType.BulletExpireTimer)]
+    public class BulletExpireTimerHandler: ATimer<BulletComponent>
+    {
+        protected override void Run(BulletComponent self)
+        {
+            try
+            {
+                if (self == null || self.IsDisposed)
+                {
+                    return;
+                }
+
+                self.Expire();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Bullet BulletExpireTimer error: {self.Id}\n{e}");
+            }
+        }
+    }
+
     #endregion
     
     [EntitySystemOf(typeof(BulletComponent))]
@@ -41,14 +62,15 @@ namespace ET.Server
         [EntitySystem]
         private static void Destroy(this ET.Server.BulletComponent self)
         {
-            self.Root().GetComponent<TimerComponent>().Remove(ref self.TickTimer);
+            TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
+            timerComponent.Remove(ref self.TickTimer);
+            timerComponent.Remove(ref self.ExpireTimer);
             self.TickTimer = 0;
+            self.ExpireTimer = 0;
             
             self.PreDestroy();
             self.ConfigId = 0;
             self.OwnerId = 0;
-            
-            
         }
 
         public static Unit GetOwner(this BulletComponent self)
@@ -80,8 +102,39 @@ namespace ET.Server
                 }
                 
                 self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(interval, (int)TimerInvokeType.BulletTickTimer, self);
-                
             }
+
+            self.RefreshExpireTimer();
+        }
+
+        public static void Expire(this BulletComponent self)
+        {
+            Unit bulletUnit = self.GetParent<Unit>();
+            bulletUnit?.Dispose();
+        }
+
+        private static void RefreshExpireTimer(this BulletComponent self)
+        {
+            TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
+            if (self.ExpireTimer != 0)
+            {
+                timerComponent.Remove(ref self.ExpireTimer);
+            }
+
+            int totalTime = self.Config.TotalTime;
+            if (totalTime <= 0)
+            {
+                self.ExpireTimer = 0;
+                return;
+            }
+
+            if (totalTime <= 100)
+            {
+                totalTime = 100;
+            }
+
+            long expireTime = TimeInfo.Instance.ServerFrameTime() + totalTime;
+            self.ExpireTimer = timerComponent.NewOnceTimer(expireTime, (int)TimerInvokeType.BulletExpireTimer, self);
         }
 
         /// <summary>
@@ -160,18 +213,18 @@ namespace ET.Server
         private static bool TrySelectTickTargets(this BulletComponent self, Unit bulletUnit, Unit owner, BulletConfig bulletConfig,
             ListComponent<Unit> list)
         {
-            BulletShape bulletShape = (BulletShape)bulletConfig.ShapeParam[0];
+            int[] shapeParam = bulletConfig.ShapeParam;
+            if (shapeParam == null || shapeParam.Length < 4)
+            {
+                Log.Error($"BulletConfig {bulletConfig.Id} ShapeParam invalid");
+                return false;
+            }
+
+            BulletShape bulletShape = (BulletShape)shapeParam[0];
             switch (bulletShape)
             {
                 case BulletShape.Circle:
                 {
-                    int[] shapeParam = bulletConfig.ShapeParam;
-                    if (shapeParam == null || shapeParam.Length != 4)
-                    {
-                        Log.Error($"BulletConfig {bulletConfig.Id} Circle ShapeParam invalid");
-                        return false;
-                    }
-
                     ShapeSelectHelper.SelectCircle(owner, bulletUnit.Position, shapeParam[1], shapeParam[2],
                         (SelectCampType)shapeParam[3], owner.GetAoiUnits(), list);
                     return true;
