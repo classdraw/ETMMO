@@ -26,6 +26,9 @@ namespace ET.Server
             root.AddComponent<MapComponent>();
 
             root.AddComponent<ActionsDispatcherComponent>();//所有技能actions
+
+
+            root.AddComponent<MonsterMapComponent>();//怪物地图刷新器
             
             await ETTask.CompletedTask;
         }

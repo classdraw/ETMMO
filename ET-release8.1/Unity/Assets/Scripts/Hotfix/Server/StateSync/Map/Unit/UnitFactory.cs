@@ -43,7 +43,8 @@ namespace ET.Server
                     numericComponent.Set(NumericType.HpBase, hp);
                     numericComponent.Set(NumericType.MaxHpBase, hp);
                     numericComponent.Set(NumericType.SpBase,sp);
-                    
+
+                    unit.AddComponent<ReliveComponent>();
                     //背包组件
                     unit.AddComponent<KnapsackComponent>();
                     
@@ -85,6 +86,32 @@ namespace ET.Server
             bulletComponent.OwnerId = ownerId;
 
             unitComponent.Add(unit);
+            return unit;
+        }
+
+
+        public static Unit CreateMonster(Scene scene,int unitConfigId,float3 pos)
+        {
+            UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
+            UnitConfig unitConfig = UnitConfigCategory.Instance.Get(unitConfigId);
+            Unit unit = unitComponent.AddChild<Unit, int, string>(unitConfigId,unitConfig.Name);
+            unit.AddComponent<MoveComponent>();
+            unit.Position = pos;
+            
+            
+            NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
+            numericComponent.Set(NumericType.SpeedBase,unitConfig.Speed/1000f); // 速度是3米每秒
+            numericComponent.Set(NumericType.AOI, unitConfig.Aoi); // 视野6米
+            
+            numericComponent.Set(NumericType.HpBase, 1000);
+            numericComponent.Set(NumericType.MaxHpBase, 1000);
+            
+            unit.AddComponent<ReliveComponent>();
+            
+            
+            unitComponent.Add(unit);
+            // 加入aoi
+            var aoiEntity=unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
             return unit;
         }
     }

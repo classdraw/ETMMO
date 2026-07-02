@@ -1,0 +1,4 @@
+{"dict": [
+[3001, {"_t":"MonsterGroupConfig","_id":3001,"Pos":[0.0,0.0,0.0],"Range":5000}],
+[3002, {"_t":"MonsterGroupConfig","_id":3002,"Pos":[0.0,0.0,0.0],"Range":5000}],
+]}
