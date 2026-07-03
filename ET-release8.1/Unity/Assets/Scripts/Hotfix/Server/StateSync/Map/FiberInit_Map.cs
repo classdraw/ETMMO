@@ -3,7 +3,7 @@
 namespace ET.Server
 {
     /// <summary>
-    /// AAAAAA
+    /// 地图场景 实体表演的场景
     /// </summary>
     [Invoke((long)SceneType.Map)]
     public class FiberInit_Map: AInvokeHandler<FiberInit, ETTask>

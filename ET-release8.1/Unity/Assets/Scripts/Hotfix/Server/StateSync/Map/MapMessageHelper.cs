@@ -1,14 +1,46 @@
 ﻿
 
 using System.Collections.Generic;
-using System.IO;
 
 namespace ET.Server
 {
     public static partial class MapMessageHelper
     {
+        private static bool CanSendClientMessage(Unit unit)
+        {
+            if (unit == null || unit.IsDisposed || !unit.IsPlayer())
+            {
+                return false;
+            }
+
+            Scene root = unit.Root();
+            if (root == null || root.IsDisposed)
+            {
+                return false;
+            }
+
+            MessageLocationSenderComponent messageLocationSenderComponent = root.GetComponent<MessageLocationSenderComponent>();
+            if (messageLocationSenderComponent == null || messageLocationSenderComponent.IsDisposed)
+            {
+                return false;
+            }
+
+            CoroutineLockComponent coroutineLockComponent = root.GetComponent<CoroutineLockComponent>();
+            if (coroutineLockComponent == null || coroutineLockComponent.IsDisposed || coroutineLockComponent.IScene == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static void NoticeUnitAdd(Unit unit, Unit sendUnit)
         {
+            if (!CanSendClientMessage(unit) || sendUnit == null || sendUnit.IsDisposed)
+            {
+                return;
+            }
+
             M2C_CreateUnits createUnits = M2C_CreateUnits.Create();
             createUnits.Units.Add(UnitHelper.CreateUnitInfo(sendUnit));
             MapMessageHelper.SendToClient(unit, createUnits).Coroutine();
@@ -16,6 +48,11 @@ namespace ET.Server
         
         public static void NoticeUnitRemove(Unit unit, Unit sendUnit)
         {
+            if (!CanSendClientMessage(unit) || sendUnit == null || sendUnit.IsDisposed)
+            {
+                return;
+            }
+
             M2C_RemoveUnits removeUnits = M2C_RemoveUnits.Create();
             removeUnits.Units.Add(sendUnit.Id);
             MapMessageHelper.SendToClient(unit, removeUnits).Coroutine();
@@ -40,8 +77,9 @@ namespace ET.Server
         
         public static async ETTask SendToClient(this Unit unit, IMessage message)
         {
-            if (!unit.IsPlayer())
+            if (!CanSendClientMessage(unit))
             {
+                (message as MessageObject)?.Dispose();
                 return;
             }
 

@@ -65,6 +65,8 @@ namespace ET
 		public int[] Pos { get; set; }
 		/// <summary>范围/1000</summary>
 		public int Range { get; set; }
+		/// <summary>地图id</summary>
+		public int mapId { get; set; }
 
 	}
 }

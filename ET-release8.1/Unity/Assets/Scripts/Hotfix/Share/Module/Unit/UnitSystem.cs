@@ -1,3 +1,5 @@
+using ET.Server;
+
 namespace ET
 {
     [EntitySystemOf(typeof(Unit))]
@@ -45,7 +47,7 @@ namespace ET
                 tt==UnitType.Summon||
                 tt==UnitType.Robot)
             {
-                return true;
+                return self.IsAlive();
             }
 
             return false;

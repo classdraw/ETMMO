@@ -14,7 +14,7 @@ namespace ET.Client
             root.AddComponent<ResourcesLoaderComponent>();
             //显示层框架入口 资源加载用到ResourcesLoaderComponent 在这个后面
             await root.AddComponent<TEngineComponent>().Init();
-            //相机需要一些准备
+            //相机需要一些准备（MainCamera + CameraRoot）
             await root.AddComponent<CameraPlayComponent>().Init();
             //hud需要一些准备
             root.AddComponent<HudComponent>();

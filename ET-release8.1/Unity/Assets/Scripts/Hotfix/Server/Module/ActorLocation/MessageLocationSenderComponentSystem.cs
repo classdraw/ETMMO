@@ -98,13 +98,31 @@ namespace ET.Server
         
         private static async ETTask SendInner(this MessageLocationSenderOneType self, long entityId, IMessage message)
         {
-            MessageLocationSender messageLocationSender = self.GetOrCreate(entityId);
+            if (self == null || self.IsDisposed)
+            {
+                (message as MessageObject)?.Dispose();
+                return;
+            }
 
             Scene root = self.Root();
-            
+            if (root == null || root.IsDisposed)
+            {
+                (message as MessageObject)?.Dispose();
+                return;
+            }
+
+            CoroutineLockComponent coroutineLockComponent = root.GetComponent<CoroutineLockComponent>();
+            if (coroutineLockComponent == null || coroutineLockComponent.IsDisposed || coroutineLockComponent.IScene == null)
+            {
+                (message as MessageObject)?.Dispose();
+                return;
+            }
+
+            MessageLocationSender messageLocationSender = self.GetOrCreate(entityId);
+
             long instanceId = messageLocationSender.InstanceId;
             
-            using (await root.GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.MessageLocationSender, entityId))
+            using (await coroutineLockComponent.Wait(CoroutineLockType.MessageLocationSender, entityId))
             {
                 if (messageLocationSender.InstanceId != instanceId)
                 {

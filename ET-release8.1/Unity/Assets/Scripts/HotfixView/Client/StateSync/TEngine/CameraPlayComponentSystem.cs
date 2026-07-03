@@ -17,25 +17,39 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this CameraPlayComponent self)
         {
-            if (self.CameraRootObj!=null)
+            if (self.CameraRootObj != null)
             {
                 GameObject.Destroy(self.CameraRootObj);
             }
 
+            if (self.MainCameraObj != null)
+            {
+                GameObject.Destroy(self.MainCameraObj);
+            }
+
             self.CameraRootObj = null;
+            self.MainCameraObj = null;
             self.CinemachineFreeLook = null;
         }
 
         public static async ETTask Init(this CameraPlayComponent self)
         {
-            var resLoader = self.Root().GetComponent<ResourcesLoaderComponent>();
+            ResourcesLoaderComponent resLoader = self.Root().GetComponent<ResourcesLoaderComponent>();
+            GlobalComponent globalComponent = self.Root().GetComponent<GlobalComponent>();
+
+            GameObject mainCamera = await LoadGameObjectInstance(resLoader, self.MainCameraPath);
+            mainCamera.transform.SetParent(globalComponent.Global, false);
+            mainCamera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            mainCamera.name = "MainCamera";
+            self.MainCameraObj = mainCamera;
+
             GameObject cameraRoot = await LoadGameObjectInstance(resLoader, self.CameraRootPath);
             GameObject.DontDestroyOnLoad(cameraRoot);
             cameraRoot.transform.position = Vector3.zero;
             cameraRoot.name = "CameraPlayComponent(Object)";
             self.CameraRootObj = cameraRoot;
             self.CinemachineFreeLook = cameraRoot.transform.Find("CameraFree").GetComponent<CinemachineFreeLook>();
-            
+
             await ETTask.CompletedTask;
         }
 

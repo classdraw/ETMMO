@@ -6,6 +6,7 @@ namespace ET.Server
         protected override async ETTask Run(Scene scene, M2M_InitMap message)
         {
             await scene.GetComponent<MapComponent>().InitMap(message);
+            scene.GetComponent<MonsterMapComponent>()?.InitByMapConfig(message.MapConfigId);
         }
     }
 }

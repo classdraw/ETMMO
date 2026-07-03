@@ -9,7 +9,9 @@ namespace ET.Client
     [ComponentOf(typeof(Scene))]
     public class CameraPlayComponent : Entity, IAwake, IDestroy
     {
-        public string CameraRootPath = $"Assets/Bundles/Tools/CameraRoot.prefab";
+        public string MainCameraPath = "Assets/Bundles/Tools/MainCamera.prefab";
+        public string CameraRootPath = "Assets/Bundles/Tools/CameraRoot.prefab";
+        public GameObject MainCameraObj;
         public GameObject CameraRootObj;
 
         public CinemachineFreeLook CinemachineFreeLook;//后面可能会有很多

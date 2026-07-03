@@ -35,6 +35,12 @@ namespace ET
 
         public static async ETTask<CoroutineLock> Wait(this CoroutineLockComponent self, int coroutineLockType, long key, int time = 60000)
         {
+            if (self == null || self.IsDisposed || self.IScene == null)
+            {
+                await ETTask.CompletedTask;
+                return null;
+            }
+
             CoroutineLockQueueType coroutineLockQueueType = self.GetChild<CoroutineLockQueueType>(coroutineLockType) ?? self.AddChildWithId<CoroutineLockQueueType>(coroutineLockType);
             return await coroutineLockQueueType.Wait(key, time);
         }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -16,6 +17,8 @@ namespace ET.Server
         [EntitySystem]
         private static void Destroy(this ET.Server.MonsterFlag self)
         {
+            self.Scene().GetComponent<MonsterMapComponent>().UnitCallDestroy(self.ConfigId,self.GroupConfigId);
+            
             self.ConfigId = 0;
             self.GroupConfigId = 0;
         }

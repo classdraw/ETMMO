@@ -1,4 +1,4 @@
 {"dict": [
-[4400001, {"_t":"MonsterConfig","_id":4400001,"UnitConfigId":10001,"GroupId":3001}],
-[4400002, {"_t":"MonsterConfig","_id":4400002,"UnitConfigId":10002,"GroupId":3002}],
+[4400001, {"_t":"MonsterConfig","_id":4400001,"UnitConfigId":10001,"GroupId":3001,"Model":"Monster4400001"}],
+[4400002, {"_t":"MonsterConfig","_id":4400002,"UnitConfigId":10002,"GroupId":3002,"Model":"Monster4400002"}],
 ]}
