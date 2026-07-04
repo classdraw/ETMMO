@@ -28,8 +28,8 @@ namespace ET.Server
     
     
 
-    [Invoke(TimerInvokeType.DestroyMonsterTimer)]
-    public class DestroyMonsterTimerHandler: ATimer<Unit>
+    [Invoke(TimerInvokeType.DeadMonsterTimer)]
+    public class DeadMonsterTimerHandler: ATimer<Unit>
     {
         protected override void Run(Unit self)
         {
@@ -44,7 +44,7 @@ namespace ET.Server
             }
             catch (Exception e)
             {
-                Log.Error($"Unit DestroyMonsterTimerHandler error: {self.Id}\n{e}");
+                Log.Error($"Unit DeadMonsterTimerHandler error: {self.Id}\n{e}");
             }
         }
     }

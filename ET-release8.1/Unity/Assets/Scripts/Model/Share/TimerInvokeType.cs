@@ -29,7 +29,7 @@
         public const int BulletExpireTimer = 408;//bullet超时销毁
 
         public const int CreateMonsterTimer = 409;//创建怪物延迟
-        public const int DestroyMonsterTimer = 410;//移动怪物延迟
+        public const int DeadMonsterTimer = 410;//怪物死亡延迟
 
     }
 }
