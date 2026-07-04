@@ -742,13 +742,13 @@ message M2C_BuffAdd // IMessage
 message M2C_BuffTick // IMessage
 {
   	int64 UnitId = 1;
-	int64 BuffId = 2;
+		int64 BuffId = 2;
 }
 //buff更新
 message M2C_BuffUpdate // IMessage
 {
     int64 UnitId = 1;
-	BuffProto BuffData = 2;
+		BuffProto BuffData = 2;
 }
 //buff移除
 message M2C_BuffRemove // IMessage
