@@ -1,7 +1,7 @@
 namespace ET.Server
 {
     [MessageHandler(SceneType.Map)]
-    public class C2M_GMTestCastHandler: MessageHandler<Unit, C2M_GMTestCast, M2C_GMTestCast>
+    public class C2M_GMTestCastHandler: MessageLocationHandler<Unit, C2M_GMTestCast, M2C_GMTestCast>
     {
         protected override async ETTask Run(Unit unit, C2M_GMTestCast request, M2C_GMTestCast response)
         {
