@@ -3441,6 +3441,77 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_GMTestCast)]
+    [ResponseType(nameof(M2C_GMTestCast))]
+    public partial class C2M_GMTestCast : MessageObject, ILocationRequest
+    {
+        public static C2M_GMTestCast Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_GMTestCast), isFromPool) as C2M_GMTestCast;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int CastConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long TargetId { get; set; }
+
+        [MemoryPackOrder(3)]
+        public Unity.Mathematics.float3 InputPos { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.CastConfigId = default;
+            this.TargetId = default;
+            this.InputPos = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_GMTestCast)]
+    public partial class M2C_GMTestCast : MessageObject, ILocationResponse
+    {
+        public static M2C_GMTestCast Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_GMTestCast), isFromPool) as M2C_GMTestCast;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 相关GM///////////////////////////////////////////
     /// </summary>
@@ -3543,5 +3614,7 @@ namespace ET
         public const ushort M2C_BuffRemove = 10096;
         public const ushort C2Mail_GMAddMail = 10097;
         public const ushort Mail2C_GMAddMail = 10098;
+        public const ushort C2M_GMTestCast = 10099;
+        public const ushort M2C_GMTestCast = 10100;
     }
 }

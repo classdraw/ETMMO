@@ -6,11 +6,19 @@ namespace ET.Client
         protected override async ETTask Run(Scene root, M2C_BuffUpdate message)
         {
             Log.Console($" 玩家 {message.UnitId} buffUpdate Id {message.BuffData.Id} ConfigId {message.BuffData.ConfigId} ");
-            BuffUpdate buffUpdate= new BuffUpdate();
-            buffUpdate.Unit = root.GetComponent<UnitComponent>().Get(message.UnitId);
-            buffUpdate.BuffId = message.BuffData.Id;
-
-            EventSystem.Instance.Publish(root,buffUpdate);
+            UnitComponent unitComponent = root.GetComponent<UnitComponent>();
+            if (unitComponent==null)
+            {
+                return;
+            }
+            Unit unit = unitComponent.Get(message.UnitId);
+            if (unit!=null&&!unit.IsDisposed)
+            {
+                BuffUpdate buffUpdate= new BuffUpdate();
+                buffUpdate.Unit = unit;
+                buffUpdate.BuffId = message.BuffData.Id;
+                EventSystem.Instance.Publish(root,buffUpdate);
+            }
             await ETTask.CompletedTask;
         }
     }

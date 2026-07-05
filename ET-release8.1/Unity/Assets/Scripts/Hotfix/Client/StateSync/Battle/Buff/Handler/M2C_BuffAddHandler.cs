@@ -6,11 +6,22 @@ namespace ET.Client
         protected override async ETTask Run(Scene root, M2C_BuffAdd message)
         {
             Log.Console($" 玩家 {message.UnitId} 新增buff Id {message.BuffData.Id} ConfigId {message.BuffData.ConfigId} ");
-            BuffAdd buffAdd = new BuffAdd();
-            buffAdd.Unit = root.GetComponent<UnitComponent>().Get(message.UnitId);
-            buffAdd.BuffId = message.BuffData.Id;
-            buffAdd.BuffConfigId = message.BuffData.ConfigId;
-            EventSystem.Instance.Publish(root,buffAdd);
+            UnitComponent unitComponent = root.GetComponent<UnitComponent>();
+            if (unitComponent==null)
+            {
+                return;
+            }
+
+            Unit unit = unitComponent.Get(message.UnitId);
+            if (unit!=null&&!unit.IsDisposed)
+            {
+                //这里需要把buff信息添加到游戏客户端的buffcomponent
+                BuffAdd buffAdd = new BuffAdd();
+                buffAdd.Unit = unit;
+                buffAdd.BuffId = message.BuffData.Id;
+                buffAdd.BuffConfigId = message.BuffData.ConfigId;
+                EventSystem.Instance.Publish(root, buffAdd);
+            }
             await ETTask.CompletedTask;
         }
     }

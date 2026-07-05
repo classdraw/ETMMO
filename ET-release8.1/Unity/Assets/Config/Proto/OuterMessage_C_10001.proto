@@ -719,6 +719,8 @@ message M2C_BattleResult // IMessage
 	bool IsCrit = 4;//是否暴击
 }
 
+
+
 //////////////////////技能///////////////////////////////////////////
 
 
@@ -772,5 +774,19 @@ message Mail2C_GMAddMail // IMailInfoResponse
 	int32 Error = 2;
 	string Message = 3;
 }
+// ResponseType M2C_GMTestCast
+message  C2M_GMTestCast // ILocationRequest
+{
+	int32 RpcId = 1;
+	int32 CastConfigId = 2;
+	int64 TargetId = 3;
+	Unity.Mathematics.float3 InputPos = 4;
+}
 
+message M2C_GMTestCast // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
 //////////////////////相关GM///////////////////////////////////////////
