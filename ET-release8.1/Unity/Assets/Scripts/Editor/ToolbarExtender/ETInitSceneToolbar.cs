@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -8,23 +10,21 @@ using UnityToolbarExtender;
 namespace ET
 {
 	/// <summary>
-	/// 在工具栏播放按钮左侧增加入口场景按钮（实现方式同 GridWar 的 Launcher：Unity Toolbar Extender）。
+	/// 在工具栏播放按钮左侧增加场景下拉切换（不含 Assets/Art 目录），仅打开场景不运行。
+	/// F1 / ET/Play Init Scene 仍由 <see cref="PlayInitSceneShortcut"/> 负责打开 Init 并播放。
 	/// </summary>
 	[InitializeOnLoad]
 	public static class ETInitSceneToolbar
 	{
-		private const string PreviousSceneKey = "ET_PreviousScenePath";
-		private const string IsInitToolbarKey = "ET_PlayFromInitToolbar";
-		private const string InitScenePath = "Assets/Scenes/Init.unity";
+		private const string ArtFolderToken = "/Art/";
 
 		private static readonly string ButtonStyleName = "Tab middle";
 		private static GUIStyle _buttonGuiStyle;
+		private static string _pendingOpenPath;
 
 		static ETInitSceneToolbar()
 		{
 			ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
-			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-			EditorApplication.quitting += OnEditorQuit;
 		}
 
 		private static void OnToolbarGUI()
@@ -37,88 +37,132 @@ namespace ET
 			};
 
 			GUILayout.FlexibleSpace();
-			if (GUILayout.Button(
-					new GUIContent("Init", EditorGUIUtility.FindTexture("PlayButton"),
-						"从入口场景播放（与 ET/Play Init Scene、快捷键 F1 相同）；停止运行后可恢复之前打开的场景。"),
-					_buttonGuiStyle))
+
+			string label = GetButtonLabel();
+			var content = new GUIContent(label, "切换工程场景（不含 Art 目录），不自动运行");
+			Rect buttonRect = GUILayoutUtility.GetRect(content, _buttonGuiStyle, GUILayout.MinWidth(72));
+
+			if (EditorGUI.DropdownButton(buttonRect, content, FocusType.Passive, _buttonGuiStyle))
 			{
-				SceneHelper.StartInitScene();
+				ShowSceneMenu(buttonRect);
 			}
 		}
 
-		private static void OnPlayModeStateChanged(PlayModeStateChange state)
+		private static void ShowSceneMenu(Rect buttonRect)
 		{
-			if (state == PlayModeStateChange.EnteredEditMode)
-			{
-				var previousScenePath = EditorPrefs.GetString(PreviousSceneKey, string.Empty);
-				if (!string.IsNullOrEmpty(previousScenePath) && EditorPrefs.GetBool(IsInitToolbarKey))
-				{
-					EditorApplication.delayCall += () =>
-					{
-						if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-						{
-							EditorSceneManager.OpenScene(previousScenePath);
-						}
-					};
-				}
+			string[] scenePaths = GetProjectScenes();
+			var menu = new GenericMenu();
 
-				EditorPrefs.SetBool(IsInitToolbarKey, false);
+			if (scenePaths.Length == 0)
+			{
+				menu.AddDisabledItem(new GUIContent("未找到场景"));
 			}
+			else
+			{
+				string activePath = SceneManager.GetActiveScene().path;
+				foreach (string scenePath in scenePaths)
+				{
+					string menuPath = GetMenuPath(scenePath);
+					bool isActive = string.Equals(activePath, scenePath, StringComparison.OrdinalIgnoreCase);
+					string path = scenePath;
+					menu.AddItem(new GUIContent(menuPath), isActive, () => OpenScene(path));
+				}
+			}
+
+			menu.DropDown(buttonRect);
 		}
 
-		private static void OnEditorQuit()
+		private static string GetButtonLabel()
 		{
-			EditorPrefs.SetString(PreviousSceneKey, string.Empty);
-			EditorPrefs.SetBool(IsInitToolbarKey, false);
+			string activePath = SceneManager.GetActiveScene().path;
+			if (!string.IsNullOrEmpty(activePath))
+			{
+				return Path.GetFileNameWithoutExtension(activePath);
+			}
+
+			return "Scenes";
 		}
 
-		private static class SceneHelper
+		private static string[] GetProjectScenes()
 		{
-			private static string _pendingOpenPath;
+			var scenes = new List<string>();
+			string[] guids = AssetDatabase.FindAssets("t:Scene", new[] { "Assets" });
 
-			public static void StartInitScene()
+			foreach (string guid in guids)
 			{
-				if (EditorApplication.isPlaying)
+				string path = AssetDatabase.GUIDToAssetPath(guid).Replace('\\', '/');
+				if (path.Contains(ArtFolderToken, StringComparison.OrdinalIgnoreCase))
 				{
-					EditorApplication.isPlaying = false;
+					continue;
 				}
 
-				if (!File.Exists(InitScenePath))
-				{
-					Debug.LogError($"未找到入口场景: {InitScenePath}");
-					return;
-				}
-
-				var activeScene = SceneManager.GetActiveScene();
-				if (activeScene.isLoaded && activeScene.path != InitScenePath)
-				{
-					EditorPrefs.SetString(PreviousSceneKey, activeScene.path);
-					EditorPrefs.SetBool(IsInitToolbarKey, true);
-				}
-
-				_pendingOpenPath = InitScenePath;
-				EditorApplication.update += OnUpdate;
+				scenes.Add(path);
 			}
 
-			private static void OnUpdate()
+			scenes.Sort(StringComparer.OrdinalIgnoreCase);
+			return scenes.ToArray();
+		}
+
+		private static string GetMenuPath(string scenePath)
+		{
+			string path = scenePath.Replace('\\', '/');
+			const string prefix = "Assets/";
+			if (path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
 			{
-				if (string.IsNullOrEmpty(_pendingOpenPath) ||
-				    EditorApplication.isPlaying || EditorApplication.isPaused ||
-				    EditorApplication.isCompiling || EditorApplication.isPlayingOrWillChangePlaymode)
-				{
-					return;
-				}
-
-				EditorApplication.update -= OnUpdate;
-
-				if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-				{
-					EditorSceneManager.OpenScene(_pendingOpenPath, OpenSceneMode.Single);
-					EditorApplication.isPlaying = true;
-				}
-
-				_pendingOpenPath = null;
+				path = path.Substring(prefix.Length);
 			}
+
+			return Path.ChangeExtension(path, null);
+		}
+
+		private static void OpenScene(string scenePath)
+		{
+			if (!File.Exists(scenePath))
+			{
+				Debug.LogError($"未找到场景: {scenePath}");
+				return;
+			}
+
+			if (EditorApplication.isPlaying)
+			{
+				EditorApplication.isPlaying = false;
+				_pendingOpenPath = scenePath;
+				EditorApplication.update -= OnPendingOpenUpdate;
+				EditorApplication.update += OnPendingOpenUpdate;
+				return;
+			}
+
+			TryOpenScene(scenePath);
+		}
+
+		private static void OnPendingOpenUpdate()
+		{
+			if (EditorApplication.isPlaying || EditorApplication.isPaused ||
+			    EditorApplication.isCompiling || EditorApplication.isPlayingOrWillChangePlaymode)
+			{
+				return;
+			}
+
+			EditorApplication.update -= OnPendingOpenUpdate;
+
+			if (string.IsNullOrEmpty(_pendingOpenPath))
+			{
+				return;
+			}
+
+			string path = _pendingOpenPath;
+			_pendingOpenPath = null;
+			TryOpenScene(path);
+		}
+
+		private static void TryOpenScene(string scenePath)
+		{
+			if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+			{
+				return;
+			}
+
+			EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
 		}
 	}
 }
