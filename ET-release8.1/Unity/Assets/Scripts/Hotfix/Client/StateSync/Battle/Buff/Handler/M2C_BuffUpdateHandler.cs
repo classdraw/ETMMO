@@ -17,6 +17,7 @@ namespace ET.Client
                 BuffUpdate buffUpdate= new BuffUpdate();
                 buffUpdate.Unit = unit;
                 buffUpdate.BuffId = message.BuffData.Id;
+                buffUpdate.BuffConfigId = message.BuffData.ConfigId;
                 EventSystem.Instance.Publish(root,buffUpdate);
             }
             await ETTask.CompletedTask;
