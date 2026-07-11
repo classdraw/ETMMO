@@ -17,9 +17,16 @@ namespace ET.Client
             self.HudInfoScript=self.HudInfoObj.AddComponent<HudInfo>();
 
             var unit = self.GetParent<Unit>();
-            self.HudInfoScript.DisplayPlayer(unit.Name);
-            
-            self.HudInfoScript.RefreshHpLv(unit.GetHpLv());
+            if (unit.IsMonster())
+            {
+                self.HudInfoScript.DisplayMonster(unit.Name);
+            }
+            else
+            {
+                self.HudInfoScript.DisplayPlayer(unit.Name);
+            }
+
+            self.RefreshHpBar();
         }
         [EntitySystem]
         private static void Destroy(this UnitTopUIComponent self)
@@ -33,8 +40,21 @@ namespace ET.Client
             self.HudInfoScript = null;
         }
 
+        public static void RefreshHpBar(this UnitTopUIComponent self)
+        {
+            if (self == null || self.IsDisposed || self.HudInfoScript == null)
+            {
+                return;
+            }
 
+            Unit unit = self.GetParent<Unit>();
+            if (unit == null || unit.IsDisposed)
+            {
+                return;
+            }
 
+            self.HudInfoScript.RefreshHpLv(unit.GetHpLv());
+        }
     }
 }
 

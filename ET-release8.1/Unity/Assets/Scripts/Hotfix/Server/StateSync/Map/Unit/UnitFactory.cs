@@ -43,11 +43,12 @@ namespace ET.Server
                     numericComponent.Set(NumericType.HpBase, hp);
                     numericComponent.Set(NumericType.MaxHpBase, hp);
                     numericComponent.Set(NumericType.SpBase,sp);
-
+                    //是否存活组件
                     unit.AddComponent<ReliveComponent>();
                     //背包组件
                     unit.AddComponent<KnapsackComponent>();
-                    
+                    //施法组件
+                    unit.AddComponent<CastComponent>();
                     unitComponent.Add(unit);
                     //装备组件后面加
                     // 加入aoi
@@ -107,7 +108,8 @@ namespace ET.Server
             numericComponent.Set(NumericType.MaxHpBase, 1000);
             
             unit.AddComponent<ReliveComponent>();
-            
+            unit.AddComponent<CastComponent>();
+            unit.AddComponent<NumericNoticeComponent>();
             
             unitComponent.Add(unit);
             // 加入aoi

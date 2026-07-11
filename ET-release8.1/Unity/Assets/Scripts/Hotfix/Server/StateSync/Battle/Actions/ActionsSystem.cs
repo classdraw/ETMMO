@@ -7,12 +7,12 @@ namespace ET.Server
         [EntitySystem]
         private static void Awake(this ET.Server.Actions self,int configId)
         {
-            
+            self.ConfigId = configId;
         }
         [EntitySystem]
         private static void Destroy(this ET.Server.Actions self)
         {
-            
+            self.ConfigId = 0;
         }
     }
 }

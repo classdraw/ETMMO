@@ -15,7 +15,7 @@ namespace ET.Client
         [EntitySystem]
 		private static void Awake(this UIHelpComponent self)
 		{
-			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+						UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_goPanel = m_bindComponent.GetComponent<RectTransform>(0).gameObject;
 			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
 			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
@@ -47,15 +47,17 @@ namespace ET.Client
 			self.m_btnP1DissolveTeam = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnP1DissolveTeam.onClick.AddListener(() => { self.OnP1DissolveTeam(); });
 			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
-			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(18).gameObject;
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(19);
+			self.m_btnP2CastSimple = m_bindComponent.GetComponent<Button>(18);
+			self.m_btnP2CastSimple.onClick.AddListener(() => { self.OnP2CastSimple(); });
+			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(19).gameObject;
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(20);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(22);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(22).gameObject;
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(23);
+			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(23).gameObject;
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(24);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 		
 			self.m_GOs.Clear();
@@ -209,6 +211,27 @@ namespace ET.Client
 
 		#endregion
 
+		#region  P2
+		
+		//释放技能测试 直接找最近的单位
+		public static void OnP2CastSimple(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrEmpty(val))
+			{
+				return;
+			}
+
+			if (int.TryParse(val,out int result))
+			{
+				BattleHelper.GMCastSimple(self.Root(), result).Coroutine();
+			}
+
+		}
+		
+
+		#endregion
+		
 		#region p3
 		//背包按钮
 		public static void OnP3bag(this UIHelpComponent self)

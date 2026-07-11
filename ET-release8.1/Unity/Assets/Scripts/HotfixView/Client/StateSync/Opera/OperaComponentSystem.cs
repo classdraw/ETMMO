@@ -62,13 +62,7 @@ namespace ET.Client
         
         private static async ETTask Test1(this OperaComponent self)
         {
-            Log.Debug($"Croutine 1 start1 ");
-            using (await self.Root().GetComponent<CoroutineLockComponent>().Wait(1, 20000, 3000))
-            {
-                await self.Root().GetComponent<TimerComponent>().WaitAsync(6000);
-            }
-
-            Log.Debug($"Croutine 1 end1");
+            await BattleHelper.GMCastSimple(self.Root(), 6600001);
         }
             
         private static async ETTask Test2(this OperaComponent self)

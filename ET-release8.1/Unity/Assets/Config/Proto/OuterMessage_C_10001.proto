@@ -63,6 +63,7 @@ message UnitInfo
 	Unity.Mathematics.float3 Forward = 9;
 	map<int32, int64> KV = 10;
 	MoveInfo MoveInfo = 11;
+	int32 MapId = 12;
 }
 
 message M2C_CreateUnits // IMessage

@@ -40,11 +40,16 @@ namespace ET.Server
                     return;
                 }
 
-                self.Dispose();
+                long unitId = self.Id;
+                Scene scene = self.Scene();
+
+                // 先通知客户端移除，再销毁服务端 Unit（避免仅 Dispose 导致客户端残留）
+                MapMessageHelper.NoticeUnitRemoveBroadcast(self);
+                scene?.GetComponent<UnitComponent>()?.Remove(unitId);
             }
             catch (Exception e)
             {
-                Log.Error($"Unit DeadMonsterTimerHandler error: {self.Id}\n{e}");
+                Log.Error($"Unit DeadMonsterTimerHandler error: {self?.Id}\n{e}");
             }
         }
     }
@@ -132,6 +137,7 @@ namespace ET.Server
             pos += new float3(RandomGenerator.RandomNumber(-groupConfig.Range, groupConfig.Range)/1000f, 0f, RandomGenerator.RandomNumber(-groupConfig.Range, groupConfig.Range)/1000f);
 
             Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig.UnitConfigId, pos);
+            unit.MapId = self.MapConfigId;
             unit.AddComponent<MonsterFlag,int,int>(monsterConfigId,monsterConfig.GroupId);
             return unit;
         }

@@ -94,14 +94,8 @@ namespace ET.Client
             }
             
             Log.Info("进入游戏成功");
+            root.GetComponent<PlayerComponent>().MyId = netClient2MainLoginGame.PlayerId;
             await EventSystem.Instance.PublishAsync(root, new LoginFinish());
-            //请求角色进入map地图
-            //Log.Info(r2CGetRealmKey.GateId+"______________________");
-
-            /*
-            root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
-            //登录完成
-            await EventSystem.Instance.PublishAsync(root, new LoginFinish());*/
         }
         
         /// <summary>
@@ -298,16 +292,11 @@ namespace ET.Client
             {
                 netCache.LoginGamePlayerId = netClient2MainLoginGame.PlayerId;
             }
-            
+
+            root.GetComponent<PlayerComponent>().MyId = netClient2MainLoginGame.PlayerId;
+
             Log.Info("进入游戏成功");
             await EventSystem.Instance.PublishAsync(root, new LoginFinish());
-            //请求角色进入map地图
-            //Log.Info(r2CGetRealmKey.GateId+"______________________");
-
-            /*
-            root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
-            //登录完成
-            await EventSystem.Instance.PublishAsync(root, new LoginFinish());*/
             return LoginOperationResult.Success();
         } 
         

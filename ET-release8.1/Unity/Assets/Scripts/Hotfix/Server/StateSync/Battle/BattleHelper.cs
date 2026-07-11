@@ -84,7 +84,7 @@ namespace ET.Server
                 {
                     TimerComponent timerComponent = killed.Root().GetComponent<TimerComponent>();
                     long now = TimeInfo.Instance.ServerFrameTime();
-                    timerComponent.NewOnceTimer(now + 3000, TimerInvokeType.DeadMonsterTimer, killed);
+                    timerComponent.NewOnceTimer(now + 1000, TimerInvokeType.DeadMonsterTimer, killed);
                     break;
                 }
             }

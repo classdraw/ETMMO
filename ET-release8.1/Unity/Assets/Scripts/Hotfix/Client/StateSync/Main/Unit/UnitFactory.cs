@@ -14,6 +14,11 @@ namespace ET.Client
 	        unit.Forward = unitInfo.Forward;
 	        unit.OwnerId = unitInfo.OwnerId;
 	        unit.TeamId = unitInfo.TeamId;
+	        unit.MapId = unitInfo.MapId;
+	        if (unit.MapId == 0)
+	        {
+		        unit.MapId = MapConfigHelper.GetIdByLogicName(currentScene.Name);
+	        }
 	        
 	        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
 

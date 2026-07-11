@@ -10,7 +10,13 @@ namespace ET.Client
             try
             {
                 G2C_EnterMap g2CEnterMap = await root.GetComponent<ClientSenderComponent>().Call(C2G_EnterMap.Create()) as G2C_EnterMap;
-                
+                if (g2CEnterMap == null || g2CEnterMap.Error != ErrorCode.ERR_Success)
+                {
+                    Log.Error($"进入地图失败: {g2CEnterMap?.Error ?? ErrorCode.ERR_None}");
+                    return;
+                }
+
+                root.GetComponent<PlayerComponent>().MyId = g2CEnterMap.MyId;
                 // 等待场景切换完成
                 await root.GetComponent<ObjectWait>().Wait<Wait_SceneChangeFinish>();
                 

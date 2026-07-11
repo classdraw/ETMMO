@@ -57,6 +57,21 @@ namespace ET.Server
             removeUnits.Units.Add(sendUnit.Id);
             MapMessageHelper.SendToClient(unit, removeUnits).Coroutine();
         }
+
+        /// <summary>
+        /// 广播移除单位给所有看见它的玩家（怪物死亡销毁等场景）。
+        /// </summary>
+        public static void NoticeUnitRemoveBroadcast(Unit removeUnit)
+        {
+            if (removeUnit == null || removeUnit.IsDisposed)
+            {
+                return;
+            }
+
+            M2C_RemoveUnits removeUnits = M2C_RemoveUnits.Create();
+            removeUnits.Units.Add(removeUnit.Id);
+            SendClient(removeUnit, removeUnits, NoticeClientType.Broadcast);
+        }
         
         public static void Broadcast(Unit unit, IMessage message)
         {

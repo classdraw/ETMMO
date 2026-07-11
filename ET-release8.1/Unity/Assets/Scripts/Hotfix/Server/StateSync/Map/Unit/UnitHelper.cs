@@ -53,8 +53,9 @@ namespace ET.Server
             }*/
             
             unit.AddComponent<NumericNoticeComponent>();//数值同步组件
-            unit.AddComponent<MoveComponent>();
-            unit.AddComponent<ReliveComponent>();
+            unit.AddComponent<MoveComponent>();//移动
+            unit.AddComponent<ReliveComponent>();//是否存活
+            unit.AddComponent<CastComponent>();//施法
             unit.AddComponent<PathfindingComponent, string>(root.Name);
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
 
@@ -103,6 +104,7 @@ namespace ET.Server
             unitInfo.TeamId = unit.TeamId;
             unitInfo.Position = unit.Position;
             unitInfo.Forward = unit.Forward;
+            unitInfo.MapId = unit.MapId;
 
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             if (moveComponent != null)

@@ -19,6 +19,7 @@
             M2C_CreateMyUnit m2CCreateMyUnit = waitCreateMyUnit.Message;
             Unit unit = UnitFactory.Create(currentScene, m2CCreateMyUnit.Unit);
             unitComponent.Add(unit);
+            root.GetComponent<PlayerComponent>().MyId = unit.Id;
             root.RemoveComponent<AIComponent>();
             
             EventSystem.Instance.Publish(currentScene, new SceneChangeFinish());//下一个场景要干的事
