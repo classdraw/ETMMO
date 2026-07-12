@@ -18,13 +18,13 @@ namespace ET.Client
             {
                 return;
             }
-
-            caster.GetComponent<CastComponent>()?.Remove(message.CastId);
-
+            
             CastFinish castFinish = new CastFinish();
             castFinish.CastId = message.CastId;
             castFinish.CasterId = message.CasterId;
             EventSystem.Instance.Publish(currentScene, castFinish);
+            
+            caster.GetComponent<CastComponent>()?.Remove(message.CastId);
             await ETTask.CompletedTask;
         }
     }

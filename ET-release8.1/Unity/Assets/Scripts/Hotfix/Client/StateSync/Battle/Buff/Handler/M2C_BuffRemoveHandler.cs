@@ -19,18 +19,18 @@ namespace ET.Client
                 return;
             }
 
-            BuffComponent buffComponent = unit.GetComponent<BuffComponent>();
-            if (buffComponent == null)
+            Buff buff = unit.GetComponent<BuffComponent>()?.Get(message.BuffId);
+            if (buff == null||buff.IsDisposed)
             {
                 return;
             }
-
-            buffComponent.Remove(message.BuffId);
 
             BuffRemove buffRemove = new BuffRemove();
             buffRemove.Unit = unit;
             buffRemove.BuffId = message.BuffId;
             EventSystem.Instance.Publish(currentScene, buffRemove);
+            
+            unit.GetComponent<BuffComponent>()?.Remove(message.BuffId);
             await ETTask.CompletedTask;
         }
     }

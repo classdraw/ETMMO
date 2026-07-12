@@ -12,15 +12,25 @@ namespace ET.Client
                 return;
             }
             Unit unit = unitComponent.Get(message.UnitId);
-            if (unit!=null&&!unit.IsDisposed)
+            if (unit==null||unit.IsDisposed)
             {
-                BuffUpdate buffUpdate= new BuffUpdate();
-                buffUpdate.Unit = unit;
-                buffUpdate.BuffId = message.BuffData.Id;
-                buffUpdate.BuffConfigId = message.BuffData.ConfigId;
-                EventSystem.Instance.Publish(root,buffUpdate);
+                return;
             }
+            Buff buff = unit.GetComponent<BuffComponent>()?.Get(message.BuffData.Id);
+            if (buff==null||buff.IsDisposed)
+            {
+                return;
+            }
+
+            unit.GetComponent<BuffComponent>()?.Update(message.BuffData);
+            BuffUpdate buffUpdate= new BuffUpdate();
+            buffUpdate.Unit = unit;
+            buffUpdate.BuffId = message.BuffData.Id;
+            buffUpdate.BuffConfigId = message.BuffData.ConfigId;
+            EventSystem.Instance.Publish(root,buffUpdate);
+            
             await ETTask.CompletedTask;
+
         }
     }
 }

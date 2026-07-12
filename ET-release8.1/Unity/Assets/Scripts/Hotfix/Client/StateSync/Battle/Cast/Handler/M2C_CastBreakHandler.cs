@@ -19,12 +19,14 @@ namespace ET.Client
                 return;
             }
 
-            caster.GetComponent<CastComponent>()?.Remove(message.CastId);
+            
 
             CastBreak castBreak = new CastBreak();
             castBreak.CastId = message.CastId;
             castBreak.CasterId = message.CasterId;
             EventSystem.Instance.Publish(currentScene, castBreak);
+            
+            caster.GetComponent<CastComponent>()?.Remove(message.CastId);
             await ETTask.CompletedTask;
         }
     }

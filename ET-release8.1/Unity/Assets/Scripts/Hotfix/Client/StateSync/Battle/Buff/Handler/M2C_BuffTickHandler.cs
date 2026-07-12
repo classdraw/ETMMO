@@ -12,14 +12,22 @@ namespace ET.Client
                 return;
             }
             Unit unit = unitComponent.Get(message.UnitId);
-            if (unit!=null&&!unit.IsDisposed)
+            if (unit==null||unit.IsDisposed)
             {
-                BuffTick buffTick = new BuffTick();
-                buffTick.Unit = unit;
-                buffTick.BuffId = message.BuffId;
-
-                EventSystem.Instance.Publish(root,buffTick);
+                return;
             }
+
+            Buff buff = unit.GetComponent<BuffComponent>()?.Get(message.BuffId);
+            if (buff==null||buff.IsDisposed)
+            {
+                return;
+            }
+
+            BuffTick buffTick = new BuffTick();
+            buffTick.Unit = unit;
+            buffTick.BuffId = message.BuffId;
+
+            EventSystem.Instance.Publish(root,buffTick);
             await ETTask.CompletedTask;
         }
     }
