@@ -44,6 +44,7 @@ namespace ET.Server
         private static BuffCreateInfo CreateBuffInfo(this ET.Server.BuffComponent self, int configId, long addUnitId, int addCastId, int firstLayer = 0)
         {
             BuffCreateInfo buffCreateInfo = self.GetComponent<BuffTempComponent>().AddChild<BuffCreateInfo, int>(configId);
+            buffCreateInfo.ConfigId = configId;
             buffCreateInfo.AddUnitId = addUnitId;
             buffCreateInfo.AddCastId = addCastId;
             buffCreateInfo.FirstLayer = firstLayer;

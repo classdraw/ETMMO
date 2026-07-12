@@ -62,7 +62,7 @@ namespace ET.Client
         
         private static async ETTask Test1(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 6600001);
+            await BattleHelper.GMCastSimple(self.Root(), 66001);
         }
             
         private static async ETTask Test2(this OperaComponent self)

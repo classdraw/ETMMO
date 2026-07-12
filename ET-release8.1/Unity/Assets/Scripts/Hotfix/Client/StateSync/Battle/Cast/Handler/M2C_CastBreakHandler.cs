@@ -6,16 +6,26 @@ namespace ET.Client
         protected override async ETTask Run(Scene root, M2C_CastBreak message)
         {
             Log.Console($" 玩家 {message.CasterId} 技能 {message.CastId} 被打断 ！！！ ");
-            //回到idle 动画还原  特效还原
-            
-            
+            Scene currentScene = root.CurrentScene();
+            UnitComponent unitComponent = currentScene?.GetComponent<UnitComponent>();
+            if (unitComponent == null)
+            {
+                return;
+            }
+
+            Unit caster = unitComponent.Get(message.CasterId);
+            if (caster == null || caster.IsDisposed)
+            {
+                return;
+            }
+
+            caster.GetComponent<CastComponent>()?.Remove(message.CastId);
+
             CastBreak castBreak = new CastBreak();
             castBreak.CastId = message.CastId;
             castBreak.CasterId = message.CasterId;
-            EventSystem.Instance.Publish(root,castBreak);
-            
+            EventSystem.Instance.Publish(currentScene, castBreak);
             await ETTask.CompletedTask;
-            
         }
     }
 }

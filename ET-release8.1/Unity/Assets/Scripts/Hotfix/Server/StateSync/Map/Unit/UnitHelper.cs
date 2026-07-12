@@ -58,7 +58,7 @@ namespace ET.Server
             unit.AddComponent<CastComponent>();//施法
             unit.AddComponent<PathfindingComponent, string>(root.Name);
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
-
+            
 
             SetUnitDataAfterTransfer(unit,request.MapId);
             

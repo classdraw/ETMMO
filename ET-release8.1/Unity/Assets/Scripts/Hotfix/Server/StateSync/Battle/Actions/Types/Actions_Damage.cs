@@ -8,7 +8,7 @@ namespace ET.Server
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
             Cast cast = actions.CastSelf;
-            if (cast == null || actionsRunType != ActionsRunType.CastHit)
+            if (cast == null && actionsRunType == ActionsRunType.CastHit)
             {
                 return;
             }

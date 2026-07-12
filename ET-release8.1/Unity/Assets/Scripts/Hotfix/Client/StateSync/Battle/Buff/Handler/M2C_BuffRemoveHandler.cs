@@ -6,19 +6,31 @@ namespace ET.Client
         protected override async ETTask Run(Scene root, M2C_BuffRemove message)
         {
             Log.Console($" 玩家 {message.UnitId} 移除buff Id {message.BuffId} ");
-            UnitComponent unitComponent = root.GetComponent<UnitComponent>();
-            if (unitComponent==null)
+            Scene currentScene = root.CurrentScene();
+            UnitComponent unitComponent = currentScene?.GetComponent<UnitComponent>();
+            if (unitComponent == null)
             {
                 return;
             }
+
             Unit unit = unitComponent.Get(message.UnitId);
-            if (unit!=null&&!unit.IsDisposed)
+            if (unit == null || unit.IsDisposed)
             {
-                BuffRemove buffRemove = new BuffRemove();
-                buffRemove.Unit = unit;
-                buffRemove.BuffId = message.BuffId;
-                EventSystem.Instance.Publish(root,buffRemove);
+                return;
             }
+
+            BuffComponent buffComponent = unit.GetComponent<BuffComponent>();
+            if (buffComponent == null)
+            {
+                return;
+            }
+
+            buffComponent.Remove(message.BuffId);
+
+            BuffRemove buffRemove = new BuffRemove();
+            buffRemove.Unit = unit;
+            buffRemove.BuffId = message.BuffId;
+            EventSystem.Instance.Publish(currentScene, buffRemove);
             await ETTask.CompletedTask;
         }
     }
