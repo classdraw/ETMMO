@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace ET.Client
 {
     [EntitySystemOf(typeof(CastComponent))]
@@ -16,34 +14,6 @@ namespace ET.Client
         private static void Destroy(this ET.Client.CastComponent self)
         {
             self.Clear();
-        }
-
-        public static Cast Create(this CastComponent self, long castId, int configId, long casterId, List<long> targetsId)
-        {
-            Cast cast = self.Get(castId);
-            if (cast != null && !cast.IsDisposed)
-            {
-                cast.ConfigId = configId;
-                cast.CasterId = casterId;
-                cast.TargetsId.Clear();
-                if (targetsId != null)
-                {
-                    cast.TargetsId.AddRange(targetsId);
-                }
-
-                return cast;
-            }
-
-            cast = self.AddChildWithId<Cast, int>(castId, configId);
-            cast.CasterId = casterId;
-            cast.TargetsId.Clear();
-            if (targetsId != null)
-            {
-                cast.TargetsId.AddRange(targetsId);
-            }
-
-            self.Casts[castId] = cast;
-            return cast;
         }
 
         public static Cast Get(this CastComponent self, long castId)

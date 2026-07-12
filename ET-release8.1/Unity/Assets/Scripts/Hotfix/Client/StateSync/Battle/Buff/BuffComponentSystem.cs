@@ -16,31 +16,6 @@ namespace ET.Client
             self.Clear();
         }
 
-        public static Buff Add(this BuffComponent self, BuffProto buffProto, Unit owner)
-        {
-            if (buffProto == null)
-            {
-                return null;
-            }
-
-            Buff buff = self.Get(buffProto.Id);
-            if (buff != null && !buff.IsDisposed)
-            {
-                buff.ConfigId = buffProto.ConfigId;
-                buff.Owner = owner;
-                buff.CreateTime = buffProto.CreateTime;
-                buff.ExpireTime = buffProto.ExpireTime;
-                return buff;
-            }
-
-            buff = self.AddChildWithId<Buff, int>(buffProto.Id, buffProto.ConfigId);
-            buff.Owner = owner;
-            buff.CreateTime = buffProto.CreateTime;
-            buff.ExpireTime = buffProto.ExpireTime;
-            self.Buffs[buffProto.Id] = buff;
-            return buff;
-        }
-
         public static Buff Get(this BuffComponent self, long buffId)
         {
             self.Buffs.TryGetValue(buffId, out EntityRef<Buff> buffRef);

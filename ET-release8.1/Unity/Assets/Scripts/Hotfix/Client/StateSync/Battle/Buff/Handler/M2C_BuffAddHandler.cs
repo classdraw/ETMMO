@@ -25,12 +25,12 @@ namespace ET.Client
             }
 
             BuffComponent buffComponent = unit.GetComponent<BuffComponent>();
-            if (buffComponent == null)
+            if (buffComponent == null||buffComponent.IsDisposed)
             {
                 return;
             }
 
-            buffComponent.Add(message.BuffData, unit);
+            buffComponent.Create(message.BuffData, unit);
 
             BuffAdd buffAdd = new BuffAdd();
             buffAdd.Unit = unit;

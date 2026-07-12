@@ -1,6 +1,7 @@
 namespace ET.Client
 {
     [MessageHandler(SceneType.StateSync)]
+    [FriendOf(typeof(CastComponent))]
     public class M2C_CastStartHandler: MessageHandler<Scene,M2C_CastStart>
     {
         protected override async ETTask Run(Scene root, M2C_CastStart message)
@@ -20,11 +21,11 @@ namespace ET.Client
             }
 
             CastComponent castComponent = caster.GetComponent<CastComponent>();
-            if (castComponent == null)
+            if (castComponent == null||castComponent.IsDisposed)
             {
                 return;
             }
-
+            
             castComponent.Create(message.CastId, message.CastConfigId, message.CasterId, message.TargetsId);
 
             CastStart castStart = new CastStart();
