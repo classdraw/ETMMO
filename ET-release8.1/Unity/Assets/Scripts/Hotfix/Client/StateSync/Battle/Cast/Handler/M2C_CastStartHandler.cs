@@ -26,7 +26,7 @@ namespace ET.Client
                 return;
             }
             
-            castComponent.Create(message.CastId, message.CastConfigId, message.CasterId, message.TargetsId);
+            var cast=caster.CreateAndAddCast(message.CastId, message.CastConfigId, message.CasterId, message.TargetsId);
 
             CastStart castStart = new CastStart();
             castStart.CastId = message.CastId;

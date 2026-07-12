@@ -8,6 +8,8 @@ namespace ET.Client
         private static void Awake(this ET.Client.Cast self, int configId)
         {
             self.ConfigId = configId;
+            self.CasterId = 0;
+            self.TargetsId.Clear();
         }
 
         [EntitySystem]

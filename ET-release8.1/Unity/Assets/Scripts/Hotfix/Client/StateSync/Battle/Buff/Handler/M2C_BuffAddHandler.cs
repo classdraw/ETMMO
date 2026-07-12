@@ -23,14 +23,8 @@ namespace ET.Client
             {
                 return;
             }
-
-            BuffComponent buffComponent = unit.GetComponent<BuffComponent>();
-            if (buffComponent == null||buffComponent.IsDisposed)
-            {
-                return;
-            }
-
-            buffComponent.Create(message.BuffData, unit);
+            
+            var buff=unit.CreateAndAddBuff(message.BuffData);
 
             BuffAdd buffAdd = new BuffAdd();
             buffAdd.Unit = unit;

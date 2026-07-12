@@ -18,8 +18,12 @@ namespace ET.Client
 
         public static Buff Get(this BuffComponent self, long buffId)
         {
-            self.Buffs.TryGetValue(buffId, out EntityRef<Buff> buffRef);
-            return buffRef;
+            if (self.Buffs.TryGetValue(buffId, out EntityRef<Buff> buffRef))
+            {
+                return buffRef;
+            }
+
+            return null;
         }
 
         public static void Remove(this BuffComponent self, long buffId)
@@ -31,6 +35,17 @@ namespace ET.Client
 
             Buff buff = buffRef;
             buff?.Dispose();
+        }
+
+        public static void Update(this BuffComponent self,BuffProto buffProto)
+        {
+            Buff buff = self.Get(buffProto.Id);
+            if (buff==null)
+            {
+                return;
+            }
+            buff.CreateTime = buffProto.CreateTime;
+            buff.ExpireTime = buffProto.ExpireTime;
         }
 
         public static void Clear(this BuffComponent self)

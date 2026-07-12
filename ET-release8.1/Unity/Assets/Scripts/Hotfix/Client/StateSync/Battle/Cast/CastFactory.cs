@@ -6,8 +6,9 @@ namespace ET.Client
     [FriendOf(typeof(Cast))]
     public static class CastFactory
     {
-        public static Cast Create(this CastComponent castComponent, long castId, int configId, long casterId, List<long> targetsId)
+        public static Cast CreateAndAddCast(this Unit caster, long castId, int configId, long casterId, List<long> targetsId)
         {
+            CastComponent castComponent = caster.GetComponent<CastComponent>();
             if (castComponent == null || castComponent.IsDisposed)
             {
                 return null;

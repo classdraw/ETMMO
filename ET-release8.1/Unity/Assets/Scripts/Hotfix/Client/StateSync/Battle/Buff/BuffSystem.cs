@@ -9,6 +9,8 @@ namespace ET.Client
         {
             self.ConfigId = configId;
             self.CreateTime = TimeInfo.Instance.ServerFrameTime();
+            self.ExpireTime = 0;
+            self.Owner = null;
         }
 
         [EntitySystem]

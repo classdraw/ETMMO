@@ -18,8 +18,11 @@ namespace ET.Client
 
         public static Cast Get(this CastComponent self, long castId)
         {
-            self.Casts.TryGetValue(castId, out EntityRef<Cast> castRef);
-            return castRef;
+            if (self.Casts.TryGetValue(castId, out EntityRef<Cast> castRef))
+            {
+                return castRef;
+            }
+            return null;
         }
 
         public static void Remove(this CastComponent self, long castId)
@@ -32,7 +35,8 @@ namespace ET.Client
             Cast cast = castRef;
             cast?.Dispose();
         }
-
+        
+        
         public static void Clear(this CastComponent self)
         {
             foreach (Cast cast in self.Casts.Values)
