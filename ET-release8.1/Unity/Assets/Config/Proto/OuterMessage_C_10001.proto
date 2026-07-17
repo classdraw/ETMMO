@@ -671,8 +671,7 @@ message G2C_LeaveTeam // ISessionResponse
 //////////////////////组队///////////////////////////////////////////
 //////////////////////技能///////////////////////////////////////////
 //cast开头
-// ResponseType M2C_CastStart
-message C2M_CastStart // ILocationRequest
+message C2M_CastStart // ILocationMessage
 {
 	int32 RpcId = 1;
 	int32 CastConfigId = 2;//技能配表id
@@ -680,8 +679,8 @@ message C2M_CastStart // ILocationRequest
 	int64 InputUnitId = 4;//目标对象id
 }
 
-//cast回调
-message M2C_CastStart // ILocationResponse
+//cast开始回调（推送，非RPC回包）
+message M2C_CastStart // IMessage
 {
   	int32 RpcId = 1;
 	int32 Error = 2;
