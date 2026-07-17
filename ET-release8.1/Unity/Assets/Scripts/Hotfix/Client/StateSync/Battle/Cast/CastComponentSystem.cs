@@ -16,6 +16,11 @@ namespace ET.Client
             self.Clear();
         }
 
+        public static void Add(this CastComponent self,Cast cast)
+        {
+            self.Casts.TryAdd(cast.Id, cast);
+        }
+
         public static Cast Get(this CastComponent self, long castId)
         {
             if (self.Casts.TryGetValue(castId, out EntityRef<Cast> castRef))
@@ -45,6 +50,34 @@ namespace ET.Client
             }
 
             self.Casts.Clear();
+        }
+
+        public static bool IsCasting(this CastComponent self)
+        {
+            if (self == null || self.IsDisposed)
+            {
+                return false;
+            }
+
+            foreach (Cast cast in self.Casts.Values)
+            {
+                if (cast != null && !cast.IsDisposed)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool IsCasting(this Unit unit)
+        {
+            if (unit == null || unit.IsDisposed)
+            {
+                return false;
+            }
+
+            return unit.GetComponent<CastComponent>()?.IsCasting() ?? false;
         }
     }
 }

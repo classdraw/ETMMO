@@ -21,6 +21,12 @@ namespace ET.Client
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 1000, self.mapMask))
                 {
+                    Unit myUnit = UnitHelper.GetMyUnitFromCurrentScene(self.Root().CurrentScene());
+                    if (myUnit == null || myUnit.IsDisposed || myUnit.IsCasting())
+                    {
+                        return;
+                    }
+
                     C2M_PathfindingResult c2MPathfindingResult = C2M_PathfindingResult.Create();
                     c2MPathfindingResult.Position = hit.point;
                     self.Root().GetComponent<ClientSenderComponent>().Send(c2MPathfindingResult);

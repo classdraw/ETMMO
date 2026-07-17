@@ -12,21 +12,12 @@ namespace ET.Client
                 return null;
             }
             
-            Buff buff = buffComponent.Get(buffProto.Id);
-            if (buff != null && !buff.IsDisposed)
-            {
-                buff.ConfigId = buffProto.ConfigId;
-                buff.Owner = unit;
-                buff.CreateTime = buffProto.CreateTime;
-                buff.ExpireTime = buffProto.ExpireTime;
-                return buff;
-            }
-
-            buff = buffComponent.AddChildWithId<Buff, int>(buffProto.Id, buffProto.ConfigId);
+            //这里必须是新增
+            Buff buff = buffComponent.AddChildWithId<Buff, int>(buffProto.Id, buffProto.ConfigId);
             buff.Owner = unit;
             buff.CreateTime = buffProto.CreateTime;
             buff.ExpireTime = buffProto.ExpireTime;
-            buffComponent.Buffs[buffProto.Id] = buff;
+            buffComponent.Add(buff);
             return buff;
         }
     }

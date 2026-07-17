@@ -66,6 +66,7 @@ namespace ET.Client
 				//Log.Console("____"+self.MotionType);
 				//self.Animator.SetTrigger(self.MotionType.ToString());
 				self.Animator.CrossFade(self.MotionType.ToString().ToLower(),0.1f);
+				self.Animator.speed = self.MontionSpeed;
 				//self.Animator.SetBool("isMoveing",self.MotionType==MotionType.Run);
 				self.MontionSpeed = 1;
 				self.MotionType = MotionType.None;
@@ -84,7 +85,7 @@ namespace ET.Client
 		public static void PlayInTime(this AnimatorComponent self, MotionType motionType, float time)
 		{
 			AnimationClip animationClip;
-			if (!self.animationClips.TryGetValue(motionType.ToString(), out animationClip))
+			if (!self.animationClips.TryGetValue(motionType.ToString().ToLower(), out animationClip))
 			{
 				throw new Exception($"找不到该动作: {motionType}");
 			}

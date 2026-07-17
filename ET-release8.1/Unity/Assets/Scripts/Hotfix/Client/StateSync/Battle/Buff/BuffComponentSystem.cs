@@ -16,6 +16,11 @@ namespace ET.Client
             self.Clear();
         }
 
+        public static void Add(this BuffComponent self,Buff buff)
+        {
+            self.Buffs.TryAdd(buff.Id,buff);
+        }
+
         public static Buff Get(this BuffComponent self, long buffId)
         {
             if (self.Buffs.TryGetValue(buffId, out EntityRef<Buff> buffRef))

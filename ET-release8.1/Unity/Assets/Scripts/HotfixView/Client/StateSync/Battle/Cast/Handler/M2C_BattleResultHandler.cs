@@ -1,5 +1,6 @@
 namespace ET.Client
 {
+    //专门处理跳字
     [MessageHandler(SceneType.StateSync)]
     public class M2C_BattleResultHandler: MessageHandler<Scene, M2C_BattleResult>
     {

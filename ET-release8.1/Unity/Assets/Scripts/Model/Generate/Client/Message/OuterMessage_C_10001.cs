@@ -2933,15 +2933,14 @@ namespace ET
     /// <summary>
     /// 技能///////////////////////////////////////////
     /// </summary>
-    // cast开头
     [MemoryPackable]
-    [Message(OuterMessage.C2M_CastStart)]
-    [ResponseType(nameof(M2C_CastStart))]
-    public partial class C2M_CastStart : MessageObject, ILocationRequest
+    [Message(OuterMessage.C2M_CastInput)]
+    [ResponseType(nameof(M2C_CastInput))]
+    public partial class C2M_CastInput : MessageObject, ILocationRequest
     {
-        public static C2M_CastStart Create(bool isFromPool = false)
+        public static C2M_CastInput Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(C2M_CastStart), isFromPool) as C2M_CastStart;
+            return ObjectPool.Instance.Fetch(typeof(C2M_CastInput), isFromPool) as C2M_CastInput;
         }
 
         [MemoryPackOrder(0)]
@@ -2981,10 +2980,43 @@ namespace ET
         }
     }
 
-    // cast回调
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CastInput)]
+    public partial class M2C_CastInput : MessageObject, ILocationResponse
+    {
+        public static M2C_CastInput Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CastInput), isFromPool) as M2C_CastInput;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    // cast开始回调（推送，非RPC回包）
     [MemoryPackable]
     [Message(OuterMessage.M2C_CastStart)]
-    public partial class M2C_CastStart : MessageObject, ILocationResponse
+    public partial class M2C_CastStart : MessageObject, IMessage
     {
         public static M2C_CastStart Create(bool isFromPool = false)
         {
@@ -3024,6 +3056,12 @@ namespace ET
         [MemoryPackOrder(6)]
         public List<long> TargetsId { get; set; } = new();
 
+        /// <summary>
+        /// 施法者朝向
+        /// </summary>
+        [MemoryPackOrder(7)]
+        public Unity.Mathematics.float3 Forward { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -3038,6 +3076,7 @@ namespace ET
             this.CasterId = default;
             this.CastConfigId = default;
             this.TargetsId.Clear();
+            this.Forward = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -3605,20 +3644,21 @@ namespace ET
         public const ushort G2C_CreateTeam = 10083;
         public const ushort C2G_LeaveTeam = 10084;
         public const ushort G2C_LeaveTeam = 10085;
-        public const ushort C2M_CastStart = 10086;
-        public const ushort M2C_CastStart = 10087;
-        public const ushort M2C_CastFinish = 10088;
-        public const ushort M2C_CastBreak = 10089;
-        public const ushort M2C_CastHit = 10090;
-        public const ushort M2C_BattleResult = 10091;
-        public const ushort BuffProto = 10092;
-        public const ushort M2C_BuffAdd = 10093;
-        public const ushort M2C_BuffTick = 10094;
-        public const ushort M2C_BuffUpdate = 10095;
-        public const ushort M2C_BuffRemove = 10096;
-        public const ushort C2Mail_GMAddMail = 10097;
-        public const ushort Mail2C_GMAddMail = 10098;
-        public const ushort C2M_GMTestCast = 10099;
-        public const ushort M2C_GMTestCast = 10100;
+        public const ushort C2M_CastInput = 10086;
+        public const ushort M2C_CastInput = 10087;
+        public const ushort M2C_CastStart = 10088;
+        public const ushort M2C_CastFinish = 10089;
+        public const ushort M2C_CastBreak = 10090;
+        public const ushort M2C_CastHit = 10091;
+        public const ushort M2C_BattleResult = 10092;
+        public const ushort BuffProto = 10093;
+        public const ushort M2C_BuffAdd = 10094;
+        public const ushort M2C_BuffTick = 10095;
+        public const ushort M2C_BuffUpdate = 10096;
+        public const ushort M2C_BuffRemove = 10097;
+        public const ushort C2Mail_GMAddMail = 10098;
+        public const ushort Mail2C_GMAddMail = 10099;
+        public const ushort C2M_GMTestCast = 10100;
+        public const ushort M2C_GMTestCast = 10101;
     }
 }

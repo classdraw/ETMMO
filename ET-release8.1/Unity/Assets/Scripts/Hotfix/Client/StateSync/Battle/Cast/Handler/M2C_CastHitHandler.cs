@@ -40,6 +40,11 @@ namespace ET.Client
 
             foreach (long targetId in cast.TargetsId)
             {
+                Unit target = unitComponent.Get(targetId);
+                if (target==null||target.IsDisposed)
+                {
+                    continue;
+                }
                 Log.Console($" 玩家 {message.CasterId} 技能 {message.CastId} 命中 {targetId} ");
                 CastHit castHit = new CastHit();
                 castHit.CastId = message.CastId;

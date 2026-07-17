@@ -87,6 +87,12 @@ namespace ET
 		public int[] SelfHitBuffs { get; set; }
 		/// <summary>技能总时长</summary>
 		public int TotalTime { get; set; }
+		/// <summary>技能开始特效</summary>
+		public int[] StartEffect { get; set; }
+		/// <summary>技能命中特效</summary>
+		public int[] HitEffect { get; set; }
+		/// <summary>施法转向</summary>
+		public bool NeedLookTarget { get; set; }
 
 	}
 }

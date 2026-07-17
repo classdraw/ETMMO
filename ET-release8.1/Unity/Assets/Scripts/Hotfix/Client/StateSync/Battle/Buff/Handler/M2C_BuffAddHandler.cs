@@ -24,7 +24,7 @@ namespace ET.Client
                 return;
             }
             
-            var buff=unit.CreateAndAddBuff(message.BuffData);
+            unit.CreateAndAddBuff(message.BuffData);
 
             BuffAdd buffAdd = new BuffAdd();
             buffAdd.Unit = unit;

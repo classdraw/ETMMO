@@ -9,6 +9,11 @@ namespace ET.Client
         // 可以多次调用，多次调用的话会取消上一次的协程
         public static async ETTask<int> MoveToAsync(this Unit unit, float3 targetPos, ETCancellationToken cancellationToken = null)
         {
+            if (unit.IsCasting())
+            {
+                return WaitTypeError.Cancel;
+            }
+
             C2M_PathfindingResult msg = C2M_PathfindingResult.Create();
             msg.Position = targetPos;
             unit.Root().GetComponent<ClientSenderComponent>().Send(msg);
@@ -29,6 +34,11 @@ namespace ET.Client
         
         public static async ETTask MoveToAsync(this Unit unit, List<float3> path)
         {
+            if (unit.IsCasting())
+            {
+                return;
+            }
+
             float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             await moveComponent.MoveToAsync(path, speed);

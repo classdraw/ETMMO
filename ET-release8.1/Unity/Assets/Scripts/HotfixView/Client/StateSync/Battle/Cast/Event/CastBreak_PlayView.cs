@@ -1,10 +1,10 @@
 namespace ET.Client
 {
-    //技能结束
+    //技能打断结束
     [Event(SceneType.Current)]
-    public class CastFinish_PlayView:AEvent<Scene,CastFinish>
+    public class CastBreak_PlayView:AEvent<Scene,CastBreak>
     {
-        protected override async ETTask Run(Scene scene, CastFinish args)
+        protected override async ETTask Run(Scene scene, CastBreak args)
         {
             Unit unit = scene.GetComponent<UnitComponent>().Get(args.CasterId);
             if (unit==null||unit.IsDisposed)

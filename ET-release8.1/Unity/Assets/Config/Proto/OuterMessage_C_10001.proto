@@ -670,14 +670,22 @@ message G2C_LeaveTeam // ISessionResponse
 
 //////////////////////组队///////////////////////////////////////////
 //////////////////////技能///////////////////////////////////////////
-//cast开头
-message C2M_CastStart // ILocationMessage
+// ResponseType M2C_CastInput
+message C2M_CastInput // ILocationRequest
 {
 	int32 RpcId = 1;
 	int32 CastConfigId = 2;//技能配表id
 	Unity.Mathematics.float3 InputPos = 3;//输入坐标
 	int64 InputUnitId = 4;//目标对象id
 }
+
+message M2C_CastInput // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
 
 //cast开始回调（推送，非RPC回包）
 message M2C_CastStart // IMessage
@@ -689,6 +697,7 @@ message M2C_CastStart // IMessage
 	int64 CasterId = 5;//释放者id
 	int32 CastConfigId = 6;//技能配置表id
 	repeated int64 TargetsId = 7;//所有目标
+	Unity.Mathematics.float3 Forward = 8;//施法者朝向
 }
 //cast结束
 message M2C_CastFinish // IMessage

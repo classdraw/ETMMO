@@ -7,6 +7,8 @@ namespace ET.Server
     [FriendOf(typeof(Cast))]
     public static partial class CastSystem
     {
+        private const float MinTurnDirectionSqr = 0.01f;
+
         [EntitySystem]
         private static void Awake(this ET.Server.Cast self,int configId)
         {
@@ -265,12 +267,14 @@ namespace ET.Server
         public static async ETTask CastBeginAsync(this Cast cast)
         {
             Unit caster = cast.Caster;
+            cast.TurnToCastPosition();
             //技能开始消息
             cast.StartTime = TimeInfo.Instance.ServerFrameTime();
             M2C_CastStart m2CCastStart = M2C_CastStart.Create();
             m2CCastStart.CasterId = caster.Id;
             m2CCastStart.CastId = cast.Id;
             m2CCastStart.CastConfigId = cast.ConfigId;
+            m2CCastStart.Forward = caster.Forward;
             m2CCastStart.TargetsId = new List<long>();
             m2CCastStart.TargetsId.AddRange(cast.Targets);
             
@@ -455,6 +459,72 @@ namespace ET.Server
             }
 
             cast.Dispose();
+        }
+
+        /// <summary>
+        /// 施法前转向施法位置（目标单位或有效输入坐标）。
+        /// </summary>
+        public static void TurnToCastPosition(this Cast cast)
+        {
+            if (!cast.Config.NeedLookTarget)
+            {
+                return;
+            }
+
+            Unit caster = cast.Caster;
+            if (caster == null || caster.IsDisposed)
+            {
+                return;
+            }
+
+            if (!cast.TryGetCastTurnPosition(out float3 castPos))
+            {
+                return;
+            }
+
+            float3 direction = castPos - caster.Position;
+            direction.y = 0;
+            if (math.lengthsq(direction) <= MinTurnDirectionSqr)
+            {
+                return;
+            }
+
+            caster.Forward = math.normalize(direction);
+        }
+
+        private static bool TryGetCastTurnPosition(this Cast cast, out float3 castPos)
+        {
+            castPos = default;
+
+            Unit inputUnit = cast.InputUnit;
+            if (inputUnit != null && !inputUnit.IsDisposed)
+            {
+                castPos = inputUnit.Position;
+                return true;
+            }
+
+            SelectType selectType = (SelectType)cast.Config.SelectType;
+            if (selectType == SelectType.Position)
+            {
+                castPos = cast.InputPos;
+                return true;
+            }
+
+            Unit caster = cast.Caster;
+            if (caster == null || caster.IsDisposed)
+            {
+                return false;
+            }
+
+            float3 direction = cast.InputPos - caster.Position;
+            direction.y = 0;
+            if (math.lengthsq(direction) > MinTurnDirectionSqr)
+            {
+                castPos = cast.InputPos;
+                return true;
+            }
+
+            return false;
         }
 
         //检测技能异步结束后是否合法

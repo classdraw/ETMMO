@@ -17,6 +17,7 @@ namespace ET.Server
                 return;
             }
 
+            unit.Stop(1);
             response.Error=unit.CreateAndCast(request.CastConfigId,request.TargetId,request.InputPos);
 
             await ETTask.CompletedTask;

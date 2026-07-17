@@ -83,6 +83,8 @@ namespace ET
 		public int[] TickAction { get; set; }
 		/// <summary>效果</summary>
 		public int[] RemoveAction { get; set; }
+		/// <summary>Buff自身特效</summary>
+		public int[] OwnerEffect { get; set; }
 
 	}
 }
