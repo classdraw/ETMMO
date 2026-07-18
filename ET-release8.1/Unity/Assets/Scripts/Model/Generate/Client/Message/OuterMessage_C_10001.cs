@@ -3173,6 +3173,18 @@ namespace ET
         [MemoryPackOrder(2)]
         public List<long> TargetsId { get; set; } = new();
 
+        /// <summary>
+        /// 命中的index
+        /// </summary>
+        [MemoryPackOrder(3)]
+        public int HitIndex { get; set; }
+
+        /// <summary>
+        /// 是否是自己
+        /// </summary>
+        [MemoryPackOrder(4)]
+        public bool IsSelf { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -3183,6 +3195,8 @@ namespace ET
             this.CastId = default;
             this.CasterId = default;
             this.TargetsId.Clear();
+            this.HitIndex = default;
+            this.IsSelf = default;
 
             ObjectPool.Instance.Recycle(this);
         }

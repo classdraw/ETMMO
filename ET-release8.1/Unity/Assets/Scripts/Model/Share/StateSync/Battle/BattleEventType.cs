@@ -16,6 +16,8 @@ namespace ET
         public long CastId;
         public long CasterId;
         public long TargetId;
+        public int HitIndex;
+        public bool IsSelf;
     }
     
     //技能结束

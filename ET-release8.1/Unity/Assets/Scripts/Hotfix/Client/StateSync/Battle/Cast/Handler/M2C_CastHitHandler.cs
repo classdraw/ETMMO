@@ -13,7 +13,7 @@ namespace ET.Client
             {
                 return;
             }
-
+            
             Unit caster = unitComponent.Get(message.CasterId);
             if (caster == null || caster.IsDisposed)
             {
@@ -50,6 +50,8 @@ namespace ET.Client
                 castHit.CastId = message.CastId;
                 castHit.CasterId = message.CasterId;
                 castHit.TargetId = targetId;
+                castHit.HitIndex = message.HitIndex;
+                castHit.IsSelf = message.IsSelf;
                 EventSystem.Instance.Publish(currentScene, castHit);
             }
 

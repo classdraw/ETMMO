@@ -65,12 +65,16 @@ namespace ET
 		public int Type { get; set; }
 		/// <summary>名字</summary>
 		public string Title { get; set; }
+		/// <summary>模型</summary>
+		public string Model { get; set; }
 		/// <summary>挂点</summary>
 		public int BindBone { get; set; }
 		/// <summary>位置偏移</summary>
 		public float[] Offset { get; set; }
 		/// <summary>缩放</summary>
 		public float[] Scale { get; set; }
+		/// <summary>销毁时间(毫秒) -1无限</summary>
+		public int DestroyTime { get; set; }
 
 	}
 }

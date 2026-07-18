@@ -350,7 +350,7 @@ namespace ET.Server
                 int actionId = actions[index];
                 if (actionId!=0)
                 {
-                    cast.HandleHit(actionId, selfHit: true);
+                    cast.HandleHit(actionId,true,index);
                 }
             }
 
@@ -374,7 +374,7 @@ namespace ET.Server
                 int actionId = actions[index];
                 if (actionId!=0)
                 {
-                    cast.HandleHit(actionId, selfHit: false);
+                    cast.HandleHit(actionId, false,index);
                 }
             }
             
@@ -402,7 +402,7 @@ namespace ET.Server
 
         }
 
-        private static void HandleHit(this Cast cast, int actionId, bool selfHit)
+        private static void HandleHit(this Cast cast, int actionId, bool selfHit,int hitIndex)
         {
             if (cast.RefreshTargets() != ErrorCode.ERR_Success)
             {
@@ -413,6 +413,8 @@ namespace ET.Server
             M2C_CastHit m2CCastHit = M2C_CastHit.Create();
             m2CCastHit.CasterId = caster.Id;
             m2CCastHit.CastId = cast.Id;
+            m2CCastHit.HitIndex = hitIndex;
+            m2CCastHit.IsSelf = selfHit;
             m2CCastHit.TargetsId = new List<long>();
             m2CCastHit.TargetsId.AddRange(cast.Targets);
             MapMessageHelper.SendClient(caster,m2CCastHit,(NoticeClientType)cast.Config.NoticeClientType);

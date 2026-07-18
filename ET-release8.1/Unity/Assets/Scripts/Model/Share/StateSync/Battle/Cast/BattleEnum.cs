@@ -52,5 +52,15 @@ namespace ET
     {
         public const int MaxMemberCount = 5;
     }
+
+    //客户端绑定骨骼位置
+    public enum BindBoneType : byte
+    {
+        Body=0,
+        Head=1,
+        Foot=2,
+        LeftHand=3,
+        RightHand=4,
+    }
 }
 

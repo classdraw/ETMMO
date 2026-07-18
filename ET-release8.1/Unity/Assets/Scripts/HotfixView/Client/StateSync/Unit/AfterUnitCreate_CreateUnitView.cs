@@ -64,6 +64,7 @@ namespace ET.Client
             go.transform.position = unit.Position;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();
+            unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
             await ETTask.CompletedTask;
         }
@@ -85,6 +86,7 @@ namespace ET.Client
             go.transform.position = unit.Position;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();
+            unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
             //Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);
             

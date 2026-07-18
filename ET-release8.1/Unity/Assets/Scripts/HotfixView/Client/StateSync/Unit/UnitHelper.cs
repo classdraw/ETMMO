@@ -30,6 +30,8 @@ namespace ET.Client
             }
             return curHp / (float)maxHp;
         }
+        
+        
     }
 }
 
