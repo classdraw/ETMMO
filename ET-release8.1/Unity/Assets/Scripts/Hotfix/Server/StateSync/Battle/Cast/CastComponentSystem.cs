@@ -20,6 +20,19 @@ namespace ET.Server
         {
             return self.AddChild<Cast, int>(configId);
         }
+
+        public static Cast GetCasting(this CastComponent self)
+        {
+            foreach (Entity entity in self.Children.Values)
+            {
+                if (entity is Cast cast && !cast.IsDisposed)
+                {
+                    return cast;
+                }
+            }
+
+            return null;
+        }
     }
 }
 

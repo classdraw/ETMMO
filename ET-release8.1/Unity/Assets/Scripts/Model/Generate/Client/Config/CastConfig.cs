@@ -85,6 +85,8 @@ namespace ET
 		public int[] HitBuffs { get; set; }
 		/// <summary>命中自身Buff</summary>
 		public int[] SelfHitBuffs { get; set; }
+		/// <summary>技能不可打断时间</summary>
+		public int UnBreakTime { get; set; }
 		/// <summary>技能总时长</summary>
 		public int TotalTime { get; set; }
 		/// <summary>技能开始特效</summary>

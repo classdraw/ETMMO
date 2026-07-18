@@ -674,9 +674,9 @@ message G2C_LeaveTeam // ISessionResponse
 message C2M_CastInput // ILocationRequest
 {
 	int32 RpcId = 1;
-	int32 CastConfigId = 2;//技能配表id
-	Unity.Mathematics.float3 InputPos = 3;//输入坐标
-	int64 InputUnitId = 4;//目标对象id
+	int32 CastConfigId = 2;
+	int64 TargetId = 3;
+	Unity.Mathematics.float3 InputPos = 4;
 }
 
 message M2C_CastInput // ILocationResponse
@@ -759,7 +759,7 @@ message M2C_BuffTick // IMessage
 message M2C_BuffUpdate // IMessage
 {
     int64 UnitId = 1;
-		BuffProto BuffData = 2;
+	BuffProto BuffData = 2;
 }
 //buff移除
 message M2C_BuffRemove // IMessage

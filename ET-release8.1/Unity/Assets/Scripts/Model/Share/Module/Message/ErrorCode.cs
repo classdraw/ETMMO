@@ -58,6 +58,7 @@ namespace ET
         public const int ERR_CastOutOfRangeError = 200056;//释放技能超出施法距离
 
         public const int ERR_CastUnitDead = 200057;//角色死亡导致某些技能逻辑不能走
+        public const int ERR_CastCasting = 200058;//正在施法且处于不可打断时间
         //一些unit战斗状态
         public const int ERR_Relive_Alive = 200090;//存活
         //地图

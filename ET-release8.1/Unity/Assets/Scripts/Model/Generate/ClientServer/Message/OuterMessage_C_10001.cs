@@ -2946,23 +2946,14 @@ namespace ET
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
 
-        /// <summary>
-        /// 技能配表id
-        /// </summary>
         [MemoryPackOrder(1)]
         public int CastConfigId { get; set; }
 
-        /// <summary>
-        /// 输入坐标
-        /// </summary>
         [MemoryPackOrder(2)]
-        public Unity.Mathematics.float3 InputPos { get; set; }
+        public long TargetId { get; set; }
 
-        /// <summary>
-        /// 目标对象id
-        /// </summary>
         [MemoryPackOrder(3)]
-        public long InputUnitId { get; set; }
+        public Unity.Mathematics.float3 InputPos { get; set; }
 
         public override void Dispose()
         {
@@ -2973,8 +2964,8 @@ namespace ET
 
             this.RpcId = default;
             this.CastConfigId = default;
+            this.TargetId = default;
             this.InputPos = default;
-            this.InputUnitId = default;
 
             ObjectPool.Instance.Recycle(this);
         }

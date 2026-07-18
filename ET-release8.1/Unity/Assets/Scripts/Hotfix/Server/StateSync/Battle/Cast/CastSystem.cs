@@ -331,7 +331,7 @@ namespace ET.Server
                 await cast.Root().GetComponent<TimerComponent>().WaitTillAsync(cast.StartTime + config.TotalTime);
                 if (!cast.CheckAsyncInvalid(castInstaceId,casterInstanceId))
                 {
-                    Log.Error($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Over");
+                    Log.Warning($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Over");
                     return;
                 }
                 
@@ -456,6 +456,26 @@ namespace ET.Server
                     castFinish.CastId = cast.Id;
                     MapMessageHelper.SendClient(caster, castFinish, (NoticeClientType)cast.Config.NoticeClientType);
                 }
+            }
+
+            cast.Dispose();
+        }
+
+        public static void CastBreak(this Cast cast)
+        {
+            if (cast == null || cast.IsDisposed)
+            {
+                return;
+            }
+
+            Unit caster = cast.Caster;
+            if (caster != null && !caster.IsDisposed)
+            {
+                Log.Console($"[Cast] 玩家 {caster.Id} 技能 {cast.Id}({cast.ConfigId}) 发送 M2C_CastBreak");
+                M2C_CastBreak castBreak = M2C_CastBreak.Create();
+                castBreak.CasterId = caster.Id;
+                castBreak.CastId = cast.Id;
+                MapMessageHelper.SendClient(caster, castBreak, (NoticeClientType)cast.Config.NoticeClientType);
             }
 
             cast.Dispose();
