@@ -8,6 +8,24 @@ namespace ET.Client
     {
         public void Run(Unit unit, NumbericChange args)
         {
+            if (args.New<args.Old)//血变少了
+            {
+                if (unit.GetHpLv()<=0f)
+                {
+                    //死亡
+                    unit.GetComponent<AnimatorComponent>()?.Play(MotionType.Death,1.0f);
+                }
+                else
+                {
+                    unit.GetComponent<AnimatorComponent>()?.Play(MotionType.Hit,1.0f);
+                }
+            }
+            else
+            {
+                //加血
+            }
+
+
             unit.GetComponent<UnitTopUIComponent>()?.RefreshHpBar();
         }
     }

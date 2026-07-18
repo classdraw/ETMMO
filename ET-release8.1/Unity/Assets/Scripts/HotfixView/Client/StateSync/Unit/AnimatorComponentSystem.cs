@@ -13,6 +13,7 @@ namespace ET.Client
 			self.animationClips = null;
 			self.Parameter = null;
 			self.Animator = null;
+			self.InnerCDLastPlayTimes.Clear();
 		}
 			
 		[EntitySystem]
@@ -45,6 +46,8 @@ namespace ET.Client
 			{
 				self.Parameter.Add(animatorControllerParameter.name);
 			}
+			
+			self.InnerCDs.Add(MotionType.Hit,1000);
 		}
 		
 		[EntitySystem]
@@ -67,7 +70,15 @@ namespace ET.Client
 				//self.Animator.SetTrigger(self.MotionType.ToString());
 				self.Animator.CrossFade(self.MotionType.ToString().ToLower(),0.1f);
 				self.Animator.speed = self.MontionSpeed;
-				//self.Animator.SetBool("isMoveing",self.MotionType==MotionType.Run);
+				if (self.MotionType==MotionType.Run)
+				{
+					self.Animator.SetBool("isMoveing",true);
+				}
+				else if(self.MotionType==MotionType.Idle)
+				{
+					self.Animator.SetBool("isMoveing",false);
+				}
+				
 				self.MontionSpeed = 1;
 				self.MotionType = MotionType.None;
 			}
@@ -84,6 +95,11 @@ namespace ET.Client
 
 		public static void PlayInTime(this AnimatorComponent self, MotionType motionType, float time)
 		{
+			if (!self.CanPlayByInnerCD(motionType))
+			{
+				return;
+			}
+
 			AnimationClip animationClip;
 			if (!self.animationClips.TryGetValue(motionType.ToString().ToLower(), out animationClip))
 			{
@@ -98,12 +114,56 @@ namespace ET.Client
 			}
 			self.MotionType = motionType;
 			self.MontionSpeed = motionSpeed;
+			self.RecordInnerCD(motionType);
 		}
 
 		public static void Play(this AnimatorComponent self, MotionType motionType, float motionSpeed)
 		{
+			if (!self.CanPlayByInnerCD(motionType))
+			{
+				return;
+			}
+
 			self.MotionType = motionType;
 			self.MontionSpeed = motionSpeed;
+			self.RecordInnerCD(motionType);
+		}
+
+		private static bool CanPlayByInnerCD(this AnimatorComponent self, MotionType motionType)
+		{
+			if (!self.InnerCDs.TryGetValue(motionType, out int cdMs) || cdMs <= 0)
+			{
+				return true;
+			}
+
+			long now = TimeInfo.Instance.ClientFrameTime();
+			if (!self.InnerCDLastPlayTimes.TryGetValue(motionType, out long lastPlayTime))
+			{
+				return true;
+			}
+
+			long elapsed = now - lastPlayTime;
+			if (elapsed >= cdMs)
+			{
+				return true;
+			}
+
+			Unit unit = self.GetParent<Unit>();
+			//Log.Info($"AnimatorInnerCD blocked, unitId={unit.Id}, motionType={motionType}, cdMs={cdMs}, lastPlayTime={lastPlayTime}, now={now}, elapsed={elapsed}ms, remain={cdMs - elapsed}ms");
+			return false;
+		}
+
+		private static void RecordInnerCD(this AnimatorComponent self, MotionType motionType)
+		{
+			if (!self.InnerCDs.TryGetValue(motionType, out int cdMs))
+			{
+				return;
+			}
+
+			long now = TimeInfo.Instance.ClientFrameTime();
+			self.InnerCDLastPlayTimes[motionType] = now;
+			Unit unit = self.GetParent<Unit>();
+			//Log.Info($"AnimatorInnerCD play, unitId={unit.Id}, motionType={motionType}, cdMs={cdMs}, now={now}");
 		}
 
 		public static float AnimationTime(this AnimatorComponent self, MotionType motionType)

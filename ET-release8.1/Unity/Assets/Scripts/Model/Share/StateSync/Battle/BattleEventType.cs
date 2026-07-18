@@ -26,7 +26,12 @@ namespace ET
         public long CastId;
         public long CasterId;
     }
-    
+    //技能服务器判定释放失败
+    public struct CastError
+    {
+        public long CasterId;
+    }
+
     //技能打断
     public struct CastBreak
     {

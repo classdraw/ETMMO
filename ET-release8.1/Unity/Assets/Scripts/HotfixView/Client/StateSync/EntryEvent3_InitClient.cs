@@ -12,6 +12,7 @@ namespace ET.Client
             GlobalComponent globalComponent = root.AddComponent<GlobalComponent>();
 
             root.AddComponent<ResourcesLoaderComponent>();
+            root.AddComponent<PoolComponent>();
             //显示层框架入口 资源加载用到ResourcesLoaderComponent 在这个后面
             await root.AddComponent<TEngineComponent>().Init();
             //相机需要一些准备（MainCamera + CameraRoot）

@@ -9,12 +9,16 @@ namespace ET.Client
 		Idle,
 		Run,
 		Attack,
-		Attack1
+		Attack1,
+		Hit,
+		Death
 	}
 
 	[ComponentOf(typeof(Unit))]
 	public class AnimatorComponent : Entity, IAwake, IUpdate, IDestroy
 	{
+		public Dictionary<MotionType, int> InnerCDs = new Dictionary<MotionType, int>();
+		public Dictionary<MotionType, long> InnerCDLastPlayTimes = new Dictionary<MotionType, long>();
 		public Dictionary<string, AnimationClip> animationClips = new();
 		public HashSet<string> Parameter = new();
 

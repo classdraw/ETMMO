@@ -37,7 +37,8 @@ namespace ET.Client
             }
             else
             {
-                Log.Info($"测试施法失败 {m2CGmTestCast.Error}!!!");
+                 Log.Info($"测试施法失败 {m2CGmTestCast.Error}!!!");
+                 EventSystem.Instance.Publish(root.CurrentScene(), new CastError(){CasterId = playerUnit.Id});
             }
         }
 

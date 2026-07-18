@@ -5,6 +5,7 @@ namespace ET.Client
     [EntitySystemOf(typeof(MountComponent))]
     [FriendOf(typeof(MountComponent))]
     [FriendOf(typeof(GameObjectComponent))]
+    [FriendOf(typeof(PoolComponent))]
     public static partial class MountComponentSystem
     {
         private const string EffectBundlePathPrefix = "Assets/Bundles/Effect/";
@@ -23,20 +24,18 @@ namespace ET.Client
         [EntitySystem]
         private static void Update(this MountComponent self)
         {
-            if (self.Objects.Count <= 0)
+            if (self.Items.Count <= 0)
             {
                 return;
             }
 
             long now = TimeInfo.Instance.ClientFrameTime();
-            for (int i = self.Objects.Count - 1; i >= 0; i--)
+            for (int i = self.Items.Count - 1; i >= 0; i--)
             {
-                long destroyTime = self.WaitDestroyTimes[i];
-                if (destroyTime > 0 && now >= destroyTime)
+                MountItem item = self.Items[i];
+                if (item.WaitDestroyTime > 0 && now >= item.WaitDestroyTime)
                 {
-                    GameObject effectGo = self.Objects[i];
-                    //Log.Info($"MountEffect timed destroy, unitId={self.GetParent<Unit>().Id}, effectGo={effectGo?.name}, now={now}, destroyTime={destroyTime}, delta={now - destroyTime}ms");
-                    self.RemoveEffectAt(i, "Update timed");
+                    self.RemoveEffectAt(i);
                 }
             }
         }
@@ -81,22 +80,15 @@ namespace ET.Client
             }
 
             string assetPath = $"{EffectBundlePathPrefix}{effectConfig.Model}.prefab";
-            Scene scene = unit.Scene();
-            ResourcesLoaderComponent resourcesLoader = scene.GetComponent<ResourcesLoaderComponent>();
-            if (resourcesLoader == null)
+
+            GameObject effectGo = await unit.Scene().GetComponent<PoolComponent>().GetEffect(assetPath);
+            if (effectGo == null)
             {
-                Log.Error($"MountEffect failed, ResourcesLoaderComponent is null, unitId={unit.Id}");
+                Log.Error($"MountEffect failed, GetEffect returned null, assetPath={assetPath}");
                 return null;
             }
 
-            GameObject prefab = await resourcesLoader.LoadAssetAsync<GameObject>(assetPath);
-            if (prefab == null)
-            {
-                Log.Error($"MountEffect failed, prefab not found: {assetPath}");
-                return null;
-            }
-
-            GameObject effectGo = UnityEngine.Object.Instantiate(prefab, boneGo.transform, false);
+            effectGo.transform.SetParent(boneGo.transform, false);
             effectGo.name = $"{effectConfig.Model}_{effectConfigId}";
             effectGo.transform.localPosition = ToUnityVector3(effectConfig.Offset);
             effectGo.transform.localScale = ToUnityScaleVector3(effectConfig.Scale);
@@ -109,45 +101,48 @@ namespace ET.Client
 
             long now = TimeInfo.Instance.ClientFrameTime();
             long waitDestroyTime = effectConfig.DestroyTime <= 0 ? 0 : now + effectConfig.DestroyTime;
-            self.Objects.Add(effectGo);
-            self.WaitDestroyTimes.Add(waitDestroyTime);
-
-            //Log.Info($"MountEffect created, unitId={unit.Id}, effectConfigId={effectConfigId}, effectGo={effectGo.name}, now={now}, destroyTime={waitDestroyTime}, configDestroyTime={effectConfig.DestroyTime}ms, count={self.Objects.Count}");
+            self.Items.Add(new MountItem
+            {
+                Object = effectGo,
+                PoolKey = assetPath,
+                WaitDestroyTime = waitDestroyTime,
+            });
 
             return effectGo;
         }
 
         private static void ClearAllEffects(this MountComponent self)
         {
-            Unit unit = self.GetParent<Unit>();
-            //Log.Info($"MountEffect clear all, unitId={unit?.Id}, count={self.Objects.Count}");
-            for (int i = self.Objects.Count - 1; i >= 0; i--)
+            for (int i = self.Items.Count - 1; i >= 0; i--)
             {
-                self.RemoveEffectAt(i, "ClearAll");
+                self.RemoveEffectAt(i);
             }
         }
 
-        private static void RemoveEffectAt(this MountComponent self, int index, string reason)
+        private static void RemoveEffectAt(this MountComponent self, int index)
         {
-            if (index < 0 || index >= self.Objects.Count)
+            if (index < 0 || index >= self.Items.Count)
             {
                 return;
             }
 
-            GameObject effectGo = self.Objects[index];
-            long waitDestroyTime = index < self.WaitDestroyTimes.Count ? self.WaitDestroyTimes[index] : -1;
-            //Log.Info($"MountEffect remove, unitId={self.GetParent<Unit>().Id}, reason={reason}, index={index}, effectGo={effectGo?.name}, waitDestroyTime={waitDestroyTime}, countBefore={self.Objects.Count}");
+            MountItem item = self.Items[index];
+            self.Items.RemoveAt(index);
 
-            if (effectGo != null)
+            if (item.Object == null)
             {
-                UnityEngine.Object.Destroy(effectGo);
+                return;
             }
 
-            self.Objects.RemoveAt(index);
-            if (index < self.WaitDestroyTimes.Count)
+            Unit unit = self.GetParent<Unit>();
+            PoolComponent poolComponent = unit.Scene().GetComponent<PoolComponent>();
+            if (poolComponent == null || string.IsNullOrEmpty(item.PoolKey))
             {
-                self.WaitDestroyTimes.RemoveAt(index);
+                UnityEngine.Object.Destroy(item.Object);
+                return;
             }
+
+            poolComponent.ReturnEffect(item.PoolKey, item.Object);
         }
 
         private static Vector3 ToUnityVector3(float[] values)
@@ -166,7 +161,7 @@ namespace ET.Client
             {
                 return Vector3.one;
             }
-            
+
             return new Vector3(values[0], values[1], values[2]);
         }
     }

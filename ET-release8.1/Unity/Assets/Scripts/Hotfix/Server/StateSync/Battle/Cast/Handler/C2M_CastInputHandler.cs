@@ -23,7 +23,7 @@ namespace ET.Server
                 response.Error = breakErr;
                 return;
             }
-
+            
             unit.Stop(1);
             response.Error=unit.CreateAndCast(request.CastConfigId,request.TargetId,request.InputPos);
 
