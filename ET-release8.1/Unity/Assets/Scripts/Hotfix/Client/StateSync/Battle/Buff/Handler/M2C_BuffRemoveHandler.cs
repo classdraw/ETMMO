@@ -19,8 +19,8 @@ namespace ET.Client
                 return;
             }
 
-            Buff buff = unit.GetComponent<BuffComponent>()?.Get(message.BuffId);
-            if (buff == null||buff.IsDisposed)
+            ClientBuff clientBuff = unit.GetComponent<ClientBuffComponent>()?.Get(message.BuffId);
+            if (clientBuff == null||clientBuff.IsDisposed)
             {
                 return;
             }
@@ -30,7 +30,7 @@ namespace ET.Client
             buffRemove.BuffId = message.BuffId;
             EventSystem.Instance.Publish(currentScene, buffRemove);
             
-            unit.GetComponent<BuffComponent>()?.Remove(message.BuffId);
+            unit.GetComponent<ClientBuffComponent>()?.Remove(message.BuffId);
             await ETTask.CompletedTask;
         }
     }

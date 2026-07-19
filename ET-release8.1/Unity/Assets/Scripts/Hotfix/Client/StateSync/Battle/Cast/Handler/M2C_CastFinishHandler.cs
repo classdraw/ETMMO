@@ -19,14 +19,14 @@ namespace ET.Client
                 return;
             }
 
-            CastComponent castComponent = caster.GetComponent<CastComponent>();
-            if (castComponent==null||castComponent.IsDisposed)
+            ClientCastComponent clientCastComponent = caster.GetComponent<ClientCastComponent>();
+            if (clientCastComponent==null||clientCastComponent.IsDisposed)
             {
                 return;
             }
 
-            Cast cast = castComponent.Get(message.CastId);
-            if (cast==null||cast.IsDisposed)
+            ClientCast clientCast = clientCastComponent.Get(message.CastId);
+            if (clientCast==null||clientCast.IsDisposed)
             {
                 return;
             }
@@ -36,7 +36,7 @@ namespace ET.Client
             castFinish.CasterId = message.CasterId;
             EventSystem.Instance.Publish(currentScene, castFinish);
             
-            castComponent.Remove(message.CastId);
+            clientCastComponent.Remove(message.CastId);
             await ETTask.CompletedTask;
         }
     }

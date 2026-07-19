@@ -7,6 +7,7 @@ namespace ET.Server
     [FriendOf(typeof(MoveComponent))]
     [FriendOf(typeof(NumericComponent))]
     [FriendOf(typeof(UnitDBSaveComponent))]
+    [FriendOf(typeof(AOIEntity))]
     public static partial class UnitHelper
     {
         /// <summary>
@@ -140,11 +141,40 @@ namespace ET.Server
             return self.GetComponent<AOIEntity>().GetBeSeePlayers();
         }
 
+        public static Dictionary<long, EntityRef<AOIEntity>> GetSeeUnits(this Unit self)
+        {
+            return self.GetComponent<AOIEntity>().GetSeeUnits();
+        }
+
+        /// <summary>
+        /// 获取 self 视野内的战斗单位候选列表，供技能/Bullet 范围筛选使用。
+        /// </summary>
         public static IEnumerable<Unit> GetAoiUnits(this Unit self)
         {
-            foreach (AOIEntity aoiEntity in self.GetBeSeePlayers().Values)
+            AOIEntity aoiEntity = self.GetComponent<AOIEntity>();
+            if (aoiEntity == null || aoiEntity.IsDisposed)
             {
-                yield return aoiEntity.GetParent<Unit>();
+                yield break;
+            }
+
+            Dictionary<long, EntityRef<AOIEntity>> seeUnits = aoiEntity.GetSeeUnits();
+            if (seeUnits == null || seeUnits.Count == 0)
+            {
+                yield break;
+            }
+
+            foreach (AOIEntity seeAoiEntity in seeUnits.Values)
+            {
+                if (seeAoiEntity == null || seeAoiEntity.IsDisposed)
+                {
+                    continue;
+                }
+
+                Unit unit = seeAoiEntity.GetParent<Unit>();
+                if (unit != null && !unit.IsDisposed)
+                {
+                    yield return unit;
+                }
             }
         }
         

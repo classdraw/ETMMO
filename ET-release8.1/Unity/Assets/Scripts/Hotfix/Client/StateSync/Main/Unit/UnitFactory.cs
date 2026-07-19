@@ -40,8 +40,8 @@ namespace ET.Client
 	        unit.AddComponent<ObjectWait>();
 
 	        unit.AddComponent<XunLuoPathComponent>();
-	        unit.AddComponent<BuffComponent>();//buff管理器
-	        unit.AddComponent<CastComponent>();//cast管理器
+	        unit.AddComponent<ClientBuffComponent>();//buff管理器
+	        unit.AddComponent<ClientCastComponent>();//cast管理器
 	        
 	        EventSystem.Instance.Publish(unit.Scene(), new AfterUnitCreate() {Unit = unit});
             return unit;

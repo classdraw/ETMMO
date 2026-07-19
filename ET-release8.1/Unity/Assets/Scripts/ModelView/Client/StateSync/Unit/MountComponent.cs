@@ -8,6 +8,7 @@ namespace ET.Client
         public GameObject Object;
         public string PoolKey;
         public long WaitDestroyTime;
+        public long BuffId;
     }
 
     /// <summary>

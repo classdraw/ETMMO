@@ -23,5 +23,11 @@ namespace ET.Client
         }
 
         public Transform Transform { get; private set; }
+
+        public void ReleaseGameObject()
+        {
+            this.gameObject = null;
+            this.Transform = null;
+        }
     }
 }

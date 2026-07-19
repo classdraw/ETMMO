@@ -1,3 +1,5 @@
+using System;
+
 namespace ET.Client
 {
     //技能开始释放逻辑
@@ -11,11 +13,72 @@ namespace ET.Client
             {
                 return;
             }
-            //后面走配置表
-            unit.GetComponent<AnimatorComponent>().PlayInTime(MotionType.Attack,0.5f);
+            //播放动画
+            PlayStartAnimation(unit,args);
+            await PlayStartEffect(unit, args.CasterConfigId);
 
             await ETTask.CompletedTask;
         }
+
+        private static async ETTask PlayStartEffect(Unit unit, int castConfigId)
+        {
+            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            {
+                Log.Error($"CastStart_PlayView CastConfig not found: {castConfigId}");
+                return;
+            }
+
+            CastConfig castConfig = CastConfigCategory.Instance.Get(castConfigId);
+            int[] startEffects = castConfig.StartEffect;
+            if (startEffects == null || startEffects.Length == 0)
+            {
+                return;
+            }
+
+            foreach (int effectConfigId in startEffects)
+            {
+                if (effectConfigId == 0)
+                {
+                    continue;
+                }
+
+                await EffectHelper.CreateEffect(unit, effectConfigId);
+            }
+        }
+
+        private static void PlayStartAnimation(Unit unit,CastStart args)
+        {
+            if (!CastConfigCategory.Instance.Contain(args.CasterConfigId))
+            {
+                Log.Error($"CastStart_PlayView CastConfig not found: {args.CasterConfigId}");
+                return;
+            }
+
+            CastConfig castConfig = CastConfigCategory.Instance.Get(args.CasterConfigId);
+            if (castConfig.StartAnimation <= 0)
+            {
+                return;
+            }
+
+            if (!Enum.IsDefined(typeof(MotionType), castConfig.StartAnimation))
+            {
+                Log.Error($"CastStart_PlayView invalid StartAnimation: {castConfig.StartAnimation}, castConfigId={args.CasterConfigId}");
+                return;
+            }
+
+            MotionType motionType = (MotionType)castConfig.StartAnimation;
+            if (motionType == MotionType.None)
+            {
+                return;
+            }
+
+            AnimatorComponent animator = unit.GetComponent<AnimatorComponent>();
+            if (animator == null || animator.IsDisposed)
+            {
+                return;
+            }
+
+            animator.Play(motionType, 1f);
+        }
     }
 }
-

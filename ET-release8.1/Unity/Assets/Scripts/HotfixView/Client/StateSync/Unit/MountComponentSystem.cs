@@ -5,11 +5,8 @@ namespace ET.Client
     [EntitySystemOf(typeof(MountComponent))]
     [FriendOf(typeof(MountComponent))]
     [FriendOf(typeof(GameObjectComponent))]
-    [FriendOf(typeof(PoolComponent))]
     public static partial class MountComponentSystem
     {
-        private const string EffectBundlePathPrefix = "Assets/Bundles/Effect/";
-
         [EntitySystem]
         private static void Destroy(this MountComponent self)
         {
@@ -40,7 +37,7 @@ namespace ET.Client
             }
         }
 
-        public static async ETTask<GameObject> MountEffect(this MountComponent self, int effectConfigId)
+        public static async ETTask<GameObject> MountEffect(this MountComponent self, int effectConfigId, long buffId = 0)
         {
             if (!EffectConfigCategory.Instance.Contain(effectConfigId))
             {
@@ -79,9 +76,13 @@ namespace ET.Client
                 return null;
             }
 
-            string assetPath = $"{EffectBundlePathPrefix}{effectConfig.Model}.prefab";
+            string assetPath = EffectHelper.GetEffectAssetPath(effectConfigId);
+            if (string.IsNullOrEmpty(assetPath))
+            {
+                return null;
+            }
 
-            GameObject effectGo = await unit.Scene().GetComponent<PoolComponent>().GetEffect(assetPath);
+            GameObject effectGo = await EffectHelper.GetEffect(unit.Scene(), assetPath);
             if (effectGo == null)
             {
                 Log.Error($"MountEffect failed, GetEffect returned null, assetPath={assetPath}");
@@ -100,15 +101,33 @@ namespace ET.Client
             }
 
             long now = TimeInfo.Instance.ClientFrameTime();
-            long waitDestroyTime = effectConfig.DestroyTime <= 0 ? 0 : now + effectConfig.DestroyTime;
+            // Buff 特效由 BuffRemove 移除，不参与定时销毁
+            long waitDestroyTime = buffId > 0 || effectConfig.DestroyTime <= 0 ? 0 : now + effectConfig.DestroyTime;
             self.Items.Add(new MountItem
             {
                 Object = effectGo,
                 PoolKey = assetPath,
                 WaitDestroyTime = waitDestroyTime,
+                BuffId = buffId,
             });
 
             return effectGo;
+        }
+
+        public static void RemoveEffectByBuffId(this MountComponent self, long buffId)
+        {
+            if (buffId <= 0)
+            {
+                return;
+            }
+
+            for (int i = self.Items.Count - 1; i >= 0; i--)
+            {
+                if (self.Items[i].BuffId == buffId)
+                {
+                    self.RemoveEffectAt(i);
+                }
+            }
         }
 
         private static void ClearAllEffects(this MountComponent self)
@@ -135,14 +154,7 @@ namespace ET.Client
             }
 
             Unit unit = self.GetParent<Unit>();
-            PoolComponent poolComponent = unit.Scene().GetComponent<PoolComponent>();
-            if (poolComponent == null || string.IsNullOrEmpty(item.PoolKey))
-            {
-                UnityEngine.Object.Destroy(item.Object);
-                return;
-            }
-
-            poolComponent.ReturnEffect(item.PoolKey, item.Object);
+            EffectHelper.ReturnEffect(unit.Scene(), item.PoolKey, item.Object);
         }
 
         private static Vector3 ToUnityVector3(float[] values)

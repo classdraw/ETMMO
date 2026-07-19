@@ -1,8 +1,8 @@
 namespace ET.Client
 {
     [MessageHandler(SceneType.StateSync)]
-    [FriendOf(typeof(Cast))]
-    [FriendOf(typeof(CastComponent))]
+    [FriendOf(typeof(ClientCast))]
+    [FriendOf(typeof(ClientCastComponent))]
     public class M2C_CastHitHandler: MessageHandler<Scene,M2C_CastHit>
     {
         protected override async ETTask Run(Scene root, M2C_CastHit message)
@@ -20,25 +20,25 @@ namespace ET.Client
                 return;
             }
 
-            CastComponent castComponent = caster.GetComponent<CastComponent>();
-            if (castComponent == null || castComponent.IsDisposed)
+            ClientCastComponent clientCastComponent = caster.GetComponent<ClientCastComponent>();
+            if (clientCastComponent == null || clientCastComponent.IsDisposed)
             {
                 return;
             }
 
-            Cast cast = castComponent.Get(message.CastId);
-            if (cast == null || cast.IsDisposed)
+            ClientCast clientCast = clientCastComponent.Get(message.CastId);
+            if (clientCast == null || clientCast.IsDisposed)
             {
                 return;
             }
 
-            cast.TargetsId.Clear();
+            clientCast.TargetsId.Clear();
             if (message.TargetsId != null)
             {
-                cast.TargetsId.AddRange(message.TargetsId);
+                clientCast.TargetsId.AddRange(message.TargetsId);
             }
 
-            foreach (long targetId in cast.TargetsId)
+            foreach (long targetId in clientCast.TargetsId)
             {
                 Unit target = unitComponent.Get(targetId);
                 if (target==null||target.IsDisposed)

@@ -15,10 +15,6 @@ namespace ET.Client
                     //死亡
                     unit.GetComponent<AnimatorComponent>()?.Play(MotionType.Death,1.0f);
                 }
-                else
-                {
-                    unit.GetComponent<AnimatorComponent>()?.Play(MotionType.Hit,1.0f);
-                }
             }
             else
             {

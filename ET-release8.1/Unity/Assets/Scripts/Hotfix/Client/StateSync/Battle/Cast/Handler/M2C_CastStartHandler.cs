@@ -3,7 +3,7 @@ using Unity.Mathematics;
 namespace ET.Client
 {
     [MessageHandler(SceneType.StateSync)]
-    [FriendOf(typeof(CastComponent))]
+    [FriendOf(typeof(ClientCastComponent))]
     public class M2C_CastStartHandler: MessageHandler<Scene,M2C_CastStart>
     {
         private const float MinTurnDirectionSqr = 0.01f;
@@ -24,8 +24,8 @@ namespace ET.Client
                 return;
             }
 
-            CastComponent castComponent = caster.GetComponent<CastComponent>();
-            if (castComponent == null||castComponent.IsDisposed)
+            ClientCastComponent clientCastComponent = caster.GetComponent<ClientCastComponent>();
+            if (clientCastComponent == null||clientCastComponent.IsDisposed)
             {
                 return;
             }

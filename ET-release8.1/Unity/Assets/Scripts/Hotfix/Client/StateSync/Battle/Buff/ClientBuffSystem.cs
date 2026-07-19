@@ -1,11 +1,11 @@
 namespace ET.Client
 {
-    [EntitySystemOf(typeof(Buff))]
-    [FriendOfAttribute(typeof(ET.Client.Buff))]
-    public static partial class BuffSystem
+    [EntitySystemOf(typeof(ClientBuff))]
+    [FriendOfAttribute(typeof(ET.Client.ClientBuff))]
+    public static partial class ClientBuffSystem
     {
         [EntitySystem]
-        private static void Awake(this ET.Client.Buff self, int configId)
+        private static void Awake(this ET.Client.ClientBuff self, int configId)
         {
             self.ConfigId = configId;
             self.CreateTime = TimeInfo.Instance.ServerFrameTime();
@@ -14,7 +14,7 @@ namespace ET.Client
         }
 
         [EntitySystem]
-        private static void Destroy(this ET.Client.Buff self)
+        private static void Destroy(this ET.Client.ClientBuff self)
         {
             self.ConfigId = 0;
             self.CreateTime = 0;

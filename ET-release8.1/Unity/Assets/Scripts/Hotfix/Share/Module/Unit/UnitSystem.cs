@@ -85,7 +85,10 @@ namespace ET
         {
             return self.Type() == UnitType.NPC;
         }
-
+        public static bool IsBullet(this Unit self)
+        {
+            return self.Type() == UnitType.Bullet;
+        }
         /// <summary>
         /// 是否是宠物
         /// </summary>

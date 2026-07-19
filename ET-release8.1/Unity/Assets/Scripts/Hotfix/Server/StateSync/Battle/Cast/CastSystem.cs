@@ -307,7 +307,7 @@ namespace ET.Server
                 
                 if (!cast.CheckAsyncInvalid(castInstaceId,casterInstanceId))
                 {
-                    Log.Error($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Action");
+                    Log.Warning($"Cast AsyncInvalid {castInstaceId} {casterInstanceId} Action");
                     return;
                 }
                 //创建技能行为实体
@@ -386,7 +386,8 @@ namespace ET.Server
                 { 
                     Unit caster = cast.Caster;
                     UnitComponent unitComponent = caster.Scene().GetComponent<UnitComponent>();
-                    foreach (long targetId in cast.Targets)
+                    List<long> targets = new List<long>(cast.Targets);
+                    foreach (long targetId in targets)
                     {
                         Unit target = unitComponent.Get(targetId);
                         if (target == null || target.IsDisposed || !target.IsBattleUnit())

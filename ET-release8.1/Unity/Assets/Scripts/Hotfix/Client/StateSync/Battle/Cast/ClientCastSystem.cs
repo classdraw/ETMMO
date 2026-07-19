@@ -1,11 +1,11 @@
 namespace ET.Client
 {
-    [EntitySystemOf(typeof(Cast))]
-    [FriendOf(typeof(Cast))]
-    public static partial class CastSystem
+    [EntitySystemOf(typeof(ClientCast))]
+    [FriendOf(typeof(ClientCast))]
+    public static partial class ClientCastSystem
     {
         [EntitySystem]
-        private static void Awake(this ET.Client.Cast self, int configId)
+        private static void Awake(this ET.Client.ClientCast self, int configId)
         {
             self.ConfigId = configId;
             self.CasterId = 0;
@@ -13,7 +13,7 @@ namespace ET.Client
         }
 
         [EntitySystem]
-        private static void Destroy(this ET.Client.Cast self)
+        private static void Destroy(this ET.Client.ClientCast self)
         {
             self.ConfigId = 0;
             self.CasterId = 0;

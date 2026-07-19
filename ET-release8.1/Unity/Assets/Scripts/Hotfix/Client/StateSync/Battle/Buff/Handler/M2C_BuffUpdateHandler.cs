@@ -16,13 +16,13 @@ namespace ET.Client
             {
                 return;
             }
-            Buff buff = unit.GetComponent<BuffComponent>()?.Get(message.BuffData.Id);
-            if (buff==null||buff.IsDisposed)
+            ClientBuff clientBuff = unit.GetComponent<ClientBuffComponent>()?.Get(message.BuffData.Id);
+            if (clientBuff==null||clientBuff.IsDisposed)
             {
                 return;
             }
 
-            unit.GetComponent<BuffComponent>()?.Update(message.BuffData);
+            unit.GetComponent<ClientBuffComponent>()?.Update(message.BuffData);
             BuffUpdate buffUpdate= new BuffUpdate();
             buffUpdate.Unit = unit;
             buffUpdate.BuffId = message.BuffData.Id;

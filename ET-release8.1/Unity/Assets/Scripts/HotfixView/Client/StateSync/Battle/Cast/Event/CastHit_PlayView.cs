@@ -1,9 +1,11 @@
+using System;
+
 namespace ET.Client
 {
     //技能命中逻辑
     [Event(SceneType.Current)]
-    [FriendOf(typeof(CastComponent))]
-    [FriendOf(typeof(Cast))]
+    [FriendOf(typeof(ClientCastComponent))]
+    [FriendOf(typeof(ClientCast))]
     public class CastHit_PlayView:AEvent<Scene,CastHit>
     {
         protected override async ETTask Run(Scene scene, CastHit args)
@@ -15,43 +17,83 @@ namespace ET.Client
                 return;
             }
 
-            CastComponent castComponent = caster.GetComponent<CastComponent>();
-            if (castComponent == null || castComponent.IsDisposed)
+            ClientCastComponent clientCastComponent = caster.GetComponent<ClientCastComponent>();
+            if (clientCastComponent == null || clientCastComponent.IsDisposed)
             {
                 return;
             }
 
-            Cast cast = castComponent.Get(args.CastId);
-            if (cast == null || cast.IsDisposed)
+            ClientCast clientCast = clientCastComponent.Get(args.CastId);
+            if (clientCast == null || clientCast.IsDisposed)
             {
                 return;
             }
 
-            int[] effectIds = args.IsSelf ? cast.Config.SelfHitEffect : cast.Config.HitEffect;
-            if (effectIds == null || args.HitIndex < 0 || args.HitIndex >= effectIds.Length)
+            if (args.IsSelf)
+            {
+                PlayHitAnimation(caster, clientCast.Config, true);
+                await PlayHitEffect(clientCast.Config, true, args.HitIndex, caster);
+
+            }
+            else
+            {
+                Unit target = unitComponent.Get(args.TargetId);
+                if (target == null || target.IsDisposed)
+                {
+                    return;
+                }
+
+                PlayHitAnimation(target, clientCast.Config, false);
+                await PlayHitEffect(clientCast.Config, false, args.HitIndex, target);
+            }
+
+
+        }
+
+        private static void PlayHitAnimation(Unit unit, CastConfig castConfig, bool isSelf)
+        {
+            int animation = isSelf ? castConfig.SelfHitAnimation : castConfig.HitAnimation;
+            if (animation <= 0)
             {
                 return;
             }
 
-            int effectConfigId = effectIds[args.HitIndex];
+            if (!Enum.IsDefined(typeof(MotionType), animation))
+            {
+                Log.Error($"CastHit_PlayView invalid hit animation: {animation}, isSelf={isSelf}, castConfigId={castConfig.Id}");
+                return;
+            }
+
+            MotionType motionType = (MotionType)animation;
+            if (motionType == MotionType.None)
+            {
+                return;
+            }
+
+            AnimatorComponent animator = unit.GetComponent<AnimatorComponent>();
+            if (animator == null || animator.IsDisposed)
+            {
+                return;
+            }
+
+            animator.Play(motionType, 1f);
+        }
+
+        private static async ETTask PlayHitEffect(CastConfig castConfig, bool isSelf, int hitIndex, Unit effectUnit)
+        {
+            int[] effectIds = isSelf ? castConfig.SelfHitEffect : castConfig.HitEffect;
+            if (effectIds == null || hitIndex < 0 || hitIndex >= effectIds.Length)
+            {
+                return;
+            }
+
+            int effectConfigId = effectIds[hitIndex];
             if (effectConfigId == 0)
             {
                 return;
             }
 
-            Unit effectUnit = args.IsSelf ? caster : unitComponent.Get(args.TargetId);
-            if (effectUnit == null || effectUnit.IsDisposed)
-            {
-                return;
-            }
-
-            MountComponent mountComponent = effectUnit.GetComponent<MountComponent>();
-            if (mountComponent == null || mountComponent.IsDisposed)
-            {
-                return;
-            }
-
-            await mountComponent.MountEffect(effectConfigId);
+            await EffectHelper.CreateEffect(effectUnit, effectConfigId);
         }
     }
 }

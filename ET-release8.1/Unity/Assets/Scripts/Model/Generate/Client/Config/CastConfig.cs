@@ -97,6 +97,12 @@ namespace ET
 		public int[] HitEffect { get; set; }
 		/// <summary>施法转向</summary>
 		public bool NeedLookTarget { get; set; }
+		/// <summary>攻击起手动画</summary>
+		public int StartAnimation { get; set; }
+		/// <summary>自己受击动画</summary>
+		public int SelfHitAnimation { get; set; }
+		/// <summary>受击动画</summary>
+		public int HitAnimation { get; set; }
 
 	}
 }

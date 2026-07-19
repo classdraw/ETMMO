@@ -730,6 +730,14 @@ message M2C_BattleResult // IMessage
 	bool IsCrit = 4;//是否暴击
 }
 
+//假子弹
+message M2C_CastEmptyBullet // IMessage
+{
+	int64 CastId = 1;//技能uuid 
+	int64 CasterId = 2;//释放者id
+	int64 TargetId = 3;//目标
+	int32 ActionId = 4;//假子弹的actionId
+}
 
 
 //////////////////////技能///////////////////////////////////////////
