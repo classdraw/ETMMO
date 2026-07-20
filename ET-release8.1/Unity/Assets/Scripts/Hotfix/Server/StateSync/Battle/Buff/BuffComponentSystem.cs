@@ -262,6 +262,43 @@ namespace ET.Server
             return self.GetByRole(configId, buffCreateInfo.AddUnitId);
         }
 
+        /// <summary>
+        /// 单位进入玩家 AOI 时，补发该单位身上已有的 Buff（RegisterBuff 只会在添加时广播，后进入视野的玩家收不到）。
+        /// </summary>
+        public static async ETTask NoticeBuffsToViewer(this BuffComponent self, Unit viewer)
+        {
+            if (self == null || self.IsDisposed || viewer == null || viewer.IsDisposed)
+            {
+                return;
+            }
+
+            Unit owner = self.GetParent<Unit>();
+            if (owner == null || owner.IsDisposed)
+            {
+                return;
+            }
+
+            foreach (EntityRef<Buff> buffRef in self.BuffsDict.Values)
+            {
+                Buff buff = buffRef;
+                if (buff == null || buff.IsDisposed)
+                {
+                    continue;
+                }
+
+                NoticeClientType noticeClientType = (NoticeClientType)buff.Config.NoticeClientType;
+                if (!MapMessageHelper.ShouldNoticeToViewer(viewer, owner, noticeClientType))
+                {
+                    continue;
+                }
+
+                M2C_BuffAdd m2CBuffAdd = M2C_BuffAdd.Create();
+                m2CBuffAdd.UnitId = owner.Id;
+                m2CBuffAdd.BuffData = buff.ToMessage();
+                await MapMessageHelper.SendToClient(viewer, m2CBuffAdd);
+            }
+        }
+
         private static void NotifyBuffUpdate(this BuffComponent self, Buff buff)
         {
             Unit owner = buff.Owner;

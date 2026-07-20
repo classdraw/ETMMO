@@ -2,4 +2,5 @@
 [22001, {"_t":"EffectConfig","_id":22001,"Type":1,"Title":"测试受击","Model":"Effect_BloodHit","BindBone":0,"Offset":[0.0,0.0,0.0],"Scale":[1.0,1.0,1.0],"DestroyTime":500}],
 [22002, {"_t":"EffectConfig","_id":22002,"Type":1,"Title":"测试火球","Model":"Effect_Fireball","BindBone":4,"Offset":[0.0,0.0,0.0],"Scale":[1.0,1.0,1.0],"DestroyTime":-1}],
 [22003, {"_t":"EffectConfig","_id":22003,"Type":1,"Title":"测试施法特效","Model":"Effect_CastBegin","BindBone":0,"Offset":[0.0,0.0,0.0],"Scale":[1.0,1.0,1.0],"DestroyTime":800}],
+[22004, {"_t":"EffectConfig","_id":22004,"Type":1,"Title":"测试毒Buff","Model":"Effect_Posion","BindBone":1,"Offset":[0.0,0.0,0.0],"Scale":[1.0,1.0,1.0],"DestroyTime":-1}],
 ]}

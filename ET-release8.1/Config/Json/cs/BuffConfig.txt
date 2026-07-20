@@ -1,4 +1,4 @@
 {"dict": [
-[55001, {"_t":"BuffConfig","_id":55001,"Type":0,"Name":"","ConverType":4,"NoticeClientType":2,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":3000,"AddAction":[],"TickTime":1000,"TickAction":[77004.0],"RemoveAction":[],"OwnerEffect":[]}],
+[55001, {"_t":"BuffConfig","_id":55001,"Type":0,"Name":"","ConverType":4,"NoticeClientType":2,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":5000,"AddAction":[],"TickTime":1000,"TickAction":[77004.0],"RemoveAction":[],"OwnerEffect":[22004.0]}],
 [55002, {"_t":"BuffConfig","_id":55002,"Type":0,"Name":"","ConverType":3,"NoticeClientType":0,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":3000,"AddAction":[],"TickTime":0,"TickAction":[],"RemoveAction":[],"OwnerEffect":[]}],
 ]}

@@ -41,9 +41,36 @@ namespace ET.Server
                 return;
             }
 
+            NoticeUnitAddAsync(unit, sendUnit).Coroutine();
+        }
+
+        private static async ETTask NoticeUnitAddAsync(Unit unit, Unit sendUnit)
+        {
             M2C_CreateUnits createUnits = M2C_CreateUnits.Create();
             createUnits.Units.Add(UnitHelper.CreateUnitInfo(sendUnit));
-            MapMessageHelper.SendToClient(unit, createUnits).Coroutine();
+            await MapMessageHelper.SendToClient(unit, createUnits);
+            BuffComponent buffComponent = sendUnit.GetComponent<BuffComponent>();
+            if (buffComponent != null)
+            {
+                await buffComponent.NoticeBuffsToViewer(unit);
+            }
+        }
+
+        public static bool ShouldNoticeToViewer(Unit viewer, Unit messageOwner, NoticeClientType noticeClientType)
+        {
+            switch (noticeClientType)
+            {
+                case NoticeClientType.NoNotice:
+                    return false;
+                case NoticeClientType.Self:
+                    return viewer.Id == messageOwner.Id;
+                case NoticeClientType.Broadcast:
+                    return true;
+                case NoticeClientType.BroadcastWithoutSelf:
+                    return viewer.Id != messageOwner.Id;
+                default:
+                    return false;
+            }
         }
         
         public static void NoticeUnitRemove(Unit unit, Unit sendUnit)
