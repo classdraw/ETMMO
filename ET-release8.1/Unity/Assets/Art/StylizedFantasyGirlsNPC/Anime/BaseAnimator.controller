@@ -123,9 +123,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.24999999
+  m_TransitionDuration: 0.07669555
   m_TransitionOffset: 0
-  m_ExitTime: 0.25938395
+  m_ExitTime: 0.6908592
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -303,7 +303,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: hit
-  m_Speed: 3
+  m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 3365304400998099377}
@@ -340,7 +340,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.08206463
   m_TransitionOffset: 0
   m_ExitTime: 0.67391455
   m_HasExitTime: 1
