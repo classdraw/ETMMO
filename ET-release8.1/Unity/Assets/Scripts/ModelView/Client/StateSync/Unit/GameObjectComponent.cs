@@ -7,7 +7,7 @@ namespace ET.Client
     [ComponentOf(typeof(Unit))]
     public class GameObjectComponent: Entity, IAwake, IDestroy
     {
-        private GameObject gameObject;
+        public GameObject gameObject;
 
         public GameObject GameObject
         {
@@ -17,17 +17,20 @@ namespace ET.Client
             }
             set
             {
-                this.gameObject = value;
-                this.Transform = value.transform;
+                if (value==null)
+                {
+                    this.gameObject = null;
+                    this.Transform = null;
+                }
+                else
+                {
+                    this.gameObject = value;
+                    this.Transform = value.transform;
+                }
             }
         }
 
-        public Transform Transform { get; private set; }
-
-        public void ReleaseGameObject()
-        {
-            this.gameObject = null;
-            this.Transform = null;
-        }
+        public Transform Transform { get;set; }
+        
     }
 }

@@ -136,7 +136,7 @@ namespace ET.Server
             float3 pos = new float3(groupConfig.Pos[0] / 1000f, groupConfig.Pos[1] / 1000f, groupConfig.Pos[2] / 1000f);
             pos += new float3(RandomGenerator.RandomNumber(-groupConfig.Range, groupConfig.Range)/1000f, 0f, RandomGenerator.RandomNumber(-groupConfig.Range, groupConfig.Range)/1000f);
 
-            Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig.UnitConfigId, pos);
+            Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig, pos);
             unit.MapId = self.MapConfigId;
             unit.AddComponent<MonsterFlag,int,int>(monsterConfigId,monsterConfig.GroupId);
             return unit;

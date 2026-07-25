@@ -62,5 +62,21 @@ namespace ET
         LeftHand=3,
         RightHand=4,
     }
+
+    //战斗元素属性
+    public enum ElementType : byte
+    {
+        Neutral=0,//中性
+        Fire=1,//火
+        Water=2,//水
+        Wind=3,//风
+        Land=4,//地面
+        Poison=5,//毒
+        Sacred=6,//圣
+        Darkness=7,//黑暗
+        Memorization=8,//念
+        Undead=9,//不死
+    }
+
 }
 

@@ -67,6 +67,30 @@ namespace ET
 		public int GroupId { get; set; }
 		/// <summary>模型</summary>
 		public string Model { get; set; }
+		/// <summary>等级</summary>
+		public int Level { get; set; }
+		/// <summary>元素</summary>
+		public int Element { get; set; }
+		/// <summary>血量</summary>
+		public int Hp { get; set; }
+		/// <summary>物理攻击</summary>
+		public int[] Atk { get; set; }
+		/// <summary>物理防御</summary>
+		public int[] Def { get; set; }
+		/// <summary>最小魔法攻击</summary>
+		public int[] MAtk { get; set; }
+		/// <summary>物理防御</summary>
+		public int[] MDef { get; set; }
+		/// <summary>命中</summary>
+		public int Hit { get; set; }
+		/// <summary>95%miss</summary>
+		public int Flee { get; set; }
+		/// <summary>攻速</summary>
+		public float AtkSpeed { get; set; }
+		/// <summary>移速</summary>
+		public float Speed { get; set; }
+		/// <summary>攻击距离（普攻）</summary>
+		public float AtkRange { get; set; }
 
 	}
 }

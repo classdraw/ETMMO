@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace ET.Client
 {
+    [FriendOf(typeof(FollowComponent))]
     public static class CastEmptyBulletHelper
     {
         private const int EmptyBulletUnitConfigId = 9001;

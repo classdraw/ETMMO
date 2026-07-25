@@ -75,6 +75,8 @@ namespace ET
 		public int JobHp { get; set; }
 		/// <summary>蓝量Job系数*1000</summary>
 		public double JobSp { get; set; }
+		/// <summary>是否远程（玩家伤害计算用）</summary>
+		public int Range { get; set; }
 		/// <summary>STR</summary>
 		public int Str { get; set; }
 		/// <summary>AGI</summary>

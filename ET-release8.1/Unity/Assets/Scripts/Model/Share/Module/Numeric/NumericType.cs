@@ -62,5 +62,37 @@
 	    public const int Sp = 1011;//蓝量
 	    public const int SpBase = Sp * 10 + 1;
 
+	    public const int Element = 1012;//元素
+	    //预留1012 1019
+	    
+	    //战斗属性
+	    public const int Atk = 1020;//攻击力
+	    public const int AtkBase = Atk * 10 + 1;
+	    public const int AtkAdd = Atk * 10 + 2;
+	    
+	    public const int Def = 1021;//物理防御
+	    public const int DefBase = Def * 10 + 1;
+	    public const int DefAdd = Def * 10 + 2;
+	    
+	    public const int MAtk = 1022;//魔法攻击力
+	    public const int MAtkBase = MAtk * 10 + 1;
+	    public const int MAtkAdd = MAtk * 10 + 2;
+	    
+	    public const int MDef = 1023;//魔法防御
+	    public const int MDefBase = MDef * 10 + 1;
+	    public const int MDefAdd = MDef * 10 + 2;
+
+	    public const int Hit = 1024;//命中
+	    public const int Flee = 1025;//95% miss值
+
+	    public const int AtkSpeed = 1026;//攻速
+	    public const int AtkRange = 1027;//普攻距离
+
+
+	    public const int AtkRandom = 1028;//物理攻击随机浮动
+	    public const int DefRandom = 1029;//物理防御随机浮动
+	    public const int MAtkRandom = 1030;//魔法攻击随机浮动
+	    public const int MDefRandom = 1031;//魔法防御随机浮动
+	    
     }
 }

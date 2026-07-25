@@ -11,6 +11,7 @@ namespace ET.Client
             {
                 return;
             }
+
             //后面走配置表
             unit.GetComponent<AnimatorComponent>().Play(MotionType.Idle,1f);
 

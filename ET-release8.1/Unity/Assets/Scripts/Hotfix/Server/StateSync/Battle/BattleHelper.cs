@@ -12,13 +12,27 @@ namespace ET.Server
         /// </summary>
         public static void CalcAttack(Unit attacker, Unit target, Actions actions)
         {
-            //需要根据实际情况，攻击力防御力一堆公式计算，得出伤害值  包含物理或者魔法伤害
-            //现在简化为直接读取固定伤害  
+            int[] param = actions.Config.ActionsParam;
+            if (param == null || param.Length < 4)
+            {
+                Log.Error($"CalcAttack ActionsParam invalid: configId={actions.Config.Id}");
+                return;
+            }
 
-            //扣血
-            int damage = actions.Config.ActionsParam[0];
+            int damage = CalcDamage(attacker, param);
+            if (damage == 0)
+            {
+                return;
+            }
+
             NumericComponent numericComponent = target.GetComponent<NumericComponent>();
+            if (numericComponent == null)
+            {
+                return;
+            }
+
             long oldHp = numericComponent[NumericType.Hp];
+            // damage < 0 扣血，damage > 0 加血
             long targetHp = numericComponent[NumericType.Hp] + damage;
             numericComponent[NumericType.HpBase] = Math.Clamp(targetHp, 0, numericComponent[NumericType.MaxHp]);
 
@@ -42,6 +56,30 @@ namespace ET.Server
                 Kill(attacker, target);
             }
         }
+
+        /// <summary>
+        /// ActionsParam: [0属性, 1物理/魔法, 2是否固定值(1固定), 3系数或固定伤害]
+        /// </summary>
+        private static int CalcDamage(Unit attacker, int[] param)
+        {
+            int isFixed = param[2];
+            int coefficient = param[3];
+
+            if (isFixed == 1)
+            {
+                return coefficient;
+            }
+
+            NumericComponent numericComponent = attacker.GetComponent<NumericComponent>();
+            if (numericComponent == null)
+            {
+                return 0;
+            }
+
+            int atk = numericComponent.GetAsInt(NumericType.Atk);
+            return (int)(atk * (coefficient / 100d));
+        }
+
         /// <summary>
         /// 击杀
         /// </summary>

@@ -33,5 +33,11 @@ namespace ET.Client
         private static void Awake(this GameObjectComponent self)
         {
         }
+        
+        public static void ReleaseGameObject(this GameObjectComponent self)
+        {
+            self.gameObject = null;
+            self.Transform = null;
+        }
     }
 }

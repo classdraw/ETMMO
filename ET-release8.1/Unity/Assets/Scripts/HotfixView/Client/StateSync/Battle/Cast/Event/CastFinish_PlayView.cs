@@ -11,8 +11,14 @@ namespace ET.Client
             {
                 return;
             }
+            ClientCast clientCast = unit.GetComponent<ClientCastComponent>().Get(args.CastId);
+            if (clientCast==null||clientCast.IsDisposed)
+            {
+                return;
+            }
+
             //后面走配置表
-            unit.GetComponent<AnimatorComponent>().Play(MotionType.Idle,1f);
+            unit.GetComponent<AnimatorComponent>()?.Play(MotionType.Idle,1f);
 
             await ETTask.CompletedTask;
         }
