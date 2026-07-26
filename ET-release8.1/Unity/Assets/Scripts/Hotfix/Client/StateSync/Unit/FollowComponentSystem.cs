@@ -1,11 +1,9 @@
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace ET.Client
 {
     [EntitySystemOf(typeof(FollowComponent))]
     [FriendOf(typeof(FollowComponent))]
-    [FriendOf(typeof(GameObjectComponent))]
     public static partial class FollowComponentSystem
     {
         private const float ArriveDistance = 0.05f;
@@ -18,9 +16,31 @@ namespace ET.Client
         [EntitySystem]
         private static void Update(this FollowComponent self)
         {
+            if (!self.IsReady)
+            {
+                return;
+            }
+
             Unit unit = self.GetParent<Unit>();
             if (unit == null || unit.IsDisposed)
             {
+                return;
+            }
+
+            Unit target = self.Target;
+            if (target == null || target.IsDisposed)
+            {
+                return;
+            }
+
+            if (self.FlyTimeMs <= 0)
+            {
+                return;
+            }
+
+            if (self.Speed <= 0f)
+            {
+                TryStartFollow(self, unit, target);
                 return;
             }
 
@@ -31,10 +51,16 @@ namespace ET.Client
                 return;
             }
 
-            Unit target = self.Target;
-            if (target == null || target.IsDisposed)
+            if (self.LastUpdateTime <= 0)
             {
-                unit.Dispose();
+                self.LastUpdateTime = now;
+                return;
+            }
+
+            float deltaTime = (now - self.LastUpdateTime) / 1000f;
+            self.LastUpdateTime = now;
+            if (deltaTime <= 0f)
+            {
                 return;
             }
 
@@ -50,7 +76,7 @@ namespace ET.Client
                 return;
             }
 
-            float moveDistance = self.Speed * Time.deltaTime;
+            float moveDistance = self.Speed * deltaTime;
             if (moveDistance >= distance)
             {
                 unit.Position = targetPos;
@@ -63,12 +89,25 @@ namespace ET.Client
             unit.Forward = direction;
         }
 
+        private static void TryStartFollow(FollowComponent self, Unit unit, Unit target)
+        {
+            float3 offset = target.Position - unit.Position;
+            offset.y = 0;
+            float distance = math.max(math.length(offset), 0.01f);
+            self.Speed = distance / (self.FlyTimeMs / 1000f);
+            self.EndTime = TimeInfo.Instance.ClientFrameTime() + self.FlyTimeMs;
+            self.LastUpdateTime = 0;
+        }
+
         [EntitySystem]
         private static void Destroy(this FollowComponent self)
         {
             self.Target = default;
+            self.FlyTimeMs = 0;
             self.Speed = 0;
             self.EndTime = 0;
+            self.LastUpdateTime = 0;
+            self.IsReady = false;
         }
     }
 }

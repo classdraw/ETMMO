@@ -1,4 +1,4 @@
 {"dict": [
-[3001, {"_t":"MonsterGroupConfig","_id":3001,"Pos":[-8800.0,0.0,-3420.0],"Range":1000,"mapId":10002}],
-[3002, {"_t":"MonsterGroupConfig","_id":3002,"Pos":[-8000.0,0.0,9433.0],"Range":1000,"mapId":10002}],
+[3001, {"_t":"MonsterGroupConfig","_id":3001,"_Pos":[-8800.0,0.0,-3420.0],"Range":1000,"mapId":10002}],
+[3002, {"_t":"MonsterGroupConfig","_id":3002,"_Pos":[-8000.0,0.0,9433.0],"Range":1000,"mapId":10002}],
 ]}

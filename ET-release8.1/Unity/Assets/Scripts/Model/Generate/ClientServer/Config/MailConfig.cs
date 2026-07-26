@@ -68,7 +68,18 @@ namespace ET
 		/// <summary>信息</summary>
 		public string Message { get; set; }
 		/// <summary>奖励</summary>
-		public int[] RewardArray { get; set; }
+		public int[] _RewardArray;
+		
+		[BsonIgnore]
+		public int[] RewardArray
+		{
+			get
+			{
+				if(_RewardArray == null)
+					_RewardArray = new int[] { };
+				return _RewardArray;
+			}
+		}
 
 	}
 }

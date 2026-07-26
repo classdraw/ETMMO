@@ -39,6 +39,25 @@ namespace ET
         public long CasterId;
     }
 
+    //战斗结果飘字
+    public struct BattleResult
+    {
+        public long AttackerId;
+        public long TargetId;
+        public long Damage;
+        public bool IsCrit;
+    }
+
+    //假子弹
+    public struct CastEmptyBullet
+    {
+        public Unit BulletUnit;
+        public Unit Caster;
+        public Unit Target;
+        public int EffectConfigId;
+        public int FlyTimeMs;
+    }
+
 
     public struct BuffAdd
     {

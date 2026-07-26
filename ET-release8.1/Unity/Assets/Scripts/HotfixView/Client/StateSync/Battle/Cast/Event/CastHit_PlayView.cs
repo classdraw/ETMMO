@@ -93,7 +93,13 @@ namespace ET.Client
                 return;
             }
 
-            await EffectHelper.CreateEffect(effectUnit, effectConfigId);
+            MountComponent mountComponent = effectUnit.GetComponent<MountComponent>();
+            if (mountComponent == null || mountComponent.IsDisposed)
+            {
+                return;
+            }
+
+            await mountComponent.MountEffect(effectConfigId);
         }
     }
 }

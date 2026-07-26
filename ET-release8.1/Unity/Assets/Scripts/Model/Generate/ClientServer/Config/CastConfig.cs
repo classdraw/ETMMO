@@ -68,33 +68,154 @@ namespace ET
 		/// <summary>目标选择方式</summary>
 		public int SelectType { get; set; }
 		/// <summary>形状</summary>
-		public int[] SelectParam { get; set; }
+		public int[] _SelectParam;
+		
+		[BsonIgnore]
+		public int[] SelectParam
+		{
+			get
+			{
+				if(_SelectParam == null)
+					_SelectParam = new int[] { };
+				return _SelectParam;
+			}
+		}
 		/// <summary>形状</summary>
-		public int[] ShapeParam { get; set; }
+		public int[] _ShapeParam;
+		
+		[BsonIgnore]
+		public int[] ShapeParam
+		{
+			get
+			{
+				if(_ShapeParam == null)
+					_ShapeParam = new int[] { };
+				return _ShapeParam;
+			}
+		}
 		/// <summary>通知客户端类型</summary>
 		public int NoticeClientType { get; set; }
 		/// <summary>命中行为</summary>
-		public int[] HitAction { get; set; }
+		public int[] _HitAction;
+		
+		[BsonIgnore]
+		public int[] HitAction
+		{
+			get
+			{
+				if(_HitAction == null)
+					_HitAction = new int[] { };
+				return _HitAction;
+			}
+		}
 		/// <summary>技能命中目标时间点</summary>
-		public int[] HitActionTimes { get; set; }
+		public int[] _HitActionTimes;
+		
+		[BsonIgnore]
+		public int[] HitActionTimes
+		{
+			get
+			{
+				if(_HitActionTimes == null)
+					_HitActionTimes = new int[] { };
+				return _HitActionTimes;
+			}
+		}
 		/// <summary>命中自身行为</summary>
-		public int[] SelfHitAction { get; set; }
+		public int[] _SelfHitAction;
+		
+		[BsonIgnore]
+		public int[] SelfHitAction
+		{
+			get
+			{
+				if(_SelfHitAction == null)
+					_SelfHitAction = new int[] { };
+				return _SelfHitAction;
+			}
+		}
 		/// <summary>技能命中自身时间点</summary>
-		public int[] SelfHitActionTimes { get; set; }
+		public int[] _SelfHitActionTimes;
+		
+		[BsonIgnore]
+		public int[] SelfHitActionTimes
+		{
+			get
+			{
+				if(_SelfHitActionTimes == null)
+					_SelfHitActionTimes = new int[] { };
+				return _SelfHitActionTimes;
+			}
+		}
 		/// <summary>命中Buff</summary>
-		public int[] HitBuffs { get; set; }
+		public int[] _HitBuffs;
+		
+		[BsonIgnore]
+		public int[] HitBuffs
+		{
+			get
+			{
+				if(_HitBuffs == null)
+					_HitBuffs = new int[] { };
+				return _HitBuffs;
+			}
+		}
 		/// <summary>命中自身Buff</summary>
-		public int[] SelfHitBuffs { get; set; }
+		public int[] _SelfHitBuffs;
+		
+		[BsonIgnore]
+		public int[] SelfHitBuffs
+		{
+			get
+			{
+				if(_SelfHitBuffs == null)
+					_SelfHitBuffs = new int[] { };
+				return _SelfHitBuffs;
+			}
+		}
 		/// <summary>技能不可打断时间</summary>
 		public int UnBreakTime { get; set; }
 		/// <summary>技能总时长</summary>
 		public int TotalTime { get; set; }
 		/// <summary>技能开始特效</summary>
-		public int[] StartEffect { get; set; }
+		public int[] _StartEffect;
+		
+		[BsonIgnore]
+		public int[] StartEffect
+		{
+			get
+			{
+				if(_StartEffect == null)
+					_StartEffect = new int[] { };
+				return _StartEffect;
+			}
+		}
 		/// <summary>技能命中特效</summary>
-		public int[] SelfHitEffect { get; set; }
+		public int[] _SelfHitEffect;
+		
+		[BsonIgnore]
+		public int[] SelfHitEffect
+		{
+			get
+			{
+				if(_SelfHitEffect == null)
+					_SelfHitEffect = new int[] { };
+				return _SelfHitEffect;
+			}
+		}
 		/// <summary>技能命中特效</summary>
-		public int[] HitEffect { get; set; }
+		public int[] _HitEffect;
+		
+		[BsonIgnore]
+		public int[] HitEffect
+		{
+			get
+			{
+				if(_HitEffect == null)
+					_HitEffect = new int[] { };
+				return _HitEffect;
+			}
+		}
 		/// <summary>施法转向</summary>
 		public bool NeedLookTarget { get; set; }
 		/// <summary>攻击起手动画</summary>

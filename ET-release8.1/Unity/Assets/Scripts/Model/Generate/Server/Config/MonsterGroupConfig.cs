@@ -62,7 +62,18 @@ namespace ET
 		/// <summary>Id</summary>
 		public int Id { get; set; }
 		/// <summary>位置/1000</summary>
-		public int[] Pos { get; set; }
+		public int[] _Pos;
+		
+		[BsonIgnore]
+		public int[] Pos
+		{
+			get
+			{
+				if(_Pos == null)
+					_Pos = new int[] { };
+				return _Pos;
+			}
+		}
 		/// <summary>范围/1000</summary>
 		public int Range { get; set; }
 		/// <summary>地图id</summary>

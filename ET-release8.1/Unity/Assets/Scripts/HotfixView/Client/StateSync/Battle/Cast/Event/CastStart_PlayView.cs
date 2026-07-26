@@ -35,6 +35,12 @@ namespace ET.Client
                 return;
             }
 
+            MountComponent mountComponent = unit.GetComponent<MountComponent>();
+            if (mountComponent == null || mountComponent.IsDisposed)
+            {
+                return;
+            }
+
             foreach (int effectConfigId in startEffects)
             {
                 if (effectConfigId == 0)
@@ -42,7 +48,7 @@ namespace ET.Client
                     continue;
                 }
 
-                await EffectHelper.CreateEffect(unit, effectConfigId);
+                await mountComponent.MountEffect(effectConfigId);
             }
         }
 

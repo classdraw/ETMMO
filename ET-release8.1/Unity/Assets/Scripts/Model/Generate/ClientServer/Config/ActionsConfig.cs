@@ -64,7 +64,18 @@ namespace ET
 		/// <summary>技能行为类型</summary>
 		public int Type { get; set; }
 		/// <summary>行为参数</summary>
-		public int[] ActionsParam { get; set; }
+		public int[] _ActionsParam;
+		
+		[BsonIgnore]
+		public int[] ActionsParam
+		{
+			get
+			{
+				if(_ActionsParam == null)
+					_ActionsParam = new int[] { };
+				return _ActionsParam;
+			}
+		}
 
 	}
 }

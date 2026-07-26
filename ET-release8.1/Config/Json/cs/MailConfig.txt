@@ -1,7 +1,7 @@
 {"dict": [
-[88001, {"_t":"MailConfig","_id":88001,"Type":1,"Title":"测试1","Message":"信息1","RewardArray":[1001.0,1.0]}],
-[88002, {"_t":"MailConfig","_id":88002,"Type":1,"Title":"测试2","Message":"信息2","RewardArray":[1001.0,2.0,1002.0,3.0]}],
-[88003, {"_t":"MailConfig","_id":88003,"Type":1,"Title":"测试3","Message":"信息3","RewardArray":[1002.0,1.0]}],
-[88004, {"_t":"MailConfig","_id":88004,"Type":1,"Title":"测试4","Message":"信息4","RewardArray":[1003.0,1.0]}],
-[88005, {"_t":"MailConfig","_id":88005,"Type":1,"Title":"测试5","Message":"信息5","RewardArray":[1002.0,1.0]}],
+[88001, {"_t":"MailConfig","_id":88001,"Type":1,"Title":"测试1","Message":"信息1","_RewardArray":[1001.0,1.0]}],
+[88002, {"_t":"MailConfig","_id":88002,"Type":1,"Title":"测试2","Message":"信息2","_RewardArray":[1001.0,2.0,1002.0,3.0]}],
+[88003, {"_t":"MailConfig","_id":88003,"Type":1,"Title":"测试3","Message":"信息3","_RewardArray":[1002.0,1.0]}],
+[88004, {"_t":"MailConfig","_id":88004,"Type":1,"Title":"测试4","Message":"信息4","_RewardArray":[1003.0,1.0]}],
+[88005, {"_t":"MailConfig","_id":88005,"Type":1,"Title":"测试5","Message":"信息5","_RewardArray":[1002.0,1.0]}],
 ]}

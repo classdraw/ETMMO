@@ -62,19 +62,74 @@ namespace ET
 		/// <summary>Id</summary>
 		public int Id { get; set; }
 		/// <summary>形状参数</summary>
-		public int[] ShapeParam { get; set; }
+		public int[] _ShapeParam;
+		
+		[BsonIgnore]
+		public int[] ShapeParam
+		{
+			get
+			{
+				if(_ShapeParam == null)
+					_ShapeParam = new int[] { };
+				return _ShapeParam;
+			}
+		}
 		/// <summary>持续时间(毫秒)</summary>
 		public int TotalTime { get; set; }
 		/// <summary>创建时触发</summary>
-		public int[] AwakeActions { get; set; }
+		public int[] _AwakeActions;
+		
+		[BsonIgnore]
+		public int[] AwakeActions
+		{
+			get
+			{
+				if(_AwakeActions == null)
+					_AwakeActions = new int[] { };
+				return _AwakeActions;
+			}
+		}
 		/// <summary>结算间隔(毫秒)</summary>
 		public int Interval { get; set; }
 		/// <summary>结算技能编号</summary>
-		public int[] TickCastIds { get; set; }
+		public int[] _TickCastIds;
+		
+		[BsonIgnore]
+		public int[] TickCastIds
+		{
+			get
+			{
+				if(_TickCastIds == null)
+					_TickCastIds = new int[] { };
+				return _TickCastIds;
+			}
+		}
 		/// <summary>结算行为</summary>
-		public int[] TickActions { get; set; }
+		public int[] _TickActions;
+		
+		[BsonIgnore]
+		public int[] TickActions
+		{
+			get
+			{
+				if(_TickActions == null)
+					_TickActions = new int[] { };
+				return _TickActions;
+			}
+		}
 		/// <summary>销毁前触发</summary>
-		public int[] DestroyActions { get; set; }
+		public int[] _DestroyActions;
+		
+		[BsonIgnore]
+		public int[] DestroyActions
+		{
+			get
+			{
+				if(_DestroyActions == null)
+					_DestroyActions = new int[] { };
+				return _DestroyActions;
+			}
+		}
 		/// <summary>模型</summary>
 		public string Model { get; set; }
 

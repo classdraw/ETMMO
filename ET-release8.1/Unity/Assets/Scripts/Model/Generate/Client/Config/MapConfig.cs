@@ -76,9 +76,31 @@ namespace ET
 		/// <summary>有效时间（秒）</summary>
 		public int ValidTime { get; set; }
 		/// <summary>初始点</summary>
-		public float[] StartPoint { get; set; }
+		public float[] _StartPoint;
+		
+		[BsonIgnore]
+		public float[] StartPoint
+		{
+			get
+			{
+				if(_StartPoint == null)
+					_StartPoint = new float[] { };
+				return _StartPoint;
+			}
+		}
 		/// <summary>地图脚本</summary>
-		public string[] CmdList { get; set; }
+		public string[] _CmdList;
+		
+		[BsonIgnore]
+		public string[] CmdList
+		{
+			get
+			{
+				if(_CmdList == null)
+					_CmdList = new string[] { };
+				return _CmdList;
+			}
+		}
 
 	}
 }

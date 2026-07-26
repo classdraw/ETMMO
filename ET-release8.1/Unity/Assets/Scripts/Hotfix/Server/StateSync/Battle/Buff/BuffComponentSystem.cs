@@ -286,31 +286,13 @@ namespace ET.Server
                     continue;
                 }
 
-                NoticeClientType noticeClientType = (NoticeClientType)buff.Config.NoticeClientType;
-                if (!MapMessageHelper.ShouldNoticeToViewer(viewer, owner, noticeClientType))
-                {
-                    continue;
-                }
-
-                M2C_BuffAdd m2CBuffAdd = M2C_BuffAdd.Create();
-                m2CBuffAdd.UnitId = owner.Id;
-                m2CBuffAdd.BuffData = buff.ToMessage();
-                await MapMessageHelper.SendToClient(viewer, m2CBuffAdd);
+                await BuffNoticeHelper.SendBuffAddToViewer(viewer, owner, buff);
             }
         }
 
         private static void NotifyBuffUpdate(this BuffComponent self, Buff buff)
         {
-            Unit owner = buff.Owner;
-            if (owner == null || owner.IsDisposed)
-            {
-                return;
-            }
-
-            M2C_BuffUpdate m2CBuffUpdate = M2C_BuffUpdate.Create();
-            m2CBuffUpdate.UnitId = owner.Id;
-            m2CBuffUpdate.BuffData = buff.ToMessage();
-            MapMessageHelper.SendClient(owner, m2CBuffUpdate, (NoticeClientType)buff.Config.NoticeClientType);
+            BuffNoticeHelper.SendBuffUpdate(buff.Owner, buff);
         }
 
         private static void RegisterBuff(this BuffComponent self, Buff buff)
@@ -324,10 +306,7 @@ namespace ET.Server
             Unit owner = buff.Owner;
             if (owner!=null&&!owner.IsDisposed)
             {
-                M2C_BuffAdd m2CBuffAdd = M2C_BuffAdd.Create();
-                m2CBuffAdd.BuffData = buff.ToMessage();
-                m2CBuffAdd.UnitId = owner.Id;
-                MapMessageHelper.SendClient(owner,m2CBuffAdd,(NoticeClientType)buff.Config.NoticeClientType);
+                BuffNoticeHelper.SendBuffAdd(owner, buff);
                 //处理buff实体添加具体行为逻辑
                       
                 buff.AddActions();//增加buff时行为处理
@@ -349,10 +328,7 @@ namespace ET.Server
                 Unit owner = buff.Owner;
                 if (owner!=null&&!owner.IsDisposed)
                 {
-                    M2C_BuffRemove m2CBuffRemove = M2C_BuffRemove.Create();
-                    m2CBuffRemove.BuffId = buff.Id;
-                    m2CBuffRemove.UnitId = owner.Id;
-                    MapMessageHelper.SendClient(owner,m2CBuffRemove,(NoticeClientType)buff.Config.NoticeClientType);
+                    BuffNoticeHelper.SendBuffRemove(owner, buff);
                     //处理buff实体移除具体行为逻辑
                     buff.RemoveActions();
                     

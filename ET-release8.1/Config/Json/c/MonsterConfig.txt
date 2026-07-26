@@ -1,4 +1,4 @@
 {"dict": [
-[44001, {"_t":"MonsterConfig","_id":44001,"UnitConfigId":10001,"GroupId":3001,"Model":"Monster44001","Level":1,"Element":0,"Hp":50,"Atk":[7.0,10.0],"Def":[1.0,1.0],"MAtk":[3.0,4.0],"MDef":[1.0,2.0],"Hit":202,"Flee":177,"AtkSpeed":1.49,"Speed":2000,"AtkRange":1}],
-[44002, {"_t":"MonsterConfig","_id":44002,"UnitConfigId":10002,"GroupId":3002,"Model":"Monster44002","Level":1,"Element":0,"Hp":50,"Atk":[7.0,10.0],"Def":[1.0,1.0],"MAtk":[3.0,4.0],"MDef":[1.0,2.0],"Hit":202,"Flee":177,"AtkSpeed":1.49,"Speed":2000,"AtkRange":1}],
+[44001, {"_t":"MonsterConfig","_id":44001,"UnitConfigId":10001,"GroupId":3001,"Model":"Monster44001","Level":1,"Element":0,"Hp":50,"_Atk":[7.0,10.0],"_Def":[1.0,1.0],"_MAtk":[3.0,4.0],"_MDef":[1.0,2.0],"Hit":202,"Flee":177,"AtkSpeed":1.49,"Speed":2000,"AtkRange":1}],
+[44002, {"_t":"MonsterConfig","_id":44002,"UnitConfigId":10002,"GroupId":3002,"Model":"Monster44002","Level":1,"Element":0,"Hp":50,"_Atk":[7.0,10.0],"_Def":[1.0,1.0],"_MAtk":[3.0,4.0],"_MDef":[1.0,2.0],"Hit":202,"Flee":177,"AtkSpeed":1.49,"Speed":2000,"AtkRange":1}],
 ]}

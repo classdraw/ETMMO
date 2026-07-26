@@ -465,7 +465,25 @@ namespace ET
 
                 sb.Append($"\t\t/// <summary>{headInfo.FieldDesc}</summary>\n");
                 string fieldType = headInfo.FieldType;
-                sb.Append($"\t\tpublic {fieldType} {headInfo.FieldName} {{ get; set; }}\n");
+                if (fieldType.Contains("[]"))
+                {
+                    sb.Append($"\t\tpublic {fieldType} _{headInfo.FieldName};\n");
+                    sb.Append("\t\t\n");
+                    sb.Append($"\t\t[BsonIgnore]\n");
+                    sb.Append($"\t\tpublic {fieldType} {headInfo.FieldName}\n");
+                    sb.Append("\t\t{\n");
+                    sb.Append("\t\t\tget\n");
+                    sb.Append("\t\t\t{\n");
+                    sb.Append($"\t\t\t\tif(_{headInfo.FieldName} == null)\n");
+                    sb.Append($"\t\t\t\t\t_{headInfo.FieldName} = new {fieldType} {{ }};\n");
+                    sb.Append($"\t\t\t\treturn _{headInfo.FieldName};\n");
+                    sb.Append("\t\t\t}\n");
+                    sb.Append("\t\t}\n");
+                }
+                else
+                {
+                    sb.Append($"\t\tpublic {fieldType} {headInfo.FieldName} {{ get; set; }}\n");
+                }
             }
 
             string content = template.Replace("(ConfigName)", protoName).Replace(("(Fields)"), sb.ToString());
@@ -562,6 +580,11 @@ namespace ET
                     if (fieldN == "Id")
                     {
                         fieldN = "_id";
+                    }
+
+                    if (headInfo.FieldType.Contains("[]"))
+                    {
+                        fieldN = $"_{fieldN}";
                     }
 
                     sb.Append($",\"{fieldN}\":{Convert(headInfo.FieldType, worksheet.Cells[row, col].Text.Trim())}");

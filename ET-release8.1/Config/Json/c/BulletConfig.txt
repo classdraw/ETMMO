@@ -1,3 +1,3 @@
 {"dict": [
-[30001, {"_t":"BulletConfig","_id":30001,"ShapeParam":[],"TotalTime":0,"AwakeActions":[],"Interval":0,"TickCastIds":[],"TickActions":[],"DestroyActions":[],"Model":""}],
+[30001, {"_t":"BulletConfig","_id":30001,"_ShapeParam":[],"TotalTime":0,"_AwakeActions":[],"Interval":0,"_TickCastIds":[],"_TickActions":[],"_DestroyActions":[],"Model":""}],
 ]}

@@ -74,13 +74,57 @@ namespace ET
 		/// <summary>血量</summary>
 		public int Hp { get; set; }
 		/// <summary>物理攻击</summary>
-		public int[] Atk { get; set; }
+		public int[] _Atk;
+		
+		[BsonIgnore]
+		public int[] Atk
+		{
+			get
+			{
+				if(_Atk == null)
+					_Atk = new int[] { };
+				return _Atk;
+			}
+		}
 		/// <summary>物理防御</summary>
-		public int[] Def { get; set; }
+		public int[] _Def;
+		
+		[BsonIgnore]
+		public int[] Def
+		{
+			get
+			{
+				if(_Def == null)
+					_Def = new int[] { };
+				return _Def;
+			}
+		}
 		/// <summary>最小魔法攻击</summary>
-		public int[] MAtk { get; set; }
+		public int[] _MAtk;
+		
+		[BsonIgnore]
+		public int[] MAtk
+		{
+			get
+			{
+				if(_MAtk == null)
+					_MAtk = new int[] { };
+				return _MAtk;
+			}
+		}
 		/// <summary>物理防御</summary>
-		public int[] MDef { get; set; }
+		public int[] _MDef;
+		
+		[BsonIgnore]
+		public int[] MDef
+		{
+			get
+			{
+				if(_MDef == null)
+					_MDef = new int[] { };
+				return _MDef;
+			}
+		}
 		/// <summary>命中</summary>
 		public int Hit { get; set; }
 		/// <summary>95%miss</summary>

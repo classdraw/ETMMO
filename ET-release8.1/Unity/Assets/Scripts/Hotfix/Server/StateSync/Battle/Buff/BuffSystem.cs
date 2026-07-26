@@ -160,13 +160,7 @@ namespace ET.Server
 
         public static BuffProto ToMessage(this Buff self)
         {
-            BuffProto buffProto = BuffProto.Create(true);
-            buffProto.Id = self.Id;
-            buffProto.ConfigId = self.ConfigId;
-            buffProto.ExpireTime = self.ExpireTime;
-            buffProto.CreateTime = self.CreateTime;
-            buffProto.ExtraData = self.ToExtraDataBytes();
-            return buffProto;
+            return BuffProtoHelper.Create(self);
         }
 
         public static void FromMessage(this Buff self, BuffProto buffProto)
@@ -312,15 +306,7 @@ namespace ET.Server
 
         public static void NoticeClientUpdateInfo(this Buff self)
         {
-            Unit owner = self.Owner;
-            if (owner==null||owner.IsDisposed)
-            {
-                return;
-            }
-            M2C_BuffUpdate m2CBuffUpdate = M2C_BuffUpdate.Create();
-            m2CBuffUpdate.BuffData = self.ToMessage();
-            m2CBuffUpdate.UnitId = owner.Id;
-            MapMessageHelper.SendClient(owner,m2CBuffUpdate,(NoticeClientType)self.Config.NoticeClientType);
+            BuffNoticeHelper.SendBuffUpdate(self.Owner, self);
         }
 
         public static void TimeOut(this Buff self)
@@ -419,16 +405,7 @@ namespace ET.Server
 
             if (self.Config.TickAction.Length>0)
             {
-                Unit owner = self.Owner;
-                if (owner!=null&&!owner.IsDisposed)
-                {
-                    M2C_BuffTick m2CBuffTick = M2C_BuffTick.Create();
-                    m2CBuffTick.BuffId = self.Id;
-                    m2CBuffTick.UnitId = owner.Id;
-                    MapMessageHelper.SendClient(owner, m2CBuffTick, (NoticeClientType)self.Config.NoticeClientType);
-                }
-
-
+                BuffNoticeHelper.SendBuffTick(self.Owner, self);
             }
 
         }

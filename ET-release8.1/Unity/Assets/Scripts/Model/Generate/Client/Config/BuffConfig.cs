@@ -76,15 +76,59 @@ namespace ET
 		/// <summary>总时长(毫秒)</summary>
 		public int TotalTime { get; set; }
 		/// <summary>效果</summary>
-		public int[] AddAction { get; set; }
+		public int[] _AddAction;
+		
+		[BsonIgnore]
+		public int[] AddAction
+		{
+			get
+			{
+				if(_AddAction == null)
+					_AddAction = new int[] { };
+				return _AddAction;
+			}
+		}
 		/// <summary>Tick间隔时间(毫秒)</summary>
 		public int TickTime { get; set; }
 		/// <summary>效果</summary>
-		public int[] TickAction { get; set; }
+		public int[] _TickAction;
+		
+		[BsonIgnore]
+		public int[] TickAction
+		{
+			get
+			{
+				if(_TickAction == null)
+					_TickAction = new int[] { };
+				return _TickAction;
+			}
+		}
 		/// <summary>效果</summary>
-		public int[] RemoveAction { get; set; }
+		public int[] _RemoveAction;
+		
+		[BsonIgnore]
+		public int[] RemoveAction
+		{
+			get
+			{
+				if(_RemoveAction == null)
+					_RemoveAction = new int[] { };
+				return _RemoveAction;
+			}
+		}
 		/// <summary>Buff自身特效</summary>
-		public int[] OwnerEffect { get; set; }
+		public int[] _OwnerEffect;
+		
+		[BsonIgnore]
+		public int[] OwnerEffect
+		{
+			get
+			{
+				if(_OwnerEffect == null)
+					_OwnerEffect = new int[] { };
+				return _OwnerEffect;
+			}
+		}
 
 	}
 }

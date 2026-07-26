@@ -49,11 +49,11 @@ namespace ET.Server
             M2C_CreateUnits createUnits = M2C_CreateUnits.Create();
             createUnits.Units.Add(UnitHelper.CreateUnitInfo(sendUnit));
             await MapMessageHelper.SendToClient(unit, createUnits);
-            BuffComponent buffComponent = sendUnit.GetComponent<BuffComponent>();
-            if (buffComponent != null)
+            EventSystem.Instance.Publish(unit.Scene(), new NoticeBuffsToViewer
             {
-                await buffComponent.NoticeBuffsToViewer(unit);
-            }
+                Viewer = unit,
+                Owner = sendUnit,
+            });
         }
 
         public static bool ShouldNoticeToViewer(Unit viewer, Unit messageOwner, NoticeClientType noticeClientType)

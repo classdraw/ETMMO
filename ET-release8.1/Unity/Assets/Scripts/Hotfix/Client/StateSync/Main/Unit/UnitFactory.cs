@@ -46,5 +46,17 @@ namespace ET.Client
 	        EventSystem.Instance.Publish(unit.Scene(), new AfterUnitCreate() {Unit = unit});
             return unit;
         }
+
+        private const int EmptyBulletUnitConfigId = 9001;
+
+        public static Unit CreateEmptyBullet(Scene scene, Unit caster)
+        {
+            UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
+            Unit bulletUnit = unitComponent.AddChild<Unit, int, string>(EmptyBulletUnitConfigId, "EmptyBullet");
+            bulletUnit.OwnerId = caster.Id;
+            bulletUnit.Position = caster.Position;
+            bulletUnit.AddComponent<FollowComponent>();
+            return bulletUnit;
+        }
     }
 }

@@ -70,9 +70,31 @@ namespace ET
 		/// <summary>挂点</summary>
 		public int BindBone { get; set; }
 		/// <summary>位置偏移</summary>
-		public float[] Offset { get; set; }
+		public float[] _Offset;
+		
+		[BsonIgnore]
+		public float[] Offset
+		{
+			get
+			{
+				if(_Offset == null)
+					_Offset = new float[] { };
+				return _Offset;
+			}
+		}
 		/// <summary>缩放</summary>
-		public float[] Scale { get; set; }
+		public float[] _Scale;
+		
+		[BsonIgnore]
+		public float[] Scale
+		{
+			get
+			{
+				if(_Scale == null)
+					_Scale = new float[] { };
+				return _Scale;
+			}
+		}
 		/// <summary>销毁时间(毫秒) -1无限</summary>
 		public int DestroyTime { get; set; }
 

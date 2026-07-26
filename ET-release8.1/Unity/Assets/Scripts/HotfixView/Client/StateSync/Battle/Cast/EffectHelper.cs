@@ -80,27 +80,6 @@ namespace ET.Client
             ReturnEffect(scene, assetPath, go);
         }
 
-        /// <summary>
-        /// 在目标单位上挂载并播放特效。
-        /// </summary>
-        public static async ETTask<GameObject> CreateEffect(Unit target, int configId)
-        {
-            if (target == null || target.IsDisposed)
-            {
-                Log.Error($"EffectHelper CreateEffect failed, target is null or disposed, configId={configId}");
-                return null;
-            }
-
-            MountComponent mountComponent = target.GetComponent<MountComponent>();
-            if (mountComponent == null || mountComponent.IsDisposed)
-            {
-                Log.Error($"EffectHelper CreateEffect failed, MountComponent is null, unitId={target.Id}, configId={configId}");
-                return null;
-            }
-
-            return await mountComponent.MountEffect(configId);
-        }
-
         private static PoolComponent GetPoolComponent(Scene scene)
         {
             if (scene == null)
