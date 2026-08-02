@@ -177,6 +177,8 @@ namespace ET
 		public int UnBreakTime { get; set; }
 		/// <summary>技能总时长</summary>
 		public int TotalTime { get; set; }
+		/// <summary>技能冷却</summary>
+		public int CoolDown { get; set; }
 		/// <summary>技能开始特效</summary>
 		public int[] _StartEffect;
 		

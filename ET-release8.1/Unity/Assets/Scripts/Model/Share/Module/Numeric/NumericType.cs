@@ -93,6 +93,9 @@
 	    public const int DefRandom = 1029;//物理防御随机浮动
 	    public const int MAtkRandom = 1030;//魔法攻击随机浮动
 	    public const int MDefRandom = 1031;//魔法防御随机浮动
-	    
+
+
+	    public const int ForbidSkill = 1050;//禁止施法技能状态
+	    public const int ForbidMove = 1051;//禁止移动
     }
 }

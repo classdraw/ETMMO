@@ -14,6 +14,13 @@ namespace ET.Server
 				return;
 			}
 
+			NumericComponent numericComponent = unit.GetComponent<NumericComponent>();
+			if (numericComponent==null||numericComponent[NumericType.ForbidMove]>0)
+			{
+				//某些状态禁止移动
+				return;
+			}
+
 			unit.FindPathMoveToAsync(message.Position).Coroutine();
 			await ETTask.CompletedTask;
 		}

@@ -78,5 +78,13 @@ namespace ET
         Undead=9,//不死
     }
 
+    //技能状态
+    public enum SkillStatusType:byte
+    {
+        New=0,
+        Init=1,
+        Running=2,
+        Finish=3
+    }
 }
 

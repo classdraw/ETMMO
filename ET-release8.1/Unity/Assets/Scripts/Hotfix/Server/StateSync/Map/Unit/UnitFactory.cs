@@ -31,6 +31,7 @@ namespace ET.Server
                     
                     unit.AddComponent<ReliveComponent>();
                     unit.AddComponent<CastComponent>();
+                    unit.AddComponent<SkillStatusComponent>();
                     unit.AddComponent<NumericNoticeComponent>();
                     unit.AddComponent<BuffComponent>();
                     //背包组件
@@ -92,6 +93,7 @@ namespace ET.Server
             
             unit.AddComponent<ReliveComponent>();
             unit.AddComponent<CastComponent>();
+            unit.AddComponent<SkillStatusComponent>();
             unit.AddComponent<NumericNoticeComponent>();
             unit.AddComponent<BuffComponent>();
             

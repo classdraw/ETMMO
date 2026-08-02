@@ -59,6 +59,11 @@ namespace ET
 
         public const int ERR_CastUnitDead = 200057;//角色死亡导致某些技能逻辑不能走
         public const int ERR_CastCasting = 200058;//正在施法且处于不可打断时间
+
+        public const int ERR_CastPreUnitIsNull = 200059;//施法角色是unit
+        public const int ERR_CastPreNumericIsNull = 200060;//施法对象数值组件没有
+        public const int ERR_CastPreForbidSkill = 200061;//施法角色禁止释放技能状态
+        public const int ERR_CastPreCoolDown = 200062;//施法技能cd中
         //一些unit战斗状态
         public const int ERR_Relive_Alive = 200090;//存活
         //地图

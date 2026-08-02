@@ -195,7 +195,7 @@ namespace ET.Server
                 {
                     foreach (int tickCastId in bulletConfig.TickCastIds)
                     {
-                        int err = owner.CreateAndCast(tickCastId, target.Id, target.Position);
+                        int err = owner.CreateAndCast(tickCastId, target.Id, target.Position,false);//子弹释放不会停止移动
                         if (err != ErrorCode.ERR_Success)
                         {
                             Log.Warning($"Bullet TickCast failed: bullet={bulletConfig.Id} cast={tickCastId} target={target.Id} err={err}");

@@ -5,6 +5,7 @@ namespace ET.Server
 {
     [EntitySystemOf(typeof(Cast))]
     [FriendOf(typeof(Cast))]
+    [FriendOf(typeof(SkillStatusComponent))]
     public static partial class CastSystem
     {
         private const float MinTurnDirectionSqr = 0.01f;
@@ -43,6 +44,9 @@ namespace ET.Server
                 return err;
             }
 
+            cast.StartTime = TimeInfo.Instance.ServerFrameTime();
+            Unit caster = cast.Caster;
+            caster?.GetComponent<SkillStatusComponent>()?.BeginCurrentSkill(cast);
             cast.CastBeginAsync().Coroutine();
             return ErrorCode.ERR_Success;
         }
@@ -268,8 +272,6 @@ namespace ET.Server
         {
             Unit caster = cast.Caster;
             cast.TurnToCastPosition();
-            //技能开始消息
-            cast.StartTime = TimeInfo.Instance.ServerFrameTime();
             M2C_CastStart m2CCastStart = M2C_CastStart.Create();
             m2CCastStart.CasterId = caster.Id;
             m2CCastStart.CastId = cast.Id;
@@ -449,10 +451,12 @@ namespace ET.Server
                 return;
             }
 
-            if (cast.Config.TotalTime > 0)
+            Unit caster = cast.Caster;
+            if (caster != null && !caster.IsDisposed)
             {
-                Unit caster = cast.Caster;
-                if (caster != null && !caster.IsDisposed)
+                caster.GetComponent<SkillStatusComponent>()?.ClearCurrentSkill(cast);
+
+                if (cast.Config.TotalTime > 0)
                 {
                     M2C_CastFinish castFinish = M2C_CastFinish.Create();
                     castFinish.CasterId = caster.Id;
@@ -474,6 +478,8 @@ namespace ET.Server
             Unit caster = cast.Caster;
             if (caster != null && !caster.IsDisposed)
             {
+                caster.GetComponent<SkillStatusComponent>()?.ClearCurrentSkill(cast);
+
                 Log.Console($"[Cast] 玩家 {caster.Id} 技能 {cast.Id}({cast.ConfigId}) 发送 M2C_CastBreak");
                 M2C_CastBreak castBreak = M2C_CastBreak.Create();
                 castBreak.CasterId = caster.Id;

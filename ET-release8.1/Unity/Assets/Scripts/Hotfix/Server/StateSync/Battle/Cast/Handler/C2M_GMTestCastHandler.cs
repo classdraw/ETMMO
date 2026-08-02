@@ -24,9 +24,20 @@ namespace ET.Server
                 return;
             }
 
-            unit.Stop(1);
-            response.Error=unit.CreateAndCast(request.CastConfigId,request.TargetId,request.InputPos);
+            SkillStatusComponent skillStatusComponent = unit.GetComponent<SkillStatusComponent>();
+            if (skillStatusComponent == null || skillStatusComponent.IsDisposed)
+            {
+                response.Error = ErrorCode.ERR_CastSkillError;
+                return;
+            }
 
+            int canCastErr = skillStatusComponent.CanCastSkill(request.CastConfigId);
+            if (canCastErr != ErrorCode.ERR_Success)
+            {
+                response.Error = canCastErr;
+                return;
+            }
+            response.Error = unit.CreateAndCast(request.CastConfigId, request.TargetId, request.InputPos,true);
             await ETTask.CompletedTask;
         }
     }

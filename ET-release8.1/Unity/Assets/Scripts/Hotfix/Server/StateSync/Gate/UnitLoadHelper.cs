@@ -25,6 +25,10 @@ namespace ET.Server
                 {
                     unit.AddComponent<CastComponent>();
                 }
+                if (unit.GetComponent<SkillStatusComponent>()==null)
+                {
+                    unit.AddComponent<SkillStatusComponent>();
+                }
                 if (unit.GetComponent<BuffComponent>()==null)
                 {
                     unit.AddComponent<BuffComponent>();
