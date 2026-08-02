@@ -56,7 +56,6 @@ namespace ET.Server
             unit.AddComponent<NumericNoticeComponent>();//数值同步组件
             unit.AddComponent<MoveComponent>();//移动
             unit.AddComponent<ReliveComponent>();//是否存活
-            unit.AddComponent<CastComponent>();//施法
             unit.AddComponent<PathfindingComponent, string>(root.Name);
             unit.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.OrderedMessage);
             

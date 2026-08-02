@@ -21,6 +21,8 @@ namespace ET.Server
                     UnitConfig unitConfig=UnitConfigCategory.Instance.Get(configId);
 
                     Unit unit = unitComponent.AddChildWithId<Unit, int,string>(id, configId,name);
+                    unit.AddComponent<UnitDBSaveComponent>();
+                    
                     
                     unit.AddComponent<MoveComponent>();
                     unit.Position = new float3(-8.7f, 0f, -15.5f);//最好给新手村第一个场景的坐标 或者新手安全区随机一个 可以写死

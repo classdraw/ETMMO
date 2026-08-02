@@ -4,7 +4,7 @@ namespace ET.Server
     /// 技能释放主键
     /// </summary>
     [ComponentOf(typeof(Unit))]
-    public class CastComponent:Entity,IAwake,IDestroy
+    public class CastComponent:Entity,IAwake,IDestroy,ITransfer
     {
     
     } 

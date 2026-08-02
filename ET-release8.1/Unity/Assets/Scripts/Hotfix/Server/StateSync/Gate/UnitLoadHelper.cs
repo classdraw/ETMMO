@@ -12,7 +12,6 @@ namespace ET.Server
             if (isNewUnit)
             {
                 unit=UnitFactory.Create(gateMapComponent.Scene, player.Id,player.ConfigId,player.Name, UnitType.Player);
-                unit.AddComponent<UnitDBSaveComponent>();
                 UnitCacheHelper.AddOrUpdateUnitAllCache(unit);//新角色把这个角色身上所有组件更新到缓存和数据库
             }
             else
@@ -20,6 +19,15 @@ namespace ET.Server
                 if (unit.GetComponent<UnitDBSaveComponent>()==null)
                 {
                     unit.AddComponent<UnitDBSaveComponent>();
+                }
+
+                if (unit.GetComponent<CastComponent>()==null)
+                {
+                    unit.AddComponent<CastComponent>();
+                }
+                if (unit.GetComponent<BuffComponent>()==null)
+                {
+                    unit.AddComponent<BuffComponent>();
                 }
             }
 
