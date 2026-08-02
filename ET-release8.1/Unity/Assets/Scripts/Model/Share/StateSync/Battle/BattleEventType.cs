@@ -84,6 +84,14 @@ namespace ET
         public long BuffId;
         public int BuffConfigId;
     }
+
+    public struct CoolDownChange
+    {
+        public Unit Unit;
+        public int CastConfigId;
+        public long CoolDownEndTime;
+        public long CoolDownStartTime;
+    }
     #endregion
 }
 

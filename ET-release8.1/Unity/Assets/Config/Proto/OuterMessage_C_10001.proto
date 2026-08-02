@@ -739,7 +739,13 @@ message M2C_CastEmptyBullet // IMessage
 	int32 ActionId = 4;//假子弹的actionId
 }
 
-
+//CD
+message M2C_CoolDownChange // IMessage
+{
+	repeated int32 CastConfigIds = 1;//技能配表
+	repeated int64 CoolDownTimes = 2;//技能cd结束时间
+	repeated int64 CoolDownStartTimes = 3;//技能cd开始时间
+}
 //////////////////////技能///////////////////////////////////////////
 
 

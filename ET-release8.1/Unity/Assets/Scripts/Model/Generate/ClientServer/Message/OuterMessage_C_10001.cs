@@ -3302,6 +3302,49 @@ namespace ET
         }
     }
 
+    // CD
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CoolDownChange)]
+    public partial class M2C_CoolDownChange : MessageObject, IMessage
+    {
+        public static M2C_CoolDownChange Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CoolDownChange), isFromPool) as M2C_CoolDownChange;
+        }
+
+        /// <summary>
+        /// 技能配表
+        /// </summary>
+        [MemoryPackOrder(0)]
+        public List<int> CastConfigIds { get; set; } = new();
+
+        /// <summary>
+        /// 技能cd
+        /// </summary>
+        [MemoryPackOrder(1)]
+        public List<long> CoolDownTimes { get; set; } = new();
+
+        /// <summary>
+        /// 技能开始时间
+        /// </summary>
+        [MemoryPackOrder(2)]
+        public List<long> CoolDownStartTimes { get; set; } = new();
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.CastConfigIds.Clear();
+            this.CoolDownTimes.Clear();
+            this.CoolDownStartTimes.Clear();
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 技能///////////////////////////////////////////
     /// </summary>
@@ -3707,14 +3750,15 @@ namespace ET
         public const ushort M2C_CastHit = 10091;
         public const ushort M2C_BattleResult = 10092;
         public const ushort M2C_CastEmptyBullet = 10093;
-        public const ushort BuffProto = 10094;
-        public const ushort M2C_BuffAdd = 10095;
-        public const ushort M2C_BuffTick = 10096;
-        public const ushort M2C_BuffUpdate = 10097;
-        public const ushort M2C_BuffRemove = 10098;
-        public const ushort C2Mail_GMAddMail = 10099;
-        public const ushort Mail2C_GMAddMail = 10100;
-        public const ushort C2M_GMTestCast = 10101;
-        public const ushort M2C_GMTestCast = 10102;
+        public const ushort M2C_CoolDownChange = 10094;
+        public const ushort BuffProto = 10095;
+        public const ushort M2C_BuffAdd = 10096;
+        public const ushort M2C_BuffTick = 10097;
+        public const ushort M2C_BuffUpdate = 10098;
+        public const ushort M2C_BuffRemove = 10099;
+        public const ushort C2Mail_GMAddMail = 10100;
+        public const ushort Mail2C_GMAddMail = 10101;
+        public const ushort C2M_GMTestCast = 10102;
+        public const ushort M2C_GMTestCast = 10103;
     }
 }

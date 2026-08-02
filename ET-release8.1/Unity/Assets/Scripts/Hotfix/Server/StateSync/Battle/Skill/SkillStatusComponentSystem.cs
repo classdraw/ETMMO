@@ -15,6 +15,7 @@ namespace ET.Server
         {
             self.ResetCurrentSkill();
             self.CoolDowns.Clear();
+            self.CoolDownStartTimes.Clear();
         }
 
         public static int CanCastSkill(this SkillStatusComponent self, int castConfigId)
@@ -55,7 +56,10 @@ namespace ET.Server
                 return;
             }
 
-            self.CoolDowns[castConfigId] = TimeInfo.Instance.ServerFrameTime() + coolDownMs;
+            long now = TimeInfo.Instance.ServerFrameTime();
+            self.CoolDowns[castConfigId] = now + coolDownMs;
+            self.CoolDownStartTimes[castConfigId] = now;
+            CoolDownNoticeHelper.SendCoolDownChange(self.GetParent<Unit>(), castConfigId, self.CoolDowns[castConfigId], now);
         }
 
         /// <summary>

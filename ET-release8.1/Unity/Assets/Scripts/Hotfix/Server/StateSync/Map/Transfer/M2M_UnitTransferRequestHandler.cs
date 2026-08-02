@@ -51,6 +51,7 @@ namespace ET.Server
             M2C_CreateMyUnit m2CCreateUnits = M2C_CreateMyUnit.Create();
             m2CCreateUnits.Unit = UnitHelper.CreateUnitInfo(unit);
             await unit.SendToClient(m2CCreateUnits);
+            await CoolDownNoticeHelper.SyncAllCoolDowns(unit);
             
             ItemNoticeHelper.SyncAllKnapsackItems(unit);
             

@@ -17,6 +17,9 @@ namespace ET.Server
         
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<int, long> CoolDowns = new Dictionary<int, long>();
+
+        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
+        public Dictionary<int, long> CoolDownStartTimes = new Dictionary<int, long>();
     }
 }
 

@@ -104,9 +104,6 @@ namespace ET.Server
             {
                 return err;
             }
-
-
-
             skillStatusComponent.SetCoolDown(castConfigId, cast.Config.CoolDown);
             return ErrorCode.ERR_Success;
         }

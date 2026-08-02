@@ -42,6 +42,7 @@ namespace ET.Client
 	        unit.AddComponent<XunLuoPathComponent>();
 	        unit.AddComponent<ClientBuffComponent>();//buff管理器
 	        unit.AddComponent<ClientCastComponent>();//cast管理器
+	        unit.AddComponent<ClientSkillStatusComponent>();//技能cd管理器
 	        
 	        EventSystem.Instance.Publish(unit.Scene(), new AfterUnitCreate() {Unit = unit});
             return unit;
