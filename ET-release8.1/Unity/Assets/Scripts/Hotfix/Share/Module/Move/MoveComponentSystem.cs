@@ -43,7 +43,7 @@ namespace ET
             self.Speed = 0;
             self.N = 0;
             self.TurnTime = 0;
-            self.DisableMoveRotation = false;
+            self.DisableMoveRotation = true;
         }
         
         public static bool IsArrived(this MoveComponent self)
@@ -91,6 +91,7 @@ namespace ET
             self.IsTurnHorizontal = true;
             self.TurnTime = turnTime;
             self.Speed = speed;
+            self.DisableMoveRotation = true;
             self.tcs = ETTask<bool>.Create(true);
 
             EventSystem.Instance.Publish(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()});
@@ -125,10 +126,6 @@ namespace ET
                 if (moveTime >= self.NeedTime)
                 {
                     unit.Position = self.NextTarget;
-                    if (!self.DisableMoveRotation && self.TurnTime > 0)
-                    {
-                        unit.Rotation = self.To;
-                    }
                 }
                 else
                 {
@@ -138,18 +135,6 @@ namespace ET
                     {
                         float3 newPos = math.lerp(self.StartPos, self.NextTarget, amount);
                         unit.Position = newPos;
-                    }
-                    
-                    // 计算方向插值
-                    if (!self.DisableMoveRotation && self.TurnTime > 0)
-                    {
-                        amount = moveTime * 1f / self.TurnTime;
-                        if (amount > 1)
-                        {
-                            amount = 1f;
-                        }
-                        quaternion q = math.slerp(self.From, self.To, amount);
-                        unit.Rotation = q;
                     }
                 }
 
@@ -167,10 +152,6 @@ namespace ET
                 if (self.N >= self.Targets.Count - 1)
                 {
                     unit.Position = self.NextTarget;
-                    if (!self.DisableMoveRotation)
-                    {
-                        unit.Rotation = self.To;
-                    }
 
                     self.MoveFinish(ret);
                     return;
@@ -206,49 +187,6 @@ namespace ET
             self.StartTime += self.NeedTime;
             
             self.NeedTime = (long) (distance / self.Speed * 1000);
-            
-            if (self.DisableMoveRotation)
-            {
-                return;
-            }
-            
-            if (self.TurnTime > 0)
-            {
-                // 要用unit的位置
-                float3 faceV = self.GetFaceV();
-                if (math.lengthsq(faceV) < 0.0001f)
-                {
-                    return;
-                }
-                self.From = unit.Rotation;
-                
-                if (self.IsTurnHorizontal)
-                {
-                    faceV.y = 0;
-                }
-
-                if (Math.Abs(faceV.x) > 0.01 || Math.Abs(faceV.z) > 0.01)
-                {
-                    self.To = quaternion.LookRotation(faceV, math.up());
-                }
-
-                return;
-            }
-            
-            if (self.TurnTime == 0) // turn time == 0 立即转向
-            {
-                float3 faceV = self.GetFaceV();
-                if (self.IsTurnHorizontal)
-                {
-                    faceV.y = 0;
-                }
-
-                if (Math.Abs(faceV.x) > 0.01 || Math.Abs(faceV.z) > 0.01)
-                {
-                    self.To = quaternion.LookRotation(faceV, math.up());
-                    unit.Rotation = self.To;
-                }
-            }
         }
 
         private static float3 GetFaceV(this MoveComponent self)

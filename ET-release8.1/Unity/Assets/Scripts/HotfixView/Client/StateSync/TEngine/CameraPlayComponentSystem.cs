@@ -30,7 +30,7 @@ namespace ET.Client
 
             self.CameraRootObj = null;
             self.MainCameraObj = null;
-            self.CinemachineFreeLook = null;
+            self.FollowCamera = null;
         }
 
         public static async ETTask Init(this CameraPlayComponent self)
@@ -40,7 +40,7 @@ namespace ET.Client
 
             GameObject mainCamera = await LoadGameObjectInstance(resLoader, self.MainCameraPath);
             mainCamera.transform.SetParent(globalComponent.Global, false);
-            mainCamera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            mainCamera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.Euler(90f, 0f, 0f));
             mainCamera.name = "CameraPlayComponent(Camera)";
             self.MainCameraObj = mainCamera;
 
@@ -49,7 +49,11 @@ namespace ET.Client
             cameraRoot.transform.position = Vector3.zero;
             cameraRoot.name = "CameraPlayComponent(CameraRoot)";
             self.CameraRootObj = cameraRoot;
-            self.CinemachineFreeLook = cameraRoot.transform.Find("CameraFree").GetComponent<CinemachineFreeLook>();
+            self.FollowCamera = cameraRoot.GetComponentInChildren<CinemachineVirtualCameraBase>(true);
+            if (self.FollowCamera == null)
+            {
+                Log.Error("CameraPlayComponent Init failed, Cinemachine virtual camera not found under CameraRoot.");
+            }
 
             await ETTask.CompletedTask;
         }
@@ -62,14 +66,12 @@ namespace ET.Client
             }
 
             self.PlayerObject = playerObject;
-            if (self.CinemachineFreeLook == null)
+            if (self.FollowCamera == null)
             {
                 return;
             }
 
-            Transform target = playerObject.transform;
-            self.CinemachineFreeLook.Follow = target;
-            self.CinemachineFreeLook.LookAt = target;
+            self.FollowCamera.Follow = playerObject.transform;
         }
         
         private static async ETTask<GameObject> LoadGameObjectInstance(ResourcesLoaderComponent resLoader,string location)

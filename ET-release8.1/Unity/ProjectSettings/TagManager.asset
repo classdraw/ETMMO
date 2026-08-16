@@ -45,15 +45,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Unit
+  - name: Ground
     uniqueID: 1671128479
     locked: 0
-  - name: Tree
+  - name: GroundFront
     uniqueID: 3464976091
     locked: 0
-  - name: Building
+  - name: World
     uniqueID: 3489270269
     locked: 0
-  - name: Effect
+  - name: WorldFront
     uniqueID: 3070461533
+    locked: 0
+  - name: SceneVfx
+    uniqueID: 529341705
     locked: 0

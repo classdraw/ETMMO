@@ -62,6 +62,7 @@ namespace ET.Client
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
             go.name = $"monster_{unit.Id}_{displayName}";
             go.transform.position = unit.Position;
+            go.transform.rotation = Quaternion.identity;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<AnimatorComponent>();
             unit.AddComponent<MountComponent>();
@@ -84,8 +85,9 @@ namespace ET.Client
             bool isMainPlayerUnit = netCache != null && netCache.LoginGamePlayerId != 0 && unit.Id == netCache.LoginGamePlayerId;
             go.name = isMainPlayerUnit ? $"unit_{unit.Id}_{name}*" : $"unit_{unit.Id}_{name}";
             go.transform.position = unit.Position;
+            go.transform.rotation = Quaternion.identity;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
-            unit.AddComponent<AnimatorComponent>();
+            //unit.AddComponent<AnimatorComponent>();
             unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
             //Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);

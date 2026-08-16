@@ -6,8 +6,6 @@ namespace ET.Client
     [FriendOf(typeof(ClientCastComponent))]
     public class M2C_CastStartHandler: MessageHandler<Scene,M2C_CastStart>
     {
-        private const float MinTurnDirectionSqr = 0.01f;
-
         protected override async ETTask Run(Scene root, M2C_CastStart message)
         {
             Log.Console($"玩家 {message.CasterId} 开始释放 {message.CastConfigId} 技能 {message.CastId} ！！！");
@@ -30,11 +28,6 @@ namespace ET.Client
                 return;
             }
 
-            if (math.lengthsq(message.Forward) > MinTurnDirectionSqr)
-            {
-                caster.Forward = math.normalize(message.Forward);
-            }
-            
             caster.CreateAndAddCast(message);
 
             CastStart castStart = new CastStart();

@@ -46,17 +46,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
   - key: Skeleton1001
-    gameObject: {fileID: 1803415221905745518, guid: 2675caf09e45ee54da6dc456558eda0e,
+    gameObject: {fileID: 7153520222090993161, guid: 0eb23eb4a2855424680e63705efb5952,
       type: 3}
   - key: Skeleton1002
-    gameObject: {fileID: 5831150629715644749, guid: b0f7ca9fb4d4feb42a9274922f03ebe8,
+    gameObject: {fileID: 7395949204463245367, guid: e76184a094f119741977ae40ee1331e9,
       type: 3}
   - key: Skeleton1003
-    gameObject: {fileID: 6575311425694352290, guid: e5e732c181cb53a498f730658c50609a,
+    gameObject: {fileID: 1583150191821076935, guid: 9d18197630c03284297416ba7a918c0e,
       type: 3}
   - key: Skeleton1004
-    gameObject: {fileID: 5442848967000254882, guid: 51a63533dc02ee5489ab011b3b47ca65,
+    gameObject: {fileID: 7500131616218098743, guid: 1bf743c5d40c106459311dbcafb6bd7f,
       type: 3}
   - key: Skeleton1005
-    gameObject: {fileID: 7034409794683060194, guid: c4cbbc43bcc5cde4586ad0da04c717d1,
+    gameObject: {fileID: 4226870178288732410, guid: 1a21a6bceb786ed4498f18df68b2d1f5,
       type: 3}

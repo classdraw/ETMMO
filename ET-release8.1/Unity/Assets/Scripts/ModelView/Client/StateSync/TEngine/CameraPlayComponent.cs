@@ -14,7 +14,7 @@ namespace ET.Client
         public GameObject MainCameraObj;
         public GameObject CameraRootObj;
 
-        public CinemachineFreeLook CinemachineFreeLook;//后面可能会有很多
+        public CinemachineVirtualCameraBase FollowCamera;
 
         public GameObject PlayerObject;//主角
 

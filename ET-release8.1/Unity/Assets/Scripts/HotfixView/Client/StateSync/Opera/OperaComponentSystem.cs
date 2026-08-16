@@ -4,6 +4,7 @@ namespace ET.Client
 {
     [EntitySystemOf(typeof(OperaComponent))]
     [FriendOf(typeof(OperaComponent))]
+    [FriendOf(typeof(CameraPlayComponent))]
     public static partial class OperaComponentSystem
     {
         [EntitySystem]
@@ -17,20 +18,20 @@ namespace ET.Client
         {
             if (Input.GetMouseButtonDown(1))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000, self.mapMask))
+                if (!self.TryGetClickWorldPosition(out Vector3 clickPosition))
                 {
-                    Unit myUnit = UnitHelper.GetMyUnitFromCurrentScene(self.Root().CurrentScene());
-                    if (myUnit == null || myUnit.IsDisposed || myUnit.IsCasting())
-                    {
-                        return;
-                    }
-
-                    C2M_PathfindingResult c2MPathfindingResult = C2M_PathfindingResult.Create();
-                    c2MPathfindingResult.Position = hit.point;
-                    self.Root().GetComponent<ClientSenderComponent>().Send(c2MPathfindingResult);
+                    return;
                 }
+
+                Unit myUnit = UnitHelper.GetMyUnitFromCurrentScene(self.Root().CurrentScene());
+                if (myUnit == null || myUnit.IsDisposed || myUnit.IsCasting())
+                {
+                    return;
+                }
+
+                C2M_PathfindingResult c2MPathfindingResult = C2M_PathfindingResult.Create();
+                c2MPathfindingResult.Position = clickPosition;
+                self.Root().GetComponent<ClientSenderComponent>().Send(c2MPathfindingResult);
             }
             
             if (Input.GetKeyDown(KeyCode.Q))
@@ -66,6 +67,49 @@ namespace ET.Client
             }
         }
         
+        private static bool TryGetClickWorldPosition(this OperaComponent self, out Vector3 clickPosition)
+        {
+            clickPosition = Vector3.zero;
+            Camera camera = self.GetPlayCamera();
+            if (camera == null)
+            {
+                return false;
+            }
+
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000, self.mapMask))
+            {
+                clickPosition = hit.point;
+                return true;
+            }
+
+            Unit myUnit = UnitHelper.GetMyUnitFromCurrentScene(self.Root().CurrentScene());
+            float groundY = myUnit != null ? myUnit.Position.y : 0f;
+            Plane xzPlane = new Plane(Vector3.up, new Vector3(0f, groundY, 0f));
+            if (!xzPlane.Raycast(ray, out float enter))
+            {
+                return false;
+            }
+
+            clickPosition = ray.GetPoint(enter);
+            return true;
+        }
+
+        private static Camera GetPlayCamera(this OperaComponent self)
+        {
+            CameraPlayComponent cameraPlay = self.Root().GetComponent<CameraPlayComponent>();
+            if (cameraPlay != null && cameraPlay.MainCameraObj != null)
+            {
+                Camera playCamera = cameraPlay.MainCameraObj.GetComponent<Camera>();
+                if (playCamera != null)
+                {
+                    return playCamera;
+                }
+            }
+
+            return Camera.main;
+        }
+
         private static async ETTask Test1(this OperaComponent self)
         {
             await BattleHelper.GMCastSimple(self.Root(), 66001);

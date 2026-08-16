@@ -86,7 +86,6 @@ namespace ET.Client
 
             float3 direction = offset / distance;
             unit.Position = currentPos + direction * moveDistance;
-            unit.Forward = direction;
         }
 
         private static void TryStartFollow(FollowComponent self, Unit unit, Unit target)

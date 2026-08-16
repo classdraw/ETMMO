@@ -50,10 +50,18 @@ namespace ET
                 {
                     ConvertPrefabRootRectTransformToTransform();
                 }
+
+                if (GUILayout.Button("子 Prefab Unpack（不含根节点）", GUILayout.Height(34)))
+                {
+                    UnpackChildPrefabsFromSelectedPrefabs();
+                }
             }
 
             EditorGUILayout.Space(6);
             EditorGUILayout.LabelField("说明：会打开预制体内容、递归清理后写回磁盘。", EditorStyles.wordWrappedMiniLabel);
+            EditorGUILayout.LabelField(
+                "子 Prefab Unpack：仅解包选中预制体内部的嵌套 Prefab 实例，根节点保持不变。",
+                EditorStyles.wordWrappedMiniLabel);
             EditorGUILayout.LabelField(
                 "Rect→Transform：新建普通 Transform 根节点，迁移子物体并复制根上除 Transform 外的组件；无法原地移除 RectTransform。",
                 EditorStyles.wordWrappedMiniLabel);
@@ -497,6 +505,99 @@ namespace ET
             EditorUtility.DisplayDialog("预制体处理工具",
                 $"已扫描 {paths.Count} 个预制体，其中 {modifiedPrefabs} 个有修改；共清空 {totalCleared} 处 SpriteRenderer.sprite。",
                 "确定");
+        }
+
+        private static void UnpackChildPrefabsFromSelectedPrefabs()
+        {
+            List<string> paths = CollectSelectedPrefabPaths();
+            if (paths.Count == 0)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", "请先在 Project 中选中至少一个 .prefab 资源。", "确定");
+                return;
+            }
+
+            if (!EditorUtility.DisplayDialog("预制体处理工具",
+                    $"将对 {paths.Count} 个预制体解包其内部的嵌套 Prefab（仅子对象，不含根节点）。\n是否继续？",
+                    "确定", "取消"))
+            {
+                return;
+            }
+
+            int totalUnpacked = 0;
+            int modifiedPrefabs = 0;
+
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                foreach (string path in paths)
+                {
+                    GameObject root = PrefabUtility.LoadPrefabContents(path);
+                    try
+                    {
+                        int n = UnpackChildPrefabInstances(root);
+                        if (n > 0)
+                        {
+                            PrefabUtility.SaveAsPrefabAsset(root, path);
+                            totalUnpacked += n;
+                            modifiedPrefabs++;
+                        }
+                    }
+                    finally
+                    {
+                        PrefabUtility.UnloadPrefabContents(root);
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+            }
+
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("预制体处理工具",
+                $"已扫描 {paths.Count} 个预制体，其中 {modifiedPrefabs} 个有修改；共解包 {totalUnpacked} 个嵌套 Prefab。",
+                "确定");
+        }
+
+        private static int UnpackChildPrefabInstances(GameObject root)
+        {
+            int unpacked = 0;
+            bool changed = true;
+
+            while (changed)
+            {
+                changed = false;
+                Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+                foreach (Transform transform in transforms)
+                {
+                    GameObject go = transform.gameObject;
+                    if (go == root)
+                    {
+                        continue;
+                    }
+
+                    if (!PrefabUtility.IsPartOfPrefabInstance(go))
+                    {
+                        continue;
+                    }
+
+                    GameObject instanceRoot = PrefabUtility.GetNearestPrefabInstanceRoot(go);
+                    if (instanceRoot == null || instanceRoot == root)
+                    {
+                        continue;
+                    }
+
+                    PrefabUtility.UnpackPrefabInstance(
+                        instanceRoot,
+                        PrefabUnpackMode.Completely,
+                        InteractionMode.AutomatedAction);
+                    unpacked++;
+                    changed = true;
+                    break;
+                }
+            }
+
+            return unpacked;
         }
 
         /// <summary>递归自身及子物体：将 sprite 已赋值的 <see cref="SpriteRenderer"/> 的 sprite 设为 null。</summary>

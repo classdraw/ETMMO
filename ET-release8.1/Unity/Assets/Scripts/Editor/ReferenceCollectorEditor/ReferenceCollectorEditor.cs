@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ET;
 using UnityEditor;
 using UnityEngine;
 //Object并非C#基础中的Object，而是 UnityEngine.Object
@@ -81,6 +82,10 @@ public class ReferenceCollectorEditor: Editor
 		{
 			referenceCollector.Sort();
 		}
+		if (GUILayout.Button("角色骨骼"))
+		{
+			CollectBindBones(dataProperty);
+		}
 		EditorGUILayout.EndHorizontal();
 		EditorGUILayout.BeginHorizontal();
         //可以在编辑器中对searchKey进行赋值，只要输入对应的Key值，就可以点后面的删除按钮删除相对应的元素
@@ -150,5 +155,68 @@ public class ReferenceCollectorEditor: Editor
 		var element = dataProperty.GetArrayElementAtIndex(index);
 		element.FindPropertyRelative("key").stringValue = key;
 		element.FindPropertyRelative("gameObject").objectReferenceValue = obj;
+	}
+
+	private void AddOrUpdateReference(SerializedProperty dataProperty, string key, Object obj)
+	{
+		for (int i = 0; i < dataProperty.arraySize; i++)
+		{
+			SerializedProperty element = dataProperty.GetArrayElementAtIndex(i);
+			if (element.FindPropertyRelative("key").stringValue == key)
+			{
+				element.FindPropertyRelative("gameObject").objectReferenceValue = obj;
+				return;
+			}
+		}
+		AddReference(dataProperty, key, obj);
+	}
+
+	private void CollectBindBones(SerializedProperty dataProperty)
+	{
+		Transform root = referenceCollector.transform;
+		foreach (BindBoneType boneType in Enum.GetValues(typeof(BindBoneType)))
+		{
+			string boneName = boneType.ToString();
+			Transform found = FindChildByBoneName(root, boneName);
+			GameObject boneGo;
+			if (found != null)
+			{
+				boneGo = found.gameObject;
+			}
+			else
+			{
+				boneGo = new GameObject(boneName);
+				Undo.RegisterCreatedObjectUndo(boneGo, "Create BindBone");
+				Undo.SetTransformParent(boneGo.transform, root, "Create BindBone");
+				boneGo.transform.localPosition = Vector3.zero;
+				boneGo.transform.localRotation = Quaternion.identity;
+				boneGo.transform.localScale = Vector3.one;
+			}
+			AddOrUpdateReference(dataProperty, boneName, boneGo);
+		}
+		EditorUtility.SetDirty(referenceCollector);
+	}
+
+	private static Transform FindChildByBoneName(Transform root, string boneName)
+	{
+		Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+		Transform contains = null;
+		for (int i = 0; i < transforms.Length; i++)
+		{
+			Transform t = transforms[i];
+			if (t == root)
+			{
+				continue;
+			}
+			if (string.Equals(t.name, boneName, StringComparison.OrdinalIgnoreCase))
+			{
+				return t;
+			}
+			if (contains == null && t.name.IndexOf(boneName, StringComparison.OrdinalIgnoreCase) >= 0)
+			{
+				contains = t;
+			}
+		}
+		return contains;
 	}
 }

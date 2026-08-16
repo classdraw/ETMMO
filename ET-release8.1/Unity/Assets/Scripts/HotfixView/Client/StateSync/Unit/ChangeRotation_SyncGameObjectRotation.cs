@@ -13,9 +13,32 @@ namespace ET.Client
             {
                 return;
             }
+
+            if (ShouldSkipGameObjectRotation(unit))
+            {
+                await ETTask.CompletedTask;
+                return;
+            }
+
             Transform transform = gameObjectComponent.GameObject.transform;
             transform.rotation = unit.Rotation;
             await ETTask.CompletedTask;
+        }
+
+        private static bool ShouldSkipGameObjectRotation(Unit unit)
+        {
+            switch (unit.Type())
+            {
+                case UnitType.Player:
+                case UnitType.Monster:
+                case UnitType.NPC:
+                case UnitType.Pet:
+                case UnitType.Summon:
+                case UnitType.Robot:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }
