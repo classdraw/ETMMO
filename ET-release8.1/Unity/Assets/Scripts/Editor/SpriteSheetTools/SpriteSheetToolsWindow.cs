@@ -7,11 +7,11 @@ using UnityEngine;
 namespace ET
 {
     /// <summary>
-    /// 序列帧图集合并、切割、背景色去除与微调预览。
+    /// 序列帧图集合并、切割、背景色去除、微调预览与边框。
     /// </summary>
     public class SpriteSheetToolsWindow : EditorWindow
     {
-        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调" };
+        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "边框" };
         private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" };
 
         private int selectedTab;
@@ -56,6 +56,14 @@ namespace ET
         private Vector2 tweakAnchor;
         private SpriteSheetTweakSettings tweakLoadedSettings;
 
+        private Texture2D borderSourceTexture;
+        private Texture2D borderPreviewTexture;
+        private string borderSourcePath;
+        private bool borderOwnsTexture;
+        private int borderSize = 1;
+        private Color borderColor = new Color(1f, 1f, 1f, 1f);
+        private Vector2 borderScroll;
+
         [MenuItem("Tools/序列帧", false, 53)]
         public static void Open()
         {
@@ -83,6 +91,9 @@ namespace ET
                 case 3:
                     DrawTweakTab();
                     break;
+                case 4:
+                    DrawBorderTab();
+                    break;
             }
         }
 
@@ -97,6 +108,7 @@ namespace ET
             ClearBackgroundPreview();
             DestroyOwnedTexture(ref backgroundSourceTexture);
             ClearTweakTexture();
+            ClearBorderTextures();
         }
 
         private void DrawCombineTab()
@@ -350,6 +362,67 @@ namespace ET
             HandleTweakDragAndDrop();
         }
 
+        private void DrawBorderTab()
+        {
+            borderScroll = EditorGUILayout.BeginScrollView(borderScroll);
+            EditorGUILayout.HelpBox(
+                "拖入图片后设置边框像素和颜色。会用指定颜色覆盖原图最外一圈像素，图片宽高不变；颜色 Alpha 可设为 0（把边缘做成透明）。保存会覆盖原图。",
+                MessageType.Info);
+            EditorGUILayout.Space(6);
+
+            DrawDropBox(
+                string.IsNullOrEmpty(borderSourcePath) ? "拖拽图片到此处" : Path.GetFileName(borderSourcePath),
+                60f);
+
+            EditorGUILayout.Space(8);
+            EditorGUI.BeginChangeCheck();
+            borderSize = Mathf.Max(0, EditorGUILayout.IntField("边框像素", borderSize));
+            borderColor = EditorGUILayout.ColorField(new GUIContent("边框颜色"), borderColor, true, true, false);
+            if (EditorGUI.EndChangeCheck())
+            {
+                RebuildBorderPreview();
+            }
+
+            EditorGUILayout.LabelField($"当前 Alpha: {borderColor.a:0.###}（0 为全透明）");
+
+            EditorGUILayout.Space(12);
+            using (new EditorGUI.DisabledScope(borderSourceTexture == null || borderSize < 0 || string.IsNullOrEmpty(borderSourcePath)))
+            {
+                if (GUILayout.Button("保存图片", GUILayout.Height(34)))
+                {
+                    SaveBorderImage();
+                }
+            }
+
+            if (borderSourceTexture == null)
+            {
+                EditorGUILayout.HelpBox("请先拖入一张图片。", MessageType.Warning);
+            }
+            else if (!string.IsNullOrEmpty(borderSourcePath))
+            {
+                EditorGUILayout.LabelField("源文件", borderSourcePath, EditorStyles.wordWrappedLabel);
+                EditorGUILayout.LabelField(
+                    $"尺寸保持 {borderSourceTexture.width}x{borderSourceTexture.height}，覆盖外圈 {borderSize} 像素");
+            }
+
+            Texture2D display = borderPreviewTexture != null ? borderPreviewTexture : borderSourceTexture;
+            if (display != null)
+            {
+                EditorGUILayout.Space(8);
+                EditorGUILayout.LabelField(borderPreviewTexture != null ? "处理后预览" : "原图预览");
+                float maxPreview = 320f;
+                float scale = Mathf.Min(maxPreview / display.width, maxPreview / display.height, 1f);
+                Rect previewRect = GUILayoutUtility.GetRect(
+                    display.width * scale,
+                    display.height * scale,
+                    GUILayout.ExpandWidth(false));
+                EditorGUI.DrawTextureTransparent(previewRect, display);
+            }
+
+            EditorGUILayout.EndScrollView();
+            HandleBorderDragAndDrop();
+        }
+
         private void DrawTweakSettingsBar()
         {
             EditorGUILayout.BeginHorizontal();
@@ -505,6 +578,25 @@ namespace ET
             {
                 DragAndDrop.AcceptDrag();
                 TryLoadTweakFromDrag();
+            }
+
+            evt.Use();
+            Repaint();
+        }
+
+        private void HandleBorderDragAndDrop()
+        {
+            Event evt = Event.current;
+            if (evt.type != EventType.DragUpdated && evt.type != EventType.DragPerform)
+            {
+                return;
+            }
+
+            DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+            if (evt.type == EventType.DragPerform)
+            {
+                DragAndDrop.AcceptDrag();
+                TryLoadBorderFromDrag();
             }
 
             evt.Use();
@@ -1976,6 +2068,159 @@ namespace ET
             EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - thickness, rect.width, thickness), color);
             EditorGUI.DrawRect(new Rect(rect.x, rect.y, thickness, rect.height), color);
             EditorGUI.DrawRect(new Rect(rect.xMax - thickness, rect.y, thickness, rect.height), color);
+        }
+
+        private void TryLoadBorderFromDrag()
+        {
+            foreach (UnityEngine.Object obj in DragAndDrop.objectReferences)
+            {
+                if (obj is Texture2D tex)
+                {
+                    SetBorderTexture(tex, AssetDatabase.GetAssetPath(tex), false);
+                    return;
+                }
+            }
+
+            foreach (string path in DragAndDrop.paths)
+            {
+                if (IsImageFile(path))
+                {
+                    LoadBorderExternalImage(path);
+                    return;
+                }
+            }
+        }
+
+        private void LoadBorderExternalImage(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return;
+            }
+
+            byte[] data = File.ReadAllBytes(path);
+            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            if (!tex.LoadImage(data))
+            {
+                DestroyImmediate(tex);
+                EditorUtility.DisplayDialog("序列帧", "无法加载图片文件。", "确定");
+                return;
+            }
+
+            SetBorderTexture(tex, path, true);
+        }
+
+        private void SetBorderTexture(Texture2D tex, string path, bool ownsTexture)
+        {
+            ClearBorderTextures();
+            borderSourceTexture = ownsTexture ? tex : GetReadableTexture(tex);
+            borderOwnsTexture = true;
+            borderSourcePath = string.IsNullOrEmpty(path) ? null : path;
+            RebuildBorderPreview();
+            Repaint();
+        }
+
+        private void ClearBorderTextures()
+        {
+            DestroyOwnedTexture(ref borderPreviewTexture);
+            if (borderOwnsTexture)
+            {
+                DestroyOwnedTexture(ref borderSourceTexture);
+            }
+            else
+            {
+                borderSourceTexture = null;
+            }
+
+            borderOwnsTexture = false;
+        }
+
+        private void RebuildBorderPreview()
+        {
+            DestroyOwnedTexture(ref borderPreviewTexture);
+            if (borderSourceTexture == null)
+            {
+                return;
+            }
+
+            borderPreviewTexture = CreateBorderedTexture(borderSourceTexture, borderSize, borderColor);
+        }
+
+        private void SaveBorderImage()
+        {
+            if (borderSourceTexture == null || string.IsNullOrEmpty(borderSourcePath))
+            {
+                EditorUtility.DisplayDialog("序列帧", "请先拖入一张图片。", "确定");
+                return;
+            }
+
+            Texture2D result = CreateBorderedTexture(borderSourceTexture, borderSize, borderColor);
+            if (result == null)
+            {
+                EditorUtility.DisplayDialog("序列帧", "生成失败。", "确定");
+                return;
+            }
+
+            try
+            {
+                string outputPath = ToAbsolutePath(borderSourcePath);
+                File.WriteAllBytes(outputPath, result.EncodeToPNG());
+
+                if (outputPath.Replace('\\', '/').Contains("/Assets"))
+                {
+                    AssetDatabase.Refresh();
+                }
+
+                DestroyOwnedTexture(ref borderPreviewTexture);
+                if (borderOwnsTexture)
+                {
+                    DestroyOwnedTexture(ref borderSourceTexture);
+                }
+
+                borderSourceTexture = result;
+                borderOwnsTexture = true;
+                result = null;
+                EditorUtility.DisplayDialog("完成", $"已覆盖原图:\n{outputPath}\n尺寸: {borderSourceTexture.width} x {borderSourceTexture.height}", "确定");
+            }
+            finally
+            {
+                if (result != null)
+                {
+                    DestroyImmediate(result);
+                }
+            }
+        }
+
+        private static Texture2D CreateBorderedTexture(Texture2D source, int border, Color color)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            int width = source.width;
+            int height = source.height;
+            border = Mathf.Clamp(border, 0, Mathf.Max(Mathf.Min(width, height) / 2, 0));
+
+            var result = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            Color[] pixels = source.GetPixels();
+            if (border > 0)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (x < border || y < border || x >= width - border || y >= height - border)
+                        {
+                            pixels[y * width + x] = color;
+                        }
+                    }
+                }
+            }
+
+            result.SetPixels(pixels);
+            result.Apply();
+            return result;
         }
     }
 }
