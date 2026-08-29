@@ -4,7 +4,7 @@ using UnityEditor;
 namespace ET
 {
     [CustomEditor(typeof(GlobalConfig))]
-    public class GlobalConfigEditor : Editor
+    public class GlobalConfigEditor : UnityEditor.Editor
     {
         private CodeMode codeMode;
         private BuildType buildType;

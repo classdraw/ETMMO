@@ -92,7 +92,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.589}
-  m_LocalScale: {x: 3.5, y: 1, z: 3.5}
+  m_LocalScale: {x: 1.5, y: 1, z: 1.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7544418863144140532}
@@ -191,6 +191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7544418863144140532}
   - component: {fileID: 1680531363232451883}
+  - component: {fileID: 6997465382960034209}
   m_Layer: 0
   m_Name: Hero_Skeleton1001
   m_TagString: Untagged
@@ -242,6 +243,22 @@ MonoBehaviour:
     gameObject: {fileID: 8341953518020645759}
   - key: RightHand
     gameObject: {fileID: 8181212596008542183}
+--- !u!114 &6997465382960034209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7153520222090993161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcfa52fd23e577d4b8b0f2fcaac6a59a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animConfig: {fileID: 11400000, guid: b823e3ae061d4624d882780f95678e11, type: 2}
+  targetRenderer: {fileID: 6363882612368945368}
+  defaultAnim: 1
+  defaultFacing: 0
 --- !u!1 &8181212596008542183
 GameObject:
   m_ObjectHideFlags: 0

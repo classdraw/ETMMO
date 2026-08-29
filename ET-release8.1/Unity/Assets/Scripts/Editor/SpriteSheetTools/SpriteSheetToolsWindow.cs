@@ -21,6 +21,9 @@ namespace ET
         private string folderPath;
         private int cellWidth = 64;
         private int cellHeight = 64;
+        private int combinePadRows;
+        private int combinePadColumns;
+        private Color combinePadColor = Color.clear;
         private readonly List<string> rowInputs = new List<string> { "" };
         private readonly List<Rect> rowDropRects = new List<Rect>();
         private Rect folderDropRect;
@@ -50,10 +53,14 @@ namespace ET
         private bool[] tweakSelected = System.Array.Empty<bool>();
         private Vector2[] tweakOffsets = System.Array.Empty<Vector2>();
         private Vector2 tweakListScroll;
+        private Vector2 tweakScrollPosition;
         private float tweakInterval = 0.1f;
         private int tweakPlayIndex;
         private double tweakLastFrameTime;
         private Vector2 tweakAnchor;
+        private int tweakTargetWidth;
+        private int tweakTargetHeight;
+        private bool tweakTargetSizeInitialized;
         private SpriteSheetTweakSettings tweakLoadedSettings;
 
         private Texture2D borderSourceTexture;
@@ -116,7 +123,7 @@ namespace ET
             combineScrollPosition = EditorGUILayout.BeginScrollView(combineScrollPosition);
 
             EditorGUILayout.HelpBox(
-                "指定单帧宽高，按行填写文件名（逗号分隔），将文件夹中的单帧图合并为一张图集。可拖入文件夹，或把多张图拖到某一行 / 底部区域自动填入。",
+                "指定单帧宽高，按行填写文件名（逗号分隔），将文件夹中的单帧图合并为一张图集。可拖入文件夹，或把多张图拖到某一行 / 底部区域自动填入。补行、补列会在现有行列基础上向下方 / 右侧扩展空格子，并用补全颜色填充。",
                 MessageType.Info);
             EditorGUILayout.Space(6);
 
@@ -125,6 +132,17 @@ namespace ET
 
             cellWidth = EditorGUILayout.IntField("单张宽度", cellWidth);
             cellHeight = EditorGUILayout.IntField("单张高度", cellHeight);
+
+            EditorGUILayout.Space(4);
+            combinePadRows = Mathf.Max(0, EditorGUILayout.IntField("补行", combinePadRows));
+            combinePadColumns = Mathf.Max(0, EditorGUILayout.IntField("补列", combinePadColumns));
+            combinePadColor = EditorGUILayout.ColorField(
+                new GUIContent("补全颜色"),
+                combinePadColor,
+                true,
+                true,
+                false);
+            DrawCombineOutputSizeHint();
 
             EditorGUILayout.Space(8);
             EditorGUILayout.LabelField("行列表（可手动输入，或拖拽多张图片自动填充）", EditorStyles.boldLabel);
@@ -278,8 +296,11 @@ namespace ET
 
         private void DrawTweakTab()
         {
+            tweakScrollPosition = EditorGUILayout.BeginScrollView(tweakScrollPosition);
+
             EditorGUILayout.HelpBox(
-                "拖入图集并设置行列后，勾选一帧或多帧，下方预览会按间隔循环播放选中帧。命名为 _行_列（左上为 0,0）。每帧可设 X/Y 像素偏移，预览播放会同步生效（+X 向右，+Y 向上）。",
+                "拖入图集并设置行列后，勾选一帧或多帧，下方预览会按间隔循环播放选中帧。命名为 _行_列（左上为 0,0）。每帧可设 X/Y 像素偏移（+X 向右，+Y 向上）。\n" +
+                "目标宽高小于原图单帧时，从原图单帧中心裁切；预览左侧为原图单帧（黄框为裁切区域），右侧为目标图，锚点设置在目标图预览上。保存时按目标宽高与行列生成新图集。",
                 MessageType.Info);
             EditorGUILayout.Space(6);
 
@@ -294,6 +315,37 @@ namespace ET
             if (EditorGUI.EndChangeCheck())
             {
                 EnsureTweakSelection(true);
+                EnsureTweakTargetSize(true);
+            }
+
+            if (tweakTexture != null)
+            {
+                GetTweakSourceCellSize(out int sourceCellWidth, out int sourceCellHeight);
+                EditorGUILayout.LabelField(
+                    $"原图单帧尺寸: {sourceCellWidth} x {sourceCellHeight}（图集 {tweakTexture.width} x {tweakTexture.height}）",
+                    EditorStyles.miniLabel);
+
+                EditorGUI.BeginChangeCheck();
+                tweakTargetWidth = Mathf.Max(1, EditorGUILayout.IntField("目标图片宽度", tweakTargetWidth));
+                tweakTargetHeight = Mathf.Max(1, EditorGUILayout.IntField("目标图片高度", tweakTargetHeight));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    tweakTargetWidth = Mathf.Min(tweakTargetWidth, sourceCellWidth);
+                    tweakTargetHeight = Mathf.Min(tweakTargetHeight, sourceCellHeight);
+                    ClampTweakAnchorToTarget();
+                }
+
+                if (tweakTargetWidth > sourceCellWidth || tweakTargetHeight > sourceCellHeight)
+                {
+                    EditorGUILayout.HelpBox(
+                        $"目标尺寸不能超过原图单帧 {sourceCellWidth} x {sourceCellHeight}。",
+                        MessageType.Warning);
+                }
+            }
+            else
+            {
+                tweakTargetWidth = Mathf.Max(1, EditorGUILayout.IntField("目标图片宽度", tweakTargetWidth));
+                tweakTargetHeight = Mathf.Max(1, EditorGUILayout.IntField("目标图片高度", tweakTargetHeight));
             }
 
             tweakInterval = EditorGUILayout.Slider("播放间隔 (秒)", tweakInterval, 0.02f, 2f);
@@ -304,11 +356,13 @@ namespace ET
             if (tweakTexture == null)
             {
                 EditorGUILayout.HelpBox("请先拖入一张序列帧图集。", MessageType.Warning);
+                EditorGUILayout.EndScrollView();
                 HandleTweakDragAndDrop();
                 return;
             }
 
             EnsureTweakSelection(false);
+            EnsureTweakTargetSize(false);
             EditorGUILayout.Space(6);
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("全选", GUILayout.Width(72)))
@@ -337,9 +391,9 @@ namespace ET
                     DrawTweakCell(thumbRect, row, column, tweakOffsets[index]);
                     EditorGUILayout.LabelField($"_{row}_{column}", GUILayout.Width(56));
                     EditorGUILayout.LabelField("X偏移", GUILayout.Width(36));
-                    float offsetX = EditorGUILayout.FloatField(tweakOffsets[index].x, GUILayout.Width(48));
+                    float offsetX = DrawStepFloatField(tweakOffsets[index].x, 0.01f, 48f);
                     EditorGUILayout.LabelField("Y偏移", GUILayout.Width(36));
-                    float offsetY = EditorGUILayout.FloatField(tweakOffsets[index].y, GUILayout.Width(48));
+                    float offsetY = DrawStepFloatField(tweakOffsets[index].y, 0.01f, 48f);
                     tweakOffsets[index] = new Vector2(offsetX, offsetY);
                     EditorGUILayout.EndHorizontal();
                 }
@@ -351,15 +405,39 @@ namespace ET
             EditorGUILayout.LabelField("预览", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("锚点 X", GUILayout.Width(48));
-            tweakAnchor.x = EditorGUILayout.FloatField(tweakAnchor.x, GUILayout.Width(56));
+            tweakAnchor.x = DrawStepFloatField(tweakAnchor.x, 0.01f, 56f);
             EditorGUILayout.LabelField("锚点 Y", GUILayout.Width(48));
-            tweakAnchor.y = EditorGUILayout.FloatField(tweakAnchor.y, GUILayout.Width(56));
-            EditorGUILayout.LabelField("像素，相对当前帧左下角（+X 右，+Y 上），仅预览显示红点", EditorStyles.miniLabel);
+            tweakAnchor.y = DrawStepFloatField(tweakAnchor.y, 0.01f, 56f);
+            EditorGUILayout.LabelField(
+                $"像素，相对目标图左下角（+X 右，+Y 上），{tweakTargetWidth}x{tweakTargetHeight}",
+                EditorStyles.miniLabel);
             EditorGUILayout.EndHorizontal();
-            Rect previewRect = GUILayoutUtility.GetRect(0f, 220f, GUILayout.ExpandWidth(true));
-            DrawTweakPlaybackPreview(previewRect);
 
+            Rect previewRowRect = GUILayoutUtility.GetRect(0f, 220f, GUILayout.ExpandWidth(true));
+            float halfWidth = (previewRowRect.width - 8f) * 0.5f;
+            Rect originalPreviewRect = new Rect(previewRowRect.x, previewRowRect.y, halfWidth, previewRowRect.height);
+            Rect targetPreviewRect = new Rect(previewRowRect.x + halfWidth + 8f, previewRowRect.y, halfWidth, previewRowRect.height);
+            DrawTweakOriginalPreview(originalPreviewRect);
+            DrawTweakTargetPreview(targetPreviewRect);
+
+            EditorGUILayout.EndScrollView();
             HandleTweakDragAndDrop();
+        }
+
+        private static float DrawStepFloatField(float value, float step, float fieldWidth)
+        {
+            float result = EditorGUILayout.FloatField(value, GUILayout.Width(fieldWidth));
+            if (GUILayout.Button("-", EditorStyles.miniButtonLeft, GUILayout.Width(18)))
+            {
+                result = Mathf.Round((result - step) / step) * step;
+            }
+
+            if (GUILayout.Button("+", EditorStyles.miniButtonRight, GUILayout.Width(18)))
+            {
+                result = Mathf.Round((result + step) / step) * step;
+            }
+
+            return result;
         }
 
         private void DrawBorderTab()
@@ -859,6 +937,25 @@ namespace ET
             return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), path));
         }
 
+        private void DrawCombineOutputSizeHint()
+        {
+            List<string[]> parsedRows = ParseRows();
+            if (parsedRows.Count == 0)
+            {
+                return;
+            }
+
+            int columnCount = parsedRows.Max(r => r.Length);
+            int rowCount = parsedRows.Count;
+            int outputColumns = columnCount + combinePadColumns;
+            int outputRows = rowCount + combinePadRows;
+            int totalWidth = outputColumns * cellWidth;
+            int totalHeight = outputRows * cellHeight;
+            EditorGUILayout.LabelField(
+                $"当前内容 {columnCount} 列 x {rowCount} 行，补全后 {outputColumns} 列 x {outputRows} 行，输出 {totalWidth} x {totalHeight}",
+                EditorStyles.miniLabel);
+        }
+
         private bool CanCombine(out string validationMessage)
         {
             validationMessage = string.Empty;
@@ -912,21 +1009,24 @@ namespace ET
 
             int columnCount = parsedRows.Max(r => r.Length);
             int rowCount = parsedRows.Count;
-            int totalWidth = columnCount * cellWidth;
-            int totalHeight = rowCount * cellHeight;
+            int outputColumnCount = columnCount + combinePadColumns;
+            int outputRowCount = rowCount + combinePadRows;
+            int totalWidth = outputColumnCount * cellWidth;
+            int totalHeight = outputRowCount * cellHeight;
 
             Texture2D result = new Texture2D(totalWidth, totalHeight, TextureFormat.RGBA32, false);
-            Color[] clear = new Color[totalWidth * totalHeight];
-            for (int i = 0; i < clear.Length; i++)
+            Color[] fill = new Color[totalWidth * totalHeight];
+            for (int i = 0; i < fill.Length; i++)
             {
-                clear[i] = Color.clear;
+                fill[i] = combinePadColor;
             }
 
-            result.SetPixels(clear);
+            result.SetPixels(fill);
 
             var loadedTextures = new List<Texture2D>();
             var missingFiles = new List<string>();
             bool cancelled = false;
+            int outputCellCount = outputColumnCount * outputRowCount;
 
             try
             {
@@ -941,7 +1041,7 @@ namespace ET
                             continue;
                         }
 
-                        float progress = (float)(row * columnCount + col) / (rowCount * columnCount);
+                        float progress = (float)(row * columnCount + col) / Mathf.Max(outputCellCount, 1);
                         if (EditorUtility.DisplayCancelableProgressBar("合并中", $"正在处理: {fileName}", progress))
                         {
                             cancelled = true;
@@ -957,7 +1057,7 @@ namespace ET
 
                         loadedTextures.Add(source);
                         int destX = col * cellWidth;
-                        int destY = (rowCount - 1 - row) * cellHeight;
+                        int destY = (outputRowCount - 1 - row) * cellHeight;
                         BlitToRegion(result, source, destX, destY, cellWidth, cellHeight);
                     }
                 }
@@ -977,7 +1077,7 @@ namespace ET
                     AssetDatabase.Refresh();
                 }
 
-                string message = $"已生成: {outputPath}\n尺寸: {totalWidth} x {totalHeight}";
+                string message = $"已生成: {outputPath}\n尺寸: {totalWidth} x {totalHeight}（{outputColumnCount} 列 x {outputRowCount} 行）";
                 if (missingFiles.Count > 0)
                 {
                     message += $"\n\n未找到 {missingFiles.Count} 个文件:\n" + string.Join("\n", missingFiles);
@@ -1499,13 +1599,19 @@ namespace ET
             SetTweakTexture(tex, path, true);
         }
 
-        private void SetTweakTexture(Texture2D tex, string path, bool ownsTexture)
+        private void SetTweakTexture(Texture2D tex, string path, bool ownsTexture, bool resetTargetSize = true)
         {
             ClearTweakTexture();
             tweakTexture = tex;
             tweakPath = string.IsNullOrEmpty(path) ? null : path;
             tweakOwnsTexture = ownsTexture;
+            if (resetTargetSize)
+            {
+                tweakTargetSizeInitialized = false;
+            }
+
             EnsureTweakSelection(true);
+            EnsureTweakTargetSize(resetTargetSize);
             tweakPlayIndex = 0;
             tweakLastFrameTime = EditorApplication.timeSinceStartup;
             Repaint();
@@ -1597,6 +1703,8 @@ namespace ET
             settings.spriteSheet = projectTexture != null ? projectTexture : tweakTexture;
             settings.rows = tweakRows;
             settings.columns = tweakColumns;
+            settings.targetWidth = tweakTargetWidth;
+            settings.targetHeight = tweakTargetHeight;
             settings.offsets = (Vector2[])tweakOffsets.Clone();
             settings.anchor = tweakAnchor;
             EditorUtility.SetDirty(settings);
@@ -1643,19 +1751,30 @@ namespace ET
             }
 
             EnsureTweakSelection(false);
+            EnsureTweakTargetSize(false);
             int columns = Mathf.Max(1, tweakColumns);
             int rows = Mathf.Max(1, tweakRows);
-            int cellWidth = readable.width / columns;
-            int cellHeight = readable.height / rows;
-            if (cellWidth <= 0 || cellHeight <= 0)
+            GetTweakSourceCellSize(out int sourceCellWidth, out int sourceCellHeight);
+            int targetCellWidth = tweakTargetWidth;
+            int targetCellHeight = tweakTargetHeight;
+            if (sourceCellWidth <= 0 || sourceCellHeight <= 0)
             {
                 DestroyImmediate(readable);
                 EditorUtility.DisplayDialog("序列帧", "横向或纵向数量过大，无法导出。", "确定");
                 return;
             }
 
-            Texture2D result = new Texture2D(readable.width, readable.height, TextureFormat.RGBA32, false);
-            Color[] clear = new Color[readable.width * readable.height];
+            if (targetCellWidth > sourceCellWidth || targetCellHeight > sourceCellHeight)
+            {
+                DestroyImmediate(readable);
+                EditorUtility.DisplayDialog("序列帧", "目标宽高不能超过原图单帧尺寸。", "确定");
+                return;
+            }
+
+            int outputWidth = targetCellWidth * columns;
+            int outputHeight = targetCellHeight * rows;
+            Texture2D result = new Texture2D(outputWidth, outputHeight, TextureFormat.RGBA32, false);
+            Color[] clear = new Color[outputWidth * outputHeight];
             result.SetPixels(clear);
 
             int total = rows * columns;
@@ -1677,14 +1796,18 @@ namespace ET
                             break;
                         }
 
-                        int srcX = column * cellWidth;
-                        int srcY = (rows - 1 - row) * cellHeight;
-                        Color[] cellPixels = readable.GetPixels(srcX, srcY, cellWidth, cellHeight);
+                        int srcX = column * sourceCellWidth;
+                        int srcY = (rows - 1 - row) * sourceCellHeight;
+                        Color[] cellPixels = readable.GetPixels(srcX, srcY, sourceCellWidth, sourceCellHeight);
                         Vector2 offset = GetTweakOffset(index);
                         int offsetX = Mathf.RoundToInt(offset.x);
                         int offsetY = Mathf.RoundToInt(offset.y);
-                        Color[] outputCell = ShiftCellPixels(cellPixels, cellWidth, cellHeight, offsetX, offsetY);
-                        result.SetPixels(srcX, srcY, cellWidth, cellHeight, outputCell);
+                        Color[] shiftedCell = ShiftCellPixels(cellPixels, sourceCellWidth, sourceCellHeight, offsetX, offsetY);
+                        Color[] outputCell = CropCenterCellPixels(
+                            shiftedCell, sourceCellWidth, sourceCellHeight, targetCellWidth, targetCellHeight);
+                        int destX = column * targetCellWidth;
+                        int destY = (rows - 1 - row) * targetCellHeight;
+                        result.SetPixels(destX, destY, targetCellWidth, targetCellHeight, outputCell);
                     }
                 }
 
@@ -1706,7 +1829,10 @@ namespace ET
                     AssetDatabase.Refresh();
                 }
 
-                EditorUtility.DisplayDialog("完成", $"已保存:\n{outputPath}\n尺寸: {result.width} x {result.height}，网格 {rows}x{columns}", "确定");
+                EditorUtility.DisplayDialog(
+                    "完成",
+                    $"已保存:\n{outputPath}\n尺寸: {result.width} x {result.height}，单帧 {targetCellWidth}x{targetCellHeight}，网格 {rows}x{columns}",
+                    "确定");
             }
             finally
             {
@@ -1788,19 +1914,27 @@ namespace ET
             tweakRows = Mathf.Max(1, settings.rows);
             tweakColumns = Mathf.Max(1, settings.columns);
             tweakAnchor = settings.anchor;
+            tweakTargetSizeInitialized = settings.targetWidth > 0 && settings.targetHeight > 0;
+            if (tweakTargetSizeInitialized)
+            {
+                tweakTargetWidth = settings.targetWidth;
+                tweakTargetHeight = settings.targetHeight;
+            }
 
             Texture2D texture = settings.spriteSheet;
             string texturePath = texture != null ? AssetDatabase.GetAssetPath(texture) : null;
             if (texture == null)
             {
-                EditorUtility.DisplayDialog("序列帧", "设置里没有图片引用，已加载行列、偏移和锚点。", "确定");
+                EnsureTweakTargetSize(!tweakTargetSizeInitialized);
+                EditorUtility.DisplayDialog("序列帧", "设置里没有图片引用，已加载行列、目标尺寸、偏移和锚点。", "确定");
             }
             else
             {
-                SetTweakTexture(texture, texturePath, false);
+                SetTweakTexture(texture, texturePath, false, false);
             }
 
             EnsureTweakSelection(true);
+            EnsureTweakTargetSize(!tweakTargetSizeInitialized);
             if (settings.offsets != null)
             {
                 int copyCount = Mathf.Min(tweakOffsets.Length, settings.offsets.Length);
@@ -1961,9 +2095,110 @@ namespace ET
             return tweakOffsets[frameIndex];
         }
 
-        private void DrawTweakPlaybackPreview(Rect rect)
+        private void GetTweakSourceCellSize(out int cellWidth, out int cellHeight)
+        {
+            if (tweakTexture == null)
+            {
+                cellWidth = 0;
+                cellHeight = 0;
+                return;
+            }
+
+            cellWidth = tweakTexture.width / Mathf.Max(1, tweakColumns);
+            cellHeight = tweakTexture.height / Mathf.Max(1, tweakRows);
+        }
+
+        private void EnsureTweakTargetSize(bool resetToSource)
+        {
+            if (tweakTexture == null)
+            {
+                return;
+            }
+
+            GetTweakSourceCellSize(out int sourceCellWidth, out int sourceCellHeight);
+            if (sourceCellWidth <= 0 || sourceCellHeight <= 0)
+            {
+                return;
+            }
+
+            if (resetToSource || !tweakTargetSizeInitialized || tweakTargetWidth <= 0 || tweakTargetHeight <= 0)
+            {
+                tweakTargetWidth = sourceCellWidth;
+                tweakTargetHeight = sourceCellHeight;
+                tweakTargetSizeInitialized = true;
+            }
+            else
+            {
+                tweakTargetWidth = Mathf.Clamp(tweakTargetWidth, 1, sourceCellWidth);
+                tweakTargetHeight = Mathf.Clamp(tweakTargetHeight, 1, sourceCellHeight);
+            }
+
+            ClampTweakAnchorToTarget();
+        }
+
+        private void ClampTweakAnchorToTarget()
+        {
+            tweakAnchor.x = Mathf.Clamp(tweakAnchor.x, 0f, tweakTargetWidth);
+            tweakAnchor.y = Mathf.Clamp(tweakAnchor.y, 0f, tweakTargetHeight);
+        }
+
+        private static Color[] CropCenterCellPixels(Color[] source, int sourceWidth, int sourceHeight, int targetWidth, int targetHeight)
+        {
+            var output = new Color[targetWidth * targetHeight];
+            int cropX = (sourceWidth - targetWidth) / 2;
+            int cropY = (sourceHeight - targetHeight) / 2;
+
+            for (int y = 0; y < targetHeight; y++)
+            {
+                for (int x = 0; x < targetWidth; x++)
+                {
+                    int srcX = cropX + x;
+                    int srcY = cropY + y;
+                    Color color = Color.clear;
+                    if (srcX >= 0 && srcY >= 0 && srcX < sourceWidth && srcY < sourceHeight)
+                    {
+                        color = source[srcY * sourceWidth + srcX];
+                    }
+
+                    output[y * targetWidth + x] = color;
+                }
+            }
+
+            return output;
+        }
+
+        private static Rect GetCenterCropRectInSource(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight)
+        {
+            float cropX = (sourceWidth - targetWidth) * 0.5f;
+            float cropY = (sourceHeight - targetHeight) * 0.5f;
+            return new Rect(cropX, cropY, targetWidth, targetHeight);
+        }
+
+        private static Rect FitRectWithAspect(Rect container, float aspect)
+        {
+            float containerAspect = container.width / Mathf.Max(container.height, 0.0001f);
+            Rect drawRect = container;
+            if (aspect > containerAspect)
+            {
+                float height = container.width / aspect;
+                drawRect.y += (container.height - height) * 0.5f;
+                drawRect.height = height;
+            }
+            else
+            {
+                float width = container.height * aspect;
+                drawRect.x += (container.width - width) * 0.5f;
+                drawRect.width = width;
+            }
+
+            return drawRect;
+        }
+
+        private void DrawTweakOriginalPreview(Rect rect)
         {
             EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f, 1f));
+            GUI.Label(new Rect(rect.x + 6f, rect.y + 4f, rect.width - 12f, 18f), "原图预览", EditorStyles.miniBoldLabel);
+
             int frameIndex = GetTweakSelectedIndexAt(tweakPlayIndex);
             if (frameIndex < 0 || tweakTexture == null)
             {
@@ -1974,39 +2209,86 @@ namespace ET
             int row = frameIndex / Mathf.Max(tweakColumns, 1);
             int column = frameIndex % Mathf.Max(tweakColumns, 1);
             Vector2 pixelOffset = GetTweakOffset(frameIndex);
-            float cellAspect = (tweakTexture.width / (float)Mathf.Max(tweakColumns, 1))
-                / Mathf.Max(tweakTexture.height / (float)Mathf.Max(tweakRows, 1), 0.0001f);
-            float previewAspect = rect.width / Mathf.Max(rect.height, 0.0001f);
-            Rect drawRect = rect;
-            if (cellAspect > previewAspect)
-            {
-                float height = rect.width / cellAspect;
-                drawRect.y += (rect.height - height) * 0.5f;
-                drawRect.height = height;
-            }
-            else
-            {
-                float width = rect.height * cellAspect;
-                drawRect.x += (rect.width - width) * 0.5f;
-                drawRect.width = width;
-            }
+            GetTweakSourceCellSize(out int sourceCellWidth, out int sourceCellHeight);
+            float cellAspect = sourceCellWidth / (float)Mathf.Max(sourceCellHeight, 1);
+            Rect contentRect = new Rect(rect.x + 4f, rect.y + 22f, rect.width - 8f, rect.height - 44f);
+            Rect drawRect = FitRectWithAspect(contentRect, cellAspect);
 
             if (Event.current.type == EventType.Repaint)
             {
-                GUI.BeginClip(rect);
+                GUI.BeginClip(contentRect);
                 Rect localDraw = drawRect;
-                localDraw.x -= rect.x;
-                localDraw.y -= rect.y;
+                localDraw.x -= contentRect.x;
+                localDraw.y -= contentRect.y;
                 ApplyTweakPixelOffset(ref localDraw, pixelOffset, drawRect.width, drawRect.height);
                 GUI.DrawTextureWithTexCoords(localDraw, tweakTexture, GetTweakCellUvNormalized(row, column), true);
+
+                Rect cropRect = GetCenterCropRectInSource(sourceCellWidth, sourceCellHeight, tweakTargetWidth, tweakTargetHeight);
+                float scaleX = drawRect.width / Mathf.Max(sourceCellWidth, 0.0001f);
+                float scaleY = drawRect.height / Mathf.Max(sourceCellHeight, 0.0001f);
+                Rect localCrop = new Rect(
+                    localDraw.x + cropRect.x * scaleX,
+                    localDraw.yMax - (cropRect.y + cropRect.height) * scaleY,
+                    cropRect.width * scaleX,
+                    cropRect.height * scaleY);
+                DrawRectOutline(localCrop, new Color(1f, 0.85f, 0.2f, 1f), 2f);
                 GUI.EndClip();
-                DrawRectOutline(drawRect, new Color(1f, 0.85f, 0.2f, 1f), 2f);
+            }
+
+            GUI.Label(
+                new Rect(rect.x + 6f, rect.yMax - 20f, rect.width - 12f, 18f),
+                $"_{row}_{column}  原图 {sourceCellWidth}x{sourceCellHeight}  X:{pixelOffset.x}  Y:{pixelOffset.y}");
+        }
+
+        private void DrawTweakTargetPreview(Rect rect)
+        {
+            EditorGUI.DrawRect(rect, new Color(0.12f, 0.12f, 0.12f, 1f));
+            GUI.Label(new Rect(rect.x + 6f, rect.y + 4f, rect.width - 12f, 18f), "目标图预览", EditorStyles.miniBoldLabel);
+
+            int frameIndex = GetTweakSelectedIndexAt(tweakPlayIndex);
+            if (frameIndex < 0 || tweakTexture == null)
+            {
+                GUI.Label(rect, "勾选序列帧后在此循环播放", EditorStyles.centeredGreyMiniLabel);
+                return;
+            }
+
+            int row = frameIndex / Mathf.Max(tweakColumns, 1);
+            int column = frameIndex % Mathf.Max(tweakColumns, 1);
+            Vector2 pixelOffset = GetTweakOffset(frameIndex);
+            GetTweakSourceCellSize(out int sourceCellWidth, out int sourceCellHeight);
+            float targetAspect = tweakTargetWidth / (float)Mathf.Max(tweakTargetHeight, 1);
+            Rect contentRect = new Rect(rect.x + 4f, rect.y + 22f, rect.width - 8f, rect.height - 44f);
+            Rect drawRect = FitRectWithAspect(contentRect, targetAspect);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                GUI.BeginClip(contentRect);
+                Rect localDraw = drawRect;
+                localDraw.x -= contentRect.x;
+                localDraw.y -= contentRect.y;
+
+                GUI.BeginClip(localDraw);
+                float scaleX = localDraw.width / Mathf.Max(tweakTargetWidth, 0.0001f);
+                float scaleY = localDraw.height / Mathf.Max(tweakTargetHeight, 0.0001f);
+                float fullDrawWidth = sourceCellWidth * scaleX;
+                float fullDrawHeight = sourceCellHeight * scaleY;
+                Rect sourceDrawRect = new Rect(
+                    -(sourceCellWidth - tweakTargetWidth) * 0.5f * scaleX,
+                    -(sourceCellHeight - tweakTargetHeight) * 0.5f * scaleY,
+                    fullDrawWidth,
+                    fullDrawHeight);
+                ApplyTweakPixelOffset(ref sourceDrawRect, pixelOffset, fullDrawWidth, fullDrawHeight);
+                GUI.DrawTextureWithTexCoords(sourceDrawRect, tweakTexture, GetTweakCellUvNormalized(row, column), true);
+                GUI.EndClip();
+                GUI.EndClip();
+
+                DrawRectOutline(drawRect, new Color(0.4f, 0.85f, 1f, 1f), 2f);
                 DrawAnchorDot(GetTweakAnchorScreenPosition(drawRect));
             }
 
             GUI.Label(
                 new Rect(rect.x + 6f, rect.yMax - 20f, rect.width - 12f, 18f),
-                $"_{row}_{column}  X:{pixelOffset.x}  Y:{pixelOffset.y}");
+                $"目标 {tweakTargetWidth}x{tweakTargetHeight}  锚点 ({tweakAnchor.x:0.##}, {tweakAnchor.y:0.##})");
         }
 
         private void UpdateTweakPreviewPlayback()
@@ -2036,15 +2318,8 @@ namespace ET
 
         private Vector2 GetTweakAnchorScreenPosition(Rect frameRect)
         {
-            if (tweakTexture == null)
-            {
-                return frameRect.center;
-            }
-
-            float cellWidth = tweakTexture.width / (float)Mathf.Max(tweakColumns, 1);
-            float cellHeight = tweakTexture.height / (float)Mathf.Max(tweakRows, 1);
-            float scaleX = frameRect.width / Mathf.Max(cellWidth, 0.0001f);
-            float scaleY = frameRect.height / Mathf.Max(cellHeight, 0.0001f);
+            float scaleX = frameRect.width / Mathf.Max(tweakTargetWidth, 0.0001f);
+            float scaleY = frameRect.height / Mathf.Max(tweakTargetHeight, 0.0001f);
             return new Vector2(
                 frameRect.x + tweakAnchor.x * scaleX,
                 frameRect.yMax - tweakAnchor.y * scaleY);
