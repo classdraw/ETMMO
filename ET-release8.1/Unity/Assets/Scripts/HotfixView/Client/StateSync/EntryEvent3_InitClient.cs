@@ -17,6 +17,8 @@ namespace ET.Client
             await root.AddComponent<TEngineComponent>().Init();
             //相机需要一些准备（MainCamera + CameraRoot）
             await root.AddComponent<CameraPlayComponent>().Init();
+            //角色贴图准备
+            await root.AddComponent<RoleTextureComponent>().Init();
             //hud需要一些准备
             root.AddComponent<HudComponent>();
             

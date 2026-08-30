@@ -55,7 +55,7 @@ namespace GameLogic
             m_reorderableList.drawElementCallback = (rect, index, _, _) =>
             {
                 SerializedProperty element = m_componentsProperty.GetArrayElementAtIndex(index);
-                Component component = element.objectReferenceValue as Component;
+                UnityEngine.Object reference = element.objectReferenceValue;
 
                 float height = EditorGUIUtility.singleLineHeight;
                 float padding = 2f;
@@ -65,7 +65,7 @@ namespace GameLogic
 
                 EditorGUI.BeginDisabledGroup(true);
                 EditorGUI.LabelField(new Rect(rect.x, rect.y + padding, indexWidth, height), $"【{index}】");
-                string objectName = component != null ? component.gameObject.name : "Null Reference";
+                string objectName = GetReferenceObjectName(reference);
                 EditorGUI.TextField(new Rect(rect.x + indexWidth, rect.y + padding, nameWidth, height), objectName);
                 EditorGUI.EndDisabledGroup();
 
@@ -185,13 +185,13 @@ namespace GameLogic
             for (int i = 0; i < m_componentsProperty.arraySize; i++)
             {
                 SerializedProperty element = m_componentsProperty.GetArrayElementAtIndex(i);
-                Component comp = element.objectReferenceValue as Component;
-                if (comp == null)
+                UnityEngine.Object reference = element.objectReferenceValue;
+                if (reference == null)
                 {
                     continue;
                 }
 
-                AppendFieldAndBind(comp, i, fields, binds, extraUsings, buttonHandlerMethods, buttonHandlerSeen);
+                AppendFieldAndBind(reference, i, fields, binds, extraUsings, buttonHandlerMethods, buttonHandlerSeen);
             }
 
             StringBuilder usings = new StringBuilder();
@@ -262,35 +262,66 @@ namespace GameLogic
             return sb.ToString();
         }
 
-        private static void AppendFieldAndBind(Component comp, int index, StringBuilder fields, StringBuilder binds,
+        private static void AppendFieldAndBind(UnityEngine.Object reference, int index, StringBuilder fields, StringBuilder binds,
             HashSet<string> extraUsings, List<string> buttonHandlerMethods, HashSet<string> buttonHandlerSeen)
         {
-            string field = FormatFieldName(comp.gameObject.name);
-            System.Type t = comp.GetType();
-
-            if (t == typeof(RectTransform))
+            string objectName;
+            if (reference is GameObject gameObject)
             {
+                objectName = gameObject.name;
+                string field = FormatFieldName(objectName);
                 fields.AppendLine($"\t\tpublic GameObject {field};");
-                binds.AppendLine(
-                    $"\t\t\tself.{field} = m_bindComponent.GetComponent<RectTransform>({index}).gameObject;");
+                binds.AppendLine($"\t\t\tself.{field} = m_bindComponent.GetGameObject({index});");
                 return;
             }
 
+            Component comp = reference as Component;
+            if (comp == null)
+            {
+                return;
+            }
+
+            string fieldName = FormatFieldName(comp.gameObject.name);
+            var rule = ScriptGeneratorSetting.GetScriptGenerateRule()
+                .Find(r => comp.gameObject.name.StartsWith(r.uiElementRegex));
+            if (rule != null && rule.componentName == UIComponentName.GameObject)
+            {
+                fields.AppendLine($"\t\tpublic GameObject {fieldName};");
+                binds.AppendLine($"\t\t\tself.{fieldName} = m_bindComponent.GetGameObject({index});");
+                return;
+            }
+
+            System.Type t = comp.GetType();
             string typeName = GetDeclarationTypeName(t, extraUsings);
-            fields.AppendLine($"\t\tpublic {typeName} {field};");
-            binds.AppendLine($"\t\t\tself.{field} = m_bindComponent.GetComponent<{typeName}>({index});");
+            fields.AppendLine($"\t\tpublic {typeName} {fieldName};");
+            binds.AppendLine($"\t\t\tself.{fieldName} = m_bindComponent.GetComponent<{typeName}>({index});");
 
             if (typeof(Button).IsAssignableFrom(t))
             {
                 extraUsings.Add("UnityEngine.UI");
-                string handlerName = GetButtonClickMethodName(field);
+                string handlerName = GetButtonClickMethodName(fieldName);
                 binds.AppendLine(
-                    $"\t\t\tself.{field}.onClick.AddListener(() => {{ self.{handlerName}(); }});");
+                    $"\t\t\tself.{fieldName}.onClick.AddListener(() => {{ self.{handlerName}(); }});");
                 if (buttonHandlerSeen.Add(handlerName))
                 {
                     buttonHandlerMethods.Add(handlerName);
                 }
             }
+        }
+
+        private static string GetReferenceObjectName(UnityEngine.Object reference)
+        {
+            if (reference is GameObject gameObject)
+            {
+                return gameObject.name;
+            }
+
+            if (reference is Component component)
+            {
+                return component.gameObject.name;
+            }
+
+            return "Null Reference";
         }
 
         /// <summary>

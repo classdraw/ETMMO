@@ -26,7 +26,6 @@ namespace ET.Client
 		public Text m_textLeftModel;
 		public GameObject m_goLeft;
 		public Button m_btnLeftCreate;
-		public Button m_btnLeftTran;
 		public Button m_btnLeftDelete;
 		public Button m_btnLeftEnter;
 		public InputField m_inputLeft;
@@ -34,11 +33,56 @@ namespace ET.Client
 		public Text m_textRightModel;
 		public GameObject m_goRight;
 		public Button m_btnRightCreate;
-		public Button m_btnRightTran;
 		public Button m_btnRightDelete;
 		public Button m_btnRightEnter;
 		public InputField m_inputRight;
 		public Button m_btnBack2;
+		public GameObject m_goLeftChoose;
+		public Text m_textRaceL;
+		public Button m_btnRaceRightL;
+		public Button m_btnRaceLeftL;
+		public Text m_textGenderL;
+		public Button m_btnGenderRightL;
+		public Button m_btnGenderLeftL;
+		public Text m_textBodyL;
+		public Button m_btnBodyRightL;
+		public Button m_btnBodyLeftL;
+		public Text m_textHeadL;
+		public Button m_btnHeadRightL;
+		public Button m_btnHeadLeftL;
+		public Text m_textTailL;
+		public Button m_btnTailRightL;
+		public Button m_btnTailLeftL;
+		public Text m_textShirtL;
+		public Button m_btnShirtRightL;
+		public Button m_btnShirtLeftL;
+		public Text m_textPantsL;
+		public Button m_btnPantsRightL;
+		public Button m_btnPantsLeftL;
+		public GameObject m_goRightChoose;
+		public Text m_textRaceR;
+		public Button m_btnRaceRightR;
+		public Button m_btnRaceLeftR;
+		public Text m_textGenderR;
+		public Button m_btnGenderRightR;
+		public Button m_btnGenderLeftR;
+		public Text m_textBodyR;
+		public Button m_btnBodyRightR;
+		public Button m_btnBodyLeftR;
+		public Text m_textHeadR;
+		public Button m_btnHeadRightR;
+		public Button m_btnHeadLeftR;
+		public Text m_textTailR;
+		public Button m_btnTailRightR;
+		public Button m_btnTailLeftR;
+		public Text m_textShirtR;
+		public Button m_btnShirtRightR;
+		public Button m_btnShirtLeftR;
+		public Text m_textPantsR;
+		public Button m_btnPantsRightR;
+		public Button m_btnPantsLeftR;
+		public GameObject m_goUIRoleLeft;
+		public GameObject m_goUIRoleRight;
 	}
 }
 
@@ -52,43 +96,113 @@ namespace ET.Client
 		private static void Awake(this UILoginComponent self)
 		{
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
-			self.m_goObj1 = m_bindComponent.GetComponent<RectTransform>(0).gameObject;
+			self.m_goObj1 = m_bindComponent.GetGameObject(0);
 			self.m_inputAccount = m_bindComponent.GetComponent<InputField>(1);
 			self.m_inputPassword = m_bindComponent.GetComponent<InputField>(2);
 			self.m_btnLogin = m_bindComponent.GetComponent<Button>(3);
 			self.m_btnLogin.onClick.AddListener(() => { self.OnLogin(); });
-			self.m_goObj2 = m_bindComponent.GetComponent<RectTransform>(4).gameObject;
+			self.m_goObj2 = m_bindComponent.GetGameObject(4);
 			self.m_loopListVerticalScroll = m_bindComponent.GetComponent<LayoutLoopList>(5);
 			self.m_btnBack1 = m_bindComponent.GetComponent<Button>(6);
 			self.m_btnBack1.onClick.AddListener(() => { self.OnBack1(); });
 			self.m_textServerList = m_bindComponent.GetComponent<Text>(7);
-			self.m_goObj3 = m_bindComponent.GetComponent<RectTransform>(8).gameObject;
+			self.m_goObj3 = m_bindComponent.GetGameObject(8);
 			self.m_textLeftTitle = m_bindComponent.GetComponent<Text>(9);
 			self.m_textLeftModel = m_bindComponent.GetComponent<Text>(10);
-			self.m_goLeft = m_bindComponent.GetComponent<RectTransform>(11).gameObject;
+			self.m_goLeft = m_bindComponent.GetGameObject(11);
 			self.m_btnLeftCreate = m_bindComponent.GetComponent<Button>(12);
 			self.m_btnLeftCreate.onClick.AddListener(() => { self.OnLeftCreate(); });
-			self.m_btnLeftTran = m_bindComponent.GetComponent<Button>(13);
-			self.m_btnLeftTran.onClick.AddListener(() => { self.OnLeftTran(); });
-			self.m_btnLeftDelete = m_bindComponent.GetComponent<Button>(14);
+			self.m_btnLeftDelete = m_bindComponent.GetComponent<Button>(13);
 			self.m_btnLeftDelete.onClick.AddListener(() => { self.OnLeftDelete(); });
-			self.m_btnLeftEnter = m_bindComponent.GetComponent<Button>(15);
+			self.m_btnLeftEnter = m_bindComponent.GetComponent<Button>(14);
 			self.m_btnLeftEnter.onClick.AddListener(() => { self.OnLeftEnter(); });
-			self.m_inputLeft = m_bindComponent.GetComponent<InputField>(16);
-			self.m_textRightTitle = m_bindComponent.GetComponent<Text>(17);
-			self.m_textRightModel = m_bindComponent.GetComponent<Text>(18);
-			self.m_goRight = m_bindComponent.GetComponent<RectTransform>(19).gameObject;
-			self.m_btnRightCreate = m_bindComponent.GetComponent<Button>(20);
+			self.m_inputLeft = m_bindComponent.GetComponent<InputField>(15);
+			self.m_textRightTitle = m_bindComponent.GetComponent<Text>(16);
+			self.m_textRightModel = m_bindComponent.GetComponent<Text>(17);
+			self.m_goRight = m_bindComponent.GetGameObject(18);
+			self.m_btnRightCreate = m_bindComponent.GetComponent<Button>(19);
 			self.m_btnRightCreate.onClick.AddListener(() => { self.OnRightCreate(); });
-			self.m_btnRightTran = m_bindComponent.GetComponent<Button>(21);
-			self.m_btnRightTran.onClick.AddListener(() => { self.OnRightTran(); });
-			self.m_btnRightDelete = m_bindComponent.GetComponent<Button>(22);
+			self.m_btnRightDelete = m_bindComponent.GetComponent<Button>(20);
 			self.m_btnRightDelete.onClick.AddListener(() => { self.OnRightDelete(); });
-			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(23);
+			self.m_btnRightEnter = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnRightEnter.onClick.AddListener(() => { self.OnRightEnter(); });
-			self.m_inputRight = m_bindComponent.GetComponent<InputField>(24);
-			self.m_btnBack2 = m_bindComponent.GetComponent<Button>(25);
+			self.m_inputRight = m_bindComponent.GetComponent<InputField>(22);
+			self.m_btnBack2 = m_bindComponent.GetComponent<Button>(23);
 			self.m_btnBack2.onClick.AddListener(() => { self.OnBack2(); });
+			self.m_goLeftChoose = m_bindComponent.GetGameObject(24);
+			self.m_textRaceL = m_bindComponent.GetComponent<Text>(25);
+			self.m_btnRaceRightL = m_bindComponent.GetComponent<Button>(26);
+			self.m_btnRaceRightL.onClick.AddListener(() => { self.OnRaceRightL(); });
+			self.m_btnRaceLeftL = m_bindComponent.GetComponent<Button>(27);
+			self.m_btnRaceLeftL.onClick.AddListener(() => { self.OnRaceLeftL(); });
+			self.m_textGenderL = m_bindComponent.GetComponent<Text>(28);
+			self.m_btnGenderRightL = m_bindComponent.GetComponent<Button>(29);
+			self.m_btnGenderRightL.onClick.AddListener(() => { self.OnGenderRightL(); });
+			self.m_btnGenderLeftL = m_bindComponent.GetComponent<Button>(30);
+			self.m_btnGenderLeftL.onClick.AddListener(() => { self.OnGenderLeftL(); });
+			self.m_textBodyL = m_bindComponent.GetComponent<Text>(31);
+			self.m_btnBodyRightL = m_bindComponent.GetComponent<Button>(32);
+			self.m_btnBodyRightL.onClick.AddListener(() => { self.OnBodyRightL(); });
+			self.m_btnBodyLeftL = m_bindComponent.GetComponent<Button>(33);
+			self.m_btnBodyLeftL.onClick.AddListener(() => { self.OnBodyLeftL(); });
+			self.m_textHeadL = m_bindComponent.GetComponent<Text>(34);
+			self.m_btnHeadRightL = m_bindComponent.GetComponent<Button>(35);
+			self.m_btnHeadRightL.onClick.AddListener(() => { self.OnHeadRightL(); });
+			self.m_btnHeadLeftL = m_bindComponent.GetComponent<Button>(36);
+			self.m_btnHeadLeftL.onClick.AddListener(() => { self.OnHeadLeftL(); });
+			self.m_textTailL = m_bindComponent.GetComponent<Text>(37);
+			self.m_btnTailRightL = m_bindComponent.GetComponent<Button>(38);
+			self.m_btnTailRightL.onClick.AddListener(() => { self.OnTailRightL(); });
+			self.m_btnTailLeftL = m_bindComponent.GetComponent<Button>(39);
+			self.m_btnTailLeftL.onClick.AddListener(() => { self.OnTailLeftL(); });
+			self.m_textShirtL = m_bindComponent.GetComponent<Text>(40);
+			self.m_btnShirtRightL = m_bindComponent.GetComponent<Button>(41);
+			self.m_btnShirtRightL.onClick.AddListener(() => { self.OnShirtRightL(); });
+			self.m_btnShirtLeftL = m_bindComponent.GetComponent<Button>(42);
+			self.m_btnShirtLeftL.onClick.AddListener(() => { self.OnShirtLeftL(); });
+			self.m_textPantsL = m_bindComponent.GetComponent<Text>(43);
+			self.m_btnPantsRightL = m_bindComponent.GetComponent<Button>(44);
+			self.m_btnPantsRightL.onClick.AddListener(() => { self.OnPantsRightL(); });
+			self.m_btnPantsLeftL = m_bindComponent.GetComponent<Button>(45);
+			self.m_btnPantsLeftL.onClick.AddListener(() => { self.OnPantsLeftL(); });
+			self.m_goRightChoose = m_bindComponent.GetGameObject(46);
+			self.m_textRaceR = m_bindComponent.GetComponent<Text>(47);
+			self.m_btnRaceRightR = m_bindComponent.GetComponent<Button>(48);
+			self.m_btnRaceRightR.onClick.AddListener(() => { self.OnRaceRightR(); });
+			self.m_btnRaceLeftR = m_bindComponent.GetComponent<Button>(49);
+			self.m_btnRaceLeftR.onClick.AddListener(() => { self.OnRaceLeftR(); });
+			self.m_textGenderR = m_bindComponent.GetComponent<Text>(50);
+			self.m_btnGenderRightR = m_bindComponent.GetComponent<Button>(51);
+			self.m_btnGenderRightR.onClick.AddListener(() => { self.OnGenderRightR(); });
+			self.m_btnGenderLeftR = m_bindComponent.GetComponent<Button>(52);
+			self.m_btnGenderLeftR.onClick.AddListener(() => { self.OnGenderLeftR(); });
+			self.m_textBodyR = m_bindComponent.GetComponent<Text>(53);
+			self.m_btnBodyRightR = m_bindComponent.GetComponent<Button>(54);
+			self.m_btnBodyRightR.onClick.AddListener(() => { self.OnBodyRightR(); });
+			self.m_btnBodyLeftR = m_bindComponent.GetComponent<Button>(55);
+			self.m_btnBodyLeftR.onClick.AddListener(() => { self.OnBodyLeftR(); });
+			self.m_textHeadR = m_bindComponent.GetComponent<Text>(56);
+			self.m_btnHeadRightR = m_bindComponent.GetComponent<Button>(57);
+			self.m_btnHeadRightR.onClick.AddListener(() => { self.OnHeadRightR(); });
+			self.m_btnHeadLeftR = m_bindComponent.GetComponent<Button>(58);
+			self.m_btnHeadLeftR.onClick.AddListener(() => { self.OnHeadLeftR(); });
+			self.m_textTailR = m_bindComponent.GetComponent<Text>(59);
+			self.m_btnTailRightR = m_bindComponent.GetComponent<Button>(60);
+			self.m_btnTailRightR.onClick.AddListener(() => { self.OnTailRightR(); });
+			self.m_btnTailLeftR = m_bindComponent.GetComponent<Button>(61);
+			self.m_btnTailLeftR.onClick.AddListener(() => { self.OnTailLeftR(); });
+			self.m_textShirtR = m_bindComponent.GetComponent<Text>(62);
+			self.m_btnShirtRightR = m_bindComponent.GetComponent<Button>(63);
+			self.m_btnShirtRightR.onClick.AddListener(() => { self.OnShirtRightR(); });
+			self.m_btnShirtLeftR = m_bindComponent.GetComponent<Button>(64);
+			self.m_btnShirtLeftR.onClick.AddListener(() => { self.OnShirtLeftR(); });
+			self.m_textPantsR = m_bindComponent.GetComponent<Text>(65);
+			self.m_btnPantsRightR = m_bindComponent.GetComponent<Button>(66);
+			self.m_btnPantsRightR.onClick.AddListener(() => { self.OnPantsRightR(); });
+			self.m_btnPantsLeftR = m_bindComponent.GetComponent<Button>(67);
+			self.m_btnPantsLeftR.onClick.AddListener(() => { self.OnPantsLeftR(); });
+			self.m_goUIRoleLeft = m_bindComponent.GetGameObject(68);
+			self.m_goUIRoleRight = m_bindComponent.GetGameObject(69);
 		}
 
 		[EntitySystem]
@@ -108,10 +222,6 @@ namespace ET.Client
 		{
 		}
 
-		public static void OnLeftTran(this UILoginComponent self)
-		{
-		}
-
 		public static void OnLeftDelete(this UILoginComponent self)
 		{
 		}
@@ -124,10 +234,6 @@ namespace ET.Client
 		{
 		}
 
-		public static void OnRightTran(this UILoginComponent self)
-		{
-		}
-
 		public static void OnRightDelete(this UILoginComponent self)
 		{
 		}
@@ -137,6 +243,118 @@ namespace ET.Client
 		}
 
 		public static void OnBack2(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRaceRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRaceLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnGenderRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnGenderLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnBodyRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnBodyLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnHeadRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnHeadLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnTailRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnTailLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnShirtRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnShirtLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnPantsRightL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnPantsLeftL(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRaceRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnRaceLeftR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnGenderRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnGenderLeftR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnBodyRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnBodyLeftR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnHeadRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnHeadLeftR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnTailRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnTailLeftR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnShirtRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnShirtLeftR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnPantsRightR(this UILoginComponent self)
+		{
+		}
+
+		public static void OnPantsLeftR(this UILoginComponent self)
 		{
 		}
 	}

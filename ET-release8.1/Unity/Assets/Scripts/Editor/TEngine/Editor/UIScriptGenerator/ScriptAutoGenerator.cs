@@ -298,7 +298,7 @@ namespace TEngine.Editor.UI
             strVar.AppendLine($"\t\tprivate {componentName} {varName}{(ScriptGeneratorSetting.Instance.NullableEnable?" = null!;":";")}");
             if (rule.componentName == UIComponentName.GameObject)
             {
-                strBind.AppendLine($"\t\t\t{varName} = m_bindComponent.GetComponent<RectTransform>({m_bindIndex}).gameObject;");
+                strBind.AppendLine($"\t\t\t{varName} = m_bindComponent.GetGameObject({m_bindIndex});");
             }
             else
             {
@@ -570,8 +570,7 @@ namespace TEngine.Editor.UI
 
             if (rule.componentName == UIComponentName.GameObject)
             {
-                var c = child.gameObject.GetComponent<RectTransform>();
-                uiBindComponent.AddComponent(c);
+                uiBindComponent.AddGameObject(child.gameObject);
                 return;
             }
 

@@ -16,7 +16,7 @@ namespace ET.Client
 		private static void Awake(this UIHelpComponent self)
 		{
 						UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
-			self.m_goPanel = m_bindComponent.GetComponent<RectTransform>(0).gameObject;
+			self.m_goPanel = m_bindComponent.GetGameObject(0);
 			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
 			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
 			self.m_btnTap2 = m_bindComponent.GetComponent<Button>(2);
@@ -27,7 +27,7 @@ namespace ET.Client
 			self.m_btnTap4.onClick.AddListener(() => { self.OnTap4(); });
 			self.m_inputAll = m_bindComponent.GetComponent<InputField>(5);
 			self.m_toggle1 = m_bindComponent.GetComponent<Toggle>(6);
-			self.m_goP1 = m_bindComponent.GetComponent<RectTransform>(7).gameObject;
+			self.m_goP1 = m_bindComponent.GetGameObject(7);
 			self.m_btnP1rankList = m_bindComponent.GetComponent<Button>(8);
 			self.m_btnP1rankList.onClick.AddListener(() => { self.OnP1rankList(); });
 			self.m_btnP1addMail = m_bindComponent.GetComponent<Button>(9);
@@ -46,17 +46,17 @@ namespace ET.Client
 			self.m_btnP1LeaveTeam.onClick.AddListener(() => { self.OnP1LeaveTeam(); });
 			self.m_btnP1DissolveTeam = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnP1DissolveTeam.onClick.AddListener(() => { self.OnP1DissolveTeam(); });
-			self.m_goP2 = m_bindComponent.GetComponent<RectTransform>(17).gameObject;
+			self.m_goP2 = m_bindComponent.GetGameObject(17);
 			self.m_btnP2CastSimple = m_bindComponent.GetComponent<Button>(18);
 			self.m_btnP2CastSimple.onClick.AddListener(() => { self.OnP2CastSimple(); });
-			self.m_goP3 = m_bindComponent.GetComponent<RectTransform>(19).gameObject;
+			self.m_goP3 = m_bindComponent.GetGameObject(19);
 			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(20);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
 			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
 			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(22);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetComponent<RectTransform>(23).gameObject;
+			self.m_goP4 = m_bindComponent.GetGameObject(23);
 			self.m_btnGM = m_bindComponent.GetComponent<Button>(24);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 		

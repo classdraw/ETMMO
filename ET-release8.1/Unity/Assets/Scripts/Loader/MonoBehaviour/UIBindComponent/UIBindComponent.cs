@@ -17,9 +17,32 @@ namespace GameLogic
     [DisallowMultipleComponent]
     public partial class UIBindComponent : MonoBehaviour
     {
-        [SerializeField] private List<Component> m_components = new List<Component>();
+        [SerializeField] private List<UnityEngine.Object> m_components = new List<UnityEngine.Object>();
 
         public int ComponentCount => m_components.Count;
+
+        public GameObject GetGameObject(int index)
+        {
+            if (index < 0 || index >= m_components.Count)
+            {
+                Log.Error("索引超出范围");
+                return null;
+            }
+
+            UnityEngine.Object reference = m_components[index];
+            if (reference is GameObject gameObject)
+            {
+                return gameObject;
+            }
+
+            if (reference is Component component)
+            {
+                return component.gameObject;
+            }
+
+            Log.Error($"索引 {index} 不是有效的 GameObject 引用");
+            return null;
+        }
 
         public T GetComponent<T>(int index) where T : Component
         {
@@ -28,14 +51,26 @@ namespace GameLogic
                 Log.Error("索引超出范围");
                 return null;
             }
-            T c = m_components[index] as T;
 
-            if (c == null)
+            UnityEngine.Object reference = m_components[index];
+            if (reference is T component)
             {
-                Log.Error($"没有找到对应类型: {typeof(T).FullName}");
-                return null;
+                return component;
             }
-            return c;
+
+            if (reference is GameObject gameObject)
+            {
+                T c = gameObject.GetComponent<T>();
+                if (c == null)
+                {
+                    Log.Error($"没有找到对应类型: {typeof(T).FullName}");
+                }
+
+                return c;
+            }
+
+            Log.Error($"没有找到对应类型: {typeof(T).FullName}");
+            return null;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ET
     /// </summary>
     public class SpriteSheetToolsWindow : EditorWindow
     {
-        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "边框" };
+        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "边框", "2D贴图制作" };
         private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" };
 
         private int selectedTab;
@@ -70,6 +70,9 @@ namespace ET
         private int borderSize = 1;
         private Color borderColor = new Color(1f, 1f, 1f, 1f);
         private Vector2 borderScroll;
+        private Vector2 twoDTextureScrollPosition;
+
+        [SerializeField] private TwoDTextureMakerTab twoDTextureMakerTab = new TwoDTextureMakerTab();
 
         [MenuItem("Tools/序列帧", false, 53)]
         public static void Open()
@@ -100,6 +103,9 @@ namespace ET
                     break;
                 case 4:
                     DrawBorderTab();
+                    break;
+                case 5:
+                    DrawTwoDTextureTab();
                     break;
             }
         }
@@ -499,6 +505,13 @@ namespace ET
 
             EditorGUILayout.EndScrollView();
             HandleBorderDragAndDrop();
+        }
+
+        private void DrawTwoDTextureTab()
+        {
+            twoDTextureScrollPosition = EditorGUILayout.BeginScrollView(twoDTextureScrollPosition);
+            twoDTextureMakerTab.OnGUI();
+            EditorGUILayout.EndScrollView();
         }
 
         private void DrawTweakSettingsBar()

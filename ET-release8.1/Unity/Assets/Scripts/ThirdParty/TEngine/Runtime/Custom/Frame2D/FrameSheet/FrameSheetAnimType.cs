@@ -10,6 +10,7 @@ namespace ET
         Stand = 2,//战力不动
         Move=3,//移动
         Archery=5,//射箭
+        Cast=6,//施法
     }
 
     /// <summary>

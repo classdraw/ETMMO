@@ -48,15 +48,3 @@ MonoBehaviour:
   - key: Skeleton1001
     gameObject: {fileID: 7153520222090993161, guid: 0eb23eb4a2855424680e63705efb5952,
       type: 3}
-  - key: Skeleton1002
-    gameObject: {fileID: 7395949204463245367, guid: e76184a094f119741977ae40ee1331e9,
-      type: 3}
-  - key: Skeleton1003
-    gameObject: {fileID: 1583150191821076935, guid: 9d18197630c03284297416ba7a918c0e,
-      type: 3}
-  - key: Skeleton1004
-    gameObject: {fileID: 7500131616218098743, guid: 1bf743c5d40c106459311dbcafb6bd7f,
-      type: 3}
-  - key: Skeleton1005
-    gameObject: {fileID: 4226870178288732410, guid: 1a21a6bceb786ed4498f18df68b2d1f5,
-      type: 3}

@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c5b6c871213c84b83024bcac9e268d, type: 3}
+  m_Name: FrameRoleTexture_Body
+  m_EditorClassIdentifier: 
+  partKey: 1
+  races:
+  - raceKey: 1
+    genders:
+    - genderKey: 1
+      textures:
+      - index: 0
+        displayId: 10101000
+        name: humanmanbody1
+        desc: "\u4EBA\u7C7B\u7537\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: 28c5a5503a80c624c91e3e7ac3c9e98e, type: 3}
+      - index: 1
+        displayId: 10101001
+        name: humanmanbody2
+        desc: "\u4EBA\u7C7B\u7537\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: d2e5d33472922be4bb8973909860fab8, type: 3}
+      - index: 2
+        displayId: 10101002
+        name: humanmanbody3
+        desc: "\u4EBA\u7C7B\u7537\u8EAB\u67503"
+        texture: {fileID: 2800000, guid: 1c399de3ec7e06f43b636b7f870d598a, type: 3}
+      - index: 3
+        displayId: 10101003
+        name: humanmanbody4
+        desc: "\u4EBA\u7C7B\u7537\u8EAB\u67504"
+        texture: {fileID: 2800000, guid: 11a10523f0e1996419fdc174a620a84e, type: 3}
+    - genderKey: 2
+      textures:
+      - index: 0
+        displayId: 10102000
+        name: humanfemalebody1
+        desc: "\u4EBA\u7C7B\u5973\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: 94a149a9f54595f4ebe7fd06ec55497d, type: 3}
+      - index: 1
+        displayId: 10102001
+        name: humanfemalebody2
+        desc: "\u4EBA\u7C7B\u5973\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: de79c7a73d2de7d48b0ddbd472334789, type: 3}
+      - index: 2
+        displayId: 10102002
+        name: humanfemalebody3
+        desc: "\u4EBA\u7C7B\u5973\u8EAB\u67503"
+        texture: {fileID: 2800000, guid: 3ed1a0517d5244f4385a8fdf9de53738, type: 3}
+  - raceKey: 2
+    genders:
+    - genderKey: 1
+      textures:
+      - index: 0
+        displayId: 10201000
+        name: orcmanbody1
+        desc: "\u517D\u4EBA\u7537\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: 78911674161a72345a813627b098b3ac, type: 3}
+      - index: 1
+        displayId: 10201001
+        name: orcmanbody2
+        desc: "\u517D\u4EBA\u7537\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: cac2cf079d47d7248994633d2032b52b, type: 3}
+    - genderKey: 2
+      textures:
+      - index: 0
+        displayId: 10202000
+        name: orcfemalebody1
+        desc: "\u517D\u4EBA\u5973\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: b2a4b956b4a18854297bc492e85ddf50, type: 3}
+      - index: 1
+        displayId: 10202001
+        name: orcfemalebody2
+        desc: "\u517D\u4EBA\u5973\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: 7a38b65d7746c9949a91696b8098a7eb, type: 3}
+  - raceKey: 3
+    genders:
+    - genderKey: 1
+      textures:
+      - index: 0
+        displayId: 10301000
+        name: darkelfmanbody1
+        desc: "\u6697\u7CBE\u7075\u7537\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: 738057217998a1440a0f7e23d0897b8c, type: 3}
+      - index: 1
+        displayId: 10301001
+        name: darkelfmanbody2
+        desc: "\u6697\u7CBE\u7075\u7537\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: 80bab05b9d3c913449fd37a633ea1e1a, type: 3}
+      - index: 2
+        displayId: 10301002
+        name: darkelfmanbody3
+        desc: "\u6697\u7CBE\u7075\u7537\u8EAB\u67503"
+        texture: {fileID: 2800000, guid: f01d97d68294b464c92e02c4b7d4c725, type: 3}
+      - index: 3
+        displayId: 10301003
+        name: darkelfmanbody4
+        desc: "\u6697\u7CBE\u7075\u7537\u8EAB\u67504"
+        texture: {fileID: 2800000, guid: deaa922d243b2a64aaba11ece2ed1ca8, type: 3}
+    - genderKey: 2
+      textures:
+      - index: 0
+        displayId: 10302000
+        name: darkelffemalebody1
+        desc: "\u6697\u7CBE\u7075\u5973\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: dfc3ea07470f0ef4daaec6530f46799c, type: 3}
+      - index: 1
+        displayId: 10302001
+        name: darkelffemalebody2
+        desc: "\u6697\u7CBE\u7075\u5973\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: 79944b5d804c43c42a9bf7a8a904b310, type: 3}
+      - index: 2
+        displayId: 10302002
+        name: darkelffemalebody3
+        desc: "\u6697\u7CBE\u7075\u5973\u8EAB\u67503"
+        texture: {fileID: 2800000, guid: d99ea8c72a2abab4281d02a4d1c65d4f, type: 3}
+  - raceKey: 4
+    genders:
+    - genderKey: 1
+      textures:
+      - index: 0
+        displayId: 10401000
+        name: wolfmanbody1
+        desc: "\u72FC\u4EBA\u7537\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: 1a96d49c17983764a9a4d8b80bc4304d, type: 3}
+      - index: 1
+        displayId: 10401001
+        name: wolfmanbody2
+        desc: "\u72FC\u4EBA\u7537\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: 24bb11c08d32a8847851344cf2298145, type: 3}
+    - genderKey: 2
+      textures:
+      - index: 0
+        displayId: 10402000
+        name: wolffamalebody1
+        desc: "\u72FC\u4EBA\u5973\u8EAB\u67501"
+        texture: {fileID: 2800000, guid: 44be7e5c3ae959f41b78c8b31dbc2111, type: 3}
+      - index: 1
+        displayId: 10402001
+        name: wolffamalebody2
+        desc: "\u72FC\u4EBA\u5973\u8EAB\u67502"
+        texture: {fileID: 2800000, guid: dc3a467e3d77b2c40930452951b973b9, type: 3}

@@ -135,10 +135,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UILogin
       objectReference: {fileID: 0}
-    - target: {fileID: 1386170326414932, guid: 9f6d9adc6f537764fa0fea29671e77bf, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 224438795553994780, guid: 9f6d9adc6f537764fa0fea29671e77bf,
         type: 3}
       propertyPath: m_Pivot.x
@@ -380,6 +376,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIHelp
       objectReference: {fileID: 0}
+    - target: {fileID: 1386170326414932, guid: c54e8d9624286b24fa23519e5df2ed0a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 224438795553994780, guid: c54e8d9624286b24fa23519e5df2ed0a,
         type: 3}
       propertyPath: m_Pivot.x
@@ -552,6 +552,11 @@ PrefabInstance:
     - target: {fileID: 2048672832556206749, guid: 76d0be5e960228f4c80649e53595571b,
         type: 3}
       propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2460021739149181874, guid: 76d0be5e960228f4c80649e53595571b,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5025905358082330248, guid: 76d0be5e960228f4c80649e53595571b,

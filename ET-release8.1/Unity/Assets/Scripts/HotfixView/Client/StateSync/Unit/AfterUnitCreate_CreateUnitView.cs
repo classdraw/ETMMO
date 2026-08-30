@@ -90,8 +90,7 @@ namespace ET.Client
             //unit.AddComponent<AnimatorComponent>();
             unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
-            //Avatar2DComponent avatar2D = unit.AddComponent<Avatar2DComponent,GameObject>(go);
-            
+
             if (isMainPlayerUnit)
             {
                 EventSystem.Instance.Publish(scene.Root(), new MainPlayerUnitViewCreate { Unit = unit });

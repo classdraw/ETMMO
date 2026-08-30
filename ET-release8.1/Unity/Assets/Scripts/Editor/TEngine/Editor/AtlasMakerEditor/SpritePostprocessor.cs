@@ -10,6 +10,16 @@ namespace TEngine.Editor
 
     public class SpritePostprocessor : AssetPostprocessor
     {
+        /// <summary>
+        /// 批量导入期间暂停图集后处理，避免 SaveAndReimport 与 meta 写入冲突。
+        /// </summary>
+        public static bool SuspendAutoProcess;
+
+        /// <summary>
+        /// 额外跳过判定。返回 true 时不处理该资源（例如已被资源配置模板接管）。
+        /// </summary>
+        public static Func<string, bool> ExtraSkipPredicate;
+
         private static List<string> m_resourcesToDelete = new List<string>();
 
         private static void OnPostprocessAllAssets(
@@ -18,6 +28,11 @@ namespace TEngine.Editor
             string[] movedAssets,
             string[] movedFromAssetPaths)
         {
+            if (SuspendAutoProcess)
+            {
+                return;
+            }
+
             m_resourcesToDelete.Clear();
             var config = AtlasConfiguration.Instance;
 
@@ -228,6 +243,7 @@ namespace TEngine.Editor
 
             if (!CheckIsShowProcessPath(assetPath)) return false;
             if (CheckIsExcludeFolder(assetPath)) return false;
+            if (ExtraSkipPredicate != null && ExtraSkipPredicate(assetPath)) return false;
 
             if (!IsValidImageFile(assetPath)) return false;
 

@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f3a2c1b9e8d4f6a5b0c3d2e1f4a5b6c, type: 3}
+  m_Name: BaseAnimLogicConfig
+  m_EditorClassIdentifier: 
+  gridRows: 21
+  gridColumns: 13
+  clips:
+  - animType: 1
+    rowDown: 10
+    rowLeft: 11
+    rowRight: 9
+    rowUp: 12
+    startColumn: 9
+    endColumn: 10
+    loop: 1
+    interval: 0.2
+  - animType: 2
+    rowDown: 10
+    rowLeft: 11
+    rowRight: 9
+    rowUp: 12
+    startColumn: 0
+    endColumn: 0
+    loop: 1
+    interval: 0.1
+  - animType: 3
+    rowDown: 10
+    rowLeft: 11
+    rowRight: 9
+    rowUp: 12
+    startColumn: 1
+    endColumn: 8
+    loop: 1
+    interval: 0.1
+  - animType: 5
+    rowDown: 2
+    rowLeft: 3
+    rowRight: 1
+    rowUp: 4
+    startColumn: 0
+    endColumn: 12
+    loop: 1
+    interval: 0.1
+  - animType: 6
+    rowDown: 18
+    rowLeft: 19
+    rowRight: 17
+    rowUp: 20
+    startColumn: 0
+    endColumn: 6
+    loop: 1
+    interval: 0.1

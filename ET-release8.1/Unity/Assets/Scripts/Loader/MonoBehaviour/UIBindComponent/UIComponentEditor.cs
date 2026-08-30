@@ -12,12 +12,22 @@ namespace GameLogic
         [SerializeField, HideInInspector] private bool isGenImpClass;
         [SerializeField, HideInInspector] private string uiType;
 
+        public void AddReference(Object reference)
+        {
+            if (m_components != null && reference != null && !m_components.Contains(reference))
+            {
+                m_components.Add(reference);
+            }
+        }
+
         public void AddComponent(Component component)
         {
-            if (m_components != null && !m_components.Contains(component))
-            {
-                m_components.Add(component);
-            }
+            AddReference(component);
+        }
+
+        public void AddGameObject(GameObject gameObject)
+        {
+            AddReference(gameObject);
         }
 
         public void Clear()
