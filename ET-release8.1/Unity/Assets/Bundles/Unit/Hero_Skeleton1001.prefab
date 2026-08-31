@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 7544418863144140532}
   - component: {fileID: 1680531363232451883}
   - component: {fileID: 6997465382960034209}
+  - component: {fileID: 8018114030980952486}
   m_Layer: 0
   m_Name: Hero_Skeleton1001
   m_TagString: Untagged
@@ -259,6 +260,19 @@ MonoBehaviour:
   targetRenderer: {fileID: 6363882612368945368}
   defaultAnim: 1
   defaultFacing: 0
+--- !u!114 &8018114030980952486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7153520222090993161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a515b11ea6dd3940a580a32487d05fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animPlayer: {fileID: 6997465382960034209}
 --- !u!1 &8181212596008542183
 GameObject:
   m_ObjectHideFlags: 0

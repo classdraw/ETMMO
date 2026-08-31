@@ -19,6 +19,12 @@ namespace ET
         [Tooltip("描述，导出到 ExternalDisplayConfig 的 Desc 列")]
         public string desc;
 
+        [Tooltip("体型 Key，Body 部位表示身材；导出到 ExternalDisplayConfig 的 BodyType 列")]
+        public int bodyType;
+
+        [Tooltip("是否限制体型，0 表示不限制；非 0 时须与角色 Body 的 bodyType 一致（看 BodyType 列）")]
+        public int needBodyType;
+
         [Tooltip("贴图引用")]
         public Texture2D texture;
     }

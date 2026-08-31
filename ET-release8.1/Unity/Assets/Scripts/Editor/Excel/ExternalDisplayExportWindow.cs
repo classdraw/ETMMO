@@ -78,7 +78,10 @@ namespace ET
                             genderGroup.genderKey,
                             raceGroup.raceKey,
                             name,
-                            entry.desc));
+                            entry.desc,
+                            config.partKey,
+                            entry.bodyType,
+                            entry.needBodyType));
                     }
                 }
             }
@@ -87,7 +90,7 @@ namespace ET
 
     public class ExternalDisplayExportWindow : EditorWindow
     {
-        private const string DefaultFolderPath = "Assets/Bundles/ScriptObject/FrameRole";
+        private const string DefaultFolderPath = "Assets/Bundles/ScriptObject";
 
         [SerializeField] private string sourceFolder = DefaultFolderPath;
         [SerializeField] private DefaultAsset excelAsset;
@@ -117,7 +120,7 @@ namespace ET
             EditorGUILayout.LabelField("外显导出 Excel", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 "拖入包含 FrameRoleTextureConfig 的文件夹，导出到 ExternalDisplayConfig.xlsx。\n" +
-                "新增 DisplayId 会追加行；已存在的 DisplayId 会更新 Gender / Race / Name / Desc 等字段（Id 不变）。",
+                "新增 DisplayId 会追加行；已存在的 DisplayId 会更新 Gender / Race / Name / PartKey / BodyType / NeedBodyType / Desc 等字段（Id 不变）。",
                 MessageType.Info);
 
             EditorGUILayout.Space(6);

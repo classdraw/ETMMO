@@ -22,11 +22,15 @@ MonoBehaviour:
         displayId: 50001000
         name: manpants1
         desc: "\u7537\u88E4\u5B501"
+        bodyType: 0
+        needBodyType: 1
         texture: {fileID: 2800000, guid: 47ab4c69839a5eb45b2fc672a74822f6, type: 3}
       - index: 1
         displayId: 50001001
         name: manpants2
         desc: "\u7537\u88E4\u5B502"
+        bodyType: 1
+        needBodyType: 1
         texture: {fileID: 2800000, guid: 4b129d5766bbd534d9c5b08f61de91e4, type: 3}
     - genderKey: 2
       textures:
@@ -34,9 +38,13 @@ MonoBehaviour:
         displayId: 50002000
         name: femalepants1
         desc: "\u5973\u88E4\u5B501"
+        bodyType: 0
+        needBodyType: 1
         texture: {fileID: 2800000, guid: d9e8a17c172568649891c90160e29358, type: 3}
       - index: 1
         displayId: 50002001
         name: femalepants2
         desc: "\u5973\u88E4\u5B502"
+        bodyType: 1
+        needBodyType: 1
         texture: {fileID: 2800000, guid: 0dd200cfdb701c94b9db85fdf309be8c, type: 3}

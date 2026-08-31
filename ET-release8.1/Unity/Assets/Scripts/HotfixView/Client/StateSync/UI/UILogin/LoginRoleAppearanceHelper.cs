@@ -16,11 +16,16 @@ namespace ET.Client
 
         public static void ValidatePartSelections(RoleTextureComponent roleTex, ref LoginRoleAppearance appearance)
         {
-            appearance.BodyDisplayId = FixPartDisplayId(roleTex, FrameRolePartType.Body, appearance.Race, appearance.Gender, appearance.BodyDisplayId);
-            appearance.HeadDisplayId = FixPartDisplayId(roleTex, FrameRolePartType.Head, appearance.Race, appearance.Gender, appearance.HeadDisplayId);
-            appearance.TailDisplayId = FixPartDisplayId(roleTex, FrameRolePartType.Tail, appearance.Race, appearance.Gender, appearance.TailDisplayId);
-            appearance.ShirtDisplayId = FixPartDisplayId(roleTex, FrameRolePartType.Shirt, appearance.Race, appearance.Gender, appearance.ShirtDisplayId);
-            appearance.PantsDisplayId = FixPartDisplayId(roleTex, FrameRolePartType.Pants, appearance.Race, appearance.Gender, appearance.PantsDisplayId);
+            appearance.BodyDisplayId = FixPartDisplayId(
+                roleTex, FrameRolePartType.Body, appearance.Race, appearance.Gender, appearance.BodyDisplayId, appearance.BodyDisplayId);
+            appearance.HeadDisplayId = FixPartDisplayId(
+                roleTex, FrameRolePartType.Head, appearance.Race, appearance.Gender, appearance.HeadDisplayId, appearance.BodyDisplayId);
+            appearance.TailDisplayId = FixPartDisplayId(
+                roleTex, FrameRolePartType.Tail, appearance.Race, appearance.Gender, appearance.TailDisplayId, appearance.BodyDisplayId);
+            appearance.ShirtDisplayId = FixPartDisplayId(
+                roleTex, FrameRolePartType.Shirt, appearance.Race, appearance.Gender, appearance.ShirtDisplayId, appearance.BodyDisplayId);
+            appearance.PantsDisplayId = FixPartDisplayId(
+                roleTex, FrameRolePartType.Pants, appearance.Race, appearance.Gender, appearance.PantsDisplayId, appearance.BodyDisplayId);
         }
 
         public static void CycleRace(RoleTextureComponent roleTex, ref LoginRoleAppearance appearance, int delta)
@@ -56,19 +61,34 @@ namespace ET.Client
         public static void CyclePart(RoleTextureComponent roleTex, ref LoginRoleAppearance appearance, FrameRolePartType part, int delta)
         {
             int current = GetPartDisplayId(ref appearance, part);
-            List<int> ids = roleTex.GetPartDisplayIds(part, appearance.Race, appearance.Gender);
+            List<int> ids = roleTex.GetPartDisplayIds(part, appearance.Race, appearance.Gender, appearance.BodyDisplayId);
             if (ids.Count == 0)
             {
                 SetPartDisplayId(ref appearance, part, 0);
+                if (part == FrameRolePartType.Body)
+                {
+                    ValidatePartSelections(roleTex, ref appearance);
+                }
+
                 return;
             }
 
             SetPartDisplayId(ref appearance, part, CycleValue(ids, current, delta));
+            if (part == FrameRolePartType.Body)
+            {
+                ValidatePartSelections(roleTex, ref appearance);
+            }
         }
 
-        private static int FixPartDisplayId(RoleTextureComponent roleTex, FrameRolePartType part, int race, int gender, int currentDisplayId)
+        private static int FixPartDisplayId(
+            RoleTextureComponent roleTex,
+            FrameRolePartType part,
+            int race,
+            int gender,
+            int currentDisplayId,
+            int bodyDisplayId)
         {
-            List<int> ids = roleTex.GetPartDisplayIds(part, race, gender);
+            List<int> ids = roleTex.GetPartDisplayIds(part, race, gender, bodyDisplayId);
             if (ids.Count == 0)
             {
                 return 0;

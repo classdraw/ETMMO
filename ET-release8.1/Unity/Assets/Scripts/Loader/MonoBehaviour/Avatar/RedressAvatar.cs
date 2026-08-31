@@ -17,7 +17,25 @@ namespace ET
         [SerializeField]
         private FrameSheetAnimPlayer animPlayer;
 
-        private Material runtimeMaterial;
+        private MaterialPropertyBlock propertyBlock;
+
+        // 1x1 占位图：SR_Character 通过 texelSize 判断该层是否生效，1x1 时 AssignedMapMask=0。
+        private static Texture2D s_EmptyPartTexture;
+
+        private static Texture2D EmptyPartTexture
+        {
+            get
+            {
+                if (s_EmptyPartTexture == null)
+                {
+                    s_EmptyPartTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+                    s_EmptyPartTexture.SetPixel(0, 0, Color.clear);
+                    s_EmptyPartTexture.Apply(false, true);
+                }
+
+                return s_EmptyPartTexture;
+            }
+        }
 
         private void Awake()
         {
@@ -35,21 +53,16 @@ namespace ET
                 return;
             }
 
-            this.EnsureRuntimeMaterial(renderer);
+            this.EnsurePropertyBlock();
+            renderer.GetPropertyBlock(this.propertyBlock);
 
-            if (body != null)
-            {
-                this.runtimeMaterial.SetTexture(BodyMapId, body);
-            }
+            SetPartTexture(this.propertyBlock, BodyMapId, body, optional: false);
+            SetPartTexture(this.propertyBlock, HeadMapId, head, optional: false);
+            SetPartTexture(this.propertyBlock, TailMapId, tail, optional: true);
+            SetPartTexture(this.propertyBlock, EquipMap1Id, shirt, optional: true);
+            SetPartTexture(this.propertyBlock, EquipMap2Id, pants, optional: true);
 
-            if (head != null)
-            {
-                this.runtimeMaterial.SetTexture(HeadMapId, head);
-            }
-
-            this.runtimeMaterial.SetTexture(TailMapId, tail);
-            this.runtimeMaterial.SetTexture(EquipMap1Id, shirt);
-            this.runtimeMaterial.SetTexture(EquipMap2Id, pants);
+            renderer.SetPropertyBlock(this.propertyBlock);
 
             this.ReplayAnimation();
         }
@@ -80,11 +93,25 @@ namespace ET
             return this.GetComponentInChildren<Renderer>();
         }
 
-        private void EnsureRuntimeMaterial(Renderer renderer)
+        private void EnsurePropertyBlock()
         {
-            if (this.runtimeMaterial == null)
+            if (this.propertyBlock == null)
             {
-                this.runtimeMaterial = renderer.material;
+                this.propertyBlock = new MaterialPropertyBlock();
+            }
+        }
+
+        private static void SetPartTexture(MaterialPropertyBlock block, int propertyId, Texture2D texture, bool optional)
+        {
+            if (texture != null)
+            {
+                block.SetTexture(propertyId, texture);
+                return;
+            }
+
+            if (optional)
+            {
+                block.SetTexture(propertyId, EmptyPartTexture);
             }
         }
     }

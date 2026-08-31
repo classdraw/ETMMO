@@ -25,6 +25,42 @@ namespace ET.Client
             return MatchesRace(encodedRace, race) && MatchesGender(encodedGender, gender);
         }
 
+        private static bool MatchesNeedBodyType(FrameRoleTextureEntry entry, int characterBodyType, FrameRolePartType part)
+        {
+            if (part == FrameRolePartType.Body || entry == null || entry.needBodyType <= 0)
+            {
+                return true;
+            }
+
+            return entry.bodyType == characterBodyType;
+        }
+
+        public static bool TryGetEntry(this RoleTextureComponent self, int displayId, out FrameRoleTextureEntry entry)
+        {
+            entry = null;
+            if (displayId <= 0 || !FrameRoleTextureId.TryDecode(displayId, out int partKey, out _, out _, out _))
+            {
+                return false;
+            }
+
+            if (!self.RoleTextureConfigs.TryGetValue((FrameRolePartType)partKey, out FrameRoleTextureConfig config))
+            {
+                return false;
+            }
+
+            return config.TryGetEntry(displayId, out entry);
+        }
+
+        public static int GetCharacterBodyType(this RoleTextureComponent self, int bodyDisplayId)
+        {
+            if (!self.TryGetEntry(bodyDisplayId, out FrameRoleTextureEntry bodyEntry))
+            {
+                return 0;
+            }
+
+            return bodyEntry.bodyType;
+        }
+
         public static bool TryGetTexture(this RoleTextureComponent self, int displayId, out Texture2D texture)
         {
             texture = null;
@@ -41,13 +77,20 @@ namespace ET.Client
             return config.TryGetTexture(displayId, out texture);
         }
 
-        public static List<int> GetPartDisplayIds(this RoleTextureComponent self, FrameRolePartType part, int race, int gender)
+        public static List<int> GetPartDisplayIds(
+            this RoleTextureComponent self,
+            FrameRolePartType part,
+            int race,
+            int gender,
+            int bodyDisplayId = 0)
         {
             List<int> result = new List<int>();
             if (!self.RoleTextureConfigs.TryGetValue(part, out FrameRoleTextureConfig config) || config.races == null)
             {
                 return result;
             }
+
+            int characterBodyType = part == FrameRolePartType.Body ? 0 : self.GetCharacterBodyType(bodyDisplayId);
 
             for (int r = 0; r < config.races.Count; r++)
             {
@@ -68,7 +111,9 @@ namespace ET.Client
                     for (int i = 0; i < genderGroup.textures.Count; i++)
                     {
                         FrameRoleTextureEntry entry = genderGroup.textures[i];
-                        if (entry != null && MatchesEncodedRaceGender(entry.displayId, race, gender))
+                        if (entry != null
+                            && MatchesEncodedRaceGender(entry.displayId, race, gender)
+                            && MatchesNeedBodyType(entry, characterBodyType, part))
                         {
                             result.Add(entry.displayId);
                         }
@@ -117,14 +162,31 @@ namespace ET.Client
             return displayId.ToString();
         }
 
-        public static bool IsPartDisplayValid(this RoleTextureComponent self, FrameRolePartType part, int displayId, int race, int gender)
+        public static bool IsPartDisplayValid(
+            this RoleTextureComponent self,
+            FrameRolePartType part,
+            int displayId,
+            int race,
+            int gender,
+            int bodyDisplayId = 0)
         {
             if (displayId <= 0 || !MatchesEncodedRaceGender(displayId, race, gender))
             {
                 return false;
             }
 
-            List<int> ids = self.GetPartDisplayIds(part, race, gender);
+            if (!self.TryGetEntry(displayId, out FrameRoleTextureEntry entry))
+            {
+                return false;
+            }
+
+            int characterBodyType = part == FrameRolePartType.Body ? 0 : self.GetCharacterBodyType(bodyDisplayId);
+            if (!MatchesNeedBodyType(entry, characterBodyType, part))
+            {
+                return false;
+            }
+
+            List<int> ids = self.GetPartDisplayIds(part, race, gender, bodyDisplayId);
             return ids.Contains(displayId);
         }
 
