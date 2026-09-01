@@ -4,7 +4,7 @@ namespace ET.Client
 {
     public static class UILoginRolePreviewHelper
     {
-        public static void ApplyPreview(FrameSheetAnimPlayer player, RoleTextureComponent roleTex, LoginRoleAppearance appearance)
+        public static void ApplyPreview(FrameSheetAnimPlayer player, RoleTextureComponent roleTex, ExternalDisplayAppearance appearance)
         {
             if (player == null || roleTex == null)
             {

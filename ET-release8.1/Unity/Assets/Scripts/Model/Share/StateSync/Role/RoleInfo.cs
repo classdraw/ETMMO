@@ -19,7 +19,7 @@ namespace ET
         
         
         //avatar数据
-        public int ConfigId;//对应UnitConfig配置表id
+        public string BaseExternalDisplay;
 
     }
 }

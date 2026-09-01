@@ -1,7 +1,9 @@
-namespace ET.Client
+namespace ET
 {
-    /// <summary>创角界面一侧的外显选择状态（displayId 来自 RoleTextureComponent）。</summary>
-    public struct LoginRoleAppearance
+    /// <summary>
+    /// 角色外显各部位 displayId 选择状态。
+    /// </summary>
+    public struct ExternalDisplayAppearance
     {
         public int Race;
         public int Gender;

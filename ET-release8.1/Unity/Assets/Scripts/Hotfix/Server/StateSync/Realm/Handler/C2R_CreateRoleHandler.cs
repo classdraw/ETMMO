@@ -52,7 +52,14 @@ namespace ET.Server
                 roleInfo.CreateTime = nowTime;
                 roleInfo.LastLoginTime = 0;
                 roleInfo.Name = request.Name;
-                roleInfo.ConfigId = request.ConfigId;
+                string baseExternalDisplay = request.BaseExternalDisplay ?? string.Empty;
+                if (!ExternalDisplayConfigHelper.IsExternalDisplayValid(baseExternalDisplay))
+                {
+                    response.Error = ErrorCode.ERR_ExternalDisplayInvalid;
+                    return;
+                }
+
+                roleInfo.BaseExternalDisplay = baseExternalDisplay;
 
                 await dbComponent.Save<RoleInfo>(roleInfo);
                     

@@ -7,24 +7,22 @@ namespace ET
         [EntitySystem]
         private static void Awake(this RoleInfo self)
         {
-            
         }
 
-        public static void FromMessage(this RoleInfo self,RoleInfoProto roleInfoProto)
+        public static void FromMessage(this RoleInfo self, RoleInfoProto roleInfoProto)
         {
-            //这里不需要id 因为entity有自己的id逻辑
             self.Name = roleInfoProto.Name;
             self.State = roleInfoProto.State;
             self.AccountName = roleInfoProto.AccountName;
             self.LastLoginTime = roleInfoProto.LastLoginTime;
             self.CreateTime = roleInfoProto.CreateTime;
             self.ServerId = roleInfoProto.ServerId;
-            self.ConfigId = roleInfoProto.ConfigId;
+            self.BaseExternalDisplay = roleInfoProto.BaseExternalDisplay;
         }
 
         public static RoleInfoProto ToMessage(this RoleInfo self)
         {
-            var roleInfoProto = RoleInfoProto.Create();
+            RoleInfoProto roleInfoProto = RoleInfoProto.Create();
             roleInfoProto.Id = self.Id;
             roleInfoProto.Name = self.Name;
             roleInfoProto.State = self.State;
@@ -32,10 +30,9 @@ namespace ET
             roleInfoProto.LastLoginTime = self.LastLoginTime;
             roleInfoProto.CreateTime = self.CreateTime;
             roleInfoProto.ServerId = self.ServerId;
-            roleInfoProto.ConfigId = self.ConfigId;
+            roleInfoProto.BaseExternalDisplay = self.BaseExternalDisplay;
 
             return roleInfoProto;
         }
     }
 }
-

@@ -99,6 +99,9 @@ namespace ET.Server
             unitInfo.UnitId = unit.Id;
             unitInfo.Name = unit.Name;
             unitInfo.ConfigId = unit.ConfigId;
+            unitInfo.BaseExternalDisplay = unit.BaseExternalDisplay ?? string.Empty;
+            unitInfo.Race = unit.Race;
+            unitInfo.Gender = unit.Gender;
             unitInfo.Type = (int)unit.Type();
             unitInfo.OwnerId = unit.OwnerId;
             unitInfo.TeamId = unit.TeamId;

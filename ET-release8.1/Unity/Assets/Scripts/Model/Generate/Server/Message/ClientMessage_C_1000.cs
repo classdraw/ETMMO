@@ -114,7 +114,7 @@ namespace ET
         public string GateAddress { get; set; }
 
         [MemoryPackOrder(5)]
-        public int ConfigId { get; set; }
+        public string BaseExternalDisplay { get; set; }
 
         [MemoryPackOrder(6)]
         public string Name { get; set; }
@@ -131,7 +131,7 @@ namespace ET
             this.RealmKey = default;
             this.RoleId = default;
             this.GateAddress = default;
-            this.ConfigId = default;
+            this.BaseExternalDisplay = default;
             this.Name = default;
 
             ObjectPool.Instance.Recycle(this);

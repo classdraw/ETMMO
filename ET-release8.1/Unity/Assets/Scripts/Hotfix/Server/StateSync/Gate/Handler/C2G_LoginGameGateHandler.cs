@@ -62,7 +62,8 @@ namespace ET.Server
                     //playerSessionComponent 可以网络消息处理
                     //player也可以网络消息处理 只是处理消息类型不同
                     //player的id和player的unitId一样
-                    player = playerComponent.AddChildWithId<Player, string,int,string>(request.RoleId,account,request.ConfigId,request.Name);
+                    player = playerComponent.AddChildWithId<Player, string, string, string>(
+                        request.RoleId, account, request.BaseExternalDisplay ?? string.Empty, request.Name);
                     player.UnitId = request.RoleId;
                     
                     playerComponent.Add(player);
@@ -84,6 +85,9 @@ namespace ET.Server
                 }
                 else
                 {
+                    player.Name = request.Name;
+                    player.BaseExternalDisplay = request.BaseExternalDisplay ?? string.Empty;
+                    player.SyncProfileFromExternalDisplay();
                     //这里是第二次登陆
                     player.RemoveComponent<PlayerOfflineOutTimeComponent>();//离线就需要增加这个组件
                     

@@ -272,6 +272,15 @@ namespace ET
         [MemoryPackOrder(11)]
         public int MapId { get; set; }
 
+        [MemoryPackOrder(12)]
+        public string BaseExternalDisplay { get; set; }
+
+        [MemoryPackOrder(13)]
+        public int Race { get; set; }
+
+        [MemoryPackOrder(14)]
+        public int Gender { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -291,6 +300,9 @@ namespace ET
             this.KV.Clear();
             this.MoveInfo = default;
             this.MapId = default;
+            this.BaseExternalDisplay = default;
+            this.Race = default;
+            this.Gender = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1147,7 +1159,7 @@ namespace ET
         public int ServerId { get; set; }
 
         [MemoryPackOrder(7)]
-        public int ConfigId { get; set; }
+        public string BaseExternalDisplay { get; set; }
 
         public override void Dispose()
         {
@@ -1163,7 +1175,7 @@ namespace ET
             this.LastLoginTime = default;
             this.CreateTime = default;
             this.ServerId = default;
-            this.ConfigId = default;
+            this.BaseExternalDisplay = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1276,7 +1288,7 @@ namespace ET
         public int ServerId { get; set; }
 
         [MemoryPackOrder(5)]
-        public int ConfigId { get; set; }
+        public string BaseExternalDisplay { get; set; }
 
         public override void Dispose()
         {
@@ -1290,7 +1302,7 @@ namespace ET
             this.AccountName = default;
             this.Name = default;
             this.ServerId = default;
-            this.ConfigId = default;
+            this.BaseExternalDisplay = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1762,10 +1774,10 @@ namespace ET
         public long RoleId { get; set; }
 
         /// <summary>
-        /// 初始角色配置id
+        /// 角色外显
         /// </summary>
         [MemoryPackOrder(4)]
-        public int ConfigId { get; set; }
+        public string BaseExternalDisplay { get; set; }
 
         /// <summary>
         /// 角色名字
@@ -1784,7 +1796,7 @@ namespace ET
             this.Key = default;
             this.AccountName = default;
             this.RoleId = default;
-            this.ConfigId = default;
+            this.BaseExternalDisplay = default;
             this.Name = default;
 
             ObjectPool.Instance.Recycle(this);
@@ -3319,13 +3331,13 @@ namespace ET
         public List<int> CastConfigIds { get; set; } = new();
 
         /// <summary>
-        /// 技能cd
+        /// 技能cd结束时间
         /// </summary>
         [MemoryPackOrder(1)]
         public List<long> CoolDownTimes { get; set; } = new();
 
         /// <summary>
-        /// 技能开始时间
+        /// 技能cd开始时间
         /// </summary>
         [MemoryPackOrder(2)]
         public List<long> CoolDownStartTimes { get; set; } = new();

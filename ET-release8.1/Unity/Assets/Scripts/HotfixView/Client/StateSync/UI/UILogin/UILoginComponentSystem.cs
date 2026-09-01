@@ -135,12 +135,13 @@ namespace ET.Client
 			self.m_goUIRoleRight = m_bindComponent.GetGameObject(69);
 			self.m_playerUIRoleLeft = self.m_goUIRoleLeft != null ? self.m_goUIRoleLeft.GetComponent<FrameSheetAnimPlayer>() : null;
 			self.m_playerUIRoleRight = self.m_goUIRoleRight != null ? self.m_goUIRoleRight.GetComponent<FrameSheetAnimPlayer>() : null;
+			DisableCreateRolePreviewRaycast(self);
 
 			RoleTextureComponent roleTex = self.RoleTextures();
 			if (roleTex != null)
 			{
-				LoginRoleAppearanceHelper.InitDefault(roleTex, ref self.LeftAppearance);
-				LoginRoleAppearanceHelper.InitDefault(roleTex, ref self.RightAppearance);
+				roleTex.InitDefaultAppearance(ref self.LeftAppearance);
+				roleTex.InitDefaultAppearance(ref self.RightAppearance);
 			}
 
 			self.m_loopListVerticalScroll.OnItemRefresh.RemoveAllListeners();
@@ -189,16 +190,6 @@ namespace ET.Client
 
 		public static void OnLeftTran(this UILoginComponent self)
 		{
-			if (self.IsDisposed)
-			{
-				return;
-			}
-
-			int cur = self.PendingCreateLeftConfigId == 0
-				? DefaultAvatarHelper.GetDefaultRoleUnitConfigId()
-				: self.PendingCreateLeftConfigId;
-			self.PendingCreateLeftConfigId = DefaultAvatarHelper.NextRoleUnitConfigId(cur);
-			self.UpdateLeftModelBaseAvatarText();
 		}
 
 		public static void OnLeftDelete(this UILoginComponent self)
@@ -218,16 +209,6 @@ namespace ET.Client
 
 		public static void OnRightTran(this UILoginComponent self)
 		{
-			if (self.IsDisposed)
-			{
-				return;
-			}
-
-			int cur = self.PendingCreateRightConfigId == 0
-				? DefaultAvatarHelper.GetDefaultRoleUnitConfigId()
-				: self.PendingCreateRightConfigId;
-			self.PendingCreateRightConfigId = DefaultAvatarHelper.NextRoleUnitConfigId(cur);
-			self.UpdateRightModelBaseAvatarText();
 		}
 
 		public static void OnRightDelete(this UILoginComponent self)
@@ -381,12 +362,12 @@ namespace ET.Client
 				return;
 			}
 
-			if (self.PendingCreateLeftConfigId == 0)
-			{
-				self.PendingCreateLeftConfigId = DefaultAvatarHelper.GetDefaultRoleUnitConfigId();
-			}
+			RoleTextureComponent roleTex = self.RoleTextures();
+			string baseExternalDisplay = roleTex != null
+				? ExternalDisplayHelper.ToExternalDisplayString(self.LeftAppearance)
+				: string.Empty;
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateLeftConfigId);
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, baseExternalDisplay);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftCreate");
@@ -419,12 +400,12 @@ namespace ET.Client
 				return;
 			}
 
-			if (self.PendingCreateRightConfigId == 0)
-			{
-				self.PendingCreateRightConfigId = DefaultAvatarHelper.GetDefaultRoleUnitConfigId();
-			}
+			RoleTextureComponent roleTex = self.RoleTextures();
+			string baseExternalDisplay = roleTex != null
+				? ExternalDisplayHelper.ToExternalDisplayString(self.RightAppearance)
+				: string.Empty;
 
-			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, self.PendingCreateRightConfigId);
+			LoginOperationResult result = await LoginHelper.LoginCreateRole(self.Root(), roleName, baseExternalDisplay);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightCreate");
@@ -501,9 +482,9 @@ namespace ET.Client
 			}
 
 			long roleId = roles.RoleInfoList[0].Id;
-			int configId = roles.RoleInfoList[0].ConfigId;
+			string baseExternalDisplay = roles.RoleInfoList[0].BaseExternalDisplay;
 			string name = roles.RoleInfoList[0].Name;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId,name);
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, baseExternalDisplay, name);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnLeftEnter");
@@ -525,9 +506,9 @@ namespace ET.Client
 			}
 
 			long roleId = roles.RoleInfoList[1].Id;
-			int configId = roles.RoleInfoList[1].ConfigId;
+			string baseExternalDisplay = roles.RoleInfoList[1].BaseExternalDisplay;
 			string name = roles.RoleInfoList[1].Name;
-			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, configId,name);
+			LoginOperationResult result = await LoginHelper.LoginRoleEnterGame(self.Root(), roleId, baseExternalDisplay, name);
 			if (!result.Ok)
 			{
 				self.HandleLoginOpFailure(result, "OnRightEnter");
@@ -643,7 +624,7 @@ namespace ET.Client
 
 		private static void UpdateLeftAppearanceText(this UILoginComponent self)
 		{
-			LoginRoleAppearance appearance = self.LeftAppearance;
+			ExternalDisplayAppearance appearance = self.LeftAppearance;
 			RoleTextureComponent roleTex = self.RoleTextures();
 
 			if (self.m_textRaceL != null)
@@ -665,7 +646,7 @@ namespace ET.Client
 
 		private static void UpdateRightAppearanceText(this UILoginComponent self)
 		{
-			LoginRoleAppearance appearance = self.RightAppearance;
+			ExternalDisplayAppearance appearance = self.RightAppearance;
 			RoleTextureComponent roleTex = self.RoleTextures();
 
 			if (self.m_textRaceR != null)
@@ -704,10 +685,7 @@ namespace ET.Client
 				return;
 			}
 
-			int configId = self.PendingCreateLeftConfigId == 0
-				? DefaultAvatarHelper.GetDefaultRoleUnitConfigId()
-				: self.PendingCreateLeftConfigId;
-			self.m_textLeftModel.text = configId.ToString();
+			self.m_textLeftModel.text = ExternalDisplayHelper.ToExternalDisplayString(self.LeftAppearance);
 		}
 
 		private static void UpdateRightModelBaseAvatarText(this UILoginComponent self)
@@ -717,10 +695,7 @@ namespace ET.Client
 				return;
 			}
 
-			int configId = self.PendingCreateRightConfigId == 0
-				? DefaultAvatarHelper.GetDefaultRoleUnitConfigId()
-				: self.PendingCreateRightConfigId;
-			self.m_textRightModel.text = configId.ToString();
+			self.m_textRightModel.text = ExternalDisplayHelper.ToExternalDisplayString(self.RightAppearance);
 		}
 
 		private static void CycleLeftAppearanceRace(this UILoginComponent self, int delta)
@@ -731,7 +706,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginRoleAppearanceHelper.CycleRace(roleTex, ref self.LeftAppearance, delta);
+			roleTex.CycleAppearanceRace(ref self.LeftAppearance, delta);
 			self.RefreshLeftRolePreview();
 		}
 
@@ -743,7 +718,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginRoleAppearanceHelper.CycleGender(roleTex, ref self.LeftAppearance, delta);
+			roleTex.CycleAppearanceGender(ref self.LeftAppearance, delta);
 			self.RefreshLeftRolePreview();
 		}
 
@@ -755,7 +730,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginRoleAppearanceHelper.CyclePart(roleTex, ref self.LeftAppearance, part, delta);
+			roleTex.CycleAppearancePart(ref self.LeftAppearance, part, delta);
 			self.RefreshLeftRolePreview();
 		}
 
@@ -767,7 +742,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginRoleAppearanceHelper.CycleRace(roleTex, ref self.RightAppearance, delta);
+			roleTex.CycleAppearanceRace(ref self.RightAppearance, delta);
 			self.RefreshRightRolePreview();
 		}
 
@@ -779,7 +754,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginRoleAppearanceHelper.CycleGender(roleTex, ref self.RightAppearance, delta);
+			roleTex.CycleAppearanceGender(ref self.RightAppearance, delta);
 			self.RefreshRightRolePreview();
 		}
 
@@ -791,7 +766,7 @@ namespace ET.Client
 				return;
 			}
 
-			LoginRoleAppearanceHelper.CyclePart(roleTex, ref self.RightAppearance, part, delta);
+			roleTex.CycleAppearancePart(ref self.RightAppearance, part, delta);
 			self.RefreshRightRolePreview();
 		}
 
@@ -799,12 +774,14 @@ namespace ET.Client
 		{
 			UILoginRolePreviewHelper.ApplyPreview(self.m_playerUIRoleLeft, self.RoleTextures(), self.LeftAppearance);
 			self.UpdateLeftAppearanceText();
+			self.UpdateLeftModelBaseAvatarText();
 		}
 
 		private static void RefreshRightRolePreview(this UILoginComponent self)
 		{
 			UILoginRolePreviewHelper.ApplyPreview(self.m_playerUIRoleRight, self.RoleTextures(), self.RightAppearance);
 			self.UpdateRightAppearanceText();
+			self.UpdateRightModelBaseAvatarText();
 		}
 
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)
@@ -818,6 +795,7 @@ namespace ET.Client
 				self.m_goLeftChoose.SetActive(true);
 				self.m_textLeftTitle.text = "角色1";
 				self.m_inputLeft.gameObject.SetActive(true);
+				EnsureRoleNameInputEditable(self.m_inputLeft);
 				self.RefreshLeftRolePreview();
 			}
 			else
@@ -842,6 +820,7 @@ namespace ET.Client
 				self.m_goRightChoose.SetActive(true);
 				self.m_textRightTitle.text = "角色2";
 				self.m_inputRight.gameObject.SetActive(true);
+				EnsureRoleNameInputEditable(self.m_inputRight);
 				self.RefreshRightRolePreview();
 			}
 			else
@@ -853,6 +832,34 @@ namespace ET.Client
 				self.m_inputRight.gameObject.SetActive(false);
 				self.m_textRightTitle.text = roleInfoProto.Name;
 			}
+		}
+
+		/// <summary>
+		/// 创角页 RawImage 预览层不应拦截 UI 射线，否则会挡住角色名输入框。
+		/// </summary>
+		private static void DisableCreateRolePreviewRaycast(UILoginComponent self)
+		{
+			if (self.m_goObj3 == null)
+			{
+				return;
+			}
+
+			RawImage[] rawImages = self.m_goObj3.GetComponentsInChildren<RawImage>(true);
+			for (int i = 0; i < rawImages.Length; i++)
+			{
+				rawImages[i].raycastTarget = false;
+			}
+		}
+
+		private static void EnsureRoleNameInputEditable(InputField inputField)
+		{
+			if (inputField == null)
+			{
+				return;
+			}
+
+			inputField.interactable = true;
+			inputField.readOnly = false;
 		}
 
 		#endregion

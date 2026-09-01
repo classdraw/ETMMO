@@ -5,34 +5,89 @@ namespace ET.Client
 {
     public static partial class RoleTextureComponentSystem
     {
-        private static bool MatchesRace(int groupRaceKey, int race)
+        private static ExternalDisplayPartIdsQuery CreatePartIdsQuery(this RoleTextureComponent self)
         {
-            return groupRaceKey == 0 || groupRaceKey == race;
+            return (partKey, race, gender, bodyDisplayId) =>
+                self.GetPartDisplayIds((FrameRolePartType)partKey, race, gender, bodyDisplayId);
         }
 
-        private static bool MatchesGender(int groupGenderKey, int gender)
+        private static ExternalDisplayEntryQuery CreateEntryQuery(this RoleTextureComponent self)
         {
-            return groupGenderKey == 0 || groupGenderKey == gender;
-        }
-
-        private static bool MatchesEncodedRaceGender(int displayId, int race, int gender)
-        {
-            if (!FrameRoleTextureId.TryDecode(displayId, out _, out int encodedRace, out int encodedGender, out _))
+            return (int displayId, out ExternalDisplayEntryInfo entryInfo) =>
             {
-                return false;
-            }
+                entryInfo = default;
+                if (!FrameRoleTextureId.TryDecode(displayId, out int partKey, out _, out _, out _))
+                {
+                    return false;
+                }
 
-            return MatchesRace(encodedRace, race) && MatchesGender(encodedGender, gender);
-        }
+                if (!ExternalDisplayConfigHelper.TryGetConfig(displayId, out ExternalDisplayConfig config))
+                {
+                    return false;
+                }
 
-        private static bool MatchesNeedBodyType(FrameRoleTextureEntry entry, int characterBodyType, FrameRolePartType part)
-        {
-            if (part == FrameRolePartType.Body || entry == null || entry.needBodyType <= 0)
-            {
+                entryInfo = new ExternalDisplayEntryInfo
+                {
+                    PartKey = partKey,
+                    BodyType = config.BodyType,
+                    NeedBodyType = config.NeedBodyType,
+                };
                 return true;
-            }
+            };
+        }
 
-            return entry.bodyType == characterBodyType;
+        public static bool IsExternalDisplayValid(this RoleTextureComponent self, string externalDisplay)
+        {
+            return ExternalDisplayHelper.IsExternalDisplayValid(externalDisplay, self.CreatePartIdsQuery());
+        }
+
+        public static ExternalDisplayAppearance CreateDefaultAppearance(this RoleTextureComponent self, int race, int gender, int bodyType)
+        {
+            return ExternalDisplayHelper.CreateDefaultAppearance(
+                race,
+                gender,
+                bodyType,
+                self.CreatePartIdsQuery(),
+                self.CreateEntryQuery());
+        }
+
+        public static string CreateDefaultExternalDisplay(this RoleTextureComponent self, int race, int gender, int bodyType)
+        {
+            return ExternalDisplayHelper.ToExternalDisplayString(self.CreateDefaultAppearance(race, gender, bodyType));
+        }
+
+        public static void InitDefaultAppearance(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance)
+        {
+            ExternalDisplayHelper.InitDefaultAppearance(ref appearance, self.CreatePartIdsQuery());
+        }
+
+        public static void ValidateAppearance(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance)
+        {
+            ExternalDisplayHelper.ValidatePartSelections(ref appearance, self.CreatePartIdsQuery());
+        }
+
+        public static void CycleAppearanceRace(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance, int delta)
+        {
+            ExternalDisplayHelper.CycleRace(
+                ref appearance,
+                delta,
+                () => self.GetAvailableRaces(),
+                race => self.GetAvailableGenders(race),
+                self.CreatePartIdsQuery());
+        }
+
+        public static void CycleAppearanceGender(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance, int delta)
+        {
+            ExternalDisplayHelper.CycleGender(
+                ref appearance,
+                delta,
+                race => self.GetAvailableGenders(race),
+                self.CreatePartIdsQuery());
+        }
+
+        public static void CycleAppearancePart(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance, FrameRolePartType part, int delta)
+        {
+            ExternalDisplayHelper.CyclePart(ref appearance, part, delta, self.CreatePartIdsQuery());
         }
 
         public static bool TryGetEntry(this RoleTextureComponent self, int displayId, out FrameRoleTextureEntry entry)
@@ -53,12 +108,12 @@ namespace ET.Client
 
         public static int GetCharacterBodyType(this RoleTextureComponent self, int bodyDisplayId)
         {
-            if (!self.TryGetEntry(bodyDisplayId, out FrameRoleTextureEntry bodyEntry))
+            if (ExternalDisplayConfigHelper.TryGetConfig(bodyDisplayId, out ExternalDisplayConfig config))
             {
-                return 0;
+                return config.BodyType;
             }
 
-            return bodyEntry.bodyType;
+            return 0;
         }
 
         public static bool TryGetTexture(this RoleTextureComponent self, int displayId, out Texture2D texture)
@@ -95,7 +150,7 @@ namespace ET.Client
             for (int r = 0; r < config.races.Count; r++)
             {
                 FrameRoleRaceGroup raceGroup = config.races[r];
-                if (raceGroup == null || !MatchesRace(raceGroup.raceKey, race) || raceGroup.genders == null)
+                if (raceGroup == null || !ExternalDisplayHelper.MatchesRace(raceGroup.raceKey, race) || raceGroup.genders == null)
                 {
                     continue;
                 }
@@ -103,7 +158,7 @@ namespace ET.Client
                 for (int g = 0; g < raceGroup.genders.Count; g++)
                 {
                     FrameRoleGenderGroup genderGroup = raceGroup.genders[g];
-                    if (genderGroup == null || !MatchesGender(genderGroup.genderKey, gender) || genderGroup.textures == null)
+                    if (genderGroup == null || !ExternalDisplayHelper.MatchesGender(genderGroup.genderKey, gender) || genderGroup.textures == null)
                     {
                         continue;
                     }
@@ -111,9 +166,27 @@ namespace ET.Client
                     for (int i = 0; i < genderGroup.textures.Count; i++)
                     {
                         FrameRoleTextureEntry entry = genderGroup.textures[i];
-                        if (entry != null
-                            && MatchesEncodedRaceGender(entry.displayId, race, gender)
-                            && MatchesNeedBodyType(entry, characterBodyType, part))
+                        if (entry == null)
+                        {
+                            continue;
+                        }
+
+                        int entryBodyType = entry.bodyType;
+                        int entryNeedBodyType = entry.needBodyType;
+                        if (ExternalDisplayConfigHelper.TryGetConfig(entry.displayId, out ExternalDisplayConfig wearConfig))
+                        {
+                            entryBodyType = wearConfig.BodyType;
+                            entryNeedBodyType = wearConfig.NeedBodyType;
+                        }
+
+                        if (ExternalDisplayHelper.CanWearDisplay(
+                                config.partKey,
+                                entry.displayId,
+                                race,
+                                gender,
+                                characterBodyType,
+                                entryBodyType,
+                                entryNeedBodyType))
                         {
                             result.Add(entry.displayId);
                         }
@@ -170,7 +243,7 @@ namespace ET.Client
             int gender,
             int bodyDisplayId = 0)
         {
-            if (displayId <= 0 || !MatchesEncodedRaceGender(displayId, race, gender))
+            if (displayId <= 0 || !ExternalDisplayHelper.MatchesEncodedRaceGender(displayId, race, gender))
             {
                 return false;
             }
@@ -180,8 +253,16 @@ namespace ET.Client
                 return false;
             }
 
+            int entryBodyType = entry.bodyType;
+            int entryNeedBodyType = entry.needBodyType;
+            if (ExternalDisplayConfigHelper.TryGetConfig(displayId, out ExternalDisplayConfig config))
+            {
+                entryBodyType = config.BodyType;
+                entryNeedBodyType = config.NeedBodyType;
+            }
+
             int characterBodyType = part == FrameRolePartType.Body ? 0 : self.GetCharacterBodyType(bodyDisplayId);
-            if (!MatchesNeedBodyType(entry, characterBodyType, part))
+            if (!ExternalDisplayHelper.MatchesNeedBodyType((int)part, entryNeedBodyType, entryBodyType, characterBodyType))
             {
                 return false;
             }
@@ -201,7 +282,7 @@ namespace ET.Client
             for (int r = 0; r < config.races.Count; r++)
             {
                 FrameRoleRaceGroup raceGroup = config.races[r];
-                if (raceGroup == null || !MatchesRace(raceGroup.raceKey, race) || raceGroup.genders == null)
+                if (raceGroup == null || !ExternalDisplayHelper.MatchesRace(raceGroup.raceKey, race) || raceGroup.genders == null)
                 {
                     continue;
                 }
@@ -247,7 +328,7 @@ namespace ET.Client
                     for (int g = 0; g < raceGroup.genders.Count; g++)
                     {
                         int genderKey = raceGroup.genders[g]?.genderKey ?? -1;
-                        if (MatchesGender(genderKey, genderFilter))
+                        if (ExternalDisplayHelper.MatchesGender(genderKey, genderFilter))
                         {
                             hasGender = true;
                             break;

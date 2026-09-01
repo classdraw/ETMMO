@@ -64,6 +64,9 @@ message UnitInfo
 	map<int32, int64> KV = 10;
 	MoveInfo MoveInfo = 11;
 	int32 MapId = 12;
+	string BaseExternalDisplay = 13;
+	int32 Race = 14;
+	int32 Gender = 15;
 }
 
 message M2C_CreateUnits // IMessage
@@ -256,7 +259,7 @@ message RoleInfoProto
 	int64 LastLoginTime = 5;
 	int64 CreateTime = 6;
 	int32 ServerId = 7;
-	int32 ConfigId = 8;
+	string BaseExternalDisplay = 8;
 }
 
 
@@ -288,7 +291,7 @@ message C2R_CreateRole // ISessionRequest
 	string AccountName = 3;
 	string Name = 4;
 	int32 ServerId = 5;
-	int32 ConfigId = 6;
+	string BaseExternalDisplay = 6;
 }
 
 message R2C_CreateRole // ISessionResponse
@@ -403,7 +406,7 @@ message C2G_LoginGameGate // ISessionRequest
 	int64 Key = 2; // realmkey
 	string AccountName = 3; // 帐号
 	int64 RoleId = 4; //角色id
-	int32 ConfigId = 5; //初始角色配置id
+	string BaseExternalDisplay = 5; //角色外显
 	string Name = 6;//角色名字
 }
 

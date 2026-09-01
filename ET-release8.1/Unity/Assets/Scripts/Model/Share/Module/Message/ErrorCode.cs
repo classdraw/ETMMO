@@ -47,6 +47,7 @@ namespace ET
         public const int ERR_TeamNotExist = 200028; //不在队伍中
         public const int ERR_TeamNotInTeam = 200029; //不是该队伍成员
         public const int ERR_TeamNotLeader = 200030; //不是队长
+        public const int ERR_ExternalDisplayInvalid = 200031; //外显配置无效
         
         //技能
         public const int ERR_CastSkillError = 200050;//释放技能失败

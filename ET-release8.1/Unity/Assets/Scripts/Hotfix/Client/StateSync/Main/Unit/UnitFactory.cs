@@ -15,6 +15,9 @@ namespace ET.Client
 	        unit.OwnerId = unitInfo.OwnerId;
 	        unit.TeamId = unitInfo.TeamId;
 	        unit.MapId = unitInfo.MapId;
+	        unit.BaseExternalDisplay = unitInfo.BaseExternalDisplay ?? string.Empty;
+	        unit.Race = unitInfo.Race;
+	        unit.Gender = unitInfo.Gender;
 	        if (unit.MapId == 0)
 	        {
 		        unit.MapId = MapConfigHelper.GetIdByLogicName(currentScene.Name);

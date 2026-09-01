@@ -22,7 +22,7 @@ namespace ET.Client
 
             var rand = new Random();
             
-            await LoginHelper.LoginOld(root, root.Name, "", DefaultAvatarHelper.DefaultRoleUnitConfigId0,"Test"+rand.Next(1000));
+            await LoginHelper.LoginOld(root, root.Name, "", ExternalDisplayHelper.DefaultExternalDisplayVal,"Test"+rand.Next(1000));
             
             await EnterMapHelper.EnterMapAsync(root);
             

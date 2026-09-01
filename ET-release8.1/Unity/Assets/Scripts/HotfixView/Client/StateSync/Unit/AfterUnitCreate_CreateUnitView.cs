@@ -73,12 +73,13 @@ namespace ET.Client
         private async ETTask CreatePlayer(Scene scene, AfterUnitCreate args)
         {
             Unit unit = args.Unit;
+            Log.Info($"AfterUnitCreate_CreateUnitView Player unitId={unit.Id}, name={unit.Name}, configId={unit.ConfigId}, race={unit.Race}, gender={unit.Gender}, baseExternalDisplay={unit.BaseExternalDisplay ?? string.Empty}");
             string name = string.IsNullOrEmpty(unit.Name) ? "Empty" : unit.Name;
             // Unit View层
             string assetsName = $"Assets/Bundles/Unit/Unit.prefab";
             GameObject bundleGameObject = await scene.GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
-            string prefabKey = "Skeleton"+unit.ConfigId;
-            GameObject prefab =bundleGameObject.Get<GameObject>(prefabKey);
+            string prefabKey = "Skeleton1001";
+            GameObject prefab = bundleGameObject.Get<GameObject>(prefabKey);
             GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
             NetworkCacheComponent netCache = scene.Root().GetComponent<NetworkCacheComponent>();
@@ -90,6 +91,8 @@ namespace ET.Client
             //unit.AddComponent<AnimatorComponent>();
             unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
+
+            ExternalDisplayViewHelper.ApplyToUnit(scene, unit);
 
             if (isMainPlayerUnit)
             {

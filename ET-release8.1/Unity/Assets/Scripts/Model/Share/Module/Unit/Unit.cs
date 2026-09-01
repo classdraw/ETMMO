@@ -8,7 +8,7 @@ namespace ET
     [DebuggerDisplay("ViewName,nq")]
     public partial class Unit: Entity, IAwake<int,string>,IGetComponentSys
     {
-        public int ConfigId { get; set; } //配置表id
+        
         public string Name { get; set; } //角色名字
         [BsonElement]
         private float3 position; //坐标
@@ -76,5 +76,12 @@ namespace ET
                 return $"{this.GetType().FullName} ({this.Id})";
             }
         }
+        /// <summary>
+        /// 角色显示外显，一般创建角色用到
+        /// </summary>
+        public string BaseExternalDisplay { get; set; }
+        public int ConfigId { get; set; } //配置表id
+        public int Race { get; set; }
+        public int Gender { get; set; }
     }
 }
