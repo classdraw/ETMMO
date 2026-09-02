@@ -784,6 +784,21 @@ namespace ET.Client
 			self.UpdateRightModelBaseAvatarText();
 		}
 
+		private static void LoadRoleAppearance(this UILoginComponent self, string baseExternalDisplay, ref ExternalDisplayAppearance appearance)
+		{
+			RoleTextureComponent roleTex = self.RoleTextures();
+			if (roleTex == null)
+			{
+				return;
+			}
+
+			if (ExternalDisplayHelper.TryParseExternalDisplayString(baseExternalDisplay, out ExternalDisplayAppearance parsed))
+			{
+				appearance = parsed;
+				roleTex.ValidateAppearance(ref appearance);
+			}
+		}
+
 		private static void SetLeftRole(this UILoginComponent self,RoleInfoProto roleInfoProto)
 		{
 			self.m_inputLeft.text = "";
@@ -806,6 +821,8 @@ namespace ET.Client
 				self.m_goLeftChoose.SetActive(false);
 				self.m_inputLeft.gameObject.SetActive(false);
 				self.m_textLeftTitle.text = roleInfoProto.Name;
+				self.LoadRoleAppearance(roleInfoProto.BaseExternalDisplay, ref self.LeftAppearance);
+				self.RefreshLeftRolePreview();
 			}
 		}
 
@@ -831,6 +848,8 @@ namespace ET.Client
 				self.m_goRightChoose.SetActive(false);
 				self.m_inputRight.gameObject.SetActive(false);
 				self.m_textRightTitle.text = roleInfoProto.Name;
+				self.LoadRoleAppearance(roleInfoProto.BaseExternalDisplay, ref self.RightAppearance);
+				self.RefreshRightRolePreview();
 			}
 		}
 

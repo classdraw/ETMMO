@@ -13,7 +13,7 @@ namespace ET.Client
                 if (unit.GetHpLv()<=0f)
                 {
                     //死亡
-                    unit.GetComponent<AnimatorComponent>()?.Play(MotionType.Death,1.0f);
+                    unit.GetComponent<Animator2DComponent>()?.Play(MotionType.Death,1.0f);
                 }
             }
             else

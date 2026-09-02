@@ -3,7 +3,7 @@ using ET;
 namespace ET.Client
 {
     [Event(SceneType.Current)]
-    [FriendOf(typeof(AnimatorComponent))]
+    [FriendOf(typeof(Animator2DComponent))]
     public class MoveStart_UnitAnimatorPlay : AEvent<Scene, MoveStart>
     {
         protected override async ETTask Run(Scene scene, MoveStart args)
@@ -15,13 +15,14 @@ namespace ET.Client
                 return;
             }
 
-            AnimatorComponent animator = unit.GetComponent<AnimatorComponent>();
+            Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
             if (animator == null)
             {
                 await ETTask.CompletedTask;
                 return;
             }
-            
+
+            animator.SyncFacingFromUnit();
             animator.Play(MotionType.Run, 1f);
             await ETTask.CompletedTask;
         }

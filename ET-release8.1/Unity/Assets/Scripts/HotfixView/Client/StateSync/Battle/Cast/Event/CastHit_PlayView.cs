@@ -70,7 +70,7 @@ namespace ET.Client
                 return;
             }
 
-            AnimatorComponent animator = unit.GetComponent<AnimatorComponent>();
+            Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
             if (animator == null || animator.IsDisposed)
             {
                 return;

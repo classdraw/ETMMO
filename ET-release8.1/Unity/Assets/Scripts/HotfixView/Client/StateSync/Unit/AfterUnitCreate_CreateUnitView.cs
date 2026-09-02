@@ -64,7 +64,8 @@ namespace ET.Client
             go.transform.position = unit.Position;
             go.transform.rotation = Quaternion.identity;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
-            unit.AddComponent<AnimatorComponent>();
+            unit.AddComponent<Avatar2DComponent>();
+            unit.AddComponent<Animator2DComponent>();
             unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
             await ETTask.CompletedTask;
@@ -88,11 +89,10 @@ namespace ET.Client
             go.transform.position = unit.Position;
             go.transform.rotation = Quaternion.identity;
             unit.AddComponent<GameObjectComponent>().GameObject = go;
-            //unit.AddComponent<AnimatorComponent>();
+            unit.AddComponent<Avatar2DComponent>();
+            unit.AddComponent<Animator2DComponent>();
             unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
-
-            ExternalDisplayViewHelper.ApplyToUnit(scene, unit);
 
             if (isMainPlayerUnit)
             {

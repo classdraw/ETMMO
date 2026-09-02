@@ -3,6 +3,7 @@ using ET;
 namespace ET.Client
 {
     [Event(SceneType.Current)]
+    [FriendOf(typeof(Animator2DComponent))]
     public class MoveStop_UnitAnimatorPlay : AEvent<Scene, MoveStop>
     {
         protected override async ETTask Run(Scene scene, MoveStop args)
@@ -14,7 +15,7 @@ namespace ET.Client
                 return;
             }
 
-            AnimatorComponent animator = unit.GetComponent<AnimatorComponent>();
+            Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
             if (animator == null)
             {
                 await ETTask.CompletedTask;
