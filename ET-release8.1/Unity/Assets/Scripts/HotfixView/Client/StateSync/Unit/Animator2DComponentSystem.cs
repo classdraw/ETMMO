@@ -139,6 +139,7 @@ namespace ET.Client
 		{
 			Unit unit = self.GetParent<Unit>();
 			self.Facing = ForwardToFacing(unit.Forward);
+			self.AnimPlayer?.SetFacing(self.Facing);
 		}
 
 		public static void PauseAnimator(this Animator2DComponent self)
@@ -255,6 +256,7 @@ namespace ET.Client
 
 		private static FrameSheetFacing ForwardToFacing(float3 forward)
 		{
+			forward.y = 0;
 			if (math.lengthsq(forward) <= math.EPSILON)
 			{
 				return FrameSheetFacing.Down;

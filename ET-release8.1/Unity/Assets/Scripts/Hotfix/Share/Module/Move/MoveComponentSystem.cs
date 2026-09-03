@@ -94,9 +94,9 @@ namespace ET
             self.DisableMoveRotation = true;
             self.tcs = ETTask<bool>.Create(true);
 
-            EventSystem.Instance.Publish(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()});
-            
             self.StartMove();
+
+            EventSystem.Instance.Publish(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()});
             
             bool moveRet = await self.tcs;
 
@@ -179,6 +179,13 @@ namespace ET
 
             // 时间计算用服务端的位置, 但是移动要用客户端的位置来插值
             float3 v = self.GetFaceV();
+            float3 faceDir = v;
+            faceDir.y = 0;
+            if (math.lengthsq(faceDir) > math.EPSILON)
+            {
+                unit.Forward = math.normalize(faceDir);
+            }
+
             float distance = math.length(v);
             
             // 插值的起始点要以unit的真实位置来算
