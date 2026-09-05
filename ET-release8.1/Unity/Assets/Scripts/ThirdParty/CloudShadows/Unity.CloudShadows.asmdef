@@ -1,0 +1,7 @@
+{
+    "name": "Unity.CloudShadows",
+    "references": [
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ]
+}

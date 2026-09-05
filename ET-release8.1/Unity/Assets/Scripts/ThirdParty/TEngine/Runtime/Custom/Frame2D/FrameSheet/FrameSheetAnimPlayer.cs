@@ -99,6 +99,9 @@ namespace ET
             propertyBlock.SetFloat(FrameSheetAnimShaderIds.Interval, clip.interval / speedMultiplier);
             targetRenderer.SetPropertyBlock(propertyBlock);
 
+            IFrameSheetClipTextureRouter textureRouter = GetComponent<IFrameSheetClipTextureRouter>();
+            textureRouter?.ApplyClipTextureRouting(clip, facing);
+
             currentAnim = animType;
             currentFacing = facing;
             currentSpeedMultiplier = speedMultiplier;

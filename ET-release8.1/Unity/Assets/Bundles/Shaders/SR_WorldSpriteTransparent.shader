@@ -1,5 +1,6 @@
 Shader "Custom/SR_WorldSpriteTransparent"
 {
+    // Cloud shadows: GetShadowAttenuation() via SR_CloudShadowsIntegration when _SSCS_RECEIVE is enabled.
     Properties
     {
         [MainTexture] _BaseMap("Texture", 2D) = "white" {}
@@ -37,9 +38,17 @@ Shader "Custom/SR_WorldSpriteTransparent"
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
+            #pragma multi_compile _ _SSCS_RECEIVE
+            #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
+            #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
+            #pragma multi_compile_fragment _ _BOUNDS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            #if defined(_SSCS_RECEIVE)
+                #include "SR_CloudShadowsIntegration.hlsl"
+            #endif
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST;
@@ -65,6 +74,7 @@ Shader "Custom/SR_WorldSpriteTransparent"
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float2 meshUV : TEXCOORD5;
+                float3 positionWS : TEXCOORD6;
                 float3 normalWS : TEXCOORD1;
                 half fogFactor : TEXCOORD2;
                 float4 shadowCoord : TEXCOORD3;
@@ -82,6 +92,7 @@ Shader "Custom/SR_WorldSpriteTransparent"
                 VertexNormalInputs normalInputs = GetVertexNormalInputs(input.normalOS);
 
                 output.positionCS = positionInputs.positionCS;
+                output.positionWS = positionInputs.positionWS;
                 output.meshUV = input.uv;
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 output.normalWS = normalInputs.normalWS;
@@ -117,6 +128,11 @@ Shader "Custom/SR_WorldSpriteTransparent"
                 MixRealtimeAndBakedGI(mainLight, normalWS, bakedGI);
 
                 half3 litColor = albedo * (bakedGI + mainLightColor);
+
+                #if defined(_SSCS_RECEIVE)
+                    litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
+                #endif
+
                 litColor = MixFog(litColor, input.fogFactor);
                 return half4(litColor, alpha);
             }

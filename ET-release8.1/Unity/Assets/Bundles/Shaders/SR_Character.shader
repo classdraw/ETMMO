@@ -1,8 +1,10 @@
 Shader "Custom/SR_Character"
 {
+    // Cloud shadows: GetShadowAttenuation() via SR_CloudShadowsIntegration when _SSCS_RECEIVE is enabled.
     Properties
     {
         [Header(Layers Bottom To Top)]
+        _TailMap1("Tail Texture 1", 2D) = "white" {}
         [MainTexture] _BodyMap("Body Texture", 2D) = "white" {}
         [MainColor] _BodyColor("Body Tint", Color) = (1, 1, 1, 1)
         _HeadMap("Head Texture", 2D) = "white" {}
@@ -10,7 +12,7 @@ Shader "Custom/SR_Character"
         _EquipColor1("Equip Tint 1", Color) = (1, 1, 1, 1)
         _EquipMap2("Equip Texture 2", 2D) = "white" {}
         _EquipColor2("Equip Tint 2", Color) = (1, 1, 1, 1)
-        _TailMap("Tail Texture", 2D) = "white" {}
+        _TailMap2("Tail Texture 2", 2D) = "white" {}
         _OcclusionFade("Occlusion Fade", Range(0, 1)) = 1
 
         [Header(Grid m Rows n Columns)]
@@ -40,17 +42,28 @@ Shader "Custom/SR_Character"
             Cull Off
 
             HLSLPROGRAM
+            #pragma target 2.0
             #pragma vertex Vert
             #pragma fragment Frag
+            #pragma multi_compile _ _SSCS_RECEIVE
+            #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
+            #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
+            #pragma multi_compile_fragment _ _BOUNDS
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
+            #if defined(_SSCS_RECEIVE)
+                #include "SR_CloudShadowsIntegration.hlsl"
+            #endif
+
             CBUFFER_START(UnityPerMaterial)
+                float4 _TailMap1_TexelSize;
                 float4 _BodyMap_ST;
                 float4 _BodyMap_TexelSize;
                 float4 _HeadMap_TexelSize;
                 float4 _EquipMap1_TexelSize;
                 float4 _EquipMap2_TexelSize;
-                float4 _TailMap_TexelSize;
+                float4 _TailMap2_TexelSize;
                 half4 _BodyColor;
                 half4 _EquipColor1;
                 half4 _EquipColor2;
@@ -64,6 +77,8 @@ Shader "Custom/SR_Character"
                 float _Interval;
             CBUFFER_END
 
+            TEXTURE2D(_TailMap1);
+            SAMPLER(sampler_TailMap1);
             TEXTURE2D(_BodyMap);
             SAMPLER(sampler_BodyMap);
             TEXTURE2D(_HeadMap);
@@ -72,11 +87,21 @@ Shader "Custom/SR_Character"
             SAMPLER(sampler_EquipMap1);
             TEXTURE2D(_EquipMap2);
             SAMPLER(sampler_EquipMap2);
-            TEXTURE2D(_TailMap);
-            SAMPLER(sampler_TailMap);
+            TEXTURE2D(_TailMap2);
+            SAMPLER(sampler_TailMap2);
 
-            struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
-            struct Varyings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                float3 positionWS : TEXCOORD1;
+            };
 
             half AssignedMapMask(float4 texelSize)
             {
@@ -122,6 +147,7 @@ Shader "Custom/SR_Character"
             {
                 Varyings output;
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
                 output.uv = input.uv;
                 return output;
             }
@@ -143,7 +169,15 @@ Shader "Custom/SR_Character"
                 float2 cellMin = float2(cellX, cellY) * uvCell;
                 float2 atlasUv = cellMin + input.uv * uvCell;
 
-                half4 color = SAMPLE_TEXTURE2D(_BodyMap, sampler_BodyMap, atlasUv) * _BodyColor;
+                half4 color = half4(0, 0, 0, 0);
+
+                half4 tail1 = SAMPLE_TEXTURE2D(_TailMap1, sampler_TailMap1, atlasUv);
+                tail1.a *= AssignedMapMask(_TailMap1_TexelSize);
+                color = AlphaOver(color, tail1);
+
+                half4 body = SAMPLE_TEXTURE2D(_BodyMap, sampler_BodyMap, atlasUv) * _BodyColor;
+                body.a *= AssignedMapMask(_BodyMap_TexelSize);
+                color = AlphaOver(color, body);
 
                 half4 head = SAMPLE_TEXTURE2D(_HeadMap, sampler_HeadMap, atlasUv);
                 head.a *= AssignedMapMask(_HeadMap_TexelSize);
@@ -157,9 +191,14 @@ Shader "Custom/SR_Character"
                 equip2.a *= AssignedMapMask(_EquipMap2_TexelSize);
                 color = AlphaOver(color, equip2);
 
-                half4 tail = SAMPLE_TEXTURE2D(_TailMap, sampler_TailMap, atlasUv);
-                tail.a *= AssignedMapMask(_TailMap_TexelSize);
-                color = AlphaOver(color, tail);
+                half4 tail2 = SAMPLE_TEXTURE2D(_TailMap2, sampler_TailMap2, atlasUv);
+                tail2.a *= AssignedMapMask(_TailMap2_TexelSize);
+                color = AlphaOver(color, tail2);
+
+                #if defined(_SSCS_RECEIVE)
+                    half3 normalWS = half3(0.0h, 1.0h, 0.0h);
+                    color.rgb = ApplySSCSCloudShadow(color.rgb, input.positionWS, normalWS);
+                #endif
 
                 return half4(color.rgb, color.a * _OcclusionFade);
             }

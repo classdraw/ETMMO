@@ -16,6 +16,55 @@ MonoBehaviour:
   gridColumns: 13
   clips:
   - animType: 1
+    bodyTextureSlot: 1
+    headTextureSlot: 2
+    tailTextureSlot: 5
+    shirtTextureSlot: 3
+    pantsTextureSlot: 4
+    downTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    leftTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    rightTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    upTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 0
+      tailTextureSlot: 5
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
     rowDown: 10
     rowLeft: 11
     rowRight: 9
@@ -25,6 +74,55 @@ MonoBehaviour:
     loop: 1
     interval: 0.2
   - animType: 2
+    bodyTextureSlot: 1
+    headTextureSlot: 2
+    tailTextureSlot: 5
+    shirtTextureSlot: 3
+    pantsTextureSlot: 4
+    downTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    leftTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    rightTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    upTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 0
+      tailTextureSlot: 5
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
     rowDown: 10
     rowLeft: 11
     rowRight: 9
@@ -34,6 +132,55 @@ MonoBehaviour:
     loop: 1
     interval: 0.1
   - animType: 3
+    bodyTextureSlot: 1
+    headTextureSlot: 2
+    tailTextureSlot: 5
+    shirtTextureSlot: 3
+    pantsTextureSlot: 4
+    downTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    leftTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    rightTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    upTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 0
+      tailTextureSlot: 5
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
     rowDown: 10
     rowLeft: 11
     rowRight: 9
@@ -43,6 +190,55 @@ MonoBehaviour:
     loop: 1
     interval: 0.1
   - animType: 5
+    bodyTextureSlot: 1
+    headTextureSlot: 2
+    tailTextureSlot: 5
+    shirtTextureSlot: 3
+    pantsTextureSlot: 4
+    downTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    leftTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    rightTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    upTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 0
+      tailTextureSlot: 5
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
     rowDown: 2
     rowLeft: 3
     rowRight: 1
@@ -52,6 +248,55 @@ MonoBehaviour:
     loop: 1
     interval: 0.1
   - animType: 6
+    bodyTextureSlot: 1
+    headTextureSlot: 2
+    tailTextureSlot: 5
+    shirtTextureSlot: 3
+    pantsTextureSlot: 4
+    downTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    leftTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    rightTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 1
+      tailTextureSlot: 0
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
+    upTextureOverrides:
+      overrideBody: 0
+      bodyTextureSlot: 1
+      overrideHead: 0
+      headTextureSlot: 2
+      overrideTail: 0
+      tailTextureSlot: 5
+      overrideShirt: 0
+      shirtTextureSlot: 3
+      overridePants: 0
+      pantsTextureSlot: 4
     rowDown: 18
     rowLeft: 19
     rowRight: 17

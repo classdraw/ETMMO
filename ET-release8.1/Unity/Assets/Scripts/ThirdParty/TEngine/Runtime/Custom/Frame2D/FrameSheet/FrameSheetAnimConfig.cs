@@ -4,11 +4,106 @@ using UnityEngine;
 
 namespace ET
 {
+    /// <summary>
+    /// SR_Character 材质贴图槽位，与 Shader 属性一一对应。
+    /// </summary>
+    public enum CharacterTextureSlot
+    {
+        TailTexture1 = 0,
+        BodyTexture = 1,
+        HeadTexture = 2,
+        EquipTexture1 = 3,
+        EquipTexture2 = 4,
+        TailTexture2 = 5,
+    }
+
+    public static class CharacterTextureSlotHelper
+    {
+        private static readonly int[] ShaderPropertyIds =
+        {
+            Shader.PropertyToID("_TailMap1"),
+            Shader.PropertyToID("_BodyMap"),
+            Shader.PropertyToID("_HeadMap"),
+            Shader.PropertyToID("_EquipMap1"),
+            Shader.PropertyToID("_EquipMap2"),
+            Shader.PropertyToID("_TailMap2"),
+        };
+
+        public static int GetShaderPropertyId(CharacterTextureSlot slot)
+        {
+            return ShaderPropertyIds[(int)slot];
+        }
+    }
+
+    [Serializable]
+    public struct FrameSheetAnimResolvedPartSlots
+    {
+        public CharacterTextureSlot bodyTextureSlot;
+        public CharacterTextureSlot headTextureSlot;
+        public CharacterTextureSlot tailTextureSlot;
+        public CharacterTextureSlot shirtTextureSlot;
+        public CharacterTextureSlot pantsTextureSlot;
+    }
+
+    /// <summary>
+    /// 单个方向的部位贴图槽位覆盖。未勾选的部位沿用 Clip 默认槽位。
+    /// </summary>
+    [Serializable]
+    public class FrameSheetAnimPartSlotOverride
+    {
+        public bool overrideBody;
+        public CharacterTextureSlot bodyTextureSlot = CharacterTextureSlot.BodyTexture;
+
+        public bool overrideHead;
+        public CharacterTextureSlot headTextureSlot = CharacterTextureSlot.HeadTexture;
+
+        public bool overrideTail;
+        public CharacterTextureSlot tailTextureSlot = CharacterTextureSlot.TailTexture2;
+
+        public bool overrideShirt;
+        public CharacterTextureSlot shirtTextureSlot = CharacterTextureSlot.EquipTexture1;
+
+        public bool overridePants;
+        public CharacterTextureSlot pantsTextureSlot = CharacterTextureSlot.EquipTexture2;
+
+        public bool HasAnyOverride =>
+            overrideBody || overrideHead || overrideTail || overrideShirt || overridePants;
+    }
+
     [Serializable]
     public class FrameSheetAnimClip
     {
         [Tooltip("动画名")]
         public FrameSheetAnimType animType;
+
+        [Header("Default Part Texture Slots")]
+        [Tooltip("身体部位使用的贴图槽位")]
+        public CharacterTextureSlot bodyTextureSlot = CharacterTextureSlot.BodyTexture;
+
+        [Tooltip("头部部位使用的贴图槽位")]
+        public CharacterTextureSlot headTextureSlot = CharacterTextureSlot.HeadTexture;
+
+        [Tooltip("尾巴部位使用的贴图槽位")]
+        public CharacterTextureSlot tailTextureSlot = CharacterTextureSlot.TailTexture2;
+
+        [Tooltip("上衣部位使用的贴图槽位")]
+        public CharacterTextureSlot shirtTextureSlot = CharacterTextureSlot.EquipTexture1;
+
+        [Tooltip("下装部位使用的贴图槽位")]
+        public CharacterTextureSlot pantsTextureSlot = CharacterTextureSlot.EquipTexture2;
+
+        [Header("Facing Texture Slot Overrides")]
+        [Tooltip("朝下方向的槽位覆盖，未勾选的部位沿用默认")]
+        public FrameSheetAnimPartSlotOverride downTextureOverrides = new FrameSheetAnimPartSlotOverride();
+
+        [Tooltip("朝左方向的槽位覆盖，未勾选的部位沿用默认")]
+        public FrameSheetAnimPartSlotOverride leftTextureOverrides = new FrameSheetAnimPartSlotOverride();
+
+        [Tooltip("朝右方向的槽位覆盖，未勾选的部位沿用默认")]
+        public FrameSheetAnimPartSlotOverride rightTextureOverrides = new FrameSheetAnimPartSlotOverride();
+
+        [Tooltip("朝上方向的槽位覆盖，未勾选的部位沿用默认")]
+        public FrameSheetAnimPartSlotOverride upTextureOverrides = new FrameSheetAnimPartSlotOverride();
 
         [Header("Rows By Facing 0=Bottom")]
         [Tooltip("朝下")]
@@ -55,6 +150,62 @@ namespace ET
                 case FrameSheetFacing.Up: rowUp = row; break;
                 default: rowDown = row; break;
             }
+        }
+
+        public FrameSheetAnimPartSlotOverride GetFacingTextureOverride(FrameSheetFacing facing)
+        {
+            switch (facing)
+            {
+                case FrameSheetFacing.Left: return leftTextureOverrides;
+                case FrameSheetFacing.Right: return rightTextureOverrides;
+                case FrameSheetFacing.Up: return upTextureOverrides;
+                default: return downTextureOverrides;
+            }
+        }
+
+        public FrameSheetAnimResolvedPartSlots GetResolvedPartSlots(FrameSheetFacing facing)
+        {
+            FrameSheetAnimResolvedPartSlots slots = new FrameSheetAnimResolvedPartSlots
+            {
+                bodyTextureSlot = bodyTextureSlot,
+                headTextureSlot = headTextureSlot,
+                tailTextureSlot = tailTextureSlot,
+                shirtTextureSlot = shirtTextureSlot,
+                pantsTextureSlot = pantsTextureSlot,
+            };
+
+            FrameSheetAnimPartSlotOverride facingOverride = GetFacingTextureOverride(facing);
+            if (facingOverride == null || !facingOverride.HasAnyOverride)
+            {
+                return slots;
+            }
+
+            if (facingOverride.overrideBody)
+            {
+                slots.bodyTextureSlot = facingOverride.bodyTextureSlot;
+            }
+
+            if (facingOverride.overrideHead)
+            {
+                slots.headTextureSlot = facingOverride.headTextureSlot;
+            }
+
+            if (facingOverride.overrideTail)
+            {
+                slots.tailTextureSlot = facingOverride.tailTextureSlot;
+            }
+
+            if (facingOverride.overrideShirt)
+            {
+                slots.shirtTextureSlot = facingOverride.shirtTextureSlot;
+            }
+
+            if (facingOverride.overridePants)
+            {
+                slots.pantsTextureSlot = facingOverride.pantsTextureSlot;
+            }
+
+            return slots;
         }
     }
 

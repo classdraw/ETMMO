@@ -17,7 +17,8 @@
         "TEngine.Editor",
         "UniTask",
         "Unity.TEngine",
-        "Unity.2D.Tilemap.Editor"
+        "Unity.2D.Tilemap.Editor",
+        "Unity.CloudShadows"
     ],
     "includePlatforms": [
         "Editor"
