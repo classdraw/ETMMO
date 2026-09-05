@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4232675712057800283}
   - component: {fileID: 7113035698297264718}
   - component: {fileID: 2732900058233461198}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,7 +83,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -829991205
   m_SortingLayer: 2
-  m_SortingOrder: -5
+  m_SortingOrder: -11
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &7113035698297264718
 MonoBehaviour:
@@ -234,7 +234,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1224505763
   m_SortingLayer: 4
-  m_SortingOrder: -50
+  m_SortingOrder: -55
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5949900433022627978
 MonoBehaviour:
@@ -459,7 +459,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -805697027
   m_SortingLayer: 3
-  m_SortingOrder: -50
+  m_SortingOrder: -55
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &82545380052146879
 MonoBehaviour:

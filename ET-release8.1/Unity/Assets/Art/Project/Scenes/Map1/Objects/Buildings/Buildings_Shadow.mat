@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _USESCENESHADOW_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -30,6 +31,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _OcclusionFade: 1
+    - _SceneShadowIntensity: 0.5
+    - _UseSceneShadow: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.5176471}
+    - _BaseColor: {r: 1, g: 0, b: 0, a: 1}
+    - _BorderClip: {r: 0, g: 0, b: 0.81, a: 0}
+    - _SceneShadowChannelMask: {r: 1, g: 0, b: 0, a: 0}
+    - _SceneShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

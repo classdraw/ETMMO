@@ -1,6 +1,7 @@
 // Tilemap / Sprite lit shader for URP Forward Renderer.
 // Based on Sprite-Lit-Default properties, with ambient + main light in UniversalForward.
 // Cloud shadows: include local SSCS GetShadowAttenuation() when _SSCS_RECEIVE is enabled.
+// Scene shadows: sample global _SceneShadowRT; material Vector4 channel mask matches RT RGBA channels.
 Shader "Custom/SR_TilemapSpriteLit"{
     Properties
     {
@@ -10,6 +11,12 @@ Shader "Custom/SR_TilemapSpriteLit"{
         [Normal] _NormalMap("Normal Map", 2D) = "bump" {}
         _NormalScale("Normal Scale", Float) = 1.0
         [Toggle] _ZWrite("ZWrite", Float) = 0
+
+        [Header(Scene Shadow)]
+        [Toggle] _UseSceneShadow("Use Scene Shadow", Float) = 1
+        _SceneShadowChannelMask("Scene Shadow Channel Mask", Vector) = (1, 1, 1, 1)
+        _SceneShadowColor("Scene Shadow Color", Color) = (0, 0, 0, 1)
+        _SceneShadowIntensity("Scene Shadow Intensity", Range(0, 1)) = 0.5
 
         // Legacy sprite properties for material migration from Sprite-Lit-Default.
         [HideInInspector] _RendererColor("RendererColor", Color) = (1, 1, 1, 1)
@@ -63,11 +70,17 @@ Shader "Custom/SR_TilemapSpriteLit"{
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
             #endif
+            #include "SR_SceneShadowIntegration.hlsl"
+
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color;
                 half4 _RendererColor;
                 half _NormalScale;
+                half _UseSceneShadow;
+                half _SceneShadowIntensity;
+                half4 _SceneShadowColor;
+                half4 _SceneShadowChannelMask;
             CBUFFER_END
 
             TEXTURE2D(_MainTex);
@@ -186,6 +199,14 @@ Shader "Custom/SR_TilemapSpriteLit"{
                 #if defined(_SSCS_RECEIVE)
                     litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
                 #endif
+
+                litColor = ApplySRSceneShadow(
+                    litColor,
+                    input.positionCS,
+                    _SceneShadowChannelMask,
+                    _UseSceneShadow,
+                    _SceneShadowColor.rgb,
+                    _SceneShadowIntensity);
 
                 litColor = MixFog(litColor, input.fogFactor);                return half4(litColor, color.a);
             }

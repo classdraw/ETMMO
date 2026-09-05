@@ -24,7 +24,7 @@ MonoBehaviour:
   cloudsOpacity: 0.95
   distanceFade: 2500
   showShadows: 1
-  shadowCoverage: 0.49
+  shadowCoverage: 0.48
   shadowTintColor: {r: 0, g: 0, b: 0, a: 1}
   shadowOpacity: 1.42
   topDownOnly: 1
@@ -33,11 +33,11 @@ MonoBehaviour:
   shadowMinAltitude: -10000
   preserveDirectionalShadows: 0
   altitude: 5
-  scale: 1
-  offset: {x: 0.45, y: 0}
+  scale: 3
+  offset: {x: 0.34, y: 0}
   contrast: 1.18
   edgeNoise: 0.671
-  edgeAnimationSpeed: 5
+  edgeAnimationSpeed: 2
   windSpeed: {x: 0.05, y: 0, z: 0.1}
   clouds2Texture: {fileID: 2800000, guid: 024c8f47df13a4764a8bce082bbbc7e1, type: 3}
   cloudsTexture: {fileID: 2800000, guid: 024c8f47df13a4764a8bce082bbbc7e1, type: 3}

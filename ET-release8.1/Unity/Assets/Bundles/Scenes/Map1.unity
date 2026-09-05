@@ -1535,11 +1535,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7578812368100696045, guid: 68fdf04cc1a9d454a8386dcc9de8b4f3,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: -38
-      objectReference: {fileID: 0}
     - target: {fileID: 9182492325813230204, guid: 68fdf04cc1a9d454a8386dcc9de8b4f3,
         type: 3}
       propertyPath: m_Name
@@ -1815,11 +1810,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 574372593}
     m_Modifications:
-    - target: {fileID: 70883054406829026, guid: 63580a604ef4b6c4a84444468a65a868,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1577431072596488197, guid: 63580a604ef4b6c4a84444468a65a868,
         type: 3}
       propertyPath: m_Name
@@ -1829,11 +1819,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingOrder
       value: 520
-      objectReference: {fileID: 0}
-    - target: {fileID: 4441773628084911259, guid: 63580a604ef4b6c4a84444468a65a868,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 4441773628084911259, guid: 63580a604ef4b6c4a84444468a65a868,
         type: 3}
@@ -1884,11 +1869,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8272121116672900050, guid: 63580a604ef4b6c4a84444468a65a868,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8858837074937290775, guid: 63580a604ef4b6c4a84444468a65a868,
         type: 3}

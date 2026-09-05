@@ -50,9 +50,36 @@ namespace XEngine.Hud {
             m_kHudRenderPass = new HudRenderPass();
             m_kHudRenderPass.renderPassEvent = m_kConfig.m_eRenderPassEvent;
         }
+
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
+            if (ShouldSkipHudForCamera(renderingData.cameraData.camera))
+            {
+                return;
+            }
+
             renderer.EnqueuePass(m_kHudRenderPass);
+        }
+
+        private static bool ShouldSkipHudForCamera(Camera camera)
+        {
+            if (camera == null)
+            {
+                return true;
+            }
+
+            if (camera.GetComponent<ShadowCameraCtrl>() != null)
+            {
+                return true;
+            }
+
+            int sceneShadowLayer = LayerMask.NameToLayer(ShadowCameraCtrl.SceneShadowLayerName);
+            if (sceneShadowLayer >= 0 && camera.cullingMask == (1 << sceneShadowLayer))
+            {
+                return true;
+            }
+
+            return false;
         }
 
 

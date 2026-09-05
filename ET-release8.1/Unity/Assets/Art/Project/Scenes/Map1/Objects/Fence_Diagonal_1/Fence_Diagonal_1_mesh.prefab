@@ -285,7 +285,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -805697027
   m_SortingLayer: 3
-  m_SortingOrder: 186
+  m_SortingOrder: 34
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &2093333498847880583
 MonoBehaviour:
@@ -367,7 +367,7 @@ GameObject:
   - component: {fileID: 6862198819775855681}
   - component: {fileID: 6016902376978990673}
   - component: {fileID: 499927840133398559}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ShadowsSheet_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,7 +437,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -829991205
   m_SortingLayer: 2
-  m_SortingOrder: 441
+  m_SortingOrder: 289
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &6016902376978990673
 MonoBehaviour:

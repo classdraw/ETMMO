@@ -14,12 +14,15 @@ namespace ET
     public class PrefabToolsWindow : EditorWindow
     {
         private const string AvatarPrefabOutputRoot = "Assets/Bundles/Avatar";
+        private const string SceneShadowLayerName = "SceneShadow";
+
+        private DefaultAsset sceneShadowPrefabFolder;
 
         [MenuItem("Tools/预制体处理工具合集", false, 50)]
         public static void Open()
         {
             var w = GetWindow<PrefabToolsWindow>(true, "预制体处理工具", true);
-            w.minSize = new Vector2(440, 480);
+            w.minSize = new Vector2(440, 560);
         }
 
         private void OnGUI()
@@ -87,6 +90,30 @@ namespace ET
                 if (GUILayout.Button("选中物体：生成 Colliders 碰撞体代理（BoxCollider → Cube）", GUILayout.Height(34)))
                 {
                     GenerateColliderProxiesForSelectedSceneObject();
+                }
+            }
+
+            EditorGUILayout.Space(12);
+            EditorGUILayout.LabelField("SceneShadow 层", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox(
+                "拖入或指定一个文件夹，递归处理其下所有 .prefab。\n" +
+                "遍历预制体全部节点（含根节点），名称包含 shadow（不区分大小写）的节点 Layer 设为 SceneShadow。",
+                MessageType.Info);
+
+            sceneShadowPrefabFolder = (DefaultAsset)EditorGUILayout.ObjectField(
+                "预制体文件夹",
+                sceneShadowPrefabFolder,
+                typeof(DefaultAsset),
+                false);
+
+            string sceneShadowFolderPath = GetSceneShadowFolderPath();
+            EditorGUILayout.LabelField("目标文件夹", string.IsNullOrEmpty(sceneShadowFolderPath) ? "（未指定）" : sceneShadowFolderPath);
+
+            using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(sceneShadowFolderPath)))
+            {
+                if (GUILayout.Button("批量设置 Shadow 节点 Layer → SceneShadow", GUILayout.Height(34)))
+                {
+                    SetSceneShadowLayerInFolderPrefabs(sceneShadowFolderPath);
                 }
             }
 
@@ -764,6 +791,129 @@ namespace ET
             EditorUtility.DisplayDialog("预制体处理工具",
                 $"处理完成。\n成功替换根节点：{converted}\n跳过（根非 RectTransform）：{skipped}\n失败：{failed}",
                 "确定");
+        }
+
+        private string GetSceneShadowFolderPath()
+        {
+            if (sceneShadowPrefabFolder != null)
+            {
+                string path = AssetDatabase.GetAssetPath(sceneShadowPrefabFolder);
+                if (!string.IsNullOrEmpty(path) && AssetDatabase.IsValidFolder(path))
+                {
+                    return path;
+                }
+            }
+
+            List<string> selectedFolders = CollectSelectedAssetFolderPaths();
+            return selectedFolders.Count > 0 ? selectedFolders[0] : null;
+        }
+
+        private static void SetSceneShadowLayerInFolderPrefabs(string folderPath)
+        {
+            if (string.IsNullOrEmpty(folderPath) || !AssetDatabase.IsValidFolder(folderPath))
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", "请先拖入或选中一个有效的文件夹。", "确定");
+                return;
+            }
+
+            int sceneShadowLayer = LayerMask.NameToLayer(SceneShadowLayerName);
+            if (sceneShadowLayer < 0)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    $"Layer「{SceneShadowLayerName}」不存在。\n请在 Project Settings → Tags and Layers 中添加。",
+                    "确定");
+                return;
+            }
+
+            string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
+            if (prefabGuids.Length == 0)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", $"文件夹内未找到任何 .prefab：\n{folderPath}", "确定");
+                return;
+            }
+
+            if (!EditorUtility.DisplayDialog("预制体处理工具",
+                    $"将处理文件夹内 {prefabGuids.Length} 个预制体（含子目录）。\n" +
+                    "名称包含 shadow 的节点 Layer 将设为 SceneShadow。\n是否继续？",
+                    "确定", "取消"))
+            {
+                return;
+            }
+
+            int modifiedPrefabs = 0;
+            int matchedNodes = 0;
+            int changedNodes = 0;
+
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                for (int i = 0; i < prefabGuids.Length; i++)
+                {
+                    string prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuids[i]);
+                    EditorUtility.DisplayProgressBar(
+                        "设置 SceneShadow Layer",
+                        prefabPath,
+                        (float)(i + 1) / prefabGuids.Length);
+
+                    GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
+                    try
+                    {
+                        int prefabMatched = 0;
+                        int prefabChanged = SetSceneShadowLayerRecursive(root, sceneShadowLayer, ref prefabMatched);
+                        if (prefabChanged > 0)
+                        {
+                            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+                            modifiedPrefabs++;
+                            changedNodes += prefabChanged;
+                        }
+
+                        matchedNodes += prefabMatched;
+                    }
+                    finally
+                    {
+                        PrefabUtility.UnloadPrefabContents(root);
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+                EditorUtility.ClearProgressBar();
+            }
+
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("预制体处理工具",
+                $"文件夹：{folderPath}\n" +
+                $"扫描预制体：{prefabGuids.Length} 个\n" +
+                $"有修改的预制体：{modifiedPrefabs} 个\n" +
+                $"匹配 shadow 节点：{matchedNodes} 个\n" +
+                $"Layer 已修改：{changedNodes} 个",
+                "确定");
+        }
+
+        /// <summary>
+        /// 递归遍历自身及子节点，名称包含 shadow 的设为 SceneShadow 层。
+        /// </summary>
+        private static int SetSceneShadowLayerRecursive(GameObject go, int sceneShadowLayer, ref int matchedNodes)
+        {
+            int changed = 0;
+            if (go.name.IndexOf("shadow", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                matchedNodes++;
+                if (go.layer != sceneShadowLayer)
+                {
+                    go.layer = sceneShadowLayer;
+                    changed++;
+                }
+            }
+
+            Transform transform = go.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                changed += SetSceneShadowLayerRecursive(transform.GetChild(i).gameObject, sceneShadowLayer, ref matchedNodes);
+            }
+
+            return changed;
         }
 
         private static void GenerateAvatarSpritePrefabsFromSelectedFolders()

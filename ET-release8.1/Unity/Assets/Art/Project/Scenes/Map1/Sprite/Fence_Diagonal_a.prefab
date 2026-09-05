@@ -154,7 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2570816388119842010}
   - component: {fileID: 4845825062311854896}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ShadowsSheet_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}

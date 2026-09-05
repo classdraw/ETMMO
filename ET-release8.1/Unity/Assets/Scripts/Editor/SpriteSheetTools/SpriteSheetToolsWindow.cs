@@ -11,7 +11,7 @@ namespace ET
     /// </summary>
     public class SpriteSheetToolsWindow : EditorWindow
     {
-        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "边框", "2D贴图制作" };
+        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "边框", "2D贴图制作", "图片改色" };
         private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" };
 
         private int selectedTab;
@@ -71,8 +71,10 @@ namespace ET
         private Color borderColor = new Color(1f, 1f, 1f, 1f);
         private Vector2 borderScroll;
         private Vector2 twoDTextureScrollPosition;
+        private Vector2 imageRecolorScrollPosition;
 
         [SerializeField] private TwoDTextureMakerTab twoDTextureMakerTab = new TwoDTextureMakerTab();
+        [SerializeField] private ImageRecolorTab imageRecolorTab = new ImageRecolorTab();
 
         [MenuItem("Tools/序列帧", false, 53)]
         public static void Open()
@@ -107,6 +109,9 @@ namespace ET
                 case 5:
                     DrawTwoDTextureTab();
                     break;
+                case 6:
+                    DrawImageRecolorTab();
+                    break;
             }
         }
 
@@ -122,6 +127,7 @@ namespace ET
             DestroyOwnedTexture(ref backgroundSourceTexture);
             ClearTweakTexture();
             ClearBorderTextures();
+            imageRecolorTab.ClearPreview();
         }
 
         private void DrawCombineTab()
@@ -511,6 +517,13 @@ namespace ET
         {
             twoDTextureScrollPosition = EditorGUILayout.BeginScrollView(twoDTextureScrollPosition);
             twoDTextureMakerTab.OnGUI();
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawImageRecolorTab()
+        {
+            imageRecolorScrollPosition = EditorGUILayout.BeginScrollView(imageRecolorScrollPosition);
+            imageRecolorTab.OnGUI();
             EditorGUILayout.EndScrollView();
         }
 

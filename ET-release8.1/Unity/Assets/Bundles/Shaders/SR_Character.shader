@@ -1,6 +1,7 @@
 Shader "Custom/SR_Character"
 {
     // Cloud shadows: GetShadowAttenuation() via SR_CloudShadowsIntegration when _SSCS_RECEIVE is enabled.
+    // Scene shadows: sample global _SceneShadowRT; material Vector4 channel mask matches RT RGBA channels.
     Properties
     {
         [Header(Layers Bottom To Top)]
@@ -14,6 +15,12 @@ Shader "Custom/SR_Character"
         _EquipColor2("Equip Tint 2", Color) = (1, 1, 1, 1)
         _TailMap2("Tail Texture 2", 2D) = "white" {}
         _OcclusionFade("Occlusion Fade", Range(0, 1)) = 1
+
+        [Header(Scene Shadow)]
+        [Toggle] _UseSceneShadow("Use Scene Shadow", Float) = 1
+        _SceneShadowChannelMask("Scene Shadow Channel Mask", Vector) = (1, 1, 1, 1)
+        _SceneShadowColor("Scene Shadow Color", Color) = (0, 0, 0, 1)
+        _SceneShadowIntensity("Scene Shadow Intensity", Range(0, 1)) = 0.5
 
         [Header(Grid m Rows n Columns)]
         _GridRows("Grid Rows M", Float) = 1
@@ -45,16 +52,23 @@ Shader "Custom/SR_Character"
             #pragma target 2.0
             #pragma vertex Vert
             #pragma fragment Frag
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
+            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
+            #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ _SSCS_RECEIVE
             #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
             #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
             #pragma multi_compile_fragment _ _BOUNDS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
             #endif
+            #include "SR_SceneShadowIntegration.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _TailMap1_TexelSize;
@@ -75,6 +89,10 @@ Shader "Custom/SR_Character"
                 float _EndColumn;
                 float _Loop;
                 float _Interval;
+                half _UseSceneShadow;
+                half _SceneShadowIntensity;
+                half4 _SceneShadowColor;
+                half4 _SceneShadowChannelMask;
             CBUFFER_END
 
             TEXTURE2D(_TailMap1);
@@ -94,6 +112,7 @@ Shader "Custom/SR_Character"
             {
                 float4 positionOS : POSITION;
                 float2 uv : TEXCOORD0;
+                float2 staticLightmapUV : TEXCOORD1;
             };
 
             struct Varyings
@@ -101,6 +120,8 @@ Shader "Custom/SR_Character"
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;
+                float4 shadowCoord : TEXCOORD2;
+                DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 3);
             };
 
             half AssignedMapMask(float4 texelSize)
@@ -146,9 +167,17 @@ Shader "Custom/SR_Character"
             Varyings Vert(Attributes input)
             {
                 Varyings output;
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                VertexPositionInputs positionInputs = GetVertexPositionInputs(input.positionOS.xyz);
+
+                output.positionCS = positionInputs.positionCS;
+                output.positionWS = positionInputs.positionWS;
+                output.shadowCoord = GetShadowCoord(positionInputs);
                 output.uv = input.uv;
+
+                // Top-down 2D character: always shade with world up normal.
+                half3 normalWS = half3(0.0h, 1.0h, 0.0h);
+                OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+                OUTPUT_SH(normalWS, output.vertexSH);
                 return output;
             }
 
@@ -195,10 +224,34 @@ Shader "Custom/SR_Character"
                 tail2.a *= AssignedMapMask(_TailMap2_TexelSize);
                 color = AlphaOver(color, tail2);
 
+                half3 normalWS = half3(0.0h, 1.0h, 0.0h);
+                Light mainLight = GetMainLight(input.shadowCoord);
+                // Half Lambert wrap: keeps 2D sprites visible under side-facing directional lights.
+                half ndotl = saturate(dot(normalWS, mainLight.direction) * 0.5h + 0.5h);
+                half3 mainLightColor = mainLight.color
+                    * mainLight.distanceAttenuation
+                    * mainLight.shadowAttenuation
+                    * ndotl;
+
+                half3 bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
+                MixRealtimeAndBakedGI(mainLight, normalWS, bakedGI);
+
+                half3 lighting = bakedGI + mainLightColor;
+                half lightLuma = max(max(lighting.r, lighting.g), lighting.b);
+                // If GI/main light data is unavailable, keep original unlit brightness.
+                color.rgb *= lerp(half3(1.0h, 1.0h, 1.0h), lighting, saturate(lightLuma * 1000.0h));
+
                 #if defined(_SSCS_RECEIVE)
-                    half3 normalWS = half3(0.0h, 1.0h, 0.0h);
                     color.rgb = ApplySSCSCloudShadow(color.rgb, input.positionWS, normalWS);
                 #endif
+
+                color.rgb = ApplySRSceneShadow(
+                    color.rgb,
+                    input.positionCS,
+                    _SceneShadowChannelMask,
+                    _UseSceneShadow,
+                    _SceneShadowColor.rgb,
+                    _SceneShadowIntensity);
 
                 return half4(color.rgb, color.a * _OcclusionFade);
             }

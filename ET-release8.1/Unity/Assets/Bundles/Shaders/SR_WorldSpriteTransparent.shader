@@ -1,12 +1,19 @@
 Shader "Custom/SR_WorldSpriteTransparent"
 {
     // Cloud shadows: GetShadowAttenuation() via SR_CloudShadowsIntegration when _SSCS_RECEIVE is enabled.
+    // Scene shadows: sample global _SceneShadowRT; material Vector4 channel mask matches RT RGBA channels.
     Properties
     {
         [MainTexture] _BaseMap("Texture", 2D) = "white" {}
         [MainColor] _BaseColor("Tint", Color) = (1, 1, 1, 1)
         _OcclusionFade("Occlusion Fade", Range(0, 1)) = 1
         _BorderClip("Border Clip (Left, Top, Right, Bottom)", Vector) = (0, 0, 0, 0)
+
+        [Header(Scene Shadow)]
+        [Toggle] _UseSceneShadow("Use Scene Shadow", Float) = 1
+        _SceneShadowChannelMask("Scene Shadow Channel Mask", Vector) = (1, 0, 0, 0)
+        _SceneShadowColor("Scene Shadow Color", Color) = (0, 0, 0, 1)
+        _SceneShadowIntensity("Scene Shadow Intensity", Range(0, 1)) = 0.5
     }
 
     SubShader
@@ -49,12 +56,17 @@ Shader "Custom/SR_WorldSpriteTransparent"
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
             #endif
+            #include "SR_SceneShadowIntegration.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST;
                 float4 _BaseColor;
                 float _OcclusionFade;
                 float4 _BorderClip;
+                half _UseSceneShadow;
+                half _SceneShadowIntensity;
+                half4 _SceneShadowColor;
+                half4 _SceneShadowChannelMask;
             CBUFFER_END
 
             TEXTURE2D(_BaseMap);
@@ -121,13 +133,27 @@ Shader "Custom/SR_WorldSpriteTransparent"
 
                 half3 normalWS = normalize(input.normalWS);
                 Light mainLight = GetMainLight(input.shadowCoord);
-                half ndotl = saturate(dot(normalWS, mainLight.direction));
-                half3 mainLightColor = mainLight.color * mainLight.distanceAttenuation * mainLight.shadowAttenuation * ndotl;
+                half ndotl = saturate(dot(normalWS, mainLight.direction) * 0.5h + 0.5h);
+                half3 mainLightColor = mainLight.color
+                    * mainLight.distanceAttenuation
+                    * mainLight.shadowAttenuation
+                    * ndotl;
 
                 half3 bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
                 MixRealtimeAndBakedGI(mainLight, normalWS, bakedGI);
 
-                half3 litColor = albedo * (bakedGI + mainLightColor);
+                // Scene shadow on unlit albedo first, then soft lighting tint.
+                half3 shadedAlbedo = ApplySRSceneShadow(
+                    albedo,
+                    input.positionCS,
+                    _SceneShadowChannelMask,
+                    _UseSceneShadow,
+                    _SceneShadowColor.rgb,
+                    _SceneShadowIntensity);
+
+                half3 lighting = bakedGI + mainLightColor;
+                half lightLuma = max(max(lighting.r, lighting.g), lighting.b);
+                half3 litColor = shadedAlbedo * lerp(half3(1.0h, 1.0h, 1.0h), lighting, saturate(lightLuma * 1000.0h));
 
                 #if defined(_SSCS_RECEIVE)
                     litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
