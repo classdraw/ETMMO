@@ -95,7 +95,7 @@ Transform:
   m_GameObject: {fileID: 2543417875691799749}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.8775, y: 0, z: -0.3837}
+  m_LocalPosition: {x: 0.57, y: 0, z: -0.18}
   m_LocalScale: {x: 1.7735244, y: 1.3497802, z: 1.1149}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -149,7 +149,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -829991205
   m_SortingLayer: 2
-  m_SortingOrder: 42
+  m_SortingOrder: 22
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &7205596505594825056
 MonoBehaviour:
@@ -323,7 +323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2225787441244657903
 Transform:
   m_ObjectHideFlags: 0
