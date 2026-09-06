@@ -98,6 +98,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localOrder: 2
   sortingLayerOverride: 
+--- !u!1 &240261435548790253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7724358543456340290}
+  - component: {fileID: 6027614935471169349}
+  m_Layer: 0
+  m_Name: FakeLight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7724358543456340290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240261435548790253}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.6278687, y: -0.78090835, z: -0.6992656}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1262794914320138549}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6027614935471169349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240261435548790253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 173436465db809a429f53d4560909dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightType: 0
+  color: {r: 0.8773585, g: 0.7420911, b: 0.48420256, a: 1}
+  intensity: 0.3
+  range: 1.2
+  priority: 100
+  outerSpotAngle: 30
+  innerSpotAngle: 21.8
 --- !u!1 &325310634093705218
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,6 +316,7 @@ Transform:
   m_Children:
   - {fileID: 6939021197842483167}
   - {fileID: 807785488955968669}
+  - {fileID: 7724358543456340290}
   m_Father: {fileID: 6063412295455276394}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2119940187314176089
@@ -1300,6 +1352,7 @@ Transform:
   - {fileID: 2260380314063888347}
   - {fileID: 689856105357626444}
   - {fileID: 343097135267296993}
+  - {fileID: 4286387888050412559}
   - {fileID: 1262794914320138549}
   - {fileID: 2762610425744805745}
   m_Father: {fileID: 2990679541865620334}
@@ -2749,6 +2802,57 @@ MonoBehaviour:
   - {fileID: 662520095051400934}
   - {fileID: 9033421160089148570}
   - {fileID: 2115852570833378824}
+--- !u!1 &7433860419726628628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4286387888050412559}
+  - component: {fileID: 6364463735850335973}
+  m_Layer: 0
+  m_Name: FakeLight (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4286387888050412559
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7433860419726628628}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.36, y: 0.36, z: -1.96}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6063412295455276394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6364463735850335973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7433860419726628628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 173436465db809a429f53d4560909dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightType: 0
+  color: {r: 0.8773585, g: 0.7420911, b: 0.48420256, a: 1}
+  intensity: 0.01
+  range: 6
+  priority: 100
+  outerSpotAngle: 30
+  innerSpotAngle: 21.8
 --- !u!1 &7797758910785367741
 GameObject:
   m_ObjectHideFlags: 0
@@ -3196,6 +3300,7 @@ MonoBehaviour:
   triggerLayerMask:
     serializedVersion: 2
     m_Bits: 8192
+  needMainPlayer: 1
   colliderEnabled: 1
 --- !u!65 &1071520277479338666
 BoxCollider:

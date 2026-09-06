@@ -63,9 +63,11 @@ Shader "Custom/SR_TilemapSpriteLit"{
             #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
             #pragma multi_compile_fragment _ _BOUNDS
             #pragma shader_feature_local _NORMALMAP
+            #pragma multi_compile _ _FAKE_ADDITIONAL_LIGHTS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "../../Scripts/ThirdParty/FakeLight/ShaderLibrary/FakeLightEnv.hlsl"
 
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
@@ -195,6 +197,7 @@ Shader "Custom/SR_TilemapSpriteLit"{
 
                 half3 lighting = bakedGI + mainLightColor + GetAdditionalLighting(input.positionWS, normalWS);
                 half3 litColor = albedo * lighting;
+                litColor += GetFakeLight(input.positionWS, normalWS);
 
                 #if defined(_SSCS_RECEIVE)
                     litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);

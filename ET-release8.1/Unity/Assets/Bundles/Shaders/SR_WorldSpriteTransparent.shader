@@ -49,9 +49,11 @@ Shader "Custom/SR_WorldSpriteTransparent"
             #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
             #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
             #pragma multi_compile_fragment _ _BOUNDS
+            #pragma multi_compile _ _FAKE_ADDITIONAL_LIGHTS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "../../Scripts/ThirdParty/FakeLight/ShaderLibrary/FakeLightEnv.hlsl"
 
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
@@ -154,6 +156,7 @@ Shader "Custom/SR_WorldSpriteTransparent"
                 half3 lighting = bakedGI + mainLightColor;
                 half lightLuma = max(max(lighting.r, lighting.g), lighting.b);
                 half3 litColor = shadedAlbedo * lerp(half3(1.0h, 1.0h, 1.0h), lighting, saturate(lightLuma * 1000.0h));
+                litColor += GetFakeLight(input.positionWS, normalWS);
 
                 #if defined(_SSCS_RECEIVE)
                     litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);

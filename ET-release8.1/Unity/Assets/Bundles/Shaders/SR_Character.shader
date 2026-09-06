@@ -61,9 +61,11 @@ Shader "Custom/SR_Character"
             #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
             #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
             #pragma multi_compile_fragment _ _BOUNDS
+            #pragma multi_compile _ _FAKE_ADDITIONAL_LIGHTS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "../../Scripts/ThirdParty/FakeLight/ShaderLibrary/FakeLightEnv.hlsl"
 
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
@@ -240,6 +242,7 @@ Shader "Custom/SR_Character"
                 half lightLuma = max(max(lighting.r, lighting.g), lighting.b);
                 // If GI/main light data is unavailable, keep original unlit brightness.
                 color.rgb *= lerp(half3(1.0h, 1.0h, 1.0h), lighting, saturate(lightLuma * 1000.0h));
+                color.rgb += GetFakeLight(input.positionWS, normalWS);
 
                 #if defined(_SSCS_RECEIVE)
                     color.rgb = ApplySSCSCloudShadow(color.rgb, input.positionWS, normalWS);
