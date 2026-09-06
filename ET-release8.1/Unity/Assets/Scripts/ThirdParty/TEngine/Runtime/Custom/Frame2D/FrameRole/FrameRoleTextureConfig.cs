@@ -51,7 +51,7 @@ namespace ET
     /// 单个部位的贴图分配表。body / head 等各建一份。
     /// Excel 配 display，运行时 <see cref="TryGetTexture"/> 直接取图。
     /// </summary>
-    [CreateAssetMenu(fileName = "FrameRoleTexture_Body", menuName = "ET/Frame2D/Frame Role Texture Config", order = 210)]
+    [CreateAssetMenu(fileName = "FrameRoleTexture_Body", menuName = "Tools/Frame2D/Frame Role Texture Config", order = 210)]
     public class FrameRoleTextureConfig : ScriptableObject
     {
         [Tooltip("本文件对应的部位 Key，自行填写 int")]

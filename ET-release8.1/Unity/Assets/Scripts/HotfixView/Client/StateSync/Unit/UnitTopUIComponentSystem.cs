@@ -13,7 +13,7 @@ namespace ET.Client
             var gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
             self.HudInfoObj = new GameObject("HudInfoObj");
             self.HudInfoObj.transform.parent = gameObject.transform;
-            self.HudInfoObj.transform.SetLocalPositionAndRotation(Vector3.zero,Quaternion.identity);
+            self.HudInfoObj.transform.SetLocalPositionAndRotation(new Vector3(0f,0f,1f),Quaternion.identity);
             self.HudInfoScript=self.HudInfoObj.AddComponent<HudInfo>();
 
             var unit = self.GetParent<Unit>();

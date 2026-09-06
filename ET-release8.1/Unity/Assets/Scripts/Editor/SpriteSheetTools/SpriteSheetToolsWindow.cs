@@ -11,7 +11,7 @@ namespace ET
     /// </summary>
     public class SpriteSheetToolsWindow : EditorWindow
     {
-        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "边框", "2D贴图制作", "图片改色" };
+        private static readonly string[] TabNames = { "合并", "切割", "背景色去除", "序列帧微调", "序列帧骨骼数据导出", "边框", "2D贴图制作", "图片改色" };
         private static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".tga", ".bmp" };
 
         private int selectedTab;
@@ -75,6 +75,7 @@ namespace ET
 
         [SerializeField] private TwoDTextureMakerTab twoDTextureMakerTab = new TwoDTextureMakerTab();
         [SerializeField] private ImageRecolorTab imageRecolorTab = new ImageRecolorTab();
+        [SerializeField] private FrameBoneExportTab frameBoneExportTab = new FrameBoneExportTab();
 
         [MenuItem("Tools/序列帧", false, 53)]
         public static void Open()
@@ -104,12 +105,15 @@ namespace ET
                     DrawTweakTab();
                     break;
                 case 4:
-                    DrawBorderTab();
+                    DrawFrameBoneExportTab();
                     break;
                 case 5:
-                    DrawTwoDTextureTab();
+                    DrawBorderTab();
                     break;
                 case 6:
+                    DrawTwoDTextureTab();
+                    break;
+                case 7:
                     DrawImageRecolorTab();
                     break;
             }
@@ -118,16 +122,25 @@ namespace ET
         private void OnEnable()
         {
             EditorApplication.update += UpdateTweakPreviewPlayback;
+            EditorApplication.update += UpdateFrameBoneExportPlayback;
         }
 
         private void OnDisable()
         {
             EditorApplication.update -= UpdateTweakPreviewPlayback;
+            EditorApplication.update -= UpdateFrameBoneExportPlayback;
             ClearBackgroundPreview();
             DestroyOwnedTexture(ref backgroundSourceTexture);
             ClearTweakTexture();
             ClearBorderTextures();
             imageRecolorTab.ClearPreview();
+            frameBoneExportTab.OnDisable();
+        }
+
+        private void DrawFrameBoneExportTab()
+        {
+            frameBoneExportTab.SetHost(this);
+            frameBoneExportTab.OnGUI();
         }
 
         private void DrawCombineTab()
@@ -2340,6 +2353,16 @@ namespace ET
             tweakLastFrameTime = now;
             tweakPlayIndex = (tweakPlayIndex + 1) % selectedCount;
             Repaint();
+        }
+
+        private void UpdateFrameBoneExportPlayback()
+        {
+            if (selectedTab != 4)
+            {
+                return;
+            }
+
+            frameBoneExportTab.UpdatePlayback();
         }
 
         private Vector2 GetTweakAnchorScreenPosition(Rect frameRect)

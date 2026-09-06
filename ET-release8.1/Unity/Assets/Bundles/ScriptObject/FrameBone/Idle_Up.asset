@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bfc28714301a9a4480aa5ae1f8aa9a4, type: 3}
+  m_Name: Idle_Up
+  m_EditorClassIdentifier: 
+  frameCount: 2
+  frameMeshFrames:
+  - localPositionXZ: {x: 0, y: 0.48}
+    localScaleXZ: {x: 1.5, y: 1.5}
+  - localPositionXZ: {x: 0, y: 0.48}
+    localScaleXZ: {x: 1.5, y: 1.5}
+  boneTracks:
+  - boneType: 3
+    framePositions:
+    - localPosition: {x: -0.395, y: 0, z: -0.29}
+    - localPosition: {x: -0.415, y: 0, z: -0.22}
+  - boneType: 4
+    framePositions:
+    - localPosition: {x: 0.365, y: 0, z: -0.27}
+    - localPosition: {x: 0.405, y: 0, z: -0.21}
+  - boneType: 1
+    framePositions:
+    - localPosition: {x: 0, y: 0, z: 1.1}
+    - localPosition: {x: 0, y: 0, z: 1.1}

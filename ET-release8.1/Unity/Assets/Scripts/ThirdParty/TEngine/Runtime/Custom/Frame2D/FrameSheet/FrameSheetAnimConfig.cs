@@ -130,6 +130,30 @@ namespace ET
         [Min(0.0001f)]
         public float interval = 0.1f;
 
+        [Header("Facing Bone Offset Configs")]
+        [Tooltip("朝下方向的骨骼逐帧偏移；为空则播放时不驱动骨骼")]
+        public FrameAnimBoneConfig downBoneConfig;
+
+        [Tooltip("朝左方向的骨骼逐帧偏移；为空则播放时不驱动骨骼")]
+        public FrameAnimBoneConfig leftBoneConfig;
+
+        [Tooltip("朝右方向的骨骼逐帧偏移；为空则播放时不驱动骨骼")]
+        public FrameAnimBoneConfig rightBoneConfig;
+
+        [Tooltip("朝上方向的骨骼逐帧偏移；为空则播放时不驱动骨骼")]
+        public FrameAnimBoneConfig upBoneConfig;
+
+        public FrameAnimBoneConfig GetFacingBoneConfig(FrameSheetFacing facing)
+        {
+            switch (facing)
+            {
+                case FrameSheetFacing.Left: return leftBoneConfig;
+                case FrameSheetFacing.Right: return rightBoneConfig;
+                case FrameSheetFacing.Up: return upBoneConfig;
+                default: return downBoneConfig;
+            }
+        }
+
         public int GetRow(FrameSheetFacing facing)
         {
             switch (facing)
@@ -209,7 +233,7 @@ namespace ET
         }
     }
 
-    [CreateAssetMenu(fileName = "FrameSheetAnimConfig", menuName = "ET/Tools/FrameSheet Anim Config", order = 200)]
+    [CreateAssetMenu(fileName = "FrameSheetAnimConfig", menuName = "Tools/Frame2D/FrameSheet Anim Config", order = 200)]
     public class FrameSheetAnimConfig : ScriptableObject
     {
         [Header("Grid Shared")]

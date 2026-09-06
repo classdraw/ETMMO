@@ -57,7 +57,7 @@ namespace ET.Editor.Frame2D
     {
         private const string ScriptObjectFolder = "Assets/Bundles/ScriptObject/FrameRole";
 
-        [MenuItem("ET/Frame2D/Create Default Role Texture Assets")]
+        [MenuItem("Tools/Frame2D/Create Default Role Texture Assets")]
         public static void CreateDefaultAssets()
         {
             if (!AssetDatabase.IsValidFolder("Assets/Bundles/ScriptObject"))

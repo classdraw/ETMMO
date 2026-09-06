@@ -7,7 +7,7 @@ namespace ET
     /// <summary>
     /// 汇总各部位 ScriptableObject。Excel 的 display 解码出部位后，从这里取对应配置再取图。
     /// </summary>
-    [CreateAssetMenu(fileName = "FrameRoleTextureCatalog", menuName = "ET/Frame2D/Frame Role Texture Catalog", order = 211)]
+    [CreateAssetMenu(fileName = "FrameRoleTextureCatalog", menuName = "Tools/Frame2D/Frame Role Texture Catalog", order = 211)]
     public class FrameRoleTextureCatalog : ScriptableObject
     {
         public List<FrameRoleTextureConfig> partConfigs = new List<FrameRoleTextureConfig>();

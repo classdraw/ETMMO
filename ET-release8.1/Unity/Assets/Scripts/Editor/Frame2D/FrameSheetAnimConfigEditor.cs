@@ -113,6 +113,14 @@ namespace ET.Editor.Frame2D
             EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("loop"));
             EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("interval"));
 
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField("Facing Bone Offset Configs", EditorStyles.miniBoldLabel);
+            EditorGUILayout.HelpBox("拖入 FrameAnimBoneConfig；为空则该方向播放时不驱动骨骼偏移。", MessageType.None);
+            EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("downBoneConfig"), new GUIContent("Down Bone Config"));
+            EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("leftBoneConfig"), new GUIContent("Left Bone Config"));
+            EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("rightBoneConfig"), new GUIContent("Right Bone Config"));
+            EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("upBoneConfig"), new GUIContent("Up Bone Config"));
+
             EditorGUI.indentLevel--;
             EditorGUILayout.EndVertical();
         }
