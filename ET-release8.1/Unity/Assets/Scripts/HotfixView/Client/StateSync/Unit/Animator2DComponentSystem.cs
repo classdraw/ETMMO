@@ -48,14 +48,14 @@ namespace ET.Client
 			try
 			{
 				self.SyncFacingFromUnit();
-				FrameSheetAnimType animType = ToFrameSheetAnimType(self.MotionType);
-				if (animType == FrameSheetAnimType.None || self.AnimPlayer == null)
+				MotionType clipType = ResolveClipMotion(self.MotionType);
+				if (clipType == MotionType.None || self.AnimPlayer == null)
 				{
 					self.MotionType = MotionType.None;
 					return;
 				}
 
-				self.AnimPlayer.Play(animType, self.Facing, self.MontionSpeed);
+				self.AnimPlayer.Play(clipType, self.Facing, self.MontionSpeed);
 				self.MontionSpeed = 1f;
 				self.MotionType = MotionType.None;
 			}
@@ -67,8 +67,8 @@ namespace ET.Client
 
 		public static bool HasAnim(this Animator2DComponent self, MotionType motionType)
 		{
-			FrameSheetAnimType animType = ToFrameSheetAnimType(motionType);
-			return animType != FrameSheetAnimType.None && self.AvailableAnims.Contains(animType);
+			MotionType clipType = ResolveClipMotion(motionType);
+			return clipType != MotionType.None && self.AvailableAnims.Contains(motionType);
 		}
 
 		public static void PlayInTime(this Animator2DComponent self, MotionType motionType, float time)
@@ -120,8 +120,8 @@ namespace ET.Client
 				return 0f;
 			}
 
-			FrameSheetAnimType animType = ToFrameSheetAnimType(motionType);
-			return self.AnimPlayer.GetClipDuration(animType);
+			MotionType clipType = ResolveClipMotion(motionType);
+			return self.AnimPlayer.GetClipDuration(clipType);
 		}
 
 		public static void SetFacing(this Animator2DComponent self, FrameSheetFacing facing)
@@ -177,7 +177,7 @@ namespace ET.Client
 
 		public static void SetAnimatorSpeed(this Animator2DComponent self, float speed)
 		{
-			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == FrameSheetAnimType.None)
+			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == MotionType.None)
 			{
 				return;
 			}
@@ -188,7 +188,7 @@ namespace ET.Client
 
 		public static void ResetAnimatorSpeed(this Animator2DComponent self)
 		{
-			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == FrameSheetAnimType.None)
+			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == MotionType.None)
 			{
 				return;
 			}
@@ -232,25 +232,25 @@ namespace ET.Client
 
 			foreach (MotionType motionType in Enum.GetValues(typeof(MotionType)))
 			{
-				FrameSheetAnimType animType = ToFrameSheetAnimType(motionType);
-				if (animType != FrameSheetAnimType.None && self.AnimPlayer.TryGetClip(animType, out _))
+				if (motionType == MotionType.None)
 				{
-					self.AvailableAnims.Add(animType);
+					continue;
+				}
+
+				MotionType clipType = ResolveClipMotion(motionType);
+				if (clipType != MotionType.None && self.AnimPlayer.TryGetClip(clipType, out _))
+				{
+					self.AvailableAnims.Add(motionType);
 				}
 			}
 		}
 
-		private static FrameSheetAnimType ToFrameSheetAnimType(MotionType motionType)
+		private static MotionType ResolveClipMotion(MotionType motionType)
 		{
 			return motionType switch
 			{
-				MotionType.Idle => FrameSheetAnimType.Idle,
-				MotionType.Run => FrameSheetAnimType.Move,
-				MotionType.Attack => FrameSheetAnimType.Archery,
-				MotionType.Attack1 => FrameSheetAnimType.Cast,
-				MotionType.Hit => FrameSheetAnimType.Stand,
-				MotionType.Death => FrameSheetAnimType.Stand,
-				_ => FrameSheetAnimType.None,
+				MotionType.Hit or MotionType.Death => MotionType.Stand,
+				_ => motionType,
 			};
 		}
 

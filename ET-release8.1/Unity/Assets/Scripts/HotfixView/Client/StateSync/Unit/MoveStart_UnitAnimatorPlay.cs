@@ -23,7 +23,7 @@ namespace ET.Client
             }
 
             animator.SyncFacingFromUnit();
-            animator.Play(MotionType.Run, 1f);
+            animator.Play(MotionType.Move, 1f);
             await ETTask.CompletedTask;
         }
     }

@@ -7,7 +7,7 @@ namespace ET.Editor.Frame2D
     [CustomEditor(typeof(FrameSheetAnimPlayer))]
     public class FrameSheetAnimPlayerEditor : UnityEditor.Editor
     {
-        private FrameSheetAnimType previewAnim = FrameSheetAnimType.Idle;
+        private MotionType previewAnim = MotionType.Idle;
         private FrameSheetFacing previewFacing = FrameSheetFacing.Down;
 
         public override void OnInspectorGUI()
@@ -25,7 +25,7 @@ namespace ET.Editor.Frame2D
 
             using (new EditorGUI.DisabledScope(!canPreview))
             {
-                previewAnim = (FrameSheetAnimType)EditorGUILayout.EnumPopup("Animation", previewAnim);
+                previewAnim = (MotionType)EditorGUILayout.EnumPopup("Animation", previewAnim);
                 previewFacing = (FrameSheetFacing)EditorGUILayout.EnumPopup("Facing", previewFacing);
 
                 if (GUILayout.Button("Play Preview", GUILayout.Height(28)))

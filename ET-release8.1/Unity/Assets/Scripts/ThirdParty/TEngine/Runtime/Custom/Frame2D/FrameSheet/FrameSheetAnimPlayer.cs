@@ -7,16 +7,16 @@ namespace ET
     {
         [SerializeField] private FrameSheetAnimConfig animConfig;
         [SerializeField] private Renderer targetRenderer;
-        [SerializeField] private FrameSheetAnimType defaultAnim = FrameSheetAnimType.Idle;
+        [SerializeField] private MotionType defaultAnim = MotionType.Idle;
         [SerializeField] private FrameSheetFacing defaultFacing = FrameSheetFacing.Down;
 
         private MaterialPropertyBlock propertyBlock;
-        private FrameSheetAnimType currentAnim = FrameSheetAnimType.None;
+        private MotionType currentAnim = MotionType.None;
         private FrameSheetFacing currentFacing = FrameSheetFacing.Down;
         private float currentSpeedMultiplier = 1f;
         private bool isPaused;
 
-        public FrameSheetAnimType CurrentAnim => currentAnim;
+        public MotionType CurrentAnim => currentAnim;
         public FrameSheetFacing CurrentFacing => currentFacing;
         public float CurrentSpeedMultiplier => currentSpeedMultiplier;
         public bool IsPaused => isPaused;
@@ -34,7 +34,7 @@ namespace ET
 
         private void Start()
         {
-            if (defaultAnim != FrameSheetAnimType.None)
+            if (defaultAnim != MotionType.None)
             {
                 Play(defaultAnim, defaultFacing);
             }
@@ -45,17 +45,17 @@ namespace ET
             animConfig = config;
         }
 
-        public bool Play(FrameSheetAnimType animType)
+        public bool Play(MotionType animType)
         {
             return Play(animType, currentFacing);
         }
 
-        public bool Play(FrameSheetAnimType animType, FrameSheetFacing facing)
+        public bool Play(MotionType animType, FrameSheetFacing facing)
         {
             return Play(animType, facing, 1f);
         }
 
-        public bool TryGetClip(FrameSheetAnimType animType, out FrameSheetAnimClip clip)
+        public bool TryGetClip(MotionType animType, out FrameSheetAnimClip clip)
         {
             clip = null;
             if (animConfig == null)
@@ -66,7 +66,7 @@ namespace ET
             return animConfig.TryGetClip(animType, out clip);
         }
 
-        public float GetClipDuration(FrameSheetAnimType animType)
+        public float GetClipDuration(MotionType animType)
         {
             if (!TryGetClip(animType, out FrameSheetAnimClip clip))
             {
@@ -77,11 +77,11 @@ namespace ET
             return frameCount * clip.interval;
         }
 
-        public bool Play(FrameSheetAnimType animType, FrameSheetFacing facing, float speedMultiplier)
+        public bool Play(MotionType animType, FrameSheetFacing facing, float speedMultiplier)
         {
             EnsureInitialized();
 
-            if (animConfig == null || targetRenderer == null || animType == FrameSheetAnimType.None)
+            if (animConfig == null || targetRenderer == null || animType == MotionType.None)
             {
                 return false;
             }
@@ -131,7 +131,7 @@ namespace ET
             }
 
             isPaused = false;
-            if (currentAnim != FrameSheetAnimType.None)
+            if (currentAnim != MotionType.None)
             {
                 Play(currentAnim, currentFacing, currentSpeedMultiplier);
             }
@@ -144,7 +144,7 @@ namespace ET
                 return true;
             }
 
-            if (currentAnim == FrameSheetAnimType.None)
+            if (currentAnim == MotionType.None)
             {
                 currentFacing = facing;
                 return true;

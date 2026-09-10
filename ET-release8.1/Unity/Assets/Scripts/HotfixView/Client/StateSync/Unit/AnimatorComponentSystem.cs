@@ -70,7 +70,7 @@ namespace ET.Client
 				//self.Animator.SetTrigger(self.MotionType.ToString());
 				self.Animator.CrossFade(self.MotionType.ToString().ToLower(),0.1f);
 				self.Animator.speed = self.MontionSpeed;
-				if (self.MotionType==MotionType.Run)
+				if (self.MotionType==MotionType.Move)
 				{
 					self.Animator.SetBool("isMoveing",true);
 				}
