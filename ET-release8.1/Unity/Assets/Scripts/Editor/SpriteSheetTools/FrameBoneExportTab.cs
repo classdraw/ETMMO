@@ -44,11 +44,12 @@ namespace ET
         [SerializeField] private List<FrameBoneExportBoneEntry> bones = new List<FrameBoneExportBoneEntry>();
         [SerializeField] private Vector2 meshOffsetXZ = Vector2.zero;
         [SerializeField] private Vector2 meshScaleXZ = Vector2.one;
-        [SerializeField] private float previewPixelsPerUnit = 100f;
+        [SerializeField] private string batchResetFolderPath;
 
         [NonSerialized] private Vector2 scrollPosition;
         [NonSerialized] private Vector2 frameListScroll;
         [NonSerialized] private Rect dropRect;
+        [NonSerialized] private Rect batchFolderDropRect;
         [NonSerialized] private Rect previewRect;
         [NonSerialized] private Rect previewDrawRect;
         [NonSerialized] private double lastPlayTime;
@@ -139,6 +140,23 @@ namespace ET
             {
                 EditorGUILayout.LabelField($"未指定时将新建到: {ExportFolder}/", EditorStyles.miniLabel);
             }
+
+            EditorGUILayout.Space(8f);
+            EditorGUILayout.LabelField("批量重置 Graphics 偏移/缩放", EditorStyles.boldLabel);
+            batchFolderDropRect = DrawDropBox(
+                string.IsNullOrEmpty(batchResetFolderPath) ? "拖拽文件夹到此处" : batchResetFolderPath,
+                DropBoxHeight);
+            using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(batchResetFolderPath)))
+            {
+                if (GUILayout.Button("重置文件夹内全部 Config 偏移为 (0,0)、缩放为 (1,1)", GUILayout.Height(28f)))
+                {
+                    BatchResetMeshTransformInFolder();
+                }
+            }
+
+            EditorGUILayout.HelpBox(
+                "将文件夹内所有 FrameAnimBoneConfig 的每帧 Graphics 偏移重置为 (0,0)、缩放重置为 (1,1)。",
+                MessageType.None);
 
             if (sourceTexture == null)
             {
@@ -323,7 +341,9 @@ namespace ET
             int column = gridIndex % Mathf.Max(columns, 1);
 
             EditorGUILayout.LabelField("预览（当前编辑帧）", EditorStyles.boldLabel);
-            previewPixelsPerUnit = Mathf.Max(1f, EditorGUILayout.FloatField("预览缩放 (像素/Unity单位)", previewPixelsPerUnit));
+            EditorGUILayout.LabelField(
+                "骨骼坐标与运行时 Graphics Quad(1x1) 一致：X/Z 为相对中心的 Unity 单位偏移。",
+                EditorStyles.miniLabel);
             previewRect = GUILayoutUtility.GetRect(10f, PreviewHeight, GUILayout.ExpandWidth(true));
             if (previewRect.width < 10f)
             {
@@ -358,17 +378,14 @@ namespace ET
 
             Vector2 meshOffset = GetMeshOffsetXZ();
             Vector2 meshScale = GetMeshScaleXZ();
-            float ppu = Mathf.Max(previewPixelsPerUnit, 0.0001f);
 
             GUI.BeginClip(drawRect);
-            float scaleX = drawRect.width / Mathf.Max(targetWidth, 0.0001f);
-            float scaleY = drawRect.height / Mathf.Max(targetHeight, 0.0001f);
             Vector2 center = new Vector2(drawRect.width * 0.5f, drawRect.height * 0.5f);
-            float texW = targetWidth * scaleX * meshScale.x;
-            float texH = targetHeight * scaleY * meshScale.y;
+            float texW = drawRect.width * meshScale.x;
+            float texH = drawRect.height * meshScale.y;
             Rect sourceDrawRect = new Rect(
-                center.x - texW * 0.5f + meshOffset.x * ppu,
-                center.y - texH * 0.5f - meshOffset.y * ppu,
+                center.x - texW * 0.5f + meshOffset.x * drawRect.width,
+                center.y - texH * 0.5f - meshOffset.y * drawRect.height,
                 texW,
                 texH);
             GUI.DrawTextureWithTexCoords(sourceDrawRect, sourceTexture, GetCellUv(row, column), true);
@@ -597,15 +614,18 @@ namespace ET
 
         private Vector2 LocalPositionToGui(Rect drawRect, Vector3 localPos)
         {
-            float ppu = Mathf.Max(previewPixelsPerUnit, 0.0001f);
-            return drawRect.center + new Vector2(localPos.x * ppu, -localPos.z * ppu);
+            return drawRect.center + new Vector2(
+                localPos.x * drawRect.width,
+                -localPos.z * drawRect.height);
         }
 
         private Vector3 GuiToLocalPosition(Rect drawRect, Vector2 guiPos)
         {
-            float ppu = Mathf.Max(previewPixelsPerUnit, 0.0001f);
             Vector2 delta = guiPos - drawRect.center;
-            return new Vector3(delta.x / ppu, 0f, -delta.y / ppu);
+            return new Vector3(
+                delta.x / Mathf.Max(drawRect.width, 0.0001f),
+                0f,
+                -delta.y / Mathf.Max(drawRect.height, 0.0001f));
         }
 
         private int GetEditingGridIndex()
@@ -815,7 +835,9 @@ namespace ET
                 return;
             }
 
-            if (!dropRect.Contains(evt.mousePosition))
+            bool overImageDrop = dropRect.Contains(evt.mousePosition);
+            bool overFolderDrop = batchFolderDropRect.Contains(evt.mousePosition);
+            if (!overImageDrop && !overFolderDrop)
             {
                 return;
             }
@@ -824,7 +846,14 @@ namespace ET
             if (evt.type == EventType.DragPerform)
             {
                 DragAndDrop.AcceptDrag();
-                TryLoadFromDrag();
+                if (overFolderDrop)
+                {
+                    TryLoadBatchFolderFromDrag();
+                }
+                else
+                {
+                    TryLoadFromDrag();
+                }
             }
 
             evt.Use();
@@ -850,6 +879,69 @@ namespace ET
                     return;
                 }
             }
+        }
+
+        private void TryLoadBatchFolderFromDrag()
+        {
+            foreach (UnityEngine.Object obj in DragAndDrop.objectReferences)
+            {
+                string path = AssetDatabase.GetAssetPath(obj);
+                if (!string.IsNullOrEmpty(path) && AssetDatabase.IsValidFolder(path))
+                {
+                    batchResetFolderPath = path.Replace('\\', '/');
+                    return;
+                }
+            }
+
+            foreach (string path in DragAndDrop.paths)
+            {
+                string normalized = path.Replace('\\', '/');
+                if (AssetDatabase.IsValidFolder(normalized))
+                {
+                    batchResetFolderPath = normalized;
+                    return;
+                }
+            }
+        }
+
+        private void BatchResetMeshTransformInFolder()
+        {
+            if (string.IsNullOrEmpty(batchResetFolderPath) || !AssetDatabase.IsValidFolder(batchResetFolderPath))
+            {
+                EditorUtility.DisplayDialog("序列帧", "请先拖入有效的 Project 文件夹。", "确定");
+                return;
+            }
+
+            string[] guids = AssetDatabase.FindAssets("t:FrameAnimBoneConfig", new[] { batchResetFolderPath });
+            if (guids.Length == 0)
+            {
+                EditorUtility.DisplayDialog("序列帧", $"文件夹内未找到 FrameAnimBoneConfig：\n{batchResetFolderPath}", "确定");
+                return;
+            }
+
+            int resetCount = 0;
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                FrameAnimBoneConfig config = AssetDatabase.LoadAssetAtPath<FrameAnimBoneConfig>(assetPath);
+                if (config == null)
+                {
+                    continue;
+                }
+
+                Undo.RecordObject(config, "Batch Reset Graphics Transform");
+                config.EnsureTrackFrameCount();
+                for (int i = 0; i < config.frameMeshFrames.Count; i++)
+                {
+                    config.frameMeshFrames[i] = FrameAnimMeshFrameData.Default;
+                }
+
+                EditorUtility.SetDirty(config);
+                resetCount++;
+            }
+
+            AssetDatabase.SaveAssets();
+            EditorUtility.DisplayDialog("序列帧", $"已重置 {resetCount} 个 FrameAnimBoneConfig 的 Graphics 偏移/缩放。", "确定");
         }
 
         private void LoadExternalImage(string path)

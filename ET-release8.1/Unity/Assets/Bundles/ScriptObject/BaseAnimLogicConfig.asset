@@ -73,10 +73,10 @@ MonoBehaviour:
     endColumn: 10
     loop: 1
     interval: 0.2
-    downBoneConfig: {fileID: 0}
-    leftBoneConfig: {fileID: 0}
-    rightBoneConfig: {fileID: 0}
-    upBoneConfig: {fileID: 0}
+    downBoneConfig: {fileID: 11400000, guid: df0dd5efa6407f14cad388a4ae5f5fea, type: 2}
+    leftBoneConfig: {fileID: 11400000, guid: 305fa5692e2181d43b31d07e40027c43, type: 2}
+    rightBoneConfig: {fileID: 11400000, guid: 948367838d505e54aae094c95cd9e1b6, type: 2}
+    upBoneConfig: {fileID: 11400000, guid: 2ba0a24c727eb5e4ab3e69917576c25f, type: 2}
   - animType: 2
     bodyTextureSlot: 1
     headTextureSlot: 2
@@ -197,10 +197,10 @@ MonoBehaviour:
     endColumn: 8
     loop: 1
     interval: 0.1
-    downBoneConfig: {fileID: 0}
-    leftBoneConfig: {fileID: 0}
-    rightBoneConfig: {fileID: 0}
-    upBoneConfig: {fileID: 0}
+    downBoneConfig: {fileID: 11400000, guid: a91e0093b1768b445b90c79ef8726eba, type: 2}
+    leftBoneConfig: {fileID: 11400000, guid: 515f5ef7d7323be4e9fe22a4353e1289, type: 2}
+    rightBoneConfig: {fileID: 11400000, guid: 85e0014d26a72994ba9a1eaf0d4346b0, type: 2}
+    upBoneConfig: {fileID: 11400000, guid: 32d72a8775d21ac4296c8432aa294701, type: 2}
   - animType: 4
     bodyTextureSlot: 1
     headTextureSlot: 2
@@ -321,10 +321,10 @@ MonoBehaviour:
     endColumn: 6
     loop: 0
     interval: 0.1
-    downBoneConfig: {fileID: 0}
-    leftBoneConfig: {fileID: 0}
-    rightBoneConfig: {fileID: 0}
-    upBoneConfig: {fileID: 0}
+    downBoneConfig: {fileID: 11400000, guid: b55f689b61b7a334e9007fa848e86047, type: 2}
+    leftBoneConfig: {fileID: 11400000, guid: e48ba22189f2e6c4bbaae4bcc4bed845, type: 2}
+    rightBoneConfig: {fileID: 11400000, guid: 319c9719a4636354f8053d989e311de0, type: 2}
+    upBoneConfig: {fileID: 11400000, guid: b0c08808b96165d429d580b158bea223, type: 2}
   - animType: 6
     bodyTextureSlot: 1
     headTextureSlot: 2
@@ -383,10 +383,10 @@ MonoBehaviour:
     endColumn: 5
     loop: 0
     interval: 0.1
-    downBoneConfig: {fileID: 0}
-    leftBoneConfig: {fileID: 0}
-    rightBoneConfig: {fileID: 0}
-    upBoneConfig: {fileID: 0}
+    downBoneConfig: {fileID: 11400000, guid: d5fca3b8b8d00504895511690f5bac88, type: 2}
+    leftBoneConfig: {fileID: 11400000, guid: 3c2eab7223d2ce84dbd640f32fbf8584, type: 2}
+    rightBoneConfig: {fileID: 11400000, guid: f364722ea8f464547849bd6f43ddc2ff, type: 2}
+    upBoneConfig: {fileID: 11400000, guid: 467928a952436db449096e5532f103ce, type: 2}
   - animType: 7
     bodyTextureSlot: 1
     headTextureSlot: 2
@@ -507,7 +507,7 @@ MonoBehaviour:
     endColumn: 5
     loop: 0
     interval: 0.1
-    downBoneConfig: {fileID: 0}
-    leftBoneConfig: {fileID: 0}
-    rightBoneConfig: {fileID: 0}
-    upBoneConfig: {fileID: 0}
+    downBoneConfig: {fileID: 11400000, guid: c52da7453ebbd0247a5d7f5bc21b2f6a, type: 2}
+    leftBoneConfig: {fileID: 11400000, guid: c52da7453ebbd0247a5d7f5bc21b2f6a, type: 2}
+    rightBoneConfig: {fileID: 11400000, guid: c52da7453ebbd0247a5d7f5bc21b2f6a, type: 2}
+    upBoneConfig: {fileID: 11400000, guid: c52da7453ebbd0247a5d7f5bc21b2f6a, type: 2}

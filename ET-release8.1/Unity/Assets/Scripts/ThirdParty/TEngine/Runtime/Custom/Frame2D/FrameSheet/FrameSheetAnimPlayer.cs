@@ -1,8 +1,18 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ET
 {
+    [Serializable]
+    public class FrameSheetAnimBoneBinding
+    {
+        public FrameAnimBindBoneType boneType = FrameAnimBindBoneType.Body;
+        public Transform bone;
+    }
+
     [DisallowMultipleComponent]
+    [ExecuteAlways]
     public class FrameSheetAnimPlayer : MonoBehaviour
     {
         [SerializeField] private FrameSheetAnimConfig animConfig;
@@ -10,11 +20,16 @@ namespace ET
         [SerializeField] private MotionType defaultAnim = MotionType.Idle;
         [SerializeField] private FrameSheetFacing defaultFacing = FrameSheetFacing.Down;
 
+        [Header("Bone Bindings")]
+        [Tooltip("拖入各骨骼 GameObject；当前动画/方向无 Bone Config 时位置重置为 (0,0,0)")]
+        [SerializeField] private List<FrameSheetAnimBoneBinding> boneBindings = new List<FrameSheetAnimBoneBinding>();
+
         private MaterialPropertyBlock propertyBlock;
         private MotionType currentAnim = MotionType.None;
         private FrameSheetFacing currentFacing = FrameSheetFacing.Down;
         private float currentSpeedMultiplier = 1f;
         private bool isPaused;
+        private FrameSheetAnimClip currentClip;
 
         public MotionType CurrentAnim => currentAnim;
         public FrameSheetFacing CurrentFacing => currentFacing;
@@ -38,6 +53,16 @@ namespace ET
             {
                 Play(defaultAnim, defaultFacing);
             }
+        }
+
+        private void Update()
+        {
+            UpdateBonePositions();
+        }
+
+        private void OnValidate()
+        {
+            EnsureDefaultBoneBindings();
         }
 
         public void SetConfig(FrameSheetAnimConfig config)
@@ -83,11 +108,17 @@ namespace ET
 
             if (animConfig == null || targetRenderer == null || animType == MotionType.None)
             {
+                currentClip = null;
+                ResetAllBonePositions();
+                ResetMeshTransform();
                 return false;
             }
 
             if (!animConfig.TryGetClip(animType, out FrameSheetAnimClip clip))
             {
+                currentClip = null;
+                ResetAllBonePositions();
+                ResetMeshTransform();
                 return false;
             }
 
@@ -105,7 +136,9 @@ namespace ET
             currentAnim = animType;
             currentFacing = facing;
             currentSpeedMultiplier = speedMultiplier;
+            currentClip = clip;
             isPaused = false;
+            UpdateBonePositions();
             return true;
         }
 
@@ -164,6 +197,146 @@ namespace ET
             {
                 targetRenderer = GetComponentInChildren<Renderer>();
             }
+        }
+
+        private void EnsureDefaultBoneBindings()
+        {
+            if (boneBindings == null)
+            {
+                boneBindings = new List<FrameSheetAnimBoneBinding>();
+            }
+
+            foreach (FrameAnimBindBoneType boneType in Enum.GetValues(typeof(FrameAnimBindBoneType)))
+            {
+                if (HasBoneBinding(boneType))
+                {
+                    continue;
+                }
+
+                boneBindings.Add(new FrameSheetAnimBoneBinding
+                {
+                    boneType = boneType,
+                });
+            }
+        }
+
+        private bool HasBoneBinding(FrameAnimBindBoneType boneType)
+        {
+            for (int i = 0; i < boneBindings.Count; i++)
+            {
+                if (boneBindings[i].boneType == boneType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void UpdateBonePositions()
+        {
+            if (boneBindings == null || boneBindings.Count == 0)
+            {
+                return;
+            }
+
+            if (currentAnim == MotionType.None || currentClip == null)
+            {
+                ResetAllBonePositions();
+                ResetMeshTransform();
+                return;
+            }
+
+            FrameAnimBoneConfig boneConfig = currentClip.GetFacingBoneConfig(currentFacing);
+            if (boneConfig == null)
+            {
+                ResetAllBonePositions();
+                ResetMeshTransform();
+                return;
+            }
+
+            int frameIndex = CalculateCurrentFrameIndex(currentClip);
+            ApplyBoneConfig(boneConfig, frameIndex);
+            ApplyMeshTransform(boneConfig, frameIndex);
+        }
+
+        private int CalculateCurrentFrameIndex(FrameSheetAnimClip clip)
+        {
+            float interval = isPaused ? 99999f : clip.interval / currentSpeedMultiplier;
+            interval = Mathf.Max(interval, 0.0001f);
+
+            int frameCount = Mathf.Max(clip.endColumn - clip.startColumn + 1, 1);
+            int elapsed = Mathf.Max(Mathf.FloorToInt(Time.time / interval), 0);
+            return clip.loop ? elapsed % frameCount : Mathf.Min(elapsed, frameCount - 1);
+        }
+
+        private void ApplyBoneConfig(FrameAnimBoneConfig boneConfig, int frameIndex)
+        {
+            for (int i = 0; i < boneBindings.Count; i++)
+            {
+                Transform bone = boneBindings[i].bone;
+                if (bone == null)
+                {
+                    continue;
+                }
+
+                Vector3 localPosition = Vector3.zero;
+                if (boneConfig.TryGetFramePosition(boneBindings[i].boneType, frameIndex, out Vector3 configPosition))
+                {
+                    localPosition.x = configPosition.x;
+                    localPosition.z = configPosition.z;
+                }
+
+                bone.localPosition = localPosition;
+            }
+        }
+
+        private void ResetAllBonePositions()
+        {
+            if (boneBindings == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < boneBindings.Count; i++)
+            {
+                Transform bone = boneBindings[i].bone;
+                if (bone != null)
+                {
+                    bone.localPosition = Vector3.zero;
+                }
+            }
+        }
+
+        private void ApplyMeshTransform(FrameAnimBoneConfig boneConfig, int frameIndex)
+        {
+            if (targetRenderer == null)
+            {
+                return;
+            }
+
+            Transform meshTransform = targetRenderer.transform;
+            if (boneConfig.TryGetFrameMeshTransform(frameIndex, out FrameAnimMeshFrameData meshFrame))
+            {
+                meshTransform.localPosition = meshFrame.ToLocalPosition();
+                meshTransform.localScale = meshFrame.ToLocalScale();
+            }
+            else
+            {
+                ResetMeshTransform();
+            }
+        }
+
+        private void ResetMeshTransform()
+        {
+            if (targetRenderer == null)
+            {
+                return;
+            }
+
+            Transform meshTransform = targetRenderer.transform;
+            meshTransform.localPosition = Vector3.zero;
+            meshTransform.localScale = Vector3.one;
         }
     }
 }

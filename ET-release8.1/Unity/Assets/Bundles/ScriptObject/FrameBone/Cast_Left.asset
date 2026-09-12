@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameCount: 7
   frameMeshFrames:
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
   boneTracks:
   - boneType: 3
     framePositions:

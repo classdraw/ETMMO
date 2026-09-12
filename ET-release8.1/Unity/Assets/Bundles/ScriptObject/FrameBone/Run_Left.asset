@@ -14,50 +14,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameCount: 8
   frameMeshFrames:
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
   boneTracks:
   - boneType: 3
     framePositions:
-    - localPosition: {x: -0.175, y: 0, z: -0.43}
-    - localPosition: {x: -0.055, y: 0, z: -0.43}
-    - localPosition: {x: -0.285, y: 0, z: -0.37}
-    - localPosition: {x: -0.315, y: 0, z: -0.29}
-    - localPosition: {x: -0.425, y: 0, z: -0.29}
-    - localPosition: {x: -0.305, y: 0, z: -0.43}
-    - localPosition: {x: -0.265, y: 0, z: -0.38}
-    - localPosition: {x: -0.165, y: 0, z: -0.37}
+    - localPosition: {x: -0.07417583, y: 0, z: -0.29910713}
+    - localPosition: {x: -0.057692308, y: 0, z: -0.32142857}
+    - localPosition: {x: -0.07417583, y: 0, z: -0.25892857}
+    - localPosition: {x: -0.11813187, y: 0, z: -0.24107143}
+    - localPosition: {x: -0.1401099, y: 0, z: -0.23660715}
+    - localPosition: {x: -0.10164835, y: 0, z: -0.26339287}
+    - localPosition: {x: -0.09615385, y: 0, z: -0.27232143}
+    - localPosition: {x: -0.07967033, y: 0, z: -0.3125}
   - boneType: 4
     framePositions:
-    - localPosition: {x: 0.015, y: 0, z: -0.31}
-    - localPosition: {x: 0.075, y: 0, z: -0.44}
-    - localPosition: {x: 0.325, y: 0, z: -0.3}
-    - localPosition: {x: 0.375, y: 0, z: -0.3}
-    - localPosition: {x: 0.415, y: 0, z: -0.29}
-    - localPosition: {x: 0.385, y: 0, z: -0.43}
-    - localPosition: {x: 0.295, y: 0, z: -0.37}
-    - localPosition: {x: 0.125, y: 0, z: -0.38}
+    - localPosition: {x: 0.0027472528, y: 0, z: -0.2544643}
+    - localPosition: {x: 0.046703298, y: 0, z: -0.2767857}
+    - localPosition: {x: 0.12362637, y: 0, z: -0.23660715}
+    - localPosition: {x: 0.16758242, y: 0, z: -0.23}
+    - localPosition: {x: 0.17307693, y: 0, z: -0.23214285}
+    - localPosition: {x: 0.1510989, y: 0, z: -0.25}
+    - localPosition: {x: 0.13461539, y: 0, z: -0.25892857}
+    - localPosition: {x: 0.052197803, y: 0, z: -0.25892857}
   - boneType: 1
     framePositions:
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
+    - localPosition: {x: 0, y: 0, z: 0.216}
+    - localPosition: {x: 0, y: 0, z: 0.215}
+    - localPosition: {x: 0, y: 0, z: 0.234}
+    - localPosition: {x: 0, y: 0, z: 0.234}
+    - localPosition: {x: 0.01, y: 0, z: 0.215}
+    - localPosition: {x: 0.01, y: 0, z: 0.215}
+    - localPosition: {x: 0, y: 0, z: 0.234}
+    - localPosition: {x: 0.007, y: 0, z: 0.234}

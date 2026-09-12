@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frameCount: 2
   frameMeshFrames:
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
-  - localPositionXZ: {x: 0, y: 0.48}
-    localScaleXZ: {x: 1.5, y: 1.5}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
+  - localPositionXZ: {x: 0, y: 0}
+    localScaleXZ: {x: 1, y: 1}
   boneTracks:
   - boneType: 3
     framePositions:
-    - localPosition: {x: 0.235, y: 0, z: -0.29}
-    - localPosition: {x: 0.225, y: 0, z: -0.22}
+    - localPosition: {x: 0.09065934, y: 0, z: -0.25}
+    - localPosition: {x: 0.09615385, y: 0, z: -0.23214285}
   - boneType: 4
     framePositions:
-    - localPosition: {x: -0.245, y: 0, z: -0.29}
-    - localPosition: {x: -0.265, y: 0, z: -0.22}
+    - localPosition: {x: -0.10714286, y: 0, z: -0.25}
+    - localPosition: {x: -0.11263736, y: 0, z: -0.22767857}
   - boneType: 1
     framePositions:
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
+    - localPosition: {x: 0, y: 0, z: 0.223}
+    - localPosition: {x: 0, y: 0, z: 0.245}
