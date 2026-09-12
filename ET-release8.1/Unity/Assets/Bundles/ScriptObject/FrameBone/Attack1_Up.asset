@@ -29,25 +29,25 @@ MonoBehaviour:
   boneTracks:
   - boneType: 3
     framePositions:
-    - localPosition: {x: -0.44, y: 0, z: -0.35}
-    - localPosition: {x: -0.33, y: 0, z: -0.26}
-    - localPosition: {x: -0.34, y: 0, z: -0.34}
-    - localPosition: {x: -0.3, y: 0, z: -0.27}
-    - localPosition: {x: -0.34, y: 0, z: -0.28}
-    - localPosition: {x: -0.3, y: 0, z: -0.22}
+    - localPosition: {x: -0.17307693, y: 0, z: -0.24553572}
+    - localPosition: {x: -0.15659341, y: 0, z: -0.22321428}
+    - localPosition: {x: -0.15659341, y: 0, z: -0.22767857}
+    - localPosition: {x: -0.12912089, y: 0, z: -0.22321428}
+    - localPosition: {x: -0.1401099, y: 0, z: -0.22321428}
+    - localPosition: {x: -0.13461539, y: 0, z: -0.22767857}
   - boneType: 4
     framePositions:
-    - localPosition: {x: 0.4, y: 0, z: -0.34}
-    - localPosition: {x: 0.08, y: 0, z: -0.06}
-    - localPosition: {x: 0.07, y: 0, z: -0.01}
-    - localPosition: {x: 0.19, y: 0, z: 0.09}
-    - localPosition: {x: 0.79, y: 0, z: 0.54}
-    - localPosition: {x: 0.82, y: 0, z: 0.35}
+    - localPosition: {x: 0.16758242, y: 0, z: -0.24553572}
+    - localPosition: {x: 0.024725275, y: 0, z: -0.14732143}
+    - localPosition: {x: 0.01923077, y: 0, z: -0.125}
+    - localPosition: {x: 0.06868132, y: 0, z: -0.10714286}
+    - localPosition: {x: 0.27197802, y: 0, z: 0.004464286}
+    - localPosition: {x: 0.31593406, y: 0, z: -0.058035713}
   - boneType: 1
     framePositions:
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
+    - localPosition: {x: 0, y: 0, z: 0.2}
+    - localPosition: {x: -0.02, y: 0, z: 0.2}
+    - localPosition: {x: -0.04, y: 0, z: 0.2}
+    - localPosition: {x: 0.01, y: 0, z: 0.22}
+    - localPosition: {x: 0.02, y: 0, z: 0.22}
+    - localPosition: {x: 0.02, y: 0, z: 0.22}

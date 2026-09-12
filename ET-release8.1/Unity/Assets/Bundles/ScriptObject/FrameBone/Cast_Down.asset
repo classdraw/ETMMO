@@ -31,28 +31,28 @@ MonoBehaviour:
   boneTracks:
   - boneType: 3
     framePositions:
-    - localPosition: {x: -0.435, y: 0, z: -0.35}
-    - localPosition: {x: -0.395, y: 0, z: -0.21}
-    - localPosition: {x: -0.115, y: 0, z: -0.1}
-    - localPosition: {x: -0.435, y: 0, z: -0.17}
-    - localPosition: {x: -0.865, y: 0, z: 0.24}
-    - localPosition: {x: -0.835, y: 0, z: 0.75}
-    - localPosition: {x: -0.405, y: 0, z: -0.19}
+    - localPosition: {x: -0.16208792, y: 0, z: -0.23214285}
+    - localPosition: {x: -0.1510989, y: 0, z: -0.20982143}
+    - localPosition: {x: -0.10164835, y: 0, z: -0.17410715}
+    - localPosition: {x: -0.18956044, y: 0, z: -0.1875}
+    - localPosition: {x: -0.28846154, y: 0, z: -0.08035714}
+    - localPosition: {x: -0.29945055, y: 0, z: 0.04017857}
+    - localPosition: {x: -0.19505495, y: 0, z: -0.19642857}
   - boneType: 4
     framePositions:
-    - localPosition: {x: 0.425, y: 0, z: -0.34}
-    - localPosition: {x: 0.405, y: 0, z: -0.19}
-    - localPosition: {x: 0.115, y: 0, z: -0.09}
-    - localPosition: {x: 0.455, y: 0, z: -0.18}
-    - localPosition: {x: 0.845, y: 0, z: 0.24}
-    - localPosition: {x: 0.835, y: 0, z: 0.72}
-    - localPosition: {x: 0.445, y: 0, z: -0.19}
+    - localPosition: {x: 0.16758242, y: 0, z: -0.24553572}
+    - localPosition: {x: 0.1510989, y: 0, z: -0.20535715}
+    - localPosition: {x: 0.09615385, y: 0, z: -0.17410715}
+    - localPosition: {x: 0.17857143, y: 0, z: -0.19196428}
+    - localPosition: {x: 0.28846154, y: 0, z: -0.071428575}
+    - localPosition: {x: 0.28296703, y: 0, z: 0.04464286}
+    - localPosition: {x: 0.18956044, y: 0, z: -0.19196428}
   - boneType: 1
     framePositions:
-    - localPosition: {x: 0, y: 0, z: 1.11}
-    - localPosition: {x: 0, y: 0, z: 1.09}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.09}
-    - localPosition: {x: 0, y: 0, z: 1.11}
-    - localPosition: {x: 0, y: 0, z: 1.1}
-    - localPosition: {x: 0, y: 0, z: 1.1}
+    - localPosition: {x: 0, y: 0, z: 0.226}
+    - localPosition: {x: 0, y: 0, z: 0.226}
+    - localPosition: {x: 0, y: 0, z: 0.23}
+    - localPosition: {x: 0, y: 0, z: 0.23}
+    - localPosition: {x: 0, y: 0, z: 0.23}
+    - localPosition: {x: 0, y: 0, z: 0.23}
+    - localPosition: {x: 0, y: 0, z: 0.23}
