@@ -71,7 +71,7 @@ namespace ET
             if (this.animPlayer != null)
             {
                 facing = this.animPlayer.CurrentFacing;
-                if (this.animPlayer.CurrentAnim != MotionType.None
+                if (this.animPlayer.CurrentAnim != FrameSheetAnimTypeId.None
                     && this.animPlayer.TryGetClip(this.animPlayer.CurrentAnim, out FrameSheetAnimClip currentClip))
                 {
                     clip = currentClip;
@@ -142,13 +142,13 @@ namespace ET
                 return;
             }
 
-            if (this.animPlayer.CurrentAnim != MotionType.None)
+            if (this.animPlayer.CurrentAnim != FrameSheetAnimTypeId.None)
             {
                 this.animPlayer.Play(this.animPlayer.CurrentAnim, this.animPlayer.CurrentFacing);
                 return;
             }
 
-            this.animPlayer.Play(MotionType.Idle);
+            this.animPlayer.Play(FrameSheetAnimTypeId.Idle);
         }
 
         private Renderer GetRenderer()

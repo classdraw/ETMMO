@@ -74,7 +74,7 @@ namespace ET
     public class FrameSheetAnimClip
     {
         [Tooltip("动画名")]
-        public MotionType animType;
+        public int animType;
 
         [Header("Default Part Texture Slots")]
         [Tooltip("身体部位使用的贴图槽位")]
@@ -246,7 +246,7 @@ namespace ET
         [Header("Clips")]
         public List<FrameSheetAnimClip> clips = new List<FrameSheetAnimClip>();
 
-        public bool TryGetClip(MotionType animType, out FrameSheetAnimClip clip)
+        public bool TryGetClip(int animType, out FrameSheetAnimClip clip)
         {
             for (int i = 0; i < clips.Count; i++)
             {
@@ -261,7 +261,7 @@ namespace ET
             return false;
         }
 
-        public void ApplyClip(Material material, MotionType animType, FrameSheetFacing facing)
+        public void ApplyClip(Material material, int animType, FrameSheetFacing facing)
         {
             if (material == null || !TryGetClip(animType, out FrameSheetAnimClip clip))
             {
@@ -272,7 +272,7 @@ namespace ET
             ApplyClip(material, clip, facing);
         }
 
-        public void ApplyClip(MaterialPropertyBlock block, MotionType animType, FrameSheetFacing facing)
+        public void ApplyClip(MaterialPropertyBlock block, int animType, FrameSheetFacing facing)
         {
             if (block == null || !TryGetClip(animType, out FrameSheetAnimClip clip))
             {

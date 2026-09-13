@@ -7,13 +7,20 @@ namespace ET.Editor.Frame2D
     [CustomEditor(typeof(FrameSheetAnimPlayer))]
     public class FrameSheetAnimPlayerEditor : UnityEditor.Editor
     {
-        private MotionType previewAnim = MotionType.Idle;
+        private int previewAnim = FrameSheetAnimTypeId.Idle;
         private FrameSheetFacing previewFacing = FrameSheetFacing.Down;
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            DrawDefaultInspector();
+
+            SerializedProperty defaultAnimProp = serializedObject.FindProperty("defaultAnim");
+            DrawPropertiesExcluding(serializedObject, "defaultAnim");
+            if (defaultAnimProp != null)
+            {
+                defaultAnimProp.intValue = FrameSheetAnimTypeEditorUtil.DrawPopup(new GUIContent("Default Anim"), defaultAnimProp.intValue);
+            }
+
             serializedObject.ApplyModifiedProperties();
 
             SerializedProperty configProp = serializedObject.FindProperty("animConfig");
@@ -25,7 +32,7 @@ namespace ET.Editor.Frame2D
 
             using (new EditorGUI.DisabledScope(!canPreview))
             {
-                previewAnim = (MotionType)EditorGUILayout.EnumPopup("Animation", previewAnim);
+                previewAnim = FrameSheetAnimTypeEditorUtil.DrawPopup(new GUIContent("Animation"), previewAnim);
                 previewFacing = (FrameSheetFacing)EditorGUILayout.EnumPopup("Facing", previewFacing);
 
                 if (GUILayout.Button("Play Preview", GUILayout.Height(28)))
@@ -33,7 +40,7 @@ namespace ET.Editor.Frame2D
                     FrameSheetAnimPlayer player = (FrameSheetAnimPlayer)target;
                     if (!player.Play(previewAnim, previewFacing))
                     {
-                        Debug.LogWarning($"FrameSheetAnimPlayer 预览失败: {previewAnim}, {previewFacing}", player);
+                        Debug.LogWarning($"FrameSheetAnimPlayer 预览失败: {FrameSheetAnimTypeEditorUtil.GetName(previewAnim)}, {previewFacing}", player);
                     }
                     else
                     {

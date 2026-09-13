@@ -17,7 +17,7 @@ namespace ET
     {
         [SerializeField] private FrameSheetAnimConfig animConfig;
         [SerializeField] private Renderer targetRenderer;
-        [SerializeField] private MotionType defaultAnim = MotionType.Idle;
+        [SerializeField] private int defaultAnim = FrameSheetAnimTypeId.Idle;
         [SerializeField] private FrameSheetFacing defaultFacing = FrameSheetFacing.Down;
 
         [Header("Bone Bindings")]
@@ -25,7 +25,7 @@ namespace ET
         [SerializeField] private List<FrameSheetAnimBoneBinding> boneBindings = new List<FrameSheetAnimBoneBinding>();
 
         private MaterialPropertyBlock propertyBlock;
-        private MotionType currentAnim = MotionType.None;
+        private int currentAnim = FrameSheetAnimTypeId.None;
         private FrameSheetFacing currentFacing = FrameSheetFacing.Down;
         private float currentSpeedMultiplier = 1f;
         private bool isPaused;
@@ -33,7 +33,7 @@ namespace ET
         private float playStartTime;
         private bool pendingReturnToIdle;
 
-        public MotionType CurrentAnim => currentAnim;
+        public int CurrentAnim => currentAnim;
         public FrameSheetFacing CurrentFacing => currentFacing;
         public float CurrentSpeedMultiplier => currentSpeedMultiplier;
         public bool IsPaused => isPaused;
@@ -56,7 +56,7 @@ namespace ET
 
         private void Start()
         {
-            if (defaultAnim != MotionType.None)
+            if (defaultAnim != FrameSheetAnimTypeId.None)
             {
                 Play(defaultAnim, defaultFacing);
             }
@@ -78,17 +78,17 @@ namespace ET
             animConfig = config;
         }
 
-        public bool Play(MotionType animType)
+        public bool Play(int animType)
         {
             return Play(animType, currentFacing);
         }
 
-        public bool Play(MotionType animType, FrameSheetFacing facing)
+        public bool Play(int animType, FrameSheetFacing facing)
         {
             return Play(animType, facing, 1f);
         }
 
-        public bool TryGetClip(MotionType animType, out FrameSheetAnimClip clip)
+        public bool TryGetClip(int animType, out FrameSheetAnimClip clip)
         {
             clip = null;
             if (animConfig == null)
@@ -99,7 +99,7 @@ namespace ET
             return animConfig.TryGetClip(animType, out clip);
         }
 
-        public float GetClipDuration(MotionType animType)
+        public float GetClipDuration(int animType)
         {
             if (!TryGetClip(animType, out FrameSheetAnimClip clip))
             {
@@ -111,7 +111,7 @@ namespace ET
 
         public bool IsCurrentClipFinished()
         {
-            if (currentClip == null || currentClip.loop || currentAnim == MotionType.None || isPaused)
+            if (currentClip == null || currentClip.loop || currentAnim == FrameSheetAnimTypeId.None || isPaused)
             {
                 return false;
             }
@@ -123,7 +123,7 @@ namespace ET
         {
             return currentClip != null
                    && !currentClip.loop
-                   && currentAnim != MotionType.None
+                   && currentAnim != FrameSheetAnimTypeId.None
                    && !isPaused;
         }
 
@@ -134,11 +134,11 @@ namespace ET
             return frameCount * clip.interval / speedMultiplier;
         }
 
-        public bool Play(MotionType animType, FrameSheetFacing facing, float speedMultiplier)
+        public bool Play(int animType, FrameSheetFacing facing, float speedMultiplier)
         {
             EnsureInitialized();
 
-            if (animConfig == null || targetRenderer == null || animType == MotionType.None)
+            if (animConfig == null || targetRenderer == null || animType == FrameSheetAnimTypeId.None)
             {
                 currentClip = null;
                 ResetAllBonePositions();
@@ -204,7 +204,7 @@ namespace ET
             }
 
             isPaused = false;
-            if (currentAnim != MotionType.None)
+            if (currentAnim != FrameSheetAnimTypeId.None)
             {
                 Play(currentAnim, currentFacing, currentSpeedMultiplier);
             }
@@ -217,7 +217,7 @@ namespace ET
                 return true;
             }
 
-            if (currentAnim == MotionType.None)
+            if (currentAnim == FrameSheetAnimTypeId.None)
             {
                 currentFacing = facing;
                 return true;
@@ -241,8 +241,8 @@ namespace ET
             return currentClip != null
                    && !currentClip.loop
                    && currentClip.returnToIdleAfterPlay
-                   && currentAnim != MotionType.Idle
-                   && currentAnim != MotionType.Stand;
+                   && currentAnim != FrameSheetAnimTypeId.Idle
+                   && currentAnim != FrameSheetAnimTypeId.Stand;
         }
 
         private void EnsureInitialized()
@@ -299,7 +299,7 @@ namespace ET
                 return;
             }
 
-            if (currentAnim == MotionType.None || currentClip == null)
+            if (currentAnim == FrameSheetAnimTypeId.None || currentClip == null)
             {
                 ResetAllBonePositions();
                 ResetMeshTransform();
@@ -319,13 +319,13 @@ namespace ET
             ApplyMeshTransform(boneConfig, frameIndex);
         }
 
-        private static bool ShouldReturnToIdleAfterClip(MotionType animType, FrameSheetAnimClip clip)
+        private static bool ShouldReturnToIdleAfterClip(int animType, FrameSheetAnimClip clip)
         {
             return clip != null
                    && !clip.loop
                    && clip.returnToIdleAfterPlay
-                   && animType != MotionType.Idle
-                   && animType != MotionType.Stand;
+                   && animType != FrameSheetAnimTypeId.Idle
+                   && animType != FrameSheetAnimTypeId.Stand;
         }
 
         private void TryReturnToIdleAfterClipFinished()
@@ -346,8 +346,8 @@ namespace ET
             }
 
             pendingReturnToIdle = false;
-            MotionType idleAnim = ResolveReturnToIdleAnim();
-            if (idleAnim == MotionType.None)
+            int idleAnim = ResolveReturnToIdleAnim();
+            if (idleAnim == FrameSheetAnimTypeId.None)
             {
                 return;
             }
@@ -355,19 +355,19 @@ namespace ET
             Play(idleAnim, currentFacing);
         }
 
-        private MotionType ResolveReturnToIdleAnim()
+        private int ResolveReturnToIdleAnim()
         {
-            if (TryGetClip(MotionType.Idle, out _))
+            if (TryGetClip(FrameSheetAnimTypeId.Idle, out _))
             {
-                return MotionType.Idle;
+                return FrameSheetAnimTypeId.Idle;
             }
 
-            if (defaultAnim != MotionType.None && TryGetClip(defaultAnim, out _))
+            if (defaultAnim != FrameSheetAnimTypeId.None && TryGetClip(defaultAnim, out _))
             {
                 return defaultAnim;
             }
 
-            return MotionType.None;
+            return FrameSheetAnimTypeId.None;
         }
 
         private int CalculateCurrentFrameIndex(FrameSheetAnimClip clip)

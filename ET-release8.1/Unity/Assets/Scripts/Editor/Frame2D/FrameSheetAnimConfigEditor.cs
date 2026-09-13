@@ -67,7 +67,9 @@ namespace ET.Editor.Frame2D
             EditorGUILayout.BeginVertical("box");
 
             SerializedProperty animTypeProp = clipProp.FindPropertyRelative("animType");
-            string title = animTypeProp != null ? animTypeProp.enumDisplayNames[animTypeProp.enumValueIndex] : $"Clip {index}";
+            string title = animTypeProp != null
+                ? FrameSheetAnimTypeEditorUtil.GetName(animTypeProp.intValue)
+                : $"Clip {index}";
             clipProp.isExpanded = EditorGUILayout.Foldout(clipProp.isExpanded, title, true);
 
             if (!clipProp.isExpanded)
@@ -79,7 +81,7 @@ namespace ET.Editor.Frame2D
             EditorGUI.indentLevel++;
             if (animTypeProp != null)
             {
-                EditorGUILayout.PropertyField(animTypeProp);
+                animTypeProp.intValue = FrameSheetAnimTypeEditorUtil.DrawPopup(new GUIContent("Anim Type"), animTypeProp.intValue);
             }
 
             EditorGUILayout.Space(4);

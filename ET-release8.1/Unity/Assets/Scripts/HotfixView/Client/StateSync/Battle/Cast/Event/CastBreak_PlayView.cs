@@ -2,18 +2,19 @@ namespace ET.Client
 {
     //技能打断结束
     [Event(SceneType.Current)]
-    public class CastBreak_PlayView:AEvent<Scene,CastBreak>
+    [FriendOfAttribute(typeof(ET.Client.Animator2DComponent))]
+    public class CastBreak_PlayView : AEvent<Scene, CastBreak>
     {
         protected override async ETTask Run(Scene scene, CastBreak args)
         {
             Unit unit = scene.GetComponent<UnitComponent>().Get(args.CasterId);
-            if (unit==null||unit.IsDisposed)
+            if (unit == null || unit.IsDisposed)
             {
                 return;
             }
 
             ClientCast clientCast = unit.GetComponent<ClientCastComponent>().Get(args.CastId);
-            if (clientCast==null||clientCast.IsDisposed)
+            if (clientCast == null || clientCast.IsDisposed)
             {
                 return;
             }
@@ -23,7 +24,7 @@ namespace ET.Client
             if (animator?.AnimPlayer != null)
             {
                 animator.SyncFacingFromUnit();
-                animator.AnimPlayer.Play(MotionType.Idle, animator.Facing, 1f);
+                animator.AnimPlayer.Play((int)MotionType.Idle, animator.Facing, 1f);
             }
 
             await ETTask.CompletedTask;

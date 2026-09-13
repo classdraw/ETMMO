@@ -2,17 +2,18 @@ namespace ET.Client
 {
     //技能结束
     [Event(SceneType.Current)]
-    public class CastFinish_PlayView:AEvent<Scene,CastFinish>
+    [FriendOfAttribute(typeof(ET.Client.Animator2DComponent))]
+    public class CastFinish_PlayView : AEvent<Scene, CastFinish>
     {
         protected override async ETTask Run(Scene scene, CastFinish args)
         {
             Unit unit = scene.GetComponent<UnitComponent>().Get(args.CasterId);
-            if (unit==null||unit.IsDisposed)
+            if (unit == null || unit.IsDisposed)
             {
                 return;
             }
             ClientCast clientCast = unit.GetComponent<ClientCastComponent>().Get(args.CastId);
-            if (clientCast==null||clientCast.IsDisposed)
+            if (clientCast == null || clientCast.IsDisposed)
             {
                 return;
             }
@@ -27,7 +28,7 @@ namespace ET.Client
             if (animator?.AnimPlayer != null)
             {
                 animator.SyncFacingFromUnit();
-                animator.AnimPlayer.Play(MotionType.Idle, animator.Facing, 1f);
+                animator.AnimPlayer.Play((int)MotionType.Idle, animator.Facing, 1f);
             }
 
             await ETTask.CompletedTask;

@@ -28,6 +28,8 @@ namespace ET.Client
                 return;
             }
 
+            ApplyCasterForward(caster, message.Forward);
+
             caster.CreateAndAddCast(message);
 
             CastStart castStart = new CastStart();
@@ -36,6 +38,17 @@ namespace ET.Client
             castStart.CasterConfigId = message.CastConfigId;
             EventSystem.Instance.Publish(currentScene, castStart);
             await ETTask.CompletedTask;
+        }
+
+        private static void ApplyCasterForward(Unit caster, float3 forward)
+        {
+            forward.y = 0;
+            if (math.lengthsq(forward) <= math.EPSILON)
+            {
+                return;
+            }
+
+            caster.Forward = math.normalize(forward);
         }
     }
 }

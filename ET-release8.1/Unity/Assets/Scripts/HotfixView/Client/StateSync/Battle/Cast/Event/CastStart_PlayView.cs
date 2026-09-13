@@ -4,17 +4,18 @@ namespace ET.Client
 {
     //技能开始释放逻辑
     [Event(SceneType.Current)]
-    public class CastStart_PlayView:AEvent<Scene,CastStart>
+    [FriendOfAttribute(typeof(ET.Client.Animator2DComponent))]
+    public class CastStart_PlayView : AEvent<Scene, CastStart>
     {
         protected override async ETTask Run(Scene scene, CastStart args)
         {
             Unit unit = scene.GetComponent<UnitComponent>().Get(args.CasterId);
-            if (unit==null||unit.IsDisposed)
+            if (unit == null || unit.IsDisposed)
             {
                 return;
             }
             //播放动画
-            PlayStartAnimation(unit,args);
+            PlayStartAnimation(unit, args);
             await PlayStartEffect(unit, args.CasterConfigId);
 
             await ETTask.CompletedTask;
@@ -52,7 +53,7 @@ namespace ET.Client
             }
         }
 
-        private static void PlayStartAnimation(Unit unit,CastStart args)
+        private static void PlayStartAnimation(Unit unit, CastStart args)
         {
             if (!CastConfigCategory.Instance.Contain(args.CasterConfigId))
             {
@@ -92,7 +93,7 @@ namespace ET.Client
 
             // 立即播放，避免 MoveStart/MoveStop 在同一帧覆盖 MotionType 队列。
             animator.SyncFacingFromUnit();
-            animator.AnimPlayer.Play(motionType, animator.Facing, 1f);
+            animator.AnimPlayer.Play((int)motionType, animator.Facing, 1f);
         }
     }
 }

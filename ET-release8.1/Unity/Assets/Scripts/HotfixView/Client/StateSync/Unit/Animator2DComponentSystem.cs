@@ -63,7 +63,7 @@ namespace ET.Client
 						return;
 					}
 
-					self.AnimPlayer.Play(clipType, self.Facing, self.MontionSpeed);
+					self.AnimPlayer.Play((int)clipType, self.Facing, self.MontionSpeed);
 					self.MontionSpeed = 1f;
 					self.MotionType = MotionType.None;
 				}
@@ -142,7 +142,7 @@ namespace ET.Client
 			}
 
 			MotionType clipType = ResolveClipMotion(motionType);
-			return self.AnimPlayer.GetClipDuration(clipType);
+			return self.AnimPlayer.GetClipDuration((int)clipType);
 		}
 
 		public static void SetFacing(this Animator2DComponent self, FrameSheetFacing facing)
@@ -198,7 +198,7 @@ namespace ET.Client
 
 		public static void SetAnimatorSpeed(this Animator2DComponent self, float speed)
 		{
-			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == MotionType.None)
+			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == (int)MotionType.None)
 			{
 				return;
 			}
@@ -209,7 +209,7 @@ namespace ET.Client
 
 		public static void ResetAnimatorSpeed(this Animator2DComponent self)
 		{
-			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == MotionType.None)
+			if (self.AnimPlayer == null || self.AnimPlayer.CurrentAnim == (int)MotionType.None)
 			{
 				return;
 			}
@@ -259,7 +259,7 @@ namespace ET.Client
 				}
 
 				MotionType clipType = ResolveClipMotion(motionType);
-				if (clipType != MotionType.None && self.AnimPlayer.TryGetClip(clipType, out _))
+				if (clipType != MotionType.None && self.AnimPlayer.TryGetClip((int)clipType, out _))
 				{
 					self.AvailableAnims.Add(motionType);
 				}
@@ -284,7 +284,7 @@ namespace ET.Client
 				return false;
 			}
 
-			if (requestedMotion == MotionType.Move && animPlayer.CurrentAnim == MotionType.Move)
+			if (requestedMotion == MotionType.Move && (MotionType)animPlayer.CurrentAnim == MotionType.Move)
 			{
 				return false;
 			}
