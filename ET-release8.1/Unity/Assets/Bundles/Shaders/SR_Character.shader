@@ -53,16 +53,7 @@ Shader "Custom/SR_Character"
             #pragma target 2.0
             #pragma vertex Vert
             #pragma fragment Frag
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ LIGHTMAP_ON
-            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-            #pragma multi_compile _ SHADOWS_SHADOWMASK
-            #pragma multi_compile _ _SSCS_RECEIVE
-            #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
-            #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
-            #pragma multi_compile_fragment _ _BOUNDS
-            #pragma multi_compile _ _FAKE_ADDITIONAL_LIGHTS
+            #include "SR_2DForwardPragmas.hlsl"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"

@@ -52,18 +52,8 @@ Shader "Custom/SR_TilemapSpriteLit"{
 
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ LIGHTMAP_ON
-            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
-            #pragma multi_compile _ SHADOWS_SHADOWMASK
-            #pragma multi_compile _ _SSCS_RECEIVE
-            #pragma multi_compile_fragment _ _SHADOWS_3D _SHADOWS_3D_HQ
-            #pragma multi_compile_fragment _ _SHADOWS_COVERAGE_MASK _SHADOWS_COVERAGE_MASK_DEBUG
-            #pragma multi_compile_fragment _ _BOUNDS
+            #include "SR_2DForwardPragmas.hlsl"
             #pragma shader_feature_local _NORMALMAP
-            #pragma multi_compile _ _FAKE_ADDITIONAL_LIGHTS
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -132,23 +122,6 @@ Shader "Custom/SR_TilemapSpriteLit"{
                 return normalWS;
             }
 
-            half3 GetAdditionalLighting(half3 positionWS, half3 normalWS)
-            {
-                half3 lighting = half3(0.0h, 0.0h, 0.0h);
-
-                #if defined(_ADDITIONAL_LIGHTS)
-                    uint pixelLightCount = GetAdditionalLightsCount();
-                    for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
-                    {
-                        Light light = GetAdditionalLight(lightIndex, positionWS);
-                        half ndotl = saturate(dot(normalWS, light.direction));
-                        lighting += light.color * (light.distanceAttenuation * light.shadowAttenuation * ndotl);
-                    }
-                #endif
-
-                return lighting;
-            }
-
             Varyings Vert(Attributes input)            {
                 Varyings output;
                 UNITY_SETUP_INSTANCE_ID(input);
@@ -195,7 +168,7 @@ Shader "Custom/SR_TilemapSpriteLit"{
                 half3 bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
                 MixRealtimeAndBakedGI(mainLight, normalWS, bakedGI);
 
-                half3 lighting = bakedGI + mainLightColor + GetAdditionalLighting(input.positionWS, normalWS);
+                half3 lighting = bakedGI + mainLightColor;
                 half3 litColor = albedo * lighting;
                 litColor += GetFakeLight(input.positionWS, normalWS);
 
