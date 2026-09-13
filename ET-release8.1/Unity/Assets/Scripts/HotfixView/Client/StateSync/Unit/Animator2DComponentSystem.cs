@@ -28,7 +28,6 @@ namespace ET.Client
 
 			self.AnimPlayer = animPlayer;
 			self.Facing = animPlayer.CurrentFacing;
-			self.InnerCDs.Add(MotionType.Hit, 1000);
 			RefreshAvailableAnims(self);
 		}
 
@@ -232,7 +231,7 @@ namespace ET.Client
 
 			foreach (MotionType motionType in Enum.GetValues(typeof(MotionType)))
 			{
-				if (motionType == MotionType.None)
+				if (motionType == MotionType.None || motionType == MotionType.Hit)
 				{
 					continue;
 				}
@@ -249,7 +248,7 @@ namespace ET.Client
 		{
 			return motionType switch
 			{
-				MotionType.Hit or MotionType.Death => MotionType.Stand,
+				MotionType.Death => MotionType.Stand,
 				_ => motionType,
 			};
 		}

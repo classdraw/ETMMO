@@ -15,8 +15,13 @@ namespace ET
     {
         private const string AvatarPrefabOutputRoot = "Assets/Bundles/Avatar";
         private const string SceneShadowLayerName = "SceneShadow";
+        private const string EffectPrefabFolder = "Assets/Bundles/Effect";
+        private const string DefaultEffectSortingLayerName = "SceneVfx";
 
         private DefaultAsset sceneShadowPrefabFolder;
+        private string effectSortingLayerName = DefaultEffectSortingLayerName;
+        private int effectSortingOrder;
+        private Vector2 scrollPosition;
 
         [MenuItem("Tools/预制体处理工具合集", false, 50)]
         public static void Open()
@@ -27,6 +32,7 @@ namespace ET
 
         private void OnGUI()
         {
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             EditorGUILayout.Space(8);
             EditorGUILayout.HelpBox("在 Project 中选中一个或多个预制体资源（.prefab），再点击下方按钮执行对应处理。", MessageType.Info);
             EditorGUILayout.Space(6);
@@ -118,6 +124,21 @@ namespace ET
             }
 
             EditorGUILayout.Space(12);
+            EditorGUILayout.LabelField("特效预制体排序", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox(
+                $"批量处理 {EffectPrefabFolder} 下所有 .prefab（含子目录）。\n" +
+                "递归设置全部 ParticleSystemRenderer 的 sortingLayerName 与 sortingOrder，\n" +
+                "避免 Default 层粒子被 World 层 2D 角色挡住。",
+                MessageType.Info);
+            EditorGUILayout.LabelField("目标文件夹", EffectPrefabFolder);
+            effectSortingLayerName = EditorGUILayout.TextField("Sorting Layer", effectSortingLayerName);
+            effectSortingOrder = EditorGUILayout.IntField("Sorting Order", effectSortingOrder);
+            if (GUILayout.Button("批量设置 Effect 粒子 Sorting Layer / Order", GUILayout.Height(34)))
+            {
+                SetEffectParticleSortingInFolderPrefabs(EffectPrefabFolder, effectSortingLayerName, effectSortingOrder);
+            }
+
+            EditorGUILayout.Space(12);
             EditorGUILayout.LabelField("Avatar 精灵预制体", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
                 "在 Project 中选中文件夹（可含子目录），执行前会先删除整个 " + AvatarPrefabOutputRoot + " 再重新生成。\n" +
@@ -135,6 +156,8 @@ namespace ET
                     GenerateAvatarSpritePrefabsFromSelectedFolders();
                 }
             }
+
+            EditorGUILayout.EndScrollView();
         }
 
         private static int CountSelectedPrefabPaths()
@@ -806,6 +829,144 @@ namespace ET
 
             List<string> selectedFolders = CollectSelectedAssetFolderPaths();
             return selectedFolders.Count > 0 ? selectedFolders[0] : null;
+        }
+
+        private static void SetEffectParticleSortingInFolderPrefabs(string folderPath, string sortingLayerName, int sortingOrder)
+        {
+            if (string.IsNullOrEmpty(folderPath) || !AssetDatabase.IsValidFolder(folderPath))
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", $"文件夹不存在：\n{folderPath}", "确定");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(sortingLayerName))
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", "Sorting Layer 不能为空。", "确定");
+                return;
+            }
+
+            if (!SortingLayerExists(sortingLayerName))
+            {
+                EditorUtility.DisplayDialog("预制体处理工具",
+                    $"Sorting Layer「{sortingLayerName}」不存在。\n请在 Project Settings → Tags and Layers 中添加。",
+                    "确定");
+                return;
+            }
+
+            string[] prefabGuids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
+            if (prefabGuids.Length == 0)
+            {
+                EditorUtility.DisplayDialog("预制体处理工具", $"文件夹内未找到任何 .prefab：\n{folderPath}", "确定");
+                return;
+            }
+
+            if (!EditorUtility.DisplayDialog("预制体处理工具",
+                    $"将处理文件夹内 {prefabGuids.Length} 个预制体（含子目录）。\n" +
+                    $"所有 ParticleSystemRenderer 将设为：\n" +
+                    $"  sortingLayerName = {sortingLayerName}\n" +
+                    $"  sortingOrder = {sortingOrder}\n是否继续？",
+                    "确定", "取消"))
+            {
+                return;
+            }
+
+            int modifiedPrefabs = 0;
+            int matchedRenderers = 0;
+            int changedRenderers = 0;
+
+            AssetDatabase.StartAssetEditing();
+            try
+            {
+                for (int i = 0; i < prefabGuids.Length; i++)
+                {
+                    string prefabPath = AssetDatabase.GUIDToAssetPath(prefabGuids[i]);
+                    EditorUtility.DisplayProgressBar(
+                        "设置 Effect 粒子 Sorting",
+                        prefabPath,
+                        (float)(i + 1) / prefabGuids.Length);
+
+                    GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
+                    try
+                    {
+                        int prefabMatched = 0;
+                        int prefabChanged = SetEffectParticleSortingRecursive(root, sortingLayerName, sortingOrder, ref prefabMatched);
+                        if (prefabChanged > 0)
+                        {
+                            PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
+                            modifiedPrefabs++;
+                            changedRenderers += prefabChanged;
+                        }
+
+                        matchedRenderers += prefabMatched;
+                    }
+                    finally
+                    {
+                        PrefabUtility.UnloadPrefabContents(root);
+                    }
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
+                EditorUtility.ClearProgressBar();
+            }
+
+            AssetDatabase.Refresh();
+            EditorUtility.DisplayDialog("预制体处理工具",
+                $"文件夹：{folderPath}\n" +
+                $"扫描预制体：{prefabGuids.Length} 个\n" +
+                $"有修改的预制体：{modifiedPrefabs} 个\n" +
+                $"匹配 ParticleSystemRenderer：{matchedRenderers} 个\n" +
+                $"Sorting 已修改：{changedRenderers} 个\n" +
+                $"目标：{sortingLayerName} / {sortingOrder}",
+                "确定");
+        }
+
+        private static bool SortingLayerExists(string sortingLayerName)
+        {
+            foreach (SortingLayer layer in SortingLayer.layers)
+            {
+                if (layer.name == sortingLayerName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static int SetEffectParticleSortingRecursive(
+            GameObject go,
+            string sortingLayerName,
+            int sortingOrder,
+            ref int matchedRenderers)
+        {
+            int changed = 0;
+            ParticleSystemRenderer[] renderers = go.GetComponents<ParticleSystemRenderer>();
+            foreach (ParticleSystemRenderer renderer in renderers)
+            {
+                if (renderer == null)
+                {
+                    continue;
+                }
+
+                matchedRenderers++;
+                if (renderer.sortingLayerName != sortingLayerName || renderer.sortingOrder != sortingOrder)
+                {
+                    renderer.sortingLayerName = sortingLayerName;
+                    renderer.sortingOrder = sortingOrder;
+                    EditorUtility.SetDirty(renderer);
+                    changed++;
+                }
+            }
+
+            Transform transform = go.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                changed += SetEffectParticleSortingRecursive(transform.GetChild(i).gameObject, sortingLayerName, sortingOrder, ref matchedRenderers);
+            }
+
+            return changed;
         }
 
         private static void SetSceneShadowLayerInFolderPrefabs(string folderPath)

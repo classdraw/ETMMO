@@ -47,7 +47,6 @@ namespace ET.Client
 				self.Parameter.Add(animatorControllerParameter.name);
 			}
 			
-			self.InnerCDs.Add(MotionType.Hit,1000);
 		}
 		
 		[EntitySystem]

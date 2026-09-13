@@ -1,5 +1,3 @@
-using System;
-
 namespace ET.Client
 {
     //技能命中逻辑
@@ -31,9 +29,7 @@ namespace ET.Client
 
             if (args.IsSelf)
             {
-                PlayHitAnimation(caster, clientCast.Config, true);
                 await PlayHitEffect(clientCast.Config, true, args.HitIndex, caster);
-
             }
             else
             {
@@ -43,40 +39,8 @@ namespace ET.Client
                     return;
                 }
 
-                PlayHitAnimation(target, clientCast.Config, false);
                 await PlayHitEffect(clientCast.Config, false, args.HitIndex, target);
             }
-
-
-        }
-
-        private static void PlayHitAnimation(Unit unit, CastConfig castConfig, bool isSelf)
-        {
-            int animation = isSelf ? castConfig.SelfHitAnimation : castConfig.HitAnimation;
-            if (animation <= 0)
-            {
-                return;
-            }
-
-            if (!Enum.IsDefined(typeof(MotionType), animation))
-            {
-                Log.Error($"CastHit_PlayView invalid hit animation: {animation}, isSelf={isSelf}, castConfigId={castConfig.Id}");
-                return;
-            }
-
-            MotionType motionType = (MotionType)animation;
-            if (motionType == MotionType.None)
-            {
-                return;
-            }
-
-            Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
-            if (animator == null || animator.IsDisposed)
-            {
-                return;
-            }
-
-            animator.Play(motionType, 1f);
         }
 
         private static async ETTask PlayHitEffect(CastConfig castConfig, bool isSelf, int hitIndex, Unit effectUnit)
