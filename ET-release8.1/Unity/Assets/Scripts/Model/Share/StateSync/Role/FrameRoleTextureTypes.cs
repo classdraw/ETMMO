@@ -26,6 +26,7 @@ namespace ET
         Orc = 2,
         DarkElf = 3,
         Wolf = 4,
+        Rabbit =5
     }
 
     /// <summary>

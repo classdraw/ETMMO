@@ -49,26 +49,77 @@ namespace ET.Client
                 return;
             }
 
-            string displayName = string.IsNullOrEmpty(unit.Name) ? monsterConfig.Model : unit.Name;
-            string assetsName = $"Assets/Bundles/Unit/{monsterConfig.Model}.prefab";
-            GameObject prefab = await scene.GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
-            if (prefab == null)
+            if (!TryPrepareMonsterModel(unit, monsterConfig, out string prefabAssetPath))
             {
-                Log.Error($"Monster prefab not found: {assetsName}");
                 return;
             }
 
+            ResourcesLoaderComponent loader = scene.GetComponent<ResourcesLoaderComponent>();
+            GameObject prefab = await loader.LoadAssetAsync<GameObject>(prefabAssetPath);
+            if (prefab == null)
+            {
+                Log.Error($"Monster prefab not found: {prefabAssetPath}");
+                return;
+            }
+
+            string displayName = string.IsNullOrEmpty(unit.Name) ? monsterConfig.Model : unit.Name;
             GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
             go.name = $"monster_{unit.Id}_{displayName}";
             go.transform.position = unit.Position;
             go.transform.rotation = Quaternion.identity;
+            AttachMonsterViewComponents(unit, go);
+            await ETTask.CompletedTask;
+        }
+
+        /// <summary>
+        /// ModelType=0：Monster.prefab 骨架 + Model 部位拼装。
+        /// ModelType=1：Model 指定整模 prefab，脚本栈相同，预制体已做好贴图无需拼装。
+        /// </summary>
+        private static bool TryPrepareMonsterModel(Unit unit, MonsterConfig monsterConfig, out string prefabAssetPath)
+        {
+            prefabAssetPath = null;
+            switch (monsterConfig.ModelType)
+            {
+                case (int)MonsterModelType.PartAssembly:
+                {
+                    if (!ExternalDisplayHelper.TryParseExternalDisplayString(monsterConfig.Model, out _))
+                    {
+                        Log.Error($"Monster part assembly Model invalid: monsterConfigId={monsterConfig.Id}, model={monsterConfig.Model}");
+                        return false;
+                    }
+
+                    if (string.IsNullOrEmpty(unit.BaseExternalDisplay))
+                    {
+                        unit.BaseExternalDisplay = monsterConfig.Model;
+                    }
+
+                    prefabAssetPath = "Assets/Bundles/Unit/Monster.prefab";
+                    return true;
+                }
+                case (int)MonsterModelType.Prefab:
+                {
+                    prefabAssetPath = $"Assets/Bundles/Unit/{monsterConfig.Model}.prefab";
+                    return true;
+                }
+                default:
+                {
+                    Log.Error($"Unknown Monster ModelType: {monsterConfig.ModelType}, monsterConfigId={monsterConfig.Id}");
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 两种 ModelType 共用同一套 2D View 组件；仅 PartAssembly 会通过 Avatar2D 拼装部件。
+        /// </summary>
+        private static void AttachMonsterViewComponents(Unit unit, GameObject go)
+        {
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             unit.AddComponent<Avatar2DComponent>();
             unit.AddComponent<Animator2DComponent>();
             unit.AddComponent<MountComponent>();
             unit.AddComponent<UnitTopUIComponent>();
-            await ETTask.CompletedTask;
         }
 
         private async ETTask CreatePlayer(Scene scene, AfterUnitCreate args)

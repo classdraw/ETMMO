@@ -15,19 +15,24 @@ namespace ET.Client
 				return;
 			}
 
+			Unit unit = self.GetParent<Unit>();
 			self.AnimPlayer = gameObjectComponent.GameObject.GetComponentInChildren<FrameSheetAnimPlayer>();
 			if (self.AnimPlayer == null)
 			{
 				return;
 			}
 
-			self.RedressAvatar = self.AnimPlayer.GetComponent<RedressAvatar>();
-			if (self.RedressAvatar == null)
+			// 仅在外显拼装场景下挂载/驱动 RedressAvatar；整模 prefab 保留材质贴图。
+			if (!string.IsNullOrEmpty(unit.BaseExternalDisplay))
 			{
-				self.RedressAvatar = self.AnimPlayer.gameObject.AddComponent<RedressAvatar>();
-			}
+				self.RedressAvatar = self.AnimPlayer.GetComponent<RedressAvatar>();
+				if (self.RedressAvatar == null)
+				{
+					self.RedressAvatar = self.AnimPlayer.gameObject.AddComponent<RedressAvatar>();
+				}
 
-			self.Refresh();
+				self.Refresh();
+			}
 		}
 
 		[EntitySystem]

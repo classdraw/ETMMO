@@ -92,8 +92,23 @@ namespace ET
             this.ApplyClipTextureRouting(renderer, clip, facing);
         }
 
+        private bool HasRuntimeTextures()
+        {
+            return this.bodyTexture != null
+                || this.headTexture != null
+                || this.tailTexture != null
+                || this.shirtTexture != null
+                || this.pantsTexture != null;
+        }
+
         private void ApplyClipTextureRouting(Renderer renderer, FrameSheetAnimClip clip, FrameSheetFacing facing)
         {
+            // 未通过 ApplyTextures 注入贴图时，保留 prefab / 材质上已配置的贴图（ModelType=1 整模）。
+            if (!this.HasRuntimeTextures())
+            {
+                return;
+            }
+
             this.EnsurePropertyBlock();
             renderer.GetPropertyBlock(this.propertyBlock);
 

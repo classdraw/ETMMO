@@ -96,6 +96,12 @@ namespace ET.Server
             unit.AddComponent<SkillStatusComponent>();
             unit.AddComponent<NumericNoticeComponent>();
             unit.AddComponent<BuffComponent>();
+
+            if (monsterConfig.ModelType == (int)MonsterModelType.PartAssembly
+                && !string.IsNullOrEmpty(monsterConfig.Model))
+            {
+                unit.BaseExternalDisplay = monsterConfig.Model;
+            }
             
             unitComponent.Add(unit);
             // 加入aoi

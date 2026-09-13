@@ -10,6 +10,7 @@ namespace ET.Client
 				case (int)FrameRoleRaceType.Orc: return "兽人";
 				case (int)FrameRoleRaceType.DarkElf: return "暗精灵";
 				case (int)FrameRoleRaceType.Wolf: return "狼人";
+				case (int)FrameRoleRaceType.Rabbit: return "兔子";
 				default: return $"种族{race}";
 			}
 		}
@@ -18,6 +19,7 @@ namespace ET.Client
 		{
 			switch (gender)
 			{
+				case (int)FrameRoleGenderType.None: return "无";
 				case (int)FrameRoleGenderType.Male: return "男";
 				case (int)FrameRoleGenderType.Female: return "女";
 				default: return $"性别{gender}";
