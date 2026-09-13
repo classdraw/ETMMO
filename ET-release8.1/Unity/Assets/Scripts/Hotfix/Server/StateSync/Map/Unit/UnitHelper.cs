@@ -23,11 +23,14 @@ namespace ET.Server
 
             string tag = string.IsNullOrEmpty(reasonTag) ? "Offline" : reasonTag;
             Log.Console($"ForceUnitOfflineFromMap [{tag}] roleId:{unit.Id}");
+            // 先通知视野内玩家移除客户端 Unit，再摘 AOI（与怪物死亡销毁顺序一致）
+            MapMessageHelper.NoticeUnitRemoveBroadcast(unit);
             unit.RemoveComponent<AOIEntity>();
             UnitDBSaveComponent dbSave = unit.GetComponent<UnitDBSaveComponent>();
             if (dbSave != null)
             {
-                await dbSave.SaveChange();
+                // 已在 Unit 的 OrderedMessage 邮箱协程内执行，不能再 await SaveChange（会重入 Mailbox 锁导致死锁超时）。
+                dbSave.SaveChangeNoWait();
             }
             await EventSystem.Instance.PublishAsync(unit.Scene(), new UnitOfflinePersist { Unit = unit });
             await unit.Fiber().WaitFrameFinish();

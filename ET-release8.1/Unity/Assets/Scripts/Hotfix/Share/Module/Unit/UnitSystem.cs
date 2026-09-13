@@ -1,5 +1,3 @@
-using ET.Server;
-
 namespace ET
 {
     [EntitySystemOf(typeof(Unit))]
@@ -37,22 +35,6 @@ namespace ET
 
             return false;
         }
-        //是否战斗可以选择
-        public static bool IsBattleSelect(this Unit self)
-        {
-            var tt = self.Type();
-            if (tt==UnitType.Player||
-                tt==UnitType.Monster||
-                tt==UnitType.Pet||
-                tt==UnitType.Summon||
-                tt==UnitType.Robot)
-            {
-                return self.IsAlive();
-            }
-
-            return false;
-        }
-
         /// <summary>
         /// 是否是玩家
         /// </summary>

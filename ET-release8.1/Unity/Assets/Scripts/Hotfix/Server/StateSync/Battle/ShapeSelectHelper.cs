@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 
-namespace ET
+namespace ET.Server
 {
     public static class ShapeSelectHelper
     {

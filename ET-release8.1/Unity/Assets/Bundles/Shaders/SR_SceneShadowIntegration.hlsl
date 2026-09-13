@@ -24,8 +24,8 @@ half3 ApplySRSceneShadow(
     float2 shadowUV = GetNormalizedScreenSpaceUV(positionCS);
     half4 shadowSample = SAMPLE_TEXTURE2D(_SceneShadowRT, sampler_SceneShadowRT, shadowUV);
     half shadowMask = saturate(dot(channelMask, shadowSample));
-    // Ignore RT edge bleed; only apply meaningful shadow values.
-    shadowMask = smoothstep(0.05h, 0.15h, shadowMask);
+    // Wider smoothstep reduces concentric banding from half-res RT upsampling.
+    shadowMask = smoothstep(0.02h, 0.35h, shadowMask);
 
     half3 tintedShadow = lerp(half3(1.0h, 1.0h, 1.0h), sceneShadowColor, sceneShadowIntensity);
     return color * lerp(half3(1.0h, 1.0h, 1.0h), tintedShadow, shadowMask);

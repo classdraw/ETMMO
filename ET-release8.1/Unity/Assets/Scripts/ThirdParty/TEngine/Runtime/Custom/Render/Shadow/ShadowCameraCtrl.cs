@@ -19,7 +19,7 @@ public sealed class ShadowCameraCtrl : MonoBehaviour
     [SerializeField]
     [Range(0.1f, 1f)]
     [Tooltip("阴影 RT 相对屏幕分辨率的比例。")]
-    private float resolutionScale = 0.5f;
+    private float resolutionScale = 0.75f;
 
     private Camera shadowCamera;
     private RenderTexture sceneShadowRT;
@@ -36,6 +36,7 @@ public sealed class ShadowCameraCtrl : MonoBehaviour
     {
         shadowCamera = GetComponent<Camera>();
         sceneShadowLayer = LayerMask.NameToLayer(SceneShadowLayerName);
+        ResolveSourceCamera();
         SetupCamera();
         CreateOrResizeRenderTexture();
     }
@@ -87,6 +88,20 @@ public sealed class ShadowCameraCtrl : MonoBehaviour
         ApplyGlobalTexture();
     }
 
+    private void ResolveSourceCamera()
+    {
+        if (sourceCamera != null && sourceCamera != shadowCamera)
+        {
+            return;
+        }
+
+        Camera parentCamera = GetComponentInParent<Camera>();
+        if (parentCamera != null && parentCamera != shadowCamera)
+        {
+            sourceCamera = parentCamera;
+        }
+    }
+
     private Camera GetSourceCamera()
     {
         if (sourceCamera != null && sourceCamera != shadowCamera)
@@ -118,15 +133,9 @@ public sealed class ShadowCameraCtrl : MonoBehaviour
         shadowCamera.orthographicSize = referenceCamera.orthographicSize;
         shadowCamera.nearClipPlane = referenceCamera.nearClipPlane;
         shadowCamera.farClipPlane = referenceCamera.farClipPlane;
-
-        if (sceneShadowRT != null)
-        {
-            shadowCamera.aspect = (float)sceneShadowRT.width / sceneShadowRT.height;
-        }
-        else
-        {
-            shadowCamera.aspect = referenceCamera.aspect;
-        }
+        shadowCamera.aspect = referenceCamera.aspect;
+        shadowCamera.rect = referenceCamera.rect;
+        shadowCamera.pixelRect = referenceCamera.pixelRect;
     }
 
     private void SetupCamera()
@@ -149,8 +158,17 @@ public sealed class ShadowCameraCtrl : MonoBehaviour
 
     private void CreateOrResizeRenderTexture()
     {
-        int width = Mathf.Max(1, Mathf.RoundToInt(Screen.width * resolutionScale));
-        int height = Mathf.Max(1, Mathf.RoundToInt(Screen.height * resolutionScale));
+        Camera referenceCamera = GetSourceCamera();
+        int pixelWidth = referenceCamera != null ? referenceCamera.pixelWidth : Screen.width;
+        int pixelHeight = referenceCamera != null ? referenceCamera.pixelHeight : Screen.height;
+
+        if (pixelWidth <= 0 || pixelHeight <= 0)
+        {
+            return;
+        }
+
+        int width = Mathf.Max(1, Mathf.RoundToInt(pixelWidth * resolutionScale));
+        int height = Mathf.Max(1, Mathf.RoundToInt(pixelHeight * resolutionScale));
 
         if (sceneShadowRT != null
             && sceneShadowRT.width == width

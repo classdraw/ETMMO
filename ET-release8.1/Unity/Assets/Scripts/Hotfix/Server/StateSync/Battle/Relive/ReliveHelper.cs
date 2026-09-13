@@ -15,6 +15,24 @@ namespace ET.Server
             return unit.GetComponent<ReliveComponent>()?.Alive??true;
         }
 
+        /// <summary>
+        /// 是否可被战斗选中（存活且为可选战斗单位类型）。
+        /// </summary>
+        public static bool IsBattleSelect(this Unit unit)
+        {
+            UnitType unitType = unit.Type();
+            if (unitType == UnitType.Player
+                || unitType == UnitType.Monster
+                || unitType == UnitType.Pet
+                || unitType == UnitType.Summon
+                || unitType == UnitType.Robot)
+            {
+                return unit.IsAlive();
+            }
+
+            return false;
+        }
+
         public static int OnSiteRelive(this Unit unit)
         {
             if (unit.IsAlive())

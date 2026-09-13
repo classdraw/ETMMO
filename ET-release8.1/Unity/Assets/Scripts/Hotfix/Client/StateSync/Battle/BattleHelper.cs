@@ -79,7 +79,7 @@ namespace ET.Client
                     continue;
                 }
 
-                if (unit.Id == sourceUnit.Id || !unit.IsMonster() || !unit.IsBattleSelect())
+                if (unit.Id == sourceUnit.Id || !unit.IsMonster() || !IsAliveUnit(unit))
                 {
                     continue;
                 }
@@ -110,6 +110,17 @@ namespace ET.Client
             }
 
             return nearest;
+        }
+
+        public static bool IsAliveUnit(Unit unit)
+        {
+            NumericComponent numericComponent = unit.GetComponent<NumericComponent>();
+            if (numericComponent == null)
+            {
+                return true;
+            }
+
+            return numericComponent[NumericType.Hp] > 0;
         }
     }
 }

@@ -141,8 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5112d1a178666874ebe76ebd7dec7d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sourceCamera: {fileID: 7019377564294621683}
-  resolutionScale: 0.5
+  sourceCamera: {fileID: 3258915297019590347}
+  resolutionScale: 1
 --- !u!1 &8213698763997535744
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +219,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 11539
+    m_Bits: 7443
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

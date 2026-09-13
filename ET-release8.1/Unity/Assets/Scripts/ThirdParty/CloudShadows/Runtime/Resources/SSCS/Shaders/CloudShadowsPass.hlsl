@@ -114,68 +114,70 @@
     }
 
     half4 FragClouds (VaryingsShadows i) : SV_Target {
-
         #if _ORTHOGRAPHIC_OVERLAY
-            float3 camPos = _WorldSpaceCameraPos.xyz;
-            float3 hitPos = float3(i.wpos.x, LAYER1_CLOUDS_ALTITUDE, i.wpos.z);
-            float3 rayDir = float3(0.0, -1.0, 0.0);
+            float3 overlayCamPos = _WorldSpaceCameraPos.xyz;
+            float3 overlayHitPos = float3(i.wpos.x, LAYER1_CLOUDS_ALTITUDE, i.wpos.z);
+            float3 overlayRayDir = float3(0.0, -1.0, 0.0);
 
             #if _BOUNDS
-                if (any(floor((hitPos.xz - BOUNDS_CENTER) / BOUNDS_SIZE + 0.5) != 0)) return 0;
+                if (any(floor((overlayHitPos.xz - BOUNDS_CENTER) / BOUNDS_SIZE + 0.5) != 0)) return 0;
+            #endif
+
+            half overlayHaze = GetHaze(overlayHitPos, LAYER1_WIND_OFFSET, LAYER1_EDGE_NOISE, LAYER1_ANIMATION_SPEED, LAYER1_SCALE, LAYER1_CONTRAST, LAYER1_COVERAGE, LAYER1_OFFSET);
+            clip(overlayHaze - 0.001);
+            return ComposeCloudOutput(overlayHitPos, overlayCamPos, overlayRayDir, overlayHaze);
+        #else
+            float2 uv = i.scrPos.xy / i.scrPos.w;
+            float depth01 = GetLinearDepth(uv);
+            float3 wpos = GetWorldPosition(i.wpos, depth01);
+
+            #if _BOUNDS
+                if (any(floor((wpos.xz - BOUNDS_CENTER) / BOUNDS_SIZE + 0.5) != 0)) return 0;
+            #endif
+
+            float3 camPos;
+            float3 rayDir;
+
+            #if _ORTHOGRAPHIC
+                rayDir = unity_WorldToCamera._m20_m21_m22;
+                camPos = _WorldSpaceCameraPos.xyz;
+
+                // Camera must sit above the cloud layer (typical top-down setup).
+                if (camPos.y <= LAYER1_CLOUDS_ALTITUDE + 0.01) return 0;
+
+                // Top-down ortho: parallel rays, project clouds onto XZ at cloud altitude.
+                if (abs(rayDir.y) > 0.99) {
+                    if (!IsSkyBox(depth01) && wpos.y > LAYER1_CLOUDS_ALTITUDE + 0.01) return 0;
+                } else {
+                    float planeDistance = GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
+                    float distAlongRay = dot(wpos - camPos, rayDir);
+                    if (distAlongRay + 0.01 < planeDistance) return 0;
+                    if (!IsSkyBox(depth01) && wpos.y > LAYER1_CLOUDS_ALTITUDE + 0.01) return 0;
+                }
+            #else
+                camPos = _WorldSpaceCameraPos.xyz;
+                rayDir = normalize(wpos - camPos);
+
+                float planeDistance = GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
+                if (distance(camPos, wpos) < planeDistance) return 0;
+            #endif
+
+            float heightDiff = camPos.y - LAYER1_CLOUDS_ALTITUDE;
+            if (heightDiff * rayDir.y >= 0) return 0;
+
+            float3 hitPos;
+            #if _ORTHOGRAPHIC
+                hitPos = abs(rayDir.y) > 0.99
+                    ? float3(wpos.x, LAYER1_CLOUDS_ALTITUDE, wpos.z)
+                    : camPos + rayDir * GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
+            #else
+                hitPos = camPos + rayDir * GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
             #endif
 
             half haze = GetHaze(hitPos, LAYER1_WIND_OFFSET, LAYER1_EDGE_NOISE, LAYER1_ANIMATION_SPEED, LAYER1_SCALE, LAYER1_CONTRAST, LAYER1_COVERAGE, LAYER1_OFFSET);
             clip(haze - 0.001);
             return ComposeCloudOutput(hitPos, camPos, rayDir, haze);
         #endif
-
-        float2 uv = i.scrPos.xy / i.scrPos.w;
-        float depth01 = GetLinearDepth(uv);
-
-        float3 wpos = GetWorldPosition(i.wpos, depth01);
-
-        #if _BOUNDS
-            if (any (floor( (wpos.xz - BOUNDS_CENTER) / BOUNDS_SIZE + 0.5)) != 0) return 0;
-        #endif
-
-        #if _ORTHOGRAPHIC
-            float3 rayDir = unity_WorldToCamera._m20_m21_m22;
-            float3 camPos = _WorldSpaceCameraPos.xyz;
-
-            // Camera must sit above the cloud layer (typical top-down setup).
-            if (camPos.y <= LAYER1_CLOUDS_ALTITUDE + 0.01) return 0;
-
-            // Top-down ortho: parallel rays, project clouds onto XZ at cloud altitude.
-            if (abs(rayDir.y) > 0.99) {
-                if (!IsSkyBox(depth01) && wpos.y > LAYER1_CLOUDS_ALTITUDE + 0.01) return 0;
-            } else {
-                float planeDistance = GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
-                float distAlongRay = dot(wpos - camPos, rayDir);
-                if (distAlongRay + 0.01 < planeDistance) return 0;
-                if (!IsSkyBox(depth01) && wpos.y > LAYER1_CLOUDS_ALTITUDE + 0.01) return 0;
-            }
-        #else
-            float3 camPos = _WorldSpaceCameraPos.xyz;
-            float3 ray = wpos - camPos;
-            float3 rayDir = normalize(ray);
-
-            float planeDistance = GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
-            if (distance(camPos, wpos) < planeDistance) return 0;
-        #endif
-
-        float heightDiff = camPos.y - LAYER1_CLOUDS_ALTITUDE;
-        if (heightDiff * rayDir.y >= 0) return 0;
-
-        #if _ORTHOGRAPHIC
-            float3 hitPos = abs(rayDir.y) > 0.99
-                ? float3(wpos.x, LAYER1_CLOUDS_ALTITUDE, wpos.z)
-                : camPos + rayDir * GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
-        #else
-            float3 hitPos = camPos + rayDir * GetRayIntersectionDistance(camPos, rayDir, LAYER1_CLOUDS_ALTITUDE);
-        #endif
-        half haze = GetHaze(hitPos, LAYER1_WIND_OFFSET, LAYER1_EDGE_NOISE, LAYER1_ANIMATION_SPEED, LAYER1_SCALE, LAYER1_CONTRAST, LAYER1_COVERAGE, LAYER1_OFFSET);
-        clip(haze - 0.001);
-        return ComposeCloudOutput(hitPos, camPos, rayDir, haze);
-}
+    }
 
 #endif // SSCS_PASS
