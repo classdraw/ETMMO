@@ -15,8 +15,20 @@ namespace ET.Client
                 return;
             }
 
+            if (unit.IsCasting())
+            {
+                await ETTask.CompletedTask;
+                return;
+            }
+
             Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
             if (animator == null)
+            {
+                await ETTask.CompletedTask;
+                return;
+            }
+
+            if (Animator2DComponentSystem.ShouldSuppressLocomotionAnimation(unit, animator, MotionType.Idle))
             {
                 await ETTask.CompletedTask;
                 return;

@@ -127,6 +127,9 @@ namespace ET
 
         public bool loop = true;
 
+        [Tooltip("仅非循环动画生效：播放结束后自动回到 Idle")]
+        public bool returnToIdleAfterPlay;
+
         [Min(0.0001f)]
         public float interval = 0.1f;
 
@@ -338,5 +341,6 @@ namespace ET
         public static readonly int EndColumn = Shader.PropertyToID("_EndColumn");
         public static readonly int Loop = Shader.PropertyToID("_Loop");
         public static readonly int Interval = Shader.PropertyToID("_Interval");
+        public static readonly int AnimStartTime = Shader.PropertyToID("_AnimStartTime");
     }
 }

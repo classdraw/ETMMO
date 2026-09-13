@@ -110,7 +110,14 @@ namespace ET.Editor.Frame2D
             EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("startColumn"), new GUIContent("Start Column"));
             EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("endColumn"), new GUIContent("End Column"));
 
-            EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("loop"));
+            SerializedProperty loopProp = clipProp.FindPropertyRelative("loop");
+            EditorGUILayout.PropertyField(loopProp);
+            SerializedProperty returnToIdleProp = clipProp.FindPropertyRelative("returnToIdleAfterPlay");
+            using (new EditorGUI.DisabledScope(loopProp.boolValue))
+            {
+                EditorGUILayout.PropertyField(returnToIdleProp, new GUIContent("Return To Idle After Play"));
+            }
+
             EditorGUILayout.PropertyField(clipProp.FindPropertyRelative("interval"));
 
             EditorGUILayout.Space(4);

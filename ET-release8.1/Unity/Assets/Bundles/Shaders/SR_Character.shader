@@ -34,6 +34,7 @@ Shader "Custom/SR_Character"
         [Header(Animation)]
         [Toggle] _Loop("Loop", Float) = 1
         _Interval("Interval (Seconds)", Float) = 0.1
+        _AnimStartTime("Anim Start Time", Float) = 0
     }
 
     SubShader
@@ -91,6 +92,7 @@ Shader "Custom/SR_Character"
                 float _EndColumn;
                 float _Loop;
                 float _Interval;
+                float _AnimStartTime;
                 half _UseSceneShadow;
                 half _SceneShadowIntensity;
                 half4 _SceneShadowColor;
@@ -157,7 +159,8 @@ Shader "Custom/SR_Character"
                 float rangeEnd = max(startCol, endCol);
                 uint frameCount = max((uint)round(rangeEnd - rangeStart + 1.0), 1u);
 
-                uint elapsed = (uint)max(floor(_Time.y / max(_Interval, 0.0001)), 0.0);
+                float animTime = max(_Time.y - _AnimStartTime, 0.0);
+                uint elapsed = (uint)max(floor(animTime / max(_Interval, 0.0001)), 0.0);
                 uint frameOffset = (_Loop > 0.5)
                     ? (elapsed % frameCount)
                     : min(elapsed, frameCount - 1u);

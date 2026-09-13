@@ -30,11 +30,18 @@ namespace ET
         private float currentSpeedMultiplier = 1f;
         private bool isPaused;
         private FrameSheetAnimClip currentClip;
+        private float playStartTime;
+        private bool pendingReturnToIdle;
 
         public MotionType CurrentAnim => currentAnim;
         public FrameSheetFacing CurrentFacing => currentFacing;
         public float CurrentSpeedMultiplier => currentSpeedMultiplier;
         public bool IsPaused => isPaused;
+
+        /// <summary>
+        /// 返回 false 时阻止 returnToIdleAfterPlay 自动切回 Idle（如施法中）。
+        /// </summary>
+        public Func<bool> CanAutoReturnToIdle { get; set; }
 
         private void Awake()
         {
@@ -58,6 +65,7 @@ namespace ET
         private void Update()
         {
             UpdateBonePositions();
+            TryReturnToIdleAfterClipFinished();
         }
 
         private void OnValidate()
@@ -98,8 +106,32 @@ namespace ET
                 return 0f;
             }
 
+            return GetClipDurationAtSpeed(clip, 1f);
+        }
+
+        public bool IsCurrentClipFinished()
+        {
+            if (currentClip == null || currentClip.loop || currentAnim == MotionType.None || isPaused)
+            {
+                return false;
+            }
+
+            return Time.time - playStartTime >= GetClipDurationAtSpeed(currentClip, currentSpeedMultiplier);
+        }
+
+        public bool IsPlayingNonLoopAction()
+        {
+            return currentClip != null
+                   && !currentClip.loop
+                   && currentAnim != MotionType.None
+                   && !isPaused;
+        }
+
+        private static float GetClipDurationAtSpeed(FrameSheetAnimClip clip, float speedMultiplier)
+        {
+            speedMultiplier = Mathf.Max(speedMultiplier, 0.0001f);
             int frameCount = Mathf.Max(clip.endColumn - clip.startColumn + 1, 1);
-            return frameCount * clip.interval;
+            return frameCount * clip.interval / speedMultiplier;
         }
 
         public bool Play(MotionType animType, FrameSheetFacing facing, float speedMultiplier)
@@ -123,11 +155,13 @@ namespace ET
             }
 
             speedMultiplier = Mathf.Max(speedMultiplier, 0.0001f);
+            playStartTime = Time.time;
 
             targetRenderer.GetPropertyBlock(propertyBlock);
             animConfig.ApplyGrid(propertyBlock);
             FrameSheetAnimConfig.ApplyClip(propertyBlock, clip, facing);
             propertyBlock.SetFloat(FrameSheetAnimShaderIds.Interval, clip.interval / speedMultiplier);
+            propertyBlock.SetFloat(FrameSheetAnimShaderIds.AnimStartTime, playStartTime);
             targetRenderer.SetPropertyBlock(propertyBlock);
 
             IFrameSheetClipTextureRouter textureRouter = GetComponent<IFrameSheetClipTextureRouter>();
@@ -138,20 +172,26 @@ namespace ET
             currentSpeedMultiplier = speedMultiplier;
             currentClip = clip;
             isPaused = false;
+            pendingReturnToIdle = ShouldReturnToIdleAfterClip(animType, clip);
             UpdateBonePositions();
             return true;
         }
 
         public void PausePlayback()
         {
-            if (isPaused || targetRenderer == null)
+            if (isPaused || targetRenderer == null || currentClip == null)
             {
                 return;
             }
 
             EnsureInitialized();
+            const float pauseInterval = 99999f;
+            int frozenFrame = CalculateCurrentFrameIndex(currentClip);
+            playStartTime = Time.time - frozenFrame * pauseInterval;
+
             targetRenderer.GetPropertyBlock(propertyBlock);
-            propertyBlock.SetFloat(FrameSheetAnimShaderIds.Interval, 99999f);
+            propertyBlock.SetFloat(FrameSheetAnimShaderIds.Interval, pauseInterval);
+            propertyBlock.SetFloat(FrameSheetAnimShaderIds.AnimStartTime, playStartTime);
             targetRenderer.SetPropertyBlock(propertyBlock);
             isPaused = true;
         }
@@ -183,7 +223,26 @@ namespace ET
                 return true;
             }
 
-            return Play(currentAnim, facing);
+            float elapsedTime = Time.time - playStartTime;
+            bool success = Play(currentAnim, facing, currentSpeedMultiplier);
+            if (success)
+            {
+                playStartTime = Time.time - elapsedTime;
+                targetRenderer.GetPropertyBlock(propertyBlock);
+                propertyBlock.SetFloat(FrameSheetAnimShaderIds.AnimStartTime, playStartTime);
+                targetRenderer.SetPropertyBlock(propertyBlock);
+            }
+
+            return success;
+        }
+
+        public bool ShouldReturnToIdleAfterCurrentClip()
+        {
+            return currentClip != null
+                   && !currentClip.loop
+                   && currentClip.returnToIdleAfterPlay
+                   && currentAnim != MotionType.Idle
+                   && currentAnim != MotionType.Stand;
         }
 
         private void EnsureInitialized()
@@ -260,13 +319,64 @@ namespace ET
             ApplyMeshTransform(boneConfig, frameIndex);
         }
 
+        private static bool ShouldReturnToIdleAfterClip(MotionType animType, FrameSheetAnimClip clip)
+        {
+            return clip != null
+                   && !clip.loop
+                   && clip.returnToIdleAfterPlay
+                   && animType != MotionType.Idle
+                   && animType != MotionType.Stand;
+        }
+
+        private void TryReturnToIdleAfterClipFinished()
+        {
+            if (!pendingReturnToIdle || currentClip == null || isPaused)
+            {
+                return;
+            }
+
+            if (!IsCurrentClipFinished())
+            {
+                return;
+            }
+
+            if (CanAutoReturnToIdle != null && !CanAutoReturnToIdle())
+            {
+                return;
+            }
+
+            pendingReturnToIdle = false;
+            MotionType idleAnim = ResolveReturnToIdleAnim();
+            if (idleAnim == MotionType.None)
+            {
+                return;
+            }
+
+            Play(idleAnim, currentFacing);
+        }
+
+        private MotionType ResolveReturnToIdleAnim()
+        {
+            if (TryGetClip(MotionType.Idle, out _))
+            {
+                return MotionType.Idle;
+            }
+
+            if (defaultAnim != MotionType.None && TryGetClip(defaultAnim, out _))
+            {
+                return defaultAnim;
+            }
+
+            return MotionType.None;
+        }
+
         private int CalculateCurrentFrameIndex(FrameSheetAnimClip clip)
         {
             float interval = isPaused ? 99999f : clip.interval / currentSpeedMultiplier;
             interval = Mathf.Max(interval, 0.0001f);
 
             int frameCount = Mathf.Max(clip.endColumn - clip.startColumn + 1, 1);
-            int elapsed = Mathf.Max(Mathf.FloorToInt(Time.time / interval), 0);
+            int elapsed = Mathf.Max(Mathf.FloorToInt((Time.time - playStartTime) / interval), 0);
             return clip.loop ? elapsed % frameCount : Mathf.Min(elapsed, frameCount - 1);
         }
 

@@ -17,8 +17,18 @@ namespace ET.Client
                 return;
             }
 
-            //后面走配置表
-            unit.GetComponent<Animator2DComponent>()?.Play(MotionType.Idle,1f);
+            Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
+            if (animator?.AnimPlayer != null && animator.AnimPlayer.ShouldReturnToIdleAfterCurrentClip())
+            {
+                return;
+            }
+
+            // 施法结束需强制回 Idle；此时尚未 Remove ClientCast，Play() 会被 IsCasting 拦截。
+            if (animator?.AnimPlayer != null)
+            {
+                animator.SyncFacingFromUnit();
+                animator.AnimPlayer.Play(MotionType.Idle, animator.Facing, 1f);
+            }
 
             await ETTask.CompletedTask;
         }

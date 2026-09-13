@@ -79,12 +79,20 @@ namespace ET.Client
             }
 
             Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
-            if (animator == null || animator.IsDisposed)
+            if (animator == null || animator.IsDisposed || animator.AnimPlayer == null)
             {
                 return;
             }
 
-            animator.Play(motionType, 1f);
+            if (!animator.HasAnim(motionType))
+            {
+                Log.Warning($"CastStart_PlayView HasAnim failed, motionType={motionType}, castConfigId={args.CasterConfigId}, unitId={unit.Id}");
+                return;
+            }
+
+            // 立即播放，避免 MoveStart/MoveStop 在同一帧覆盖 MotionType 队列。
+            animator.SyncFacingFromUnit();
+            animator.AnimPlayer.Play(motionType, animator.Facing, 1f);
         }
     }
 }

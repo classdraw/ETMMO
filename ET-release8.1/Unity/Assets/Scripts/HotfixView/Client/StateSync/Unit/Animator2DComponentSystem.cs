@@ -28,6 +28,11 @@ namespace ET.Client
 
 			self.AnimPlayer = animPlayer;
 			self.Facing = animPlayer.CurrentFacing;
+			animPlayer.CanAutoReturnToIdle = () =>
+			{
+				Unit unit = self.GetParent<Unit>();
+				return unit == null || !unit.IsCasting();
+			};
 			RefreshAvailableAnims(self);
 		}
 
@@ -39,28 +44,33 @@ namespace ET.Client
 				return;
 			}
 
-			if (self.MotionType == MotionType.None)
+			if (self.MotionType != MotionType.None)
 			{
-				return;
-			}
-
-			try
-			{
-				self.SyncFacingFromUnit();
-				MotionType clipType = ResolveClipMotion(self.MotionType);
-				if (clipType == MotionType.None || self.AnimPlayer == null)
+				try
 				{
-					self.MotionType = MotionType.None;
-					return;
-				}
+					self.SyncFacingFromUnit();
+					MotionType clipType = ResolveClipMotion(self.MotionType);
+					if (clipType == MotionType.None || self.AnimPlayer == null)
+					{
+						self.MotionType = MotionType.None;
+						return;
+					}
 
-				self.AnimPlayer.Play(clipType, self.Facing, self.MontionSpeed);
-				self.MontionSpeed = 1f;
-				self.MotionType = MotionType.None;
-			}
-			catch (Exception ex)
-			{
-				throw new Exception($"2D动作播放失败: {self.MotionType}", ex);
+					Unit unit = self.GetParent<Unit>();
+					if (ShouldSuppressLocomotionAnimation(unit, self, clipType))
+					{
+						self.MotionType = MotionType.None;
+						return;
+					}
+
+					self.AnimPlayer.Play(clipType, self.Facing, self.MontionSpeed);
+					self.MontionSpeed = 1f;
+					self.MotionType = MotionType.None;
+				}
+				catch (Exception ex)
+				{
+					throw new Exception($"2D动作播放失败: {self.MotionType}", ex);
+				}
 			}
 		}
 
@@ -73,6 +83,12 @@ namespace ET.Client
 		public static void PlayInTime(this Animator2DComponent self, MotionType motionType, float time)
 		{
 			if (!self.CanPlayByInnerCD(motionType))
+			{
+				return;
+			}
+
+			Unit unit = self.GetParent<Unit>();
+			if (ShouldSuppressLocomotionAnimation(unit, self, motionType))
 			{
 				return;
 			}
@@ -103,6 +119,12 @@ namespace ET.Client
 			}
 
 			if (!self.HasAnim(motionType))
+			{
+				return;
+			}
+
+			Unit unit = self.GetParent<Unit>();
+			if (ShouldSuppressLocomotionAnimation(unit, self, motionType))
 			{
 				return;
 			}
@@ -242,6 +264,32 @@ namespace ET.Client
 					self.AvailableAnims.Add(motionType);
 				}
 			}
+		}
+
+		public static bool ShouldSuppressLocomotionAnimation(Unit unit, Animator2DComponent animator, MotionType requestedMotion)
+		{
+			if (requestedMotion != MotionType.Move && requestedMotion != MotionType.Idle)
+			{
+				return false;
+			}
+
+			if (unit != null && unit.IsCasting())
+			{
+				return true;
+			}
+
+			FrameSheetAnimPlayer animPlayer = animator?.AnimPlayer;
+			if (animPlayer == null || !animPlayer.IsPlayingNonLoopAction())
+			{
+				return false;
+			}
+
+			if (requestedMotion == MotionType.Move && animPlayer.CurrentAnim == MotionType.Move)
+			{
+				return false;
+			}
+
+			return !animPlayer.IsCurrentClipFinished();
 		}
 
 		private static MotionType ResolveClipMotion(MotionType motionType)
