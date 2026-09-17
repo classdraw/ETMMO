@@ -81,16 +81,16 @@ namespace ET.Server
             {
                 using (actions)
                 {
-                    RunActions(scene, actions, actionsRunType);
+                    RunActionsInner(scene, actions, actionsRunType);
                 }
             }
             else
             {
-                RunActions(scene, actions, actionsRunType);
+                RunActionsInner(scene, actions, actionsRunType);
             }
         }
 
-        public static void RunActions(Scene scene, Actions actions, ActionsRunType actionsRunType)
+        public static void RunActionsInner(Scene scene, Actions actions, ActionsRunType actionsRunType)
         {
             IActions iActions = GetIActions(scene, actions.Config.Type);
             if (iActions == null)

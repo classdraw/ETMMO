@@ -12,6 +12,12 @@ namespace ET.Client
                 return;
             }
 
+            ClientBuff buff = unit.GetComponent<ClientBuffComponent>().Get(args.BuffId);
+            if (buff==null)
+            {
+                return;
+            }
+
             if (!BuffConfigCategory.Instance.Contain(args.BuffConfigId))
             {
                 Log.Error($"BuffAdd_BuffView BuffConfig not found: {args.BuffConfigId}");
