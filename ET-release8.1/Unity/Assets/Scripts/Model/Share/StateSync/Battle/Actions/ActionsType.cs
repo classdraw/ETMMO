@@ -6,6 +6,7 @@ namespace ET
         public const int Damage = 2;//伤害行为
         public const int CastBullet = 3;//创建子弹
         public const int CastEmptyBullet = 4;//假子弹逻辑
+        public const int MoveToTarget = 5;//往目标移动
     }
 }
 

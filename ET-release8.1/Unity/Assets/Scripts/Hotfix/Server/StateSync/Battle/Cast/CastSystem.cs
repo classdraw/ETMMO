@@ -33,11 +33,10 @@ namespace ET.Server
         /// <summary>
         /// 释放技能
         /// </summary>
-        /// <param name="cast"></param>
-        /// <returns></returns>
-        public static int Cast(this Cast cast)
+        /// <param name="useInputTargets">为 true 时首次 RefreshTargets 不 SelectTargets，沿用 cast.Targets</param>
+        public static int Cast(this Cast cast, bool useInputTargets = false)
         {
-            int err = cast.RefreshTargets();
+            int err = cast.RefreshTargets(useInputTargets);
             if (err != ErrorCode.ERR_Success)
             {
                 cast.Dispose();
@@ -56,9 +55,10 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 校验输入、重新选目标、校验目标数量
+        /// 校验输入、选目标（或沿用外部 Targets）、校验目标数量
         /// </summary>
-        public static int RefreshTargets(this Cast cast)
+        /// <param name="useInputTargets">为 true 时不 SelectTargets（仅 Cast 首次释放传入）</param>
+        public static int RefreshTargets(this Cast cast, bool useInputTargets = false)
         {
             int err = cast.CastCheck();
             if (err != ErrorCode.ERR_Success)
@@ -66,7 +66,11 @@ namespace ET.Server
                 return err;
             }
 
-            cast.SelectTargets();
+            if (!useInputTargets)
+            {
+                cast.SelectTargets();
+            }
+
             return cast.CastCheckBeforeBegin();
         }
 

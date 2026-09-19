@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -75,8 +76,17 @@ namespace ET.Server
 
             return ErrorCode.ERR_Success;
         }
-
-        public static int CreateAndCast(this Unit caster,int castConfigId,long inputUnitId,float3 inputPos,bool needStop)//这里可能传入前端选择的目标或者坐标
+        /// <summary>
+        /// 常规输入创建技能
+        /// </summary>
+        /// <param name="caster"></param>
+        /// <param name="castConfigId"></param>
+        /// <param name="inputUnitId"></param>
+        /// <param name="inputPos"></param>
+        /// <param name="needStop"></param>
+        /// <param name="targets">非空时写入 cast.Targets，首次 Cast 不再 SelectTargets</param>
+        /// <returns></returns>
+        public static int CreateAndCast(this Unit caster,int castConfigId,long inputUnitId,float3 inputPos,bool needStop,List<long> targets = null)//这里可能传入前端选择的目标或者坐标
         {
             SkillStatusComponent skillStatusComponent = caster.GetComponent<SkillStatusComponent>();
             if (skillStatusComponent == null || skillStatusComponent.IsDisposed)
@@ -95,12 +105,20 @@ namespace ET.Server
             {
                 return ErrorCode.ERR_CastSkillError;
             }
+
+            bool useInputTargets = false;
+            if (targets != null && targets.Count > 0)
+            {
+                cast.Targets.AddRange(targets);
+                useInputTargets = true;
+            }
+
             //需求就是开始释放前停止移动，不会施法动画位移会受到stop影响！！！AI别乱改
             if (needStop)
             {
                 caster.Stop(1);
             }
-            err = cast.Cast();
+            err = cast.Cast(useInputTargets);
             if (err != ErrorCode.ERR_Success)
             {
                 return err;

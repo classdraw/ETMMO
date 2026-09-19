@@ -4,6 +4,7 @@ using Unity.Mathematics;
 namespace ET.Server
 {
     [FriendOf(typeof(BulletComponent))]
+    [FriendOfAttribute(typeof(ET.Server.AOIEntity))]
     public static partial class UnitFactory
     {
         public static UnitConfig GetUnitConfig(int configId)
@@ -11,38 +12,38 @@ namespace ET.Server
             return UnitConfigCategory.Instance.Get(configId);
         }
 
-        public static Unit  Create(Scene scene, long id,int configId,string name, UnitType unitType)
+        public static Unit Create(Scene scene, long id, int configId, string name, UnitType unitType)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             switch (unitType)
             {
                 case UnitType.Player:
-                {
-                    UnitConfig unitConfig=UnitConfigCategory.Instance.Get(configId);
+                    {
+                        UnitConfig unitConfig = UnitConfigCategory.Instance.Get(configId);
 
-                    Unit unit = unitComponent.AddChildWithId<Unit, int,string>(id, configId,name);
-                    unit.AddComponent<UnitDBSaveComponent>();
-                    
-                    
-                    unit.AddComponent<MoveComponent>();
-                    unit.Position = new float3(-8.7f, 0f, -15.5f);//最好给新手村第一个场景的坐标 或者新手安全区随机一个 可以写死
-                    NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
-                    InitNumericFromConfigByPlayer(numericComponent, unitConfig,1);
-                    
-                    unit.AddComponent<ReliveComponent>();
-                    unit.AddComponent<CastComponent>();
-                    unit.AddComponent<SkillStatusComponent>();
-                    unit.AddComponent<NumericNoticeComponent>();
-                    unit.AddComponent<BuffComponent>();
-                    //背包组件
-                    unit.AddComponent<KnapsackComponent>();
+                        Unit unit = unitComponent.AddChildWithId<Unit, int, string>(id, configId, name);
+                        unit.AddComponent<UnitDBSaveComponent>();
 
-                    unitComponent.Add(unit);
-                    //装备组件后面加
-                    // 加入aoi
-                    var aoiEntity=unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
-                    return unit;
-                }
+
+                        unit.AddComponent<MoveComponent>();
+                        unit.Position = new float3(-8.7f, 0f, -15.5f);//最好给新手村第一个场景的坐标 或者新手安全区随机一个 可以写死
+                        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
+                        InitNumericFromConfigByPlayer(numericComponent, unitConfig, 1);
+
+                        unit.AddComponent<ReliveComponent>();
+                        unit.AddComponent<CastComponent>();
+                        unit.AddComponent<SkillStatusComponent>();
+                        unit.AddComponent<NumericNoticeComponent>();
+                        unit.AddComponent<BuffComponent>();
+                        //背包组件
+                        unit.AddComponent<KnapsackComponent>();
+
+                        unitComponent.Add(unit);
+                        //装备组件后面加
+                        // 加入aoi
+                        var aoiEntity = unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
+                        return unit;
+                    }
                 default:
                     throw new Exception($"not such unit type: {unitType}");
             }
@@ -56,7 +57,7 @@ namespace ET.Server
         /// <param name="bulletConfigId">BulletConfig表</param>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static Unit CreateBullet(Scene scene, long ownerId, int unitConfigId, int bulletConfigId, float3 pos)
+        public static Unit CreateBullet(Scene scene, long ownerId, int unitConfigId, int bulletConfigId, float3 pos,quaternion rotate)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             Unit owner = unitComponent.Get(ownerId);
@@ -67,30 +68,56 @@ namespace ET.Server
             }
 
             UnitConfig unitConfig = UnitConfigCategory.Instance.Get(unitConfigId);
-            Unit unit = unitComponent.AddChild<Unit, int, string>(unitConfigId,unitConfig.Name);
+            Unit unit = unitComponent.AddChild<Unit, int, string>(unitConfigId, unitConfig.Name);
             unit.Position = pos;
+            unit.Rotation = rotate;
             unit.OwnerId = ownerId;
-
+            unit.MapId = owner.MapId;
+            unit.TeamId = owner.TeamId;
+            unit.AddComponent<CastComponent>();
+            unit.AddComponent<MoveComponent>();
+            unit.AddComponent<PathfindingComponent, string>(scene.Name);
+            NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
+            numericComponent.Set(NumericType.Speed,unitConfig.Speed);
+            
+            //子弹组件
             BulletComponent bulletComponent = unit.AddComponent<BulletComponent, int>(bulletConfigId);
             bulletComponent.OwnerId = ownerId;
 
+            int aoiDistance = unitConfig.Aoi;
+            if (aoiDistance <= 0)
+            {
+                AOIEntity ownerAoi = owner.GetComponent<AOIEntity>();
+                if (ownerAoi != null && !ownerAoi.IsDisposed)
+                {
+                    aoiDistance = ownerAoi.ViewDistance;
+                }
+            }
+
+            numericComponent.Set(NumericType.AOI, aoiDistance);
+            unit.AddComponent<AOIEntity, int, float3>(aoiDistance, unit.Position);
+
             unitComponent.Add(unit);
+
+
+
+
             return unit;
         }
 
 
-        public static Unit CreateMonster(Scene scene,MonsterConfig monsterConfig,float3 pos)
+        public static Unit CreateMonster(Scene scene, MonsterConfig monsterConfig, float3 pos)
         {
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             UnitConfig unitConfig = UnitConfigCategory.Instance.Get(monsterConfig.UnitConfigId);
-            Unit unit = unitComponent.AddChild<Unit, int, string>(monsterConfig.UnitConfigId,unitConfig.Name);
+            Unit unit = unitComponent.AddChild<Unit, int, string>(monsterConfig.UnitConfigId, unitConfig.Name);
             unit.AddComponent<MoveComponent>();
             unit.Position = pos;
-            
-            
+
+
             NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
             InitNumericFromMonsterConfig(numericComponent, monsterConfig, unitConfig);
-            
+
             unit.AddComponent<ReliveComponent>();
             unit.AddComponent<CastComponent>();
             unit.AddComponent<SkillStatusComponent>();
@@ -102,10 +129,10 @@ namespace ET.Server
             {
                 unit.BaseExternalDisplay = monsterConfig.Model;
             }
-            
+
             unitComponent.Add(unit);
             // 加入aoi
-            var aoiEntity=unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
+            var aoiEntity = unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
             return unit;
         }
 
@@ -162,9 +189,9 @@ namespace ET.Server
 
         private static void InitNumericFromMonsterConfig(NumericComponent numericComponent, MonsterConfig monsterConfig, UnitConfig unitConfig)
         {
-            numericComponent.Set(NumericType.Element,monsterConfig.Element);
+            numericComponent.Set(NumericType.Element, monsterConfig.Element);
             numericComponent.Set(NumericType.AOI, unitConfig.Aoi);
-            numericComponent.Set(NumericType.Level,monsterConfig.Level);
+            numericComponent.Set(NumericType.Level, monsterConfig.Level);
             numericComponent.Set(NumericType.SpeedBase, unitConfig.Speed / 1000f);
 
             numericComponent.Set(NumericType.STRBase, unitConfig.Str);

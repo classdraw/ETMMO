@@ -209,9 +209,9 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 销毁子弹 Unit：停移动 → 通知客户端移除 → 从场景 UnitComponent 移除（触发 BulletComponent.Destroy）。
+        /// 销毁子弹 Unit：通知客户端移除 → Dispose（AOI 与子组件 Destroy 随 Unit 销毁）。
         /// </summary>
-        private static void DoDispose(this BulletComponent self)
+        public static void DoDispose(this BulletComponent self)
         {
             if (self == null || self.IsDisposed)
             {
@@ -222,15 +222,14 @@ namespace ET.Server
             if (bulletUnit == null || bulletUnit.IsDisposed)
             {
                 return;
-            }
-
+            }            
             if (bulletUnit.GetComponent<MoveComponent>() != null)
             {
                 bulletUnit.Stop(0);
             }
-
+            
             MapMessageHelper.NoticeUnitRemoveBroadcast(bulletUnit);
-            self.Scene().GetComponent<UnitComponent>().Remove(bulletUnit.Id);
+            bulletUnit.Dispose();
         }
 
         private static void RefreshExpireTimer(this BulletComponent self)
@@ -302,15 +301,7 @@ namespace ET.Server
             {
                 foreach (int tickCastId in bulletConfig.TickCastIds)
                 {
-                    Cast cast = owner.Create(tickCastId, 0, bulletUnit.Position);
-                    if (cast == null)
-                    {
-                        Log.Console($"子弹 {self.ConfigId} 释放Cast {tickCastId} 失败: {ErrorCode.ERR_CastSkillError}");
-                        continue;
-                    }
-
-                    cast.Targets.AddRange(self.Targets);
-                    int err = cast.Cast();
+                    int err = owner.CreateAndCast(tickCastId, 0, bulletUnit.Position, false, self.Targets);
                     if (err != ErrorCode.ERR_Success)
                     {
                         Log.Console($"子弹 {self.ConfigId} 释放Cast {tickCastId} 失败: {err}");
@@ -479,7 +470,7 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// TargetNumber：-1 不限制（仅 ShapeParam 人数）；>=0 与 Shape 人数取更严；0 仅 ShapeParam。
+        /// TargetNumber：-1 不限制（仅 ShapeParam 人数）；>0 与 Shape 人数取更严；0 仅 ShapeParam。
         /// </summary>
         private static int GetSelectNeedCount(this BulletComponent self, BulletConfig bulletConfig, int shapeNeedCount)
         {

@@ -34,7 +34,7 @@ namespace ET.Server
 
             int unitConfigId = config.ActionsParam[0];
             int bulletConfigId = config.ActionsParam[1];
-            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, unitConfigId, bulletConfigId, caster.Position);
+            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, unitConfigId, bulletConfigId, caster.Position,caster.Rotation);
             if (bullet == null)
             {
                 return;
