@@ -56,6 +56,9 @@ namespace ET.Server
             self.ConfigId = configId;
             self.OwnerId = 0;
             self.TickTimer = 0;
+            self.TickTimer2 = 0;
+            self.TickTimer3 = 0;
+            self.ExpireTimer = 0;
             self.AddComponent<ActionsTempComponent>();
 
         }
@@ -64,13 +67,20 @@ namespace ET.Server
         {
             TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
             timerComponent.Remove(ref self.TickTimer);
+            timerComponent.Remove(ref self.TickTimer2);
+            timerComponent.Remove(ref self.TickTimer3);
+
             timerComponent.Remove(ref self.ExpireTimer);
+            
             self.TickTimer = 0;
+            self.TickTimer2 = 0;
+            self.TickTimer3 = 0;
             self.ExpireTimer = 0;
             
             self.PreDestroy();
             self.ConfigId = 0;
             self.OwnerId = 0;
+            self.TickCount = 0;
         }
 
         public static Unit GetOwner(this BulletComponent self)
@@ -101,7 +111,8 @@ namespace ET.Server
                     interval = 100;//间隔时间最低100
                 }
                 
-                self.Root().GetComponent<TimerComponent>().NewRepeatedTimer(interval, (int)TimerInvokeType.BulletTickTimer, self);
+                self.TickTimer = self.Root().GetComponent<TimerComponent>()
+                    .NewRepeatedTimer(interval, (int)TimerInvokeType.BulletTickTimer, self);
             }
 
             self.RefreshExpireTimer();

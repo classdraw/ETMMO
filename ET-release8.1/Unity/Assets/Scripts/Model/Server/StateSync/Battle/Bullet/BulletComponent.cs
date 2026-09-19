@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ET.Server
@@ -5,7 +6,7 @@ namespace ET.Server
     [ComponentOf(typeof(Unit))]
     public class BulletComponent:Entity,IAwake<int>,IDestroy
     {
-        public int ConfigId;
+        public int ConfigId=0;
         [BsonIgnore]
         public BulletConfig Config
         {
@@ -14,12 +15,20 @@ namespace ET.Server
                 return BulletConfigCategory.Instance.Get(this.ConfigId);
             }
         }
-
+        public int TickCount = 0;
         public long OwnerId;
         [BsonIgnore]
-        public long TickTimer;
+        public long TickTimer;//迭代时间
         [BsonIgnore]
-        public long ExpireTimer;
+        public long TickTimer2;//迭代时间
+        [BsonIgnore]
+        public long TickTimer3;//迭代时间
+        
+        [BsonIgnore]
+        public long ExpireTimer;//退出时间
+
+        [BsonIgnore]
+        public List<long> Targets = new List<long>();
     }
 }
 
