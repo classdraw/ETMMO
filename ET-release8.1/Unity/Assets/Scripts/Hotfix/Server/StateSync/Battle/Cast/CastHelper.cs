@@ -44,11 +44,12 @@ namespace ET.Server
                     continue;
                 }
 
-                int unBreakTime = casting.Config.UnBreakTime;
-                if (unBreakTime == -1)
+                if (CastSkillKind.IsAttachedSkill(casting))
                 {
                     continue;
                 }
+
+                int unBreakTime = casting.Config.UnBreakTime;
 
                 if (casting.StartTime <= 0)
                 {

@@ -47,7 +47,7 @@ namespace ET.Server
         private static async ETTask NoticeUnitAddAsync(Unit unit, Unit sendUnit)
         {
             M2C_CreateUnits createUnits = M2C_CreateUnits.Create();
-            createUnits.Units.Add(UnitHelper.CreateUnitInfo(sendUnit));
+            createUnits.Units.Add(UnitInfoHelper.CreateUnitInfo(sendUnit));
             await MapMessageHelper.SendToClient(unit, createUnits);
             EventSystem.Instance.Publish(unit.Scene(), new NoticeBuffsToViewer
             {
@@ -103,7 +103,13 @@ namespace ET.Server
         public static void Broadcast(Unit unit, IMessage message)
         {
             (message as MessageObject).IsFromPool = false;
-            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
+            AOIEntity aoiEntity = unit.GetComponent<AOIEntity>();
+            if (aoiEntity == null)
+            {
+                return;
+            }
+
+            Dictionary<long, EntityRef<AOIEntity>> dict = aoiEntity.GetBeSeePlayers();
             // 网络底层做了优化，同一个消息不会多次序列化
             MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
             foreach (AOIEntity u in dict.Values)
@@ -179,7 +185,7 @@ namespace ET.Server
                 return;
             }
             (message as MessageObject).IsFromPool = false;
-            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
+            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetComponent<AOIEntity>().GetBeSeePlayers();
             // 网络底层做了优化，同一个消息不会多次序列化
             MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
             foreach (AOIEntity u in dict.Values)
@@ -191,12 +197,13 @@ namespace ET.Server
         
         private static void SendClientBroadcastWithoutSelf(Unit unit, IMessage message)
         {
-            if (unit.GetComponent<AOIEntity>() == null)
+            AOIEntity aoiEntity = unit.GetComponent<AOIEntity>();
+            if (aoiEntity == null)
             {
                 return;
             }
             (message as MessageObject).IsFromPool = false;
-            Dictionary<long, EntityRef<AOIEntity>> dict = unit.GetBeSeePlayers();
+            Dictionary<long, EntityRef<AOIEntity>> dict = aoiEntity.GetBeSeePlayers();
             // 网络底层做了优化，同一个消息不会多次序列化
             MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
             foreach (AOIEntity u in dict.Values)

@@ -46,7 +46,11 @@ namespace ET.Server
 
             cast.StartTime = TimeInfo.Instance.ServerFrameTime();
             Unit caster = cast.Caster;
-            caster?.GetComponent<SkillStatusComponent>()?.BeginCurrentSkill(cast);
+            if (CastSkillKind.IsBehaviorSkill(cast))
+            {
+                caster?.GetComponent<SkillStatusComponent>()?.BeginCurrentSkill(cast);
+            }
+
             cast.CastBeginAsync().Coroutine();
             return ErrorCode.ERR_Success;
         }
@@ -77,6 +81,11 @@ namespace ET.Server
             if (caster==null||caster.IsDisposed)
             {
                 return ErrorCode.ERR_CastCasterIsNullError;
+            }
+
+            if (!caster.IsAlive())
+            {
+                return ErrorCode.ERR_CastUnitDead;
             }
             
             SelectType selectType = (SelectType)cast.Config.SelectType;

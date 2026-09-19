@@ -21,9 +21,14 @@ namespace ET.Server
         public static int CanCastSkill(this SkillStatusComponent self, int castConfigId)
         {
             Unit unit = self.GetParent<Unit>();
-            if (unit == null)
+            if (unit == null || unit.IsDisposed)
             {
                 return ErrorCode.ERR_CastPreUnitIsNull;
+            }
+
+            if (!unit.IsAlive())
+            {
+                return ErrorCode.ERR_CastUnitDead;
             }
 
             NumericComponent numericComponent = unit.GetComponent<NumericComponent>();
@@ -49,6 +54,7 @@ namespace ET.Server
             return ErrorCode.ERR_Success;
         }
 
+        /// <summary>写入技能 CD 与 CD 开始时间，行为技能与附属技能均生效。</summary>
         public static void SetCoolDown(this SkillStatusComponent self, int castConfigId, int coolDownMs)
         {
             if (coolDownMs <= 0)
@@ -63,11 +69,11 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// UnBreakTime>=0 的技能开始释放时，记录当前技能状态。
+        /// 行为技能（UnBreakTime>=0）开始释放时写入 CurrentSkill；附属技能不写入（CD 见 SetCoolDown，施法时间见 Cast.StartTime）。
         /// </summary>
         public static void BeginCurrentSkill(this SkillStatusComponent self, Cast cast)
         {
-            if (cast == null || cast.IsDisposed || cast.Config.UnBreakTime < 0)
+            if (!CastSkillKind.IsBehaviorSkill(cast))
             {
                 return;
             }
@@ -79,11 +85,11 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 技能结束或打断时，清空当前技能状态。
+        /// 行为技能结束或打断时清空 CurrentSkill；附属技能结束不影响 CurrentSkill。
         /// </summary>
         public static void ClearCurrentSkill(this SkillStatusComponent self, Cast cast)
         {
-            if (cast == null || cast.IsDisposed || cast.Config.UnBreakTime < 0)
+            if (!CastSkillKind.IsBehaviorSkill(cast))
             {
                 return;
             }
