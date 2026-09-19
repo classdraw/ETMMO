@@ -26,10 +26,12 @@
         public const int BuffExpireTimer = 405;//buff超时处理
         public const int BuffTickTimer = 406;//bufftick处理
         public const int BulletTickTimer = 407;//bullet定时器
-        public const int BulletExpireTimer = 408;//bullet超时销毁
+        public const int BulletTickTimer2 = 408;//bullet 1档(0.1s)
+        public const int BulletTickTimer3 = 409;//bullet 2档(1s)
+        public const int BulletExpireTimer = 410;//bullet超时销毁
 
-        public const int CreateMonsterTimer = 409;//创建怪物延迟
-        public const int DeadMonsterTimer = 410;//怪物死亡延迟
+        public const int CreateMonsterTimer = 411;//创建怪物延迟
+        public const int DeadMonsterTimer = 412;//怪物死亡延迟
 
     }
 }

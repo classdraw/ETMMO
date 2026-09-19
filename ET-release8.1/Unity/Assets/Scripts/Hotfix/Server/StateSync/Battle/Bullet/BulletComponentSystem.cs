@@ -1,10 +1,12 @@
 using System;
+using Unity.Mathematics;
 
 namespace ET.Server
 {
     #region Bullet定时器
+
     [Invoke(TimerInvokeType.BulletTickTimer)]
-    public class BulletTickTimerHandler: ATimer<BulletComponent>
+    public class BulletTickTimerHandler : ATimer<BulletComponent>
     {
         protected override void Run(BulletComponent self)
         {
@@ -14,6 +16,7 @@ namespace ET.Server
                 {
                     return;
                 }
+
                 self.Tick();
             }
             catch (Exception e)
@@ -23,8 +26,8 @@ namespace ET.Server
         }
     }
 
-    [Invoke(TimerInvokeType.BulletExpireTimer)]
-    public class BulletExpireTimerHandler: ATimer<BulletComponent>
+    [Invoke(TimerInvokeType.BulletTickTimer2)]
+    public class BulletTickTimer2Handler : ATimer<BulletComponent>
     {
         protected override void Run(BulletComponent self)
         {
@@ -35,7 +38,49 @@ namespace ET.Server
                     return;
                 }
 
-                self.Expire();
+                self.Tick1();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Bullet BulletTickTimer2 error: {self.Id}\n{e}");
+            }
+        }
+    }
+
+    [Invoke(TimerInvokeType.BulletTickTimer3)]
+    public class BulletTickTimer3Handler : ATimer<BulletComponent>
+    {
+        protected override void Run(BulletComponent self)
+        {
+            try
+            {
+                if (self == null || self.IsDisposed)
+                {
+                    return;
+                }
+
+                self.Tick2();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Bullet BulletTickTimer3 error: {self.Id}\n{e}");
+            }
+        }
+    }
+
+    [Invoke(TimerInvokeType.BulletExpireTimer)]
+    public class BulletExpireTimerHandler : ATimer<BulletComponent>
+    {
+        protected override void Run(BulletComponent self)
+        {
+            try
+            {
+                if (self == null || self.IsDisposed)
+                {
+                    return;
+                }
+
+                self.DisposeSelf();
             }
             catch (Exception e)
             {
@@ -45,13 +90,16 @@ namespace ET.Server
     }
 
     #endregion
-    
+
     [EntitySystemOf(typeof(BulletComponent))]
     [FriendOf(typeof(BulletComponent))]
+    [FriendOfAttribute(typeof(ET.Server.Cast))]
     public static partial class BulletComponentSystem
     {
+        #region 生命周期
+
         [EntitySystem]
-        private static void Awake(this ET.Server.BulletComponent self,int configId)
+        private static void Awake(this BulletComponent self, int configId)
         {
             self.ConfigId = configId;
             self.OwnerId = 0;
@@ -59,69 +107,130 @@ namespace ET.Server
             self.TickTimer2 = 0;
             self.TickTimer3 = 0;
             self.ExpireTimer = 0;
+            self.TickCount = 0;
+            self.Targets.Clear();
             self.AddComponent<ActionsTempComponent>();
-
         }
+
         [EntitySystem]
-        private static void Destroy(this ET.Server.BulletComponent self)
+        private static void Destroy(this BulletComponent self)
         {
             TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
             timerComponent.Remove(ref self.TickTimer);
             timerComponent.Remove(ref self.TickTimer2);
             timerComponent.Remove(ref self.TickTimer3);
-
             timerComponent.Remove(ref self.ExpireTimer);
-            
+
             self.TickTimer = 0;
             self.TickTimer2 = 0;
             self.TickTimer3 = 0;
             self.ExpireTimer = 0;
-            
-            self.PreDestroy();
+
             self.ConfigId = 0;
             self.OwnerId = 0;
             self.TickCount = 0;
+            self.Targets.Clear();
         }
 
-        public static Unit GetOwner(this BulletComponent self)
-        {
-            return self.Scene().GetComponent<UnitComponent>().Get(self.OwnerId);
-        }
-
-        public static void Start(this ET.Server.BulletComponent self)
+        public static void Start(this BulletComponent self)
         {
             Unit owner = self.GetOwner();
-            if (owner==null||owner.IsDisposed||!owner.IsBattleUnit())
+            if (!self.IsOwnerValid(owner))
             {
-                self.Dispose();
+                self.DisposeSelf();
                 return;
             }
+
             Log.Console($"Bullet: {self.ConfigId} Start");
             BulletConfig bulletConfig = self.Config;
-            foreach (var actionsId in bulletConfig.AwakeActions)
+
+            foreach (int actionsId in bulletConfig.AwakeActions)
             {
                 self.CreateActions(actionsId, owner, owner, ActionsRunType.BulletAwake);
             }
 
-            if (bulletConfig.Interval>0)
+            if (bulletConfig.Interval > 0)
             {
                 int interval = bulletConfig.Interval;
-                if (interval<=100)
+                if (interval <= 100)
                 {
-                    interval = 100;//间隔时间最低100
+                    interval = 100;
                 }
-                
+
                 self.TickTimer = self.Root().GetComponent<TimerComponent>()
-                    .NewRepeatedTimer(interval, (int)TimerInvokeType.BulletTickTimer, self);
+                    .NewRepeatedTimer(interval, TimerInvokeType.BulletTickTimer, self);
+            }
+
+            if (bulletConfig.Tick1.Length > 0)
+            {
+                self.TickTimer2 = self.Root().GetComponent<TimerComponent>()
+                    .NewRepeatedTimer(100, TimerInvokeType.BulletTickTimer2, self);
+            }
+
+            if (bulletConfig.Tick2.Length > 0)
+            {
+                self.TickTimer3 = self.Root().GetComponent<TimerComponent>()
+                    .NewRepeatedTimer(1000, TimerInvokeType.BulletTickTimer3, self);
             }
 
             self.RefreshExpireTimer();
         }
 
-        public static void Expire(this BulletComponent self)
+        public static void DisposeSelf(this BulletComponent self)
         {
+            if (self == null || self.IsDisposed)
+            {
+                return;
+            }
+
+            TimerComponent timerComponent = self.Root().GetComponent<TimerComponent>();
+            timerComponent.Remove(ref self.TickTimer);
+            timerComponent.Remove(ref self.TickTimer2);
+            timerComponent.Remove(ref self.TickTimer3);
+            timerComponent.Remove(ref self.ExpireTimer);
+
+            Unit owner = self.GetOwner();
+            if (owner == null || owner.IsDisposed)
+            {
+                self.DoDispose();
+                return;
+            }
+
+            BulletConfig bulletConfig = self.Config;
+            if (bulletConfig.DestroyActions.Length > 0)
+            {
+                foreach (int actionsId in bulletConfig.DestroyActions)
+                {
+                    self.CreateActions(actionsId, owner, owner, ActionsRunType.BulletDestroy);
+                }
+            }
+
+            self.DoDispose();
+        }
+
+        /// <summary>
+        /// 销毁子弹 Unit：停移动 → 通知客户端移除 → 从场景 UnitComponent 移除（触发 BulletComponent.Destroy）。
+        /// </summary>
+        private static void DoDispose(this BulletComponent self)
+        {
+            if (self == null || self.IsDisposed)
+            {
+                return;
+            }
+
             Unit bulletUnit = self.GetParent<Unit>();
-            bulletUnit?.Dispose();
+            if (bulletUnit == null || bulletUnit.IsDisposed)
+            {
+                return;
+            }
+
+            if (bulletUnit.GetComponent<MoveComponent>() != null)
+            {
+                bulletUnit.Stop(0);
+            }
+
+            MapMessageHelper.NoticeUnitRemoveBroadcast(bulletUnit);
+            self.Scene().GetComponent<UnitComponent>().Remove(bulletUnit.Id);
         }
 
         private static void RefreshExpireTimer(this BulletComponent self)
@@ -145,106 +254,253 @@ namespace ET.Server
             }
 
             long expireTime = TimeInfo.Instance.ServerFrameTime() + totalTime;
-            self.ExpireTimer = timerComponent.NewOnceTimer(expireTime, (int)TimerInvokeType.BulletExpireTimer, self);
+            self.ExpireTimer = timerComponent.NewOnceTimer(expireTime, TimerInvokeType.BulletExpireTimer, self);
         }
+
+        public static Unit GetOwner(this BulletComponent self)
+        {
+            return self.Scene().GetComponent<UnitComponent>().Get(self.OwnerId);
+        }
+
+        private static bool IsOwnerValid(this BulletComponent self, Unit owner)
+        {
+            return owner != null && !owner.IsDisposed && owner.IsBattleUnit();
+        }
+
+        #endregion
+
+        #region 结算 Tick
 
         /// <summary>
-        /// 准备销毁
+        /// Interval 档结算；仅本方法使用 TickCount / TickLimit。
         /// </summary>
-        /// <param name="self"></param>
-        private static void PreDestroy(this ET.Server.BulletComponent self)
-        {
-            Unit owner = self.GetOwner();
-            if (owner==null||owner.IsDisposed||!owner.IsBattleUnit())
-            {
-                return;
-            }
-            Log.Console($"Bullet: {self.ConfigId} PreDestroy");
-            BulletConfig bulletConfig = self.Config;
-            if (bulletConfig.DestroyActions.Length==0)
-            {
-                return;
-            }
-
-            foreach (var actionsId in bulletConfig.DestroyActions)
-            {
-                self.CreateActions(actionsId, owner, owner, ActionsRunType.BulletDestroy);
-            }
-        }
-
         public static void Tick(this BulletComponent self)
         {
-            Unit selfUnit = self.GetParent<Unit>();
+            Unit bulletUnit = self.GetParent<Unit>();
             Unit owner = self.GetOwner();
-            if (owner==null||owner.IsDisposed||!owner.IsBattleUnit())
+            if (!self.IsOwnerValid(owner))
             {
-                self.Dispose();
+                self.DisposeSelf();
                 return;
             }
-            
-            Log.Console($"Bullet: {self.ConfigId} Tick");
-            
+
             BulletConfig bulletConfig = self.Config;
             if (bulletConfig.TickActions.Length == 0 && bulletConfig.TickCastIds.Length == 0)
             {
                 return;
             }
 
-            using (ListComponent<Unit> list = ListComponent<Unit>.Create())
+            if (bulletConfig.TickLimit > 0 && self.TickCount >= bulletConfig.TickLimit)
             {
-                if (!self.TrySelectTickTargets(selfUnit, owner, bulletConfig, list))
-                {
-                    return;
-                }
+                return;
+            }
 
-                if (list.Count == 0)
-                {
-                    return;
-                }
+            self.TrySelectTickTargets(bulletUnit, bulletConfig);
+            self.TickCount++;
 
-                foreach (Unit target in list)
+            if (bulletConfig.TickCastIds.Length > 0)
+            {
+                foreach (int tickCastId in bulletConfig.TickCastIds)
                 {
-                    foreach (int tickCastId in bulletConfig.TickCastIds)
+                    Cast cast = owner.Create(tickCastId, 0, bulletUnit.Position);
+                    if (cast == null)
                     {
-                        int err = owner.CreateAndCast(tickCastId, target.Id, target.Position,false);//子弹释放不会停止移动
-                        if (err != ErrorCode.ERR_Success)
-                        {
-                            Log.Warning($"Bullet TickCast failed: bullet={bulletConfig.Id} cast={tickCastId} target={target.Id} err={err}");
-                        }
+                        Log.Console($"子弹 {self.ConfigId} 释放Cast {tickCastId} 失败: {ErrorCode.ERR_CastSkillError}");
+                        continue;
                     }
 
-                    foreach (int actionsId in bulletConfig.TickActions)
+                    cast.Targets.AddRange(self.Targets);
+                    int err = cast.Cast();
+                    if (err != ErrorCode.ERR_Success)
                     {
-                        self.CreateActions(actionsId, target, owner, ActionsRunType.BulletTick);
+                        Log.Console($"子弹 {self.ConfigId} 释放Cast {tickCastId} 失败: {err}");
                     }
                 }
             }
+
+            if (bulletConfig.TickActions.Length > 0)
+            {
+                foreach (int actionsId in bulletConfig.TickActions)
+                {
+                    self.CreateActions(actionsId, bulletUnit, bulletUnit, ActionsRunType.BulletTick);
+                }
+            }
+
+            if (bulletConfig.TickLimit > 0 && self.TickCount >= bulletConfig.TickLimit)
+            {
+                // 结算次数到了，提前结束
+                self.DisposeSelf();
+            }
         }
 
-        private static bool TrySelectTickTargets(this BulletComponent self, Unit bulletUnit, Unit owner, BulletConfig bulletConfig,
-            ListComponent<Unit> list)
+        public static void Tick1(this BulletComponent self)
         {
+            if (!self.IsOwnerValid(self.GetOwner()))
+            {
+                self.DisposeSelf();
+                return;
+            }
+
+            BulletConfig bulletConfig = self.Config;
+            if (bulletConfig.Tick1.Length == 0)
+            {
+                return;
+            }
+
+            self.SelectTarget();
+            Unit bulletUnit = self.GetParent<Unit>();
+            foreach (int actionsId in bulletConfig.Tick1)
+            {
+                self.CreateActions(actionsId, bulletUnit, bulletUnit, ActionsRunType.BulletTick);
+            }
+        }
+
+        public static void Tick2(this BulletComponent self)
+        {
+            if (!self.IsOwnerValid(self.GetOwner()))
+            {
+                self.DisposeSelf();
+                return;
+            }
+
+            BulletConfig bulletConfig = self.Config;
+            if (bulletConfig.Tick2.Length == 0)
+            {
+                return;
+            }
+
+            self.SelectTarget();
+            Unit bulletUnit = self.GetParent<Unit>();
+            foreach (int actionsId in bulletConfig.Tick2)
+            {
+                self.CreateActions(actionsId, bulletUnit, bulletUnit, ActionsRunType.BulletTick);
+            }
+        }
+
+        #endregion
+
+        #region 选目标
+
+        private static void SelectTarget(this BulletComponent self)
+        {
+            Unit bulletUnit = self.GetParent<Unit>();
+            self.TrySelectTickTargets(bulletUnit, self.Config);
+        }
+
+        /// <summary>
+        /// 按 ShapeParam 选目标（逻辑同 CastSystem.SelectTargetsInner，以子弹 Unit 为主体）；每次清空并重建 Targets，排除 OwnerId。
+        /// </summary>
+        private static bool TrySelectTickTargets(this BulletComponent self, Unit bulletUnit, BulletConfig bulletConfig)
+        {
+            self.Targets.Clear();
+
             int[] shapeParam = bulletConfig.ShapeParam;
-            if (shapeParam == null || shapeParam.Length < 4)
+            if (shapeParam == null || shapeParam.Length == 0)
             {
                 Log.Error($"BulletConfig {bulletConfig.Id} ShapeParam invalid");
                 return false;
             }
 
-            BulletShape bulletShape = (BulletShape)shapeParam[0];
-            switch (bulletShape)
+            ShapeType shapeType = (ShapeType)shapeParam[0];
+            if (shapeType == ShapeType.Single)
             {
-                case BulletShape.Circle:
-                {
-                    ShapeSelectHelper.SelectCircle(owner, bulletUnit.Position, shapeParam[1], shapeParam[2],
-                        (SelectCampType)shapeParam[3], owner.GetAoiUnits(), list);
-                    return true;
-                }
-                default:
-                    Log.Error($"BulletConfig {bulletConfig.Id} unsupported shape: {bulletShape}");
-                    return false;
+                Log.Error($"BulletConfig {bulletConfig.Id} unsupported shape: {shapeType}");
+                return false;
             }
+
+            float3 pos = bulletUnit.Position;
+            long ownerId = self.OwnerId;
+
+            using (ListComponent<Unit> list = ListComponent<Unit>.Create())
+            {
+                switch (shapeType)
+                {
+                    case ShapeType.Circle:
+                        {
+                            if (shapeParam.Length < 4)
+                            {
+                                Log.Error($"BulletConfig {bulletConfig.Id} Circle ShapeParam invalid");
+                                return false;
+                            }
+
+                            int needCount = self.GetSelectNeedCount(bulletConfig, shapeParam[2]);
+                            ShapeSelectHelper.SelectCircle(bulletUnit, pos, shapeParam[1], needCount, (SelectCampType)shapeParam[3],
+                                bulletUnit.GetAoiUnits(), list);
+                            break;
+                        }
+                    case ShapeType.Rectangle:
+                        {
+                            if (shapeParam.Length < 6)
+                            {
+                                Log.Error($"BulletConfig {bulletConfig.Id} Rectangle ShapeParam invalid");
+                                return false;
+                            }
+
+                            int needCount = self.GetSelectNeedCount(bulletConfig, shapeParam[4]);
+                            ShapeSelectHelper.SelectRectangle(bulletUnit, pos, shapeParam[1], shapeParam[2], shapeParam[3], needCount,
+                                (SelectCampType)shapeParam[5], bulletUnit.GetAoiUnits(), list);
+                            break;
+                        }
+                    case ShapeType.Fan:
+                        {
+                            if (shapeParam.Length < 5)
+                            {
+                                Log.Error($"BulletConfig {bulletConfig.Id} Fan ShapeParam invalid");
+                                return false;
+                            }
+
+                            int needCount = self.GetSelectNeedCount(bulletConfig, shapeParam[3]);
+                            ShapeSelectHelper.SelectFan(bulletUnit, pos, shapeParam[1], shapeParam[2], needCount, (SelectCampType)shapeParam[4],
+                                bulletUnit.GetAoiUnits(), list);
+                            break;
+                        }
+                    default:
+                        Log.Error($"BulletConfig {bulletConfig.Id} unsupported shape: {shapeType}");
+                        return false;
+                }
+
+                foreach (Unit targetUnit in list)
+                {
+                    if (targetUnit.Id == ownerId)
+                    {
+                        continue;
+                    }
+
+                    if (bulletConfig.TargetNumber > 0 && self.Targets.Count >= bulletConfig.TargetNumber)
+                    {
+                        break;
+                    }
+
+                    self.Targets.Add(targetUnit.Id);
+                }
+            }
+
+            return true;
         }
 
+        /// <summary>
+        /// TargetNumber：-1 不限制（仅 ShapeParam 人数）；>=0 与 Shape 人数取更严；0 仅 ShapeParam。
+        /// </summary>
+        private static int GetSelectNeedCount(this BulletComponent self, BulletConfig bulletConfig, int shapeNeedCount)
+        {
+            if (bulletConfig.TargetNumber == -1)
+            {
+                return shapeNeedCount <= 0 ? int.MaxValue : shapeNeedCount;
+            }
+
+            if (bulletConfig.TargetNumber > 0)
+            {
+                if (shapeNeedCount <= 0)
+                {
+                    return bulletConfig.TargetNumber;
+                }
+
+                return Math.Min(shapeNeedCount, bulletConfig.TargetNumber);
+            }
+
+            return shapeNeedCount <= 0 ? int.MaxValue : shapeNeedCount;
+        }
+
+        #endregion
     }
 }

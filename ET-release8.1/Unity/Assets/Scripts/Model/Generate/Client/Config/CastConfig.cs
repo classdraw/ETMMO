@@ -192,7 +192,7 @@ namespace ET
 				return _StartEffect;
 			}
 		}
-		/// <summary>技能命中特效</summary>
+		/// <summary>技能命中自己特效</summary>
 		public int[] _SelfHitEffect;
 		
 		[BsonIgnore]

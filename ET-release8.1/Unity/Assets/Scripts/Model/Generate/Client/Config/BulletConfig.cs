@@ -130,8 +130,36 @@ namespace ET
 				return _DestroyActions;
 			}
 		}
-		/// <summary>模型</summary>
-		public string Model { get; set; }
+		/// <summary>目标个数</summary>
+		public int TargetNumber { get; set; }
+		/// <summary>结算次数限制</summary>
+		public int TickLimit { get; set; }
+		/// <summary>1档(0.1s)</summary>
+		public int[] _Tick1;
+		
+		[BsonIgnore]
+		public int[] Tick1
+		{
+			get
+			{
+				if(_Tick1 == null)
+					_Tick1 = new int[] { };
+				return _Tick1;
+			}
+		}
+		/// <summary>2档(1s)</summary>
+		public int[] _Tick2;
+		
+		[BsonIgnore]
+		public int[] Tick2
+		{
+			get
+			{
+				if(_Tick2 == null)
+					_Tick2 = new int[] { };
+				return _Tick2;
+			}
+		}
 
 	}
 }
