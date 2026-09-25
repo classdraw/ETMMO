@@ -80,7 +80,11 @@ namespace ET
         /// 角色显示外显，一般创建角色用到
         /// </summary>
         public string BaseExternalDisplay { get; set; }
-        public int ConfigId { get; set; } //配置表id
+        public int ConfigId { get; set; } //UnitConfig id
+        /// <summary>
+        /// 怪物/子弹配表 Id（MonsterConfig / BulletConfig），玩家为 0。
+        /// </summary>
+        public int TableConfigId { get; set; }
         public int Race { get; set; }
         public int Gender { get; set; }
     }

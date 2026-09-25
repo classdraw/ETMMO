@@ -31,26 +31,19 @@ namespace ET.Client
             await ETTask.CompletedTask;
         }
 
-        private static BulletConfig GetBulletConfigByUnitConfigId(int unitConfigId)
-        {
-            foreach (BulletConfig bulletConfig in BulletConfigCategory.Instance.GetAll().Values)
-            {
-                if (bulletConfig.UnitConfigId == unitConfigId)
-                {
-                    return bulletConfig;
-                }
-            }
-
-            return null;
-        }
-
         private async ETTask CreateBullet(Scene scene, AfterUnitCreate args)
         {
             Unit unit = args.Unit;
-            BulletConfig bulletConfig = GetBulletConfigByUnitConfigId(unit.ConfigId);
-            if (bulletConfig == null || string.IsNullOrEmpty(bulletConfig.Model))
+            if (!BulletConfigCategory.Instance.Contain(unit.TableConfigId))
             {
-                Log.Error($"BulletConfig model not found: unitConfigId={unit.ConfigId}");
+                Log.Error($"BulletConfig not found: tableConfigId={unit.TableConfigId}, unitConfigId={unit.ConfigId}");
+                return;
+            }
+
+            BulletConfig bulletConfig = BulletConfigCategory.Instance.Get(unit.TableConfigId);
+            if (string.IsNullOrEmpty(bulletConfig.Model))
+            {
+                Log.Error($"BulletConfig model empty: tableConfigId={unit.TableConfigId}");
                 return;
             }
 
@@ -72,26 +65,19 @@ namespace ET.Client
             await ETTask.CompletedTask;
         }
 
-        private static MonsterConfig GetMonsterConfigByUnitConfigId(int unitConfigId)
-        {
-            foreach (MonsterConfig monsterConfig in MonsterConfigCategory.Instance.GetAll().Values)
-            {
-                if (monsterConfig.UnitConfigId == unitConfigId)
-                {
-                    return monsterConfig;
-                }
-            }
-
-            return null;
-        }
-
         private async ETTask CreateMonster(Scene scene, AfterUnitCreate args)
         {
             Unit unit = args.Unit;
-            MonsterConfig monsterConfig = GetMonsterConfigByUnitConfigId(unit.ConfigId);
-            if (monsterConfig == null || string.IsNullOrEmpty(monsterConfig.Model))
+            if (!MonsterConfigCategory.Instance.Contain(unit.TableConfigId))
             {
-                Log.Error($"MonsterConfig not found: unitConfigId={unit.ConfigId}");
+                Log.Error($"MonsterConfig not found: tableConfigId={unit.TableConfigId}, unitConfigId={unit.ConfigId}");
+                return;
+            }
+
+            MonsterConfig monsterConfig = MonsterConfigCategory.Instance.Get(unit.TableConfigId);
+            if (string.IsNullOrEmpty(monsterConfig.Model))
+            {
+                Log.Error($"MonsterConfig model empty: tableConfigId={unit.TableConfigId}");
                 return;
             }
 

@@ -99,11 +99,7 @@ namespace ET
             EventSystem.Instance.Publish(self.Scene(), new MoveStart() {Unit = self.GetParent<Unit>()});
             
             bool moveRet = await self.tcs;
-
-            if (moveRet)
-            {
-                EventSystem.Instance.Publish(self.Scene(), new MoveStop() {Unit = self.GetParent<Unit>()});
-            }
+            EventSystem.Instance.Publish(self.Scene(), new MoveStop() {Unit = self.GetParent<Unit>()});
             return moveRet;
         }
 

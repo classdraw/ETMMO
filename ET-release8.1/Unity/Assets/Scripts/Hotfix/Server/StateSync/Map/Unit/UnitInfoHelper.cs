@@ -13,6 +13,7 @@ namespace ET.Server
             unitInfo.UnitId = unit.Id;
             unitInfo.Name = unit.Name;
             unitInfo.ConfigId = unit.ConfigId;
+            unitInfo.TableConfigId = unit.TableConfigId;
             unitInfo.BaseExternalDisplay = unit.BaseExternalDisplay ?? string.Empty;
             unitInfo.Race = unit.Race;
             unitInfo.Gender = unit.Gender;

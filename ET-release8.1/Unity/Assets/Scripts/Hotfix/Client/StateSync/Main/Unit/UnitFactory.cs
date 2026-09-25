@@ -12,6 +12,7 @@ namespace ET.Client
 	        
 	        unit.Position = unitInfo.Position;
 	        unit.Forward = unitInfo.Forward;
+	        unit.TableConfigId = unitInfo.TableConfigId;
 	        unit.OwnerId = unitInfo.OwnerId;
 	        unit.TeamId = unitInfo.TeamId;
 	        unit.MapId = unitInfo.MapId;

@@ -281,6 +281,9 @@ namespace ET
         [MemoryPackOrder(14)]
         public int Gender { get; set; }
 
+        [MemoryPackOrder(15)]
+        public int TableConfigId { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -303,6 +306,7 @@ namespace ET
             this.BaseExternalDisplay = default;
             this.Race = default;
             this.Gender = default;
+            this.TableConfigId = default;
 
             ObjectPool.Instance.Recycle(this);
         }

@@ -7,6 +7,7 @@ namespace ET
         private static void Awake(this Unit self, int configId,string name)
         {
             self.ConfigId = configId;
+            self.TableConfigId = 0;
             self.Name = name;
         }
 

@@ -72,8 +72,15 @@ namespace ET.Server
                 return null;
             }
 
+            if (!UnitConfigCategory.Instance.Contain(bulletConfig.UnitConfigId))
+            {
+                Log.Error($"CreateBullet UnitConfig not found: bulletConfigId={bulletConfig.Id}, unitConfigId={bulletConfig.UnitConfigId}");
+                return null;
+            }
+
             UnitConfig unitConfig = UnitConfigCategory.Instance.Get(bulletConfig.UnitConfigId);
             Unit unit = unitComponent.AddChild<Unit, int, string>(bulletConfig.UnitConfigId, unitConfig.Name);
+            unit.TableConfigId = bulletConfig.Id;
             unit.Position = pos;
             unit.Rotation = rotate;
             unit.OwnerId = ownerId;
@@ -115,6 +122,7 @@ namespace ET.Server
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             UnitConfig unitConfig = UnitConfigCategory.Instance.Get(monsterConfig.UnitConfigId);
             Unit unit = unitComponent.AddChild<Unit, int, string>(monsterConfig.UnitConfigId, unitConfig.Name);
+            unit.TableConfigId = monsterConfig.Id;
             unit.AddComponent<MoveComponent>();
             unit.AddComponent<PathfindingComponent, string>(scene.Name);
             unit.Position = pos;
