@@ -53,12 +53,17 @@ namespace ET.Server
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="ownerId">拥有者</param>
-        /// <param name="unitConfigId">一般写死9001 UnitConfig表</param>
-        /// <param name="bulletConfigId">BulletConfig表</param>
+        /// <param name="bulletConfig">BulletConfig 表，Unit 取自 bulletConfig.UnitConfigId</param>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static Unit CreateBullet(Scene scene, long ownerId, int unitConfigId, int bulletConfigId, float3 pos,quaternion rotate)
+        public static Unit CreateBullet(Scene scene, long ownerId, BulletConfig bulletConfig, float3 pos,quaternion rotate)
         {
+            if (bulletConfig == null)
+            {
+                Log.Error("CreateBullet bulletConfig is null");
+                return null;
+            }
+
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
             Unit owner = unitComponent.Get(ownerId);
             if (owner == null || owner.IsDisposed || !owner.IsBattleUnit())
@@ -67,8 +72,8 @@ namespace ET.Server
                 return null;
             }
 
-            UnitConfig unitConfig = UnitConfigCategory.Instance.Get(unitConfigId);
-            Unit unit = unitComponent.AddChild<Unit, int, string>(unitConfigId, unitConfig.Name);
+            UnitConfig unitConfig = UnitConfigCategory.Instance.Get(bulletConfig.UnitConfigId);
+            Unit unit = unitComponent.AddChild<Unit, int, string>(bulletConfig.UnitConfigId, unitConfig.Name);
             unit.Position = pos;
             unit.Rotation = rotate;
             unit.OwnerId = ownerId;
@@ -76,12 +81,11 @@ namespace ET.Server
             unit.TeamId = owner.TeamId;
             unit.AddComponent<CastComponent>();
             unit.AddComponent<MoveComponent>();
-            unit.AddComponent<PathfindingComponent, string>(scene.Name);
             NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
             numericComponent.Set(NumericType.Speed,unitConfig.Speed);
             
             //子弹组件
-            BulletComponent bulletComponent = unit.AddComponent<BulletComponent, int>(bulletConfigId);
+            BulletComponent bulletComponent = unit.AddComponent<BulletComponent, int>(bulletConfig.Id);
             bulletComponent.OwnerId = ownerId;
 
             int aoiDistance = unitConfig.Aoi;

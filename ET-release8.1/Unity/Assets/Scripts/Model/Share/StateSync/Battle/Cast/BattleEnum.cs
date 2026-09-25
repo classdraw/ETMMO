@@ -8,13 +8,7 @@ namespace ET
         Position=3,//坐标 客户端传入
         ExternalTarget=4,//外部传入目标
     }
-
-    public enum BulletShape : byte
-    {
-        //一个圆 1,1500,3,0
-        Circle=1,
-    }
-
+    
     public enum ShapeType:byte
     {
         //选的是啥就是啥，一个单位不做筛选 需要判断距离 合法性  0,5000
@@ -86,6 +80,16 @@ namespace ET
         Init=1,
         Running=2,
         Finish=3
+    }
+
+    /// <summary>
+    /// MoveToTarget ActionsParam[0]。异常（无输入、无目标等）一律走 Forward。
+    /// </summary>
+    public enum MoveToTargetMode : byte
+    {
+        Input = 0,   // InputUnitId 存在则追单位，否则朝 InputPos
+        Forward = 1, // 朝自身 Forward
+        Target = 2,  // CollectActionTargets 当前目标
     }
 }
 

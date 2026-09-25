@@ -108,6 +108,8 @@ namespace ET.Server
             self.TickTimer3 = 0;
             self.ExpireTimer = 0;
             self.TickCount = 0;
+            self.InputUnitId = 0;
+            self.InputPos = default;
             self.Targets.Clear();
             self.AddComponent<ActionsTempComponent>();
         }
@@ -129,6 +131,8 @@ namespace ET.Server
             self.ConfigId = 0;
             self.OwnerId = 0;
             self.TickCount = 0;
+            self.InputUnitId = 0;
+            self.InputPos = default;
             self.Targets.Clear();
         }
 
@@ -272,6 +276,7 @@ namespace ET.Server
 
         /// <summary>
         /// Interval 档结算；仅本方法使用 TickCount / TickLimit。
+        /// TickLimit 到次数只停本档定时器，子弹仍按 TotalTime 销毁。
         /// </summary>
         public static void Tick(this BulletComponent self)
         {
@@ -313,7 +318,7 @@ namespace ET.Server
             {
                 foreach (int actionsId in bulletConfig.TickActions)
                 {
-                    self.CreateActions(actionsId, bulletUnit, bulletUnit, ActionsRunType.BulletTick);
+                    self.CreateActions(actionsId, owner, owner, ActionsRunType.BulletTick);
                 }
             }
 
@@ -388,7 +393,6 @@ namespace ET.Server
             int[] shapeParam = bulletConfig.ShapeParam;
             if (shapeParam == null || shapeParam.Length == 0)
             {
-                Log.Error($"BulletConfig {bulletConfig.Id} ShapeParam invalid");
                 return false;
             }
 

@@ -44,6 +44,11 @@ namespace ET.Client
                 self.Test2().Coroutine();
             }
 
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                self.Test3().Coroutine();
+            }
+
             if (Input.GetKeyDown(KeyCode.R))
             {
                 CodeLoader.Instance.Reload();
@@ -118,6 +123,11 @@ namespace ET.Client
         private static async ETTask Test2(this OperaComponent self)
         {
             await BattleHelper.GMCastSimple(self.Root(), 66002);
+        }
+
+        private static async ETTask Test3(this OperaComponent self)
+        {
+            await BattleHelper.GMCastForward(self.Root(), 66003, 2.9f);
         }
     }
 }

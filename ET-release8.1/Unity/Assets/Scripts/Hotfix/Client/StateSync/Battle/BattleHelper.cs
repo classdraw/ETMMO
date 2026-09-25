@@ -50,6 +50,70 @@ namespace ET.Client
         }
 
         /// <summary>
+        /// 朝角色真前方指定距离的坐标点释放技能（不选单位）。
+        /// </summary>
+        public static async ETTask GMCastForward(Scene root, int castConfigId, float distance = 5f)
+        {
+            Unit playerUnit = UnitHelper.GetMyUnitFromClientScene(root);
+            if (playerUnit == null || playerUnit.IsDisposed)
+            {
+                Log.Console("主角玩家没有!!!");
+                return;
+            }
+
+            if (playerUnit.IsForbidSkill())
+            {
+                Log.Console("禁止施法状态!!!");
+                EventSystem.Instance.Publish(root.CurrentScene(), new CastError() { CasterId = playerUnit.Id });
+                return;
+            }
+
+            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            {
+                Log.Console($"CastId {castConfigId} 不存在!!!");
+                return;
+            }
+
+            float3 inputPos = playerUnit.Position + GetCardinalForward(playerUnit.Forward) * distance;
+            inputPos.y = playerUnit.Position.y;
+
+            C2M_GMTestCast c2MGmTestCast = C2M_GMTestCast.Create();
+            c2MGmTestCast.CastConfigId = castConfigId;
+            c2MGmTestCast.TargetId = 0;
+            c2MGmTestCast.InputPos = inputPos;
+            M2C_GMTestCast m2CGmTestCast = await root.GetComponent<ClientSenderComponent>().Call(c2MGmTestCast) as M2C_GMTestCast;
+            if (m2CGmTestCast.Error == ErrorCode.ERR_Success)
+            {
+                Log.Info("测试施法成功!!!");
+            }
+            else
+            {
+                Log.Info($"测试施法失败 {m2CGmTestCast.Error}!!!");
+                EventSystem.Instance.Publish(root.CurrentScene(), new CastError() { CasterId = playerUnit.Id });
+            }
+        }
+
+        /// <summary>
+        /// 将朝向收成四方向：右(+x) / 左(-x) / 上(+z) / 下(-z)，与 Animator2D 面向一致。
+        /// </summary>
+        private static float3 GetCardinalForward(float3 forward)
+        {
+            forward.y = 0;
+            if (math.lengthsq(forward) <= math.EPSILON)
+            {
+                return new float3(0f, 0f, -1f);
+            }
+
+            forward = math.normalize(forward);
+            if (math.abs(forward.x) > math.abs(forward.z))
+            {
+                return forward.x >= 0f ? new float3(1f, 0f, 0f) : new float3(-1f, 0f, 0f);
+            }
+
+            return forward.z >= 0f ? new float3(0f, 0f, 1f) : new float3(0f, 0f, -1f);
+        }
+
+        /// <summary>
         /// 获取当前场景中距离自己最近的怪物 Unit。
         /// </summary>
         public static Unit GetNearestMonsterUnit(Scene root)

@@ -3,6 +3,7 @@ namespace ET.Server
     [Actions(ActionsType.CastBullet)]
     [FriendOf(typeof(Actions))]
     [FriendOf(typeof(Cast))]
+    [FriendOf(typeof(BulletComponent))]
     public class Actions_CastBullet : IActions
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
@@ -20,30 +21,38 @@ namespace ET.Server
             }
 
             ActionsConfig config = actions.Config;
-            if (config.ActionsParam == null || config.ActionsParam.Length < 2)
+            if (config.ActionsParam == null || config.ActionsParam.Length < 1)
             {
                 Log.Error($"Actions_CastBullet ActionsParam invalid: configId={config.Id}");
                 return;
             }
 
-            int unitConfigId = config.ActionsParam[0];
-            int bulletConfigId = config.ActionsParam[1];
-
-            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
+            int bulletConfigId = config.ActionsParam[0];
+            if (!BulletConfigCategory.Instance.Contain(bulletConfigId))
             {
-                actions.CollectActionTargets(actionsRunType, targets);
-                foreach (Unit _ in targets)
-                {
-                    CreateBulletFromCast(actions, caster, unitConfigId, bulletConfigId);
-                }
+                Log.Error($"Actions_CastBullet BulletConfig not found: configId={config.Id}, bulletConfigId={bulletConfigId}");
+                return;
             }
+
+            BulletConfig bulletConfig = BulletConfigCategory.Instance.Get(bulletConfigId);
+            CreateBulletFromCast(actions, caster, bulletConfig);
+            
         }
 
-        private static void CreateBulletFromCast(Actions actions, Unit caster, int unitConfigId, int bulletConfigId)
+        private static void CreateBulletFromCast(Actions actions, Unit caster, BulletConfig bulletConfig)
         {
-            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, unitConfigId, bulletConfigId, caster.Position,
+            Cast cast = actions.CastSelf;
+            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, bulletConfig, caster.Position,
                 caster.Rotation);
-            bullet?.GetComponent<BulletComponent>()?.Start();
+            BulletComponent bulletComponent = bullet?.GetComponent<BulletComponent>();
+            if (bulletComponent == null)
+            {
+                return;
+            }
+
+            bulletComponent.InputUnitId = cast.InputUnitId;
+            bulletComponent.InputPos = cast.InputPos;
+            bulletComponent.Start();
         }
     }
 }
