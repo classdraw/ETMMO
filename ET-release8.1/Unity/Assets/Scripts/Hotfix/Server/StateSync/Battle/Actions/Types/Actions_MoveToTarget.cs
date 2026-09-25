@@ -26,16 +26,17 @@ namespace ET.Server
             float moveStep = config.ActionsParam[0] / 1000f;
             float moveStepSq = moveStep * moveStep;
 
-            bool hasTarget = false;
-            actions.ForEachActionTarget(actionsRunType, target =>
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
             {
-                hasTarget = true;
-                ApplyMoveToTarget(unit, target, moveStep, moveStepSq);
-            }, firstOnly: true);
-
-            if (!hasTarget)
-            {
-                ApplyMoveForward(unit, moveStep);
+                actions.CollectActionTargets(actionsRunType, targets);
+                if (targets.Count > 0)
+                {
+                    ApplyMoveToTarget(unit, targets[0], moveStep, moveStepSq);
+                }
+                else
+                {
+                    ApplyMoveForward(unit, moveStep);
+                }
             }
         }
 

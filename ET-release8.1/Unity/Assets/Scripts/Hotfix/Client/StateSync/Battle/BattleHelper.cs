@@ -14,6 +14,13 @@ namespace ET.Client
                 return;
             }
 
+            if (playerUnit.IsForbidSkill())
+            {
+                Log.Console("禁止施法状态!!!");
+                EventSystem.Instance.Publish(root.CurrentScene(), new CastError(){CasterId = playerUnit.Id});
+                return;
+            }
+
             if (monsterUnit==null||monsterUnit.IsDisposed)
             {
                 Log.Console("附近没有怪物!!!");

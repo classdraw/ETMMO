@@ -45,8 +45,14 @@ namespace ET.Server
 
             forwardDir = math.normalize(forwardDir);
 
-            actions.ForEachActionTarget(actionsRunType,
-                target => ApplyHitFly(target, forwardDir, dir, buffId, addUnitId, addCastId));
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
+            {
+                actions.CollectActionTargets(actionsRunType, targets);
+                foreach (Unit target in targets)
+                {
+                    ApplyHitFly(target, forwardDir, dir, buffId, addUnitId, addCastId);
+                }
+            }
         }
 
         private static bool TryGetBuffContext(Actions actions, ActionsRunType actionsRunType, out long addUnitId, out int addCastId)

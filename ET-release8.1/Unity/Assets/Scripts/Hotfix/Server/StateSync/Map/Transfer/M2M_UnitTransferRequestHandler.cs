@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Unity.Mathematics;
 
 namespace ET.Server
@@ -58,7 +58,7 @@ namespace ET.Server
             RankHelper.AddOrUpdateLevelRank(unit);
 
             // 加入aoi
-            unit.AddComponent<AOIEntity, int, float3>(6 * 1000, unit.Position);
+            unit.AddComponent<AOIEntity, int, float3>(unit.Config().Aoi, unit.Position);
             
             if (request.IsEnterGame)
             {

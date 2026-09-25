@@ -61,6 +61,8 @@ namespace ET
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
+		/// <summary>Unit配置id</summary>
+		public int UnitConfigId { get; set; }
 		/// <summary>形状参数</summary>
 		public int[] _ShapeParam;
 		

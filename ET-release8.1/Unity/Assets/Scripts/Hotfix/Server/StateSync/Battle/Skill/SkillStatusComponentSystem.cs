@@ -37,7 +37,7 @@ namespace ET.Server
                 return ErrorCode.ERR_CastPreNumericIsNull;
             }
             //禁止施法状态
-            if (numericComponent[NumericType.ForbidSkill] > 0)
+            if (unit.IsForbidSkill())
             {
                 return ErrorCode.ERR_CastPreForbidSkill;
             }

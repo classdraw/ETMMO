@@ -6,6 +6,7 @@ namespace ET
         FriendlyTarget=1,//友方目标
         EnemyTarget=2,//敌方目标
         Position=3,//坐标 客户端传入
+        ExternalTarget=4,//外部传入目标
     }
 
     public enum BulletShape : byte

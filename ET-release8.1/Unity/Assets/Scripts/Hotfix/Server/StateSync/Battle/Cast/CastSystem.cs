@@ -33,10 +33,9 @@ namespace ET.Server
         /// <summary>
         /// 释放技能
         /// </summary>
-        /// <param name="useInputTargets">为 true 时首次 RefreshTargets 不 SelectTargets，沿用 cast.Targets</param>
-        public static int Cast(this Cast cast, bool useInputTargets = false)
+        public static int Cast(this Cast cast)
         {
-            int err = cast.RefreshTargets(useInputTargets);
+            int err = cast.RefreshTargets();
             if (err != ErrorCode.ERR_Success)
             {
                 cast.Dispose();
@@ -55,10 +54,9 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 校验输入、选目标（或沿用外部 Targets）、校验目标数量
+        /// 校验输入、选目标（SelectType.ExternalTarget 时沿用外部 Targets）、校验目标数量
         /// </summary>
-        /// <param name="useInputTargets">为 true 时不 SelectTargets（仅 Cast 首次释放传入）</param>
-        public static int RefreshTargets(this Cast cast, bool useInputTargets = false)
+        public static int RefreshTargets(this Cast cast)
         {
             int err = cast.CastCheck();
             if (err != ErrorCode.ERR_Success)
@@ -66,11 +64,7 @@ namespace ET.Server
                 return err;
             }
 
-            if (!useInputTargets)
-            {
-                cast.SelectTargets();
-            }
-
+            cast.SelectTargets();
             return cast.CastCheckBeforeBegin();
         }
 
@@ -93,7 +87,7 @@ namespace ET.Server
             }
             
             SelectType selectType = (SelectType)cast.Config.SelectType;
-            if (selectType==SelectType.Self)
+            if (selectType==SelectType.Self || selectType==SelectType.ExternalTarget)
             {
                 return ErrorCode.ERR_Success;
             }
@@ -187,6 +181,7 @@ namespace ET.Server
                 case SelectType.Self:
                 case SelectType.FriendlyTarget:
                 case SelectType.EnemyTarget:
+                case SelectType.ExternalTarget:
                     if (cast.Targets.Count<=0)
                     {
                         return ErrorCode.ERR_CastNoTargetError;
@@ -205,8 +200,12 @@ namespace ET.Server
         private static void SelectTargets(this Cast cast)
         {
             Unit caster = cast.Caster;
-            cast.Targets.Clear();
             SelectType selectType = (SelectType)cast.Config.SelectType;
+            if (selectType != SelectType.ExternalTarget)
+            {
+                cast.Targets.Clear();
+            }
+
             switch (selectType)
             {
                 //不处理none，属于异常
@@ -219,6 +218,8 @@ namespace ET.Server
                     break;
                 case SelectType.Position:
                     cast.SelectTargetsInner(null,cast.InputPos);
+                    break;
+                case SelectType.ExternalTarget:
                     break;
                 default:
                     Log.Error($"未知目标选择类型: {selectType}");

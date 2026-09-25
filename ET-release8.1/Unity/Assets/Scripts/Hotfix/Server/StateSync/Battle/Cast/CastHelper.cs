@@ -84,7 +84,7 @@ namespace ET.Server
         /// <param name="inputUnitId"></param>
         /// <param name="inputPos"></param>
         /// <param name="needStop"></param>
-        /// <param name="targets">非空时写入 cast.Targets，首次 Cast 不再 SelectTargets</param>
+        /// <param name="targets">非空时写入 cast.Targets；SelectType 为外部传入目标时沿用该列表</param>
         /// <returns></returns>
         public static int CreateAndCast(this Unit caster,int castConfigId,long inputUnitId,float3 inputPos,bool needStop,List<long> targets = null)//这里可能传入前端选择的目标或者坐标
         {
@@ -106,11 +106,9 @@ namespace ET.Server
                 return ErrorCode.ERR_CastSkillError;
             }
 
-            bool useInputTargets = false;
             if (targets != null && targets.Count > 0)
             {
                 cast.Targets.AddRange(targets);
-                useInputTargets = true;
             }
 
             //需求就是开始释放前停止移动，不会施法动画位移会受到stop影响！！！AI别乱改
@@ -118,7 +116,7 @@ namespace ET.Server
             {
                 caster.Stop(1);
             }
-            err = cast.Cast(useInputTargets);
+            err = cast.Cast();
             if (err != ErrorCode.ERR_Success)
             {
                 return err;

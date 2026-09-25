@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
@@ -181,7 +181,7 @@ namespace ET
             float3 v = self.GetFaceV();
             float3 faceDir = v;
             faceDir.y = 0;
-            if (math.lengthsq(faceDir) > math.EPSILON)
+            if (math.lengthsq(faceDir) > math.EPSILON && !unit.IsForbidRotation())
             {
                 unit.Forward = math.normalize(faceDir);
             }

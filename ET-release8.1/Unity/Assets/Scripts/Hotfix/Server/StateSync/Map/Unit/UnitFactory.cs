@@ -112,6 +112,7 @@ namespace ET.Server
             UnitConfig unitConfig = UnitConfigCategory.Instance.Get(monsterConfig.UnitConfigId);
             Unit unit = unitComponent.AddChild<Unit, int, string>(monsterConfig.UnitConfigId, unitConfig.Name);
             unit.AddComponent<MoveComponent>();
+            unit.AddComponent<PathfindingComponent, string>(scene.Name);
             unit.Position = pos;
 
 

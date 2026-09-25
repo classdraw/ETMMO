@@ -16,8 +16,14 @@ namespace ET.Server
             int numericType = config.ActionsParam[0];
             int numericValue = config.ActionsParam[1];
 
-            actions.ForEachActionTarget(actionsRunType,
-                owner => ApplyNumericChange(owner, actionsRunType, numericType, numericValue));
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
+            {
+                actions.CollectActionTargets(actionsRunType, targets);
+                foreach (Unit owner in targets)
+                {
+                    ApplyNumericChange(owner, actionsRunType, numericType, numericValue);
+                }
+            }
         }
 
         private static void ApplyNumericChange(Unit owner, ActionsRunType actionsRunType, int numericType, int numericValue)

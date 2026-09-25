@@ -19,7 +19,14 @@ namespace ET.Server
                 return;
             }
 
-            actions.ForEachActionTarget(actionsRunType, target => ApplyDamage(caster, target, actions));
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
+            {
+                actions.CollectActionTargets(actionsRunType, targets);
+                foreach (Unit target in targets)
+                {
+                    ApplyDamage(caster, target, actions);
+                }
+            }
         }
 
         private static void ApplyDamage(Unit caster, Unit target, Actions actions)

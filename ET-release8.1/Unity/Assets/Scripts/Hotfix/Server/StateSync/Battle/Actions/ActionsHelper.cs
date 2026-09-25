@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
@@ -106,20 +105,6 @@ namespace ET.Server
             }
 
             iActions.Run(actions, actionsRunType);
-        }
-
-        public static void ForEachActionTarget(this Actions actions, ActionsRunType actionsRunType, Action<Unit> handler, bool firstOnly = false)
-        {
-            using ListComponent<Unit> list = ListComponent<Unit>.Create();
-            CollectActionTargets(actions, actionsRunType, list);
-            foreach (Unit unit in list)
-            {
-                handler(unit);
-                if (firstOnly)
-                {
-                    break;
-                }
-            }
         }
 
         public static void CollectActionTargets(this Actions actions, ActionsRunType actionsRunType, List<Unit> output)

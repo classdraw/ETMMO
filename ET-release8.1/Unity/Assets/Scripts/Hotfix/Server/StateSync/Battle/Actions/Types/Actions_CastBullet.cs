@@ -29,8 +29,14 @@ namespace ET.Server
             int unitConfigId = config.ActionsParam[0];
             int bulletConfigId = config.ActionsParam[1];
 
-            actions.ForEachActionTarget(actionsRunType,
-                _ => CreateBulletFromCast(actions, caster, unitConfigId, bulletConfigId));
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
+            {
+                actions.CollectActionTargets(actionsRunType, targets);
+                foreach (Unit _ in targets)
+                {
+                    CreateBulletFromCast(actions, caster, unitConfigId, bulletConfigId);
+                }
+            }
         }
 
         private static void CreateBulletFromCast(Actions actions, Unit caster, int unitConfigId, int bulletConfigId)

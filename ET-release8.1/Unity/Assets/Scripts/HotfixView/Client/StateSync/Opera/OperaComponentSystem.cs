@@ -24,7 +24,7 @@ namespace ET.Client
                 }
 
                 Unit myUnit = UnitHelper.GetMyUnitFromCurrentScene(self.Root().CurrentScene());
-                if (myUnit == null || myUnit.IsDisposed || myUnit.IsCasting())
+                if (myUnit == null || myUnit.IsDisposed || myUnit.IsCasting() || myUnit.IsForbidMove())
                 {
                     return;
                 }

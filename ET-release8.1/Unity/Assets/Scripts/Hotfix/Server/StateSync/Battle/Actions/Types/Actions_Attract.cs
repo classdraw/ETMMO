@@ -32,10 +32,14 @@ namespace ET.Server
             float moveStep = config.ActionsParam[0] / 1000f;
             float moveStepSq = moveStep * moveStep;
             float moveStepIgnoreSq = config.ActionsParam[1] / 1000f;
-            actions.ForEachActionTarget(actionsRunType, target =>
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
             {
-                AttractUnitToward(target, center, moveStep, moveStepSq, moveStepIgnoreSq);
-            });
+                actions.CollectActionTargets(actionsRunType, targets);
+                foreach (Unit target in targets)
+                {
+                    AttractUnitToward(target, center, moveStep, moveStepSq, moveStepIgnoreSq);
+                }
+            }
         }
 
         private static void AttractUnitToward(Unit u, Unit center, float moveStep, float moveStepSq, float moveStepIgnoreSq)

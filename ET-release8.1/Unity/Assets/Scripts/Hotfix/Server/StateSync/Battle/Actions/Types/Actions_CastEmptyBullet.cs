@@ -16,7 +16,6 @@ namespace ET.Server
 
             NoticeClientType noticeClientType;
             long castId = 0;
-            long targetId = 0;
 
             if (actionsRunType == ActionsRunType.CastHit)
             {
@@ -44,19 +43,16 @@ namespace ET.Server
                 return;
             }
 
-            bool hasTarget = false;
-            actions.ForEachActionTarget(actionsRunType, target =>
+            using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
             {
-                hasTarget = true;
-                targetId = target.Id;
-            }, firstOnly: true);
+                actions.CollectActionTargets(actionsRunType, targets);
+                if (targets.Count == 0)
+                {
+                    return;
+                }
 
-            if (!hasTarget)
-            {
-                return;
+                SendCastEmptyBullet(caster, castId, actions.ConfigId, targets[0].Id, noticeClientType);
             }
-
-            SendCastEmptyBullet(caster, castId, actions.ConfigId, targetId, noticeClientType);
         }
 
         private static void SendCastEmptyBullet(Unit caster, long castId, int actionId, long targetId, NoticeClientType noticeClientType)

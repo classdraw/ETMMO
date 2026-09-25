@@ -21,8 +21,54 @@ namespace ET.Client
                     await CreateMonster(scene, args);
                     break;
                 }
+                case UnitType.Bullet:
+                {
+                    await CreateBullet(scene, args);
+                    break;
+                }
             }
 
+            await ETTask.CompletedTask;
+        }
+
+        private static BulletConfig GetBulletConfigByUnitConfigId(int unitConfigId)
+        {
+            foreach (BulletConfig bulletConfig in BulletConfigCategory.Instance.GetAll().Values)
+            {
+                if (bulletConfig.UnitConfigId == unitConfigId)
+                {
+                    return bulletConfig;
+                }
+            }
+
+            return null;
+        }
+
+        private async ETTask CreateBullet(Scene scene, AfterUnitCreate args)
+        {
+            Unit unit = args.Unit;
+            BulletConfig bulletConfig = GetBulletConfigByUnitConfigId(unit.ConfigId);
+            if (bulletConfig == null || string.IsNullOrEmpty(bulletConfig.Model))
+            {
+                Log.Error($"BulletConfig model not found: unitConfigId={unit.ConfigId}");
+                return;
+            }
+
+            string prefabAssetPath = $"Assets/Bundles/Bullet/{bulletConfig.Model}.prefab";
+            ResourcesLoaderComponent loader = scene.GetComponent<ResourcesLoaderComponent>();
+            GameObject prefab = await loader.LoadAssetAsync<GameObject>(prefabAssetPath);
+            if (prefab == null)
+            {
+                Log.Error($"Bullet prefab not found: {prefabAssetPath}");
+                return;
+            }
+
+            GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
+            GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
+            go.name = $"bullet_{unit.Id}_{bulletConfig.Model}";
+            go.transform.position = unit.Position;
+            go.transform.rotation = unit.Rotation;
+            unit.AddComponent<GameObjectComponent>().GameObject = go;
             await ETTask.CompletedTask;
         }
 

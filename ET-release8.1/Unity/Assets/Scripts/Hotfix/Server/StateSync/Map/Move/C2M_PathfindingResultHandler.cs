@@ -1,4 +1,4 @@
-﻿
+
 namespace ET.Server
 {
 	[MessageLocationHandler(SceneType.Map)]
@@ -14,8 +14,7 @@ namespace ET.Server
 				return;
 			}
 
-			NumericComponent numericComponent = unit.GetComponent<NumericComponent>();
-			if (numericComponent==null||numericComponent[NumericType.ForbidMove]>0)
+			if (unit.IsForbidMove())
 			{
 				//某些状态禁止移动
 				return;

@@ -11,7 +11,7 @@ namespace ET.Client
                 return;
             }
 
-            unit.GetComponent<MoveComponent>()?.Stop(true);
+            //unit.GetComponent<MoveComponent>()?.Stop(true); 设置坐标不停止移动
             unit.Position = message.Position;
             unit.Rotation = message.Rotation;
             await ETTask.CompletedTask;
