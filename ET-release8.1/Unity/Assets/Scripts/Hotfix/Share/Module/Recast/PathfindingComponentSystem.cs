@@ -84,5 +84,17 @@ namespace ET
                 result.Add(new float3(-pos.x, pos.y, pos.z));
             }
         }
+
+        public static float3 RecastFindNearestPoint(this PathfindingComponent self, float3 pos)
+        {
+            if (self.navMesh == null)
+            {
+                return pos;
+            }
+
+            RcVec3f recastPos = new(-pos.x, pos.y, pos.z);
+            self.query.FindNearestPoly(recastPos, self.extents, self.filter, out _, out RcVec3f nearestPt, out _);
+            return new float3(-nearestPt.x, nearestPt.y, nearestPt.z);
+        }
     }
 }

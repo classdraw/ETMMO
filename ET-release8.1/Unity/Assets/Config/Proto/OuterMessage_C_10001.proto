@@ -749,6 +749,15 @@ message M2C_CoolDownChange // IMessage
 	repeated int64 CoolDownTimes = 2;//技能cd结束时间
 	repeated int64 CoolDownStartTimes = 3;//技能cd开始时间
 }
+
+//设置坐标
+message M2C_SetPosition // IMessage
+{
+	int64 UnitId = 1;
+	Unity.Mathematics.float3 Position = 2;
+	Unity.Mathematics.quaternion Rotation = 3;
+}
+
 //////////////////////技能///////////////////////////////////////////
 
 

@@ -3357,6 +3357,40 @@ namespace ET
         }
     }
 
+    // 设置坐标
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_SetPosition)]
+    public partial class M2C_SetPosition : MessageObject, IMessage
+    {
+        public static M2C_SetPosition Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_SetPosition), isFromPool) as M2C_SetPosition;
+        }
+
+        [MemoryPackOrder(0)]
+        public long UnitId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public Unity.Mathematics.float3 Position { get; set; }
+
+        [MemoryPackOrder(2)]
+        public Unity.Mathematics.quaternion Rotation { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.UnitId = default;
+            this.Position = default;
+            this.Rotation = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 技能///////////////////////////////////////////
     /// </summary>
@@ -3763,14 +3797,15 @@ namespace ET
         public const ushort M2C_BattleResult = 10092;
         public const ushort M2C_CastEmptyBullet = 10093;
         public const ushort M2C_CoolDownChange = 10094;
-        public const ushort BuffProto = 10095;
-        public const ushort M2C_BuffAdd = 10096;
-        public const ushort M2C_BuffTick = 10097;
-        public const ushort M2C_BuffUpdate = 10098;
-        public const ushort M2C_BuffRemove = 10099;
-        public const ushort C2Mail_GMAddMail = 10100;
-        public const ushort Mail2C_GMAddMail = 10101;
-        public const ushort C2M_GMTestCast = 10102;
-        public const ushort M2C_GMTestCast = 10103;
+        public const ushort M2C_SetPosition = 10095;
+        public const ushort BuffProto = 10096;
+        public const ushort M2C_BuffAdd = 10097;
+        public const ushort M2C_BuffTick = 10098;
+        public const ushort M2C_BuffUpdate = 10099;
+        public const ushort M2C_BuffRemove = 10100;
+        public const ushort C2Mail_GMAddMail = 10101;
+        public const ushort Mail2C_GMAddMail = 10102;
+        public const ushort C2M_GMTestCast = 10103;
+        public const ushort M2C_GMTestCast = 10104;
     }
 }

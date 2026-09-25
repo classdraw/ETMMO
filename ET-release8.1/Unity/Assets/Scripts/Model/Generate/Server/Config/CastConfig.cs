@@ -134,6 +134,19 @@ namespace ET
 				return _SelfHitAction;
 			}
 		}
+		/// <summary>结束行为</summary>
+		public int[] _FinishAction;
+		
+		[BsonIgnore]
+		public int[] FinishAction
+		{
+			get
+			{
+				if(_FinishAction == null)
+					_FinishAction = new int[] { };
+				return _FinishAction;
+			}
+		}
 		/// <summary>技能命中自身时间点</summary>
 		public int[] _SelfHitActionTimes;
 		

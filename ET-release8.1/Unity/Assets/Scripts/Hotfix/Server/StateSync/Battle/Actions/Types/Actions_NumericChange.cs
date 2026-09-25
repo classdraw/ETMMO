@@ -2,16 +2,10 @@ namespace ET.Server
 {
     [Actions(ActionsType.NumericChange)]
     [FriendOf(typeof(Actions))]
-    public class Actions_NumericChange:IActions
+    public class Actions_NumericChange : IActions
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
-            Unit owner = actions.Owner;
-            if (owner == null || owner.IsDisposed || !owner.IsBattleUnit())
-            {
-                return;
-            }
-
             ActionsConfig config = actions.Config;
             if (config.ActionsParam == null || config.ActionsParam.Length < 2)
             {
@@ -21,6 +15,13 @@ namespace ET.Server
 
             int numericType = config.ActionsParam[0];
             int numericValue = config.ActionsParam[1];
+
+            actions.ForEachActionTarget(actionsRunType,
+                owner => ApplyNumericChange(owner, actionsRunType, numericType, numericValue));
+        }
+
+        private static void ApplyNumericChange(Unit owner, ActionsRunType actionsRunType, int numericType, int numericValue)
+        {
             NumericComponent numericComponent = owner.GetComponent<NumericComponent>();
             if (numericComponent == null)
             {
@@ -40,8 +41,6 @@ namespace ET.Server
                     numericComponent[numericType] -= numericValue;
                     break;
                 }
-                default:
-                    break;
             }
         }
     }

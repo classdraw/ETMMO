@@ -103,6 +103,17 @@ namespace ET.Server
             return self.GetComponent<AOIEntity>().GetBeSeePlayers();
         }
 
+        public static Dictionary<long, EntityRef<AOIEntity>> GetBeSeeUnits(this Unit self)
+        {
+            AOIEntity aoiEntity = self.GetComponent<AOIEntity>();
+            if (aoiEntity == null)
+            {
+                return null;
+            }
+
+            return aoiEntity.GetBeSeeUnits();
+        }
+
         public static Dictionary<long, EntityRef<AOIEntity>> GetSeeUnits(this Unit self)
         {
             return self.GetComponent<AOIEntity>().GetSeeUnits();

@@ -3,7 +3,7 @@ namespace ET.Server
     [Actions(ActionsType.Damage)]
     [FriendOf(typeof(Actions))]
     [FriendOf(typeof(Cast))]
-    public class Actions_Damage:IActions
+    public class Actions_Damage : IActions
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
@@ -19,12 +19,11 @@ namespace ET.Server
                 return;
             }
 
-            Unit target = actions.Owner;
-            if (target == null || target.IsDisposed || !target.IsBattleUnit())
-            {
-                return;
-            }
+            actions.ForEachActionTarget(actionsRunType, target => ApplyDamage(caster, target, actions));
+        }
 
+        private static void ApplyDamage(Unit caster, Unit target, Actions actions)
+        {
             BattleHelper.CalcAttack(caster, target, actions);
         }
     }

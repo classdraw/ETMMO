@@ -17,7 +17,9 @@ namespace ET.Server
         [BsonIgnore]
         public EntityRef<Unit> Caster;//释放者
         [BsonIgnore]
-        public EntityRef<Unit> Owner;//作用者
+        public EntityRef<Unit> Owner;//作用者（上下文单位，如施法者/子弹）
+        [BsonIgnore]
+        public bool CastSelfHit;// CastHit 是否为 SelfHit
         [BsonIgnore]
         public Cast CastSelf
         {
@@ -32,6 +34,15 @@ namespace ET.Server
             get
             {
                 return this.Parent.GetParent<Buff>();
+            }
+        }
+        
+        [BsonIgnore]
+        public BulletComponent BulletSelf
+        {
+            get
+            {
+                return this.Parent.GetParent<BulletComponent>();
             }
         }
     }

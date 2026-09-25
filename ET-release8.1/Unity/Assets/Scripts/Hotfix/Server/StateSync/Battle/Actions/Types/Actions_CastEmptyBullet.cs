@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-
 namespace ET.Server
-{    
+{
     [Actions(ActionsType.CastEmptyBullet)]
     [FriendOf(typeof(Actions))]
     [FriendOf(typeof(Cast))]
     [FriendOf(typeof(Buff))]
-    public class Actions_CastEmptyBullet:IActions
+    public class Actions_CastEmptyBullet : IActions
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
@@ -16,14 +14,9 @@ namespace ET.Server
                 return;
             }
 
-            Unit owner = actions.Owner;
-            if (owner == null || owner.IsDisposed)
-            {
-                return;
-            }
-
             NoticeClientType noticeClientType;
             long castId = 0;
+            long targetId = 0;
 
             if (actionsRunType == ActionsRunType.CastHit)
             {
@@ -31,16 +24,6 @@ namespace ET.Server
                 if (cast == null)
                 {
                     return;
-                }
-
-                // 多目标时只在第一个目标对应的 action 执行时发送一次
-                if (cast.Targets.Count > 0)
-                {
-                    int targetIndex = cast.Targets.IndexOf(owner.Id);
-                    if (targetIndex > 0)
-                    {
-                        return;
-                    }
                 }
 
                 castId = cast.Id;
@@ -61,11 +44,28 @@ namespace ET.Server
                 return;
             }
 
+            bool hasTarget = false;
+            actions.ForEachActionTarget(actionsRunType, target =>
+            {
+                hasTarget = true;
+                targetId = target.Id;
+            }, firstOnly: true);
+
+            if (!hasTarget)
+            {
+                return;
+            }
+
+            SendCastEmptyBullet(caster, castId, actions.ConfigId, targetId, noticeClientType);
+        }
+
+        private static void SendCastEmptyBullet(Unit caster, long castId, int actionId, long targetId, NoticeClientType noticeClientType)
+        {
             M2C_CastEmptyBullet message = M2C_CastEmptyBullet.Create();
             message.CastId = castId;
             message.CasterId = caster.Id;
-            message.ActionId = actions.ConfigId;
-            message.TargetId = owner.Id;
+            message.ActionId = actionId;
+            message.TargetId = targetId;
             MapMessageHelper.SendClient(caster, message, noticeClientType);
         }
     }

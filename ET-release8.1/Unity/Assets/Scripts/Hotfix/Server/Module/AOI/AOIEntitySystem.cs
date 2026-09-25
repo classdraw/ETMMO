@@ -43,6 +43,11 @@ namespace ET.Server
             return self.BeSeePlayers;
         }
 
+        public static Dictionary<long, EntityRef<AOIEntity>> GetBeSeeUnits(this AOIEntity self)
+        {
+            return self.BeSeeUnits;
+        }
+
         public static Dictionary<long, EntityRef<AOIEntity>> GetSeePlayers(this AOIEntity self)
         {
             return self.SeePlayers;

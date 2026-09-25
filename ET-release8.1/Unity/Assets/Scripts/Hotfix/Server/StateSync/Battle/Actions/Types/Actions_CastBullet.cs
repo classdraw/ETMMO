@@ -3,7 +3,7 @@ namespace ET.Server
     [Actions(ActionsType.CastBullet)]
     [FriendOf(typeof(Actions))]
     [FriendOf(typeof(Cast))]
-    public class Actions_CastBullet:IActions
+    public class Actions_CastBullet : IActions
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
@@ -19,12 +19,6 @@ namespace ET.Server
                 return;
             }
 
-            Unit target = actions.Owner;
-            if (target == null || target.IsDisposed || !target.IsBattleUnit())
-            {
-                return;
-            }
-
             ActionsConfig config = actions.Config;
             if (config.ActionsParam == null || config.ActionsParam.Length < 2)
             {
@@ -34,13 +28,16 @@ namespace ET.Server
 
             int unitConfigId = config.ActionsParam[0];
             int bulletConfigId = config.ActionsParam[1];
-            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, unitConfigId, bulletConfigId, caster.Position,caster.Rotation);
-            if (bullet == null)
-            {
-                return;
-            }
 
-            bullet.GetComponent<BulletComponent>()?.Start();
+            actions.ForEachActionTarget(actionsRunType,
+                _ => CreateBulletFromCast(actions, caster, unitConfigId, bulletConfigId));
+        }
+
+        private static void CreateBulletFromCast(Actions actions, Unit caster, int unitConfigId, int bulletConfigId)
+        {
+            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, unitConfigId, bulletConfigId, caster.Position,
+                caster.Rotation);
+            bullet?.GetComponent<BulletComponent>()?.Start();
         }
     }
 }

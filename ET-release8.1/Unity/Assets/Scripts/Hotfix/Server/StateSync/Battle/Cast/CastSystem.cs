@@ -435,24 +435,7 @@ namespace ET.Server
             m2CCastHit.TargetsId.AddRange(cast.Targets);
             MapMessageHelper.SendClient(caster,m2CCastHit,(NoticeClientType)cast.Config.NoticeClientType);
             
-            if (selfHit)
-            {
-                cast.CreateActions(actionId, caster, ActionsRunType.CastHit);
-            }
-            else
-            {
-                UnitComponent unitComponent = caster.Scene().GetComponent<UnitComponent>();
-                foreach (long targetId in cast.Targets)
-                {
-                    Unit target = unitComponent.Get(targetId);
-                    if (target == null || target.IsDisposed || !target.IsBattleUnit())
-                    {
-                        continue;
-                    }
-                    
-                    cast.CreateActions(actionId, target, ActionsRunType.CastHit);
-                }
-            }
+            cast.CreateActions(actionId, caster, ActionsRunType.CastHit, selfHit);
 
 
         }
@@ -469,12 +452,20 @@ namespace ET.Server
             {
                 caster.GetComponent<SkillStatusComponent>()?.ClearCurrentSkill(cast);
 
-                if (cast.Config.TotalTime > 0)
+                if (cast.Config.TotalTime > 0)//没有持续时间就是瞬发，不用通知客户端
                 {
                     M2C_CastFinish castFinish = M2C_CastFinish.Create();
                     castFinish.CasterId = caster.Id;
                     castFinish.CastId = cast.Id;
                     MapMessageHelper.SendClient(caster, castFinish, (NoticeClientType)cast.Config.NoticeClientType);
+                }
+            }
+
+            if (cast.Config.FinishAction.Length>0)
+            {
+                foreach (var actionId in cast.Config.FinishAction)
+                {
+                    cast.CreateActions(actionId, caster, ActionsRunType.CastFinish);
                 }
             }
 

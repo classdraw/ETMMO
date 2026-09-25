@@ -1,6 +1,7 @@
 ﻿
 
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 namespace ET.Server
 {
@@ -171,8 +172,31 @@ namespace ET.Server
                     break;
             }
         }
-        
-        
+
+        public static void ForceSetPosition(this Unit unit, float3 newPos, bool sendMsg = false)
+        {
+            PathfindingComponent pathfindingComponent = unit.GetComponent<PathfindingComponent>();
+            if (pathfindingComponent != null)
+            {
+                newPos = pathfindingComponent.RecastFindNearestPoint(newPos);
+            }
+
+            //unit.GetComponent<MoveComponent>()?.Stop(true); 技能强制位移先不停止自身移动
+            unit.Position = newPos;
+
+            if (!sendMsg)
+            {
+                return;
+            }
+
+            M2C_SetPosition m2CSetPosition = M2C_SetPosition.Create();
+            m2CSetPosition.UnitId = unit.Id;
+            m2CSetPosition.Position = unit.Position;
+            m2CSetPosition.Rotation = unit.Rotation;
+            SendClient(unit,m2CSetPosition,NoticeClientType.Broadcast);
+        }
+
+
         private static void SendClientSelf(Unit unit, IMessage message)
         {
             unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(unit.Id, message).Coroutine();
