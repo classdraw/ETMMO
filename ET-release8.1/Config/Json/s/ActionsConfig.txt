@@ -7,4 +7,7 @@
 [77006, {"_t":"ActionsConfig","_id":77006,"Type":3,"_ActionsParam":[30001.0]}],
 [77007, {"_t":"ActionsConfig","_id":77007,"Type":5,"_ActionsParam":[1.0,100.0,0.0]}],
 [77008, {"_t":"ActionsConfig","_id":77008,"Type":2,"_ActionsParam":[0.0,0.0,1.0,-1.0]}],
+[77009, {"_t":"ActionsConfig","_id":77009,"Type":3,"_ActionsParam":[30002.0]}],
+[77010, {"_t":"ActionsConfig","_id":77010,"Type":2,"_ActionsParam":[0.0,0.0,1.0,-7.0]}],
+[77011, {"_t":"ActionsConfig","_id":77011,"Type":5,"_ActionsParam":[1.0,100.0,0.0]}],
 ]}

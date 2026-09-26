@@ -306,6 +306,18 @@ namespace ET.Server
             {
                 foreach (int tickCastId in bulletConfig.TickCastIds)
                 {
+                    if (tickCastId <= 0)
+                    {
+                        Log.Error($"BulletConfig {bulletConfig.Id} TickCastIds 含无效 id: {tickCastId}");
+                        continue;
+                    }
+
+                    if (!CastConfigCategory.Instance.Contain(tickCastId))
+                    {
+                        Log.Error($"BulletConfig {bulletConfig.Id} TickCastIds 找不到 CastConfig: {tickCastId}");
+                        continue;
+                    }
+
                     int err = owner.CreateAndCast(tickCastId, 0, bulletUnit.Position, false, self.Targets);
                     if (err != ErrorCode.ERR_Success)
                     {

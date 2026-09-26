@@ -51,8 +51,7 @@ namespace ET.Client
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                CodeLoader.Instance.Reload();
-                return;
+                self.Test4().Coroutine();
             }
 
             if (Input.GetKeyDown(KeyCode.T))
@@ -128,6 +127,12 @@ namespace ET.Client
         private static async ETTask Test3(this OperaComponent self)
         {
             await BattleHelper.GMCastForward(self.Root(), 66003, 2.9f);
+        }
+
+        /// <summary>GM：释放真子弹技能 66004（SelfHit 创建 Bullet 30002）。</summary>
+        private static async ETTask Test4(this OperaComponent self)
+        {
+            await BattleHelper.GMCastSimple(self.Root(), 66004);
         }
     }
 }

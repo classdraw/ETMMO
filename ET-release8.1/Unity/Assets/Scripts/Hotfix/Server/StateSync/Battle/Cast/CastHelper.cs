@@ -100,6 +100,13 @@ namespace ET.Server
                 return err;
             }
 
+            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            {
+                return ErrorCode.ERR_CastArgsError;
+            }
+
+            int coolDownMs = CastConfigCategory.Instance.Get(castConfigId).CoolDown;
+
             Cast cast = caster.Create(castConfigId,inputUnitId, inputPos);
             if (cast==null)
             {
@@ -121,7 +128,9 @@ namespace ET.Server
             {
                 return err;
             }
-            skillStatusComponent.SetCoolDown(castConfigId, cast.Config.CoolDown);
+
+            // 瞬发技能可能在 CastBeginAsync 内已 CastFinish/Dispose，不可再读 cast.Config
+            skillStatusComponent.SetCoolDown(castConfigId, coolDownMs);
             return ErrorCode.ERR_Success;
         }
     }

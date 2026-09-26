@@ -299,6 +299,12 @@ namespace ET.Server
             CastConfig config = cast.Config;
             if (config.Times.Count <= 0)
             {
+                if (config.HitAction.Length > 0 || config.SelfHitAction.Length > 0)
+                {
+                    Log.Error(
+                        $"CastConfig {cast.ConfigId} 有 HitAction/SelfHitAction 但 HitActionTimes/SelfHitActionTimes 为空，命中不会触发");
+                }
+
                 if (config.TotalTime > 0)//如果没有配置times 理论上totaltime应该是0 如果配置，那么就是需要延迟销毁
                 {
                     long castInstaceId = cast.InstanceId;
@@ -453,7 +459,8 @@ namespace ET.Server
             {
                 caster.GetComponent<SkillStatusComponent>()?.ClearCurrentSkill(cast);
 
-                if (cast.Config.TotalTime > 0)//没有持续时间就是瞬发，不用通知客户端
+                // 发过 CastStart 的必须 CastFinish，否则客户端 ClientCast 泄漏，IsCasting 一直为 true（瞬发/附属技能常见）
+                if ((NoticeClientType)cast.Config.NoticeClientType != NoticeClientType.NoNotice)
                 {
                     M2C_CastFinish castFinish = M2C_CastFinish.Create();
                     castFinish.CasterId = caster.Id;
