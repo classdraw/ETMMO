@@ -1,3 +1,5 @@
+using Unity.Mathematics;
+
 namespace ET.Server
 {
     [Actions(ActionsType.CastBullet)]
@@ -34,16 +36,21 @@ namespace ET.Server
                 return;
             }
 
+            CastBulletSpawnOrigin spawnOrigin = CastBulletSpawnOrigin.Caster;
+            if (config.ActionsParam.Length >= 2)
+            {
+                spawnOrigin = (CastBulletSpawnOrigin)config.ActionsParam[1];
+            }
+
             BulletConfig bulletConfig = BulletConfigCategory.Instance.Get(bulletConfigId);
-            CreateBulletFromCast(actions, caster, bulletConfig);
-            
+            CreateBulletFromCast(actions, caster, bulletConfig, spawnOrigin);
         }
 
-        private static void CreateBulletFromCast(Actions actions, Unit caster, BulletConfig bulletConfig)
+        private static void CreateBulletFromCast(Actions actions, Unit caster, BulletConfig bulletConfig, CastBulletSpawnOrigin spawnOrigin)
         {
             Cast cast = actions.CastSelf;
-            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, bulletConfig, caster.Position,
-                caster.Rotation);
+            float3 spawnPos = ResolveBulletSpawnPosition(actions, caster, spawnOrigin);
+            Unit bullet = UnitFactory.CreateBullet(actions.Scene(), caster.Id, bulletConfig, spawnPos, caster.Rotation);
             BulletComponent bulletComponent = bullet?.GetComponent<BulletComponent>();
             if (bulletComponent == null)
             {
@@ -53,6 +60,54 @@ namespace ET.Server
             bulletComponent.InputUnitId = cast.InputUnitId;
             bulletComponent.InputPos = cast.InputPos;
             bulletComponent.Start();
+        }
+
+        /// <summary>
+        /// ActionsParam[1]=0 施法者位置；=1 优先 InputUnit 坐标，否则 InputPos；无效时回退施法者位置。
+        /// </summary>
+        private static float3 ResolveBulletSpawnPosition(Actions actions, Unit caster, CastBulletSpawnOrigin spawnOrigin)
+        {
+            if (spawnOrigin == CastBulletSpawnOrigin.Caster)
+            {
+                return caster.Position;
+            }
+
+            Cast cast = actions.CastSelf;
+            if (cast == null)
+            {
+                return caster.Position;
+            }
+
+            Unit inputUnit = GetInputUnit(actions, cast.InputUnitId);
+            if (inputUnit != null)
+            {
+                return inputUnit.Position;
+            }
+
+            float3 inputPos = cast.InputPos;
+            if (math.lengthsq(inputPos) > 0.001f)
+            {
+                return inputPos;
+            }
+
+            Log.Warning($"Actions_CastBullet spawnOrigin=Input 但无有效 InputUnit/InputPos，回退施法者位置: configId={actions.Config.Id}");
+            return caster.Position;
+        }
+
+        private static Unit GetInputUnit(Actions actions, long inputUnitId)
+        {
+            if (inputUnitId == 0)
+            {
+                return null;
+            }
+
+            Unit inputUnit = actions.Scene()?.GetComponent<UnitComponent>()?.Get(inputUnitId);
+            if (inputUnit == null || inputUnit.IsDisposed || !inputUnit.IsBattleUnit())
+            {
+                return null;
+            }
+
+            return inputUnit;
         }
     }
 }

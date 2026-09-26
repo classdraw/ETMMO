@@ -54,6 +54,11 @@ namespace ET.Client
                 self.Test4().Coroutine();
             }
 
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                self.Test5().Coroutine();
+            }
+
             if (Input.GetKeyDown(KeyCode.T))
             {
                 C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
@@ -133,6 +138,12 @@ namespace ET.Client
         private static async ETTask Test4(this OperaComponent self)
         {
             await BattleHelper.GMCastSimple(self.Root(), 66004);
+        }
+
+        /// <summary>GM：66006 在输入单位/坐标处生成子弹（77012 spawn=Input）。</summary>
+        private static async ETTask Test5(this OperaComponent self)
+        {
+            await BattleHelper.GMCastSimple(self.Root(), 66006);
         }
     }
 }

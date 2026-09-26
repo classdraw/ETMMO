@@ -101,5 +101,14 @@ namespace ET
         Straight = 0,    // 直线落点，可穿墙（子弹常用）
         SnapNavMesh = 1, // Recast 贴地，不穿墙（玩家/怪物技能位移常用）
     }
+
+    /// <summary>
+    /// CastBullet ActionsParam[1]：子弹生成位置。
+    /// </summary>
+    public enum CastBulletSpawnOrigin : byte
+    {
+        Caster = 0, // 施法者当前位置（默认）
+        Input = 1,  // InputUnitId 有效则用该单位坐标，否则 InputPos
+    }
 }
 
