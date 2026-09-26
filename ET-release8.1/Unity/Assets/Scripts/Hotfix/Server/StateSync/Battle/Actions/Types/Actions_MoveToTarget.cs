@@ -10,8 +10,15 @@ namespace ET.Server
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
         {
+            if (actionsRunType != ActionsRunType.CastHit
+                && actionsRunType != ActionsRunType.BuffTick
+                && actionsRunType != ActionsRunType.BulletTick)
+            {
+                return;
+            }
+
             Unit unit = GetMoveUnit(actions, actionsRunType);
-            if (unit == null || unit.IsDisposed)
+            if (unit == null || unit.IsDisposed || !unit.IsBattleUnit())
             {
                 return;
             }
@@ -26,54 +33,57 @@ namespace ET.Server
             MoveToTargetMode moveMode = (MoveToTargetMode)config.ActionsParam[0];
             float moveStep = config.ActionsParam[1] / 1000f;
             float moveStepSq = moveStep * moveStep;
+            bool snapNavMesh =  (MoveToTargetNavSnap)config.ActionsParam[2] == MoveToTargetNavSnap.SnapNavMesh;
 
             switch (moveMode)
             {
                 case MoveToTargetMode.Input:
-                    ApplyInputMove(actions, actionsRunType, unit, moveStep, moveStepSq);
+                    ApplyInputMove(actions, actionsRunType, unit, moveStep, moveStepSq, snapNavMesh);
                     break;
                 case MoveToTargetMode.Forward:
-                    ApplyMoveForward(unit, moveStep);
+                    ApplyMoveForward(unit, moveStep, snapNavMesh);
                     break;
                 case MoveToTargetMode.Target:
-                    ApplyTargetMove(actions, actionsRunType, unit, moveStep, moveStepSq);
+                    ApplyTargetMove(actions, actionsRunType, unit, moveStep, moveStepSq, snapNavMesh);
                     break;
                 default:
-                    ApplyMoveForward(unit, moveStep);
+                    ApplyMoveForward(unit, moveStep, snapNavMesh);
                     break;
             }
         }
 
-        private static void ApplyInputMove(Actions actions, ActionsRunType actionsRunType, Unit unit, float moveStep, float moveStepSq)
+        private static void ApplyInputMove(Actions actions, ActionsRunType actionsRunType, Unit unit, float moveStep, float moveStepSq,
+        bool snapNavMesh)
         {
             if (!TryGetInput(actions, actionsRunType, out long inputUnitId, out float3 inputPos))
             {
-                ApplyMoveForward(unit, moveStep);
+                ApplyMoveForward(unit, moveStep, snapNavMesh);
                 return;
             }
 
             Unit inputUnit = GetInputUnit(actions, inputUnitId);
             if (inputUnit != null)
             {
-                ApplyMoveToPos(unit, inputUnit.Position, moveStep, moveStepSq);
+                ApplyMoveToPos(unit, inputUnit.Position, moveStep, moveStepSq, snapNavMesh);
                 return;
             }
 
-            ApplyMoveToPos(unit, inputPos, moveStep, moveStepSq);
+            ApplyMoveToPos(unit, inputPos, moveStep, moveStepSq, snapNavMesh);
         }
 
-        private static void ApplyTargetMove(Actions actions, ActionsRunType actionsRunType, Unit unit, float moveStep, float moveStepSq)
+        private static void ApplyTargetMove(Actions actions, ActionsRunType actionsRunType, Unit unit, float moveStep, float moveStepSq,
+        bool snapNavMesh)
         {
             using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
             {
                 actions.CollectActionTargets(actionsRunType, targets);
                 if (targets.Count <= 0)
                 {
-                    ApplyMoveForward(unit, moveStep);
+                    ApplyMoveForward(unit, moveStep, snapNavMesh);
                     return;
                 }
 
-                ApplyMoveToPos(unit, targets[0].Position, moveStep, moveStepSq);
+                ApplyMoveToPos(unit, targets[0].Position, moveStep, moveStepSq, snapNavMesh);
             }
         }
 
@@ -83,6 +93,8 @@ namespace ET.Server
             {
                 case ActionsRunType.CastHit:
                     return actions.CastSelf?.Caster;
+                case ActionsRunType.BuffTick:
+                    return actions.Owner;
                 case ActionsRunType.BulletTick:
                     return actions.BulletSelf?.GetParent<Unit>();
                 default:
@@ -141,7 +153,7 @@ namespace ET.Server
             return inputUnit;
         }
 
-        private static void ApplyMoveToPos(Unit unit, float3 targetPos, float moveStep, float moveStepSq)
+        private static void ApplyMoveToPos(Unit unit, float3 targetPos, float moveStep, float moveStepSq, bool snapNavMesh)
         {
             float3 offset = targetPos - unit.Position;
             offset.y = 0;
@@ -156,16 +168,16 @@ namespace ET.Server
             {
                 newPos = targetPos;
                 newPos.y = unit.Position.y;
-                unit.ForceSetPosition(newPos, true);
+                unit.ActionStepSetPosition(newPos, snapNavMesh);
                 return;
             }
 
             newPos = unit.Position + math.normalize(offset) * moveStep;
             newPos.y = unit.Position.y;
-            unit.ForceSetPosition(newPos, true);
+            unit.ActionStepSetPosition(newPos, snapNavMesh);
         }
 
-        private static void ApplyMoveForward(Unit unit, float moveStep)
+        private static void ApplyMoveForward(Unit unit, float moveStep, bool snapNavMesh)
         {
             float3 forward = unit.Forward;
             forward.y = 0;
@@ -176,7 +188,7 @@ namespace ET.Server
 
             float3 newPos = unit.Position + math.normalize(forward) * moveStep;
             newPos.y = unit.Position.y;
-            unit.ForceSetPosition(newPos, true);
+            unit.ActionStepSetPosition(newPos, snapNavMesh);
         }
     }
 }

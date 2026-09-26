@@ -5,6 +5,6 @@
 [77004, {"_t":"ActionsConfig","_id":77004,"Type":2,"_ActionsParam":[0.0,0.0,1.0,-3.0]}],
 [77005, {"_t":"ActionsConfig","_id":77005,"Type":1,"_ActionsParam":[10201.0,-5.0]}],
 [77006, {"_t":"ActionsConfig","_id":77006,"Type":3,"_ActionsParam":[30001.0]}],
-[77007, {"_t":"ActionsConfig","_id":77007,"Type":5,"_ActionsParam":[1.0,100.0]}],
+[77007, {"_t":"ActionsConfig","_id":77007,"Type":5,"_ActionsParam":[1.0,100.0,0.0]}],
 [77008, {"_t":"ActionsConfig","_id":77008,"Type":2,"_ActionsParam":[0.0,0.0,1.0,-1.0]}],
 ]}

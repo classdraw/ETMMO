@@ -84,12 +84,22 @@ namespace ET
 
     /// <summary>
     /// MoveToTarget ActionsParam[0]。异常（无输入、无目标等）一律走 Forward。
+    /// ActionsParam[1]：每步距离（毫米）。ActionsParam[2]：<see cref="MoveToTargetNavSnap"/>，缺省为 Straight。
     /// </summary>
     public enum MoveToTargetMode : byte
     {
         Input = 0,   // InputUnitId 存在则追单位，否则朝 InputPos
         Forward = 1, // 朝自身 Forward
         Target = 2,  // CollectActionTargets 当前目标
+    }
+
+    /// <summary>
+    /// MoveToTarget ActionsParam[2]：落点是否贴 NavMesh（需 Unit 带 PathfindingComponent）。
+    /// </summary>
+    public enum MoveToTargetNavSnap : byte
+    {
+        Straight = 0,    // 直线落点，可穿墙（子弹常用）
+        SnapNavMesh = 1, // Recast 贴地，不穿墙（玩家/怪物技能位移常用）
     }
 }
 

@@ -189,11 +189,41 @@ namespace ET.Server
                 return;
             }
 
+            BroadcastSetPosition(unit);
+        }
+
+        /// <summary>
+        /// Action 离散步进位移（如 MoveToTarget）。<paramref name="snapNavMesh"/> 为 true 且存在 Path 时 Recast 贴 mesh。
+        /// </summary>
+        public static void ActionStepSetPosition(this Unit unit, float3 newPos, bool snapNavMesh = false, bool sendMsg = true)
+        {
+            if (snapNavMesh)
+            {
+                PathfindingComponent pathfindingComponent = unit.GetComponent<PathfindingComponent>();
+                if (pathfindingComponent != null)
+                {
+                    newPos = pathfindingComponent.RecastFindNearestPoint(newPos);
+                }
+            }
+
+            //unit.GetComponent<MoveComponent>()?.Stop(true); 技能强制位移先不停止自身移动
+            unit.Position = newPos;
+
+            if (!sendMsg)
+            {
+                return;
+            }
+
+            BroadcastSetPosition(unit);
+        }
+
+        private static void BroadcastSetPosition(Unit unit)
+        {
             M2C_SetPosition m2CSetPosition = M2C_SetPosition.Create();
             m2CSetPosition.UnitId = unit.Id;
             m2CSetPosition.Position = unit.Position;
             m2CSetPosition.Rotation = unit.Rotation;
-            SendClient(unit,m2CSetPosition,NoticeClientType.Broadcast);
+            SendClient(unit, m2CSetPosition, NoticeClientType.Broadcast);
         }
 
 
