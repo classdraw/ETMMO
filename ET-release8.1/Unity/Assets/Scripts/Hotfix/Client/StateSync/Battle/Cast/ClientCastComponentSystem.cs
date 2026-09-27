@@ -3,6 +3,7 @@ namespace ET.Client
     [EntitySystemOf(typeof(ClientCastComponent))]
     [FriendOf(typeof(ClientCastComponent))]
     [FriendOf(typeof(ClientCast))]
+    [FriendOf(typeof(ClientSkillStatusComponent))]
     public static partial class ClientCastComponentSystem
     {
         [EntitySystem]
@@ -35,6 +36,13 @@ namespace ET.Client
             if (!self.Casts.Remove(castId, out EntityRef<ClientCast> castRef))
             {
                 return;
+            }
+
+            Unit unit = self.GetParent<Unit>();
+            ClientSkillStatusComponent skillStatus = unit?.GetComponent<ClientSkillStatusComponent>();
+            if (skillStatus != null && !skillStatus.IsDisposed && skillStatus.CurrentSkillCastInstanceId == castId)
+            {
+                skillStatus.CurrentSkillCastInstanceId = default;
             }
 
             ClientCast clientCast = castRef;

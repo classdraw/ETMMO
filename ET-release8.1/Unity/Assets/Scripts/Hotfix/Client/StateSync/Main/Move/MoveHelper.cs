@@ -34,7 +34,7 @@ namespace ET.Client
         
         public static async ETTask MoveToAsync(this Unit unit, List<float3> path)
         {
-            if (unit.IsCasting())
+            if (unit.BlocksMoveWhileCasting())
             {
                 return;
             }

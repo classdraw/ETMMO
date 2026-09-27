@@ -44,12 +44,6 @@ namespace ET
         /// </summary>
         Relive = 7
     }
-    /// <summary>
-    /// Buff效果
-    /// </summary>
-    public enum BuffEffectType:byte
-    {
-        
-    }
+
 }
 

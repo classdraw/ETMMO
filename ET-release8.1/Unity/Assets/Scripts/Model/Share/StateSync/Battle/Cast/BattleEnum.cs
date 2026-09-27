@@ -1,5 +1,14 @@
 namespace ET
 {
+    /// <summary>
+    /// CastConfig.Type：普通技能施法期间客户端拦截寻路；位移技能允许同步路径移动。
+    /// </summary>
+    public enum CastType : byte
+    {
+        Normal = 1,
+        Displacement = 2,
+    }
+
     public enum SelectType:byte
     {
         Self=0,//自身

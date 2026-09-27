@@ -133,13 +133,13 @@ namespace ET.Server
 
                     if (actions.CastSelfHit)
                     {
-                        TryAddBattleUnit(output, actions.Caster);
+                        TryAddCollectedUnit(output, actions.Caster);
                     }
                     else
                     {
                         foreach (long targetId in cast.Targets)
                         {
-                            TryAddBattleUnit(output, unitComponent.Get(targetId));
+                            TryAddCollectedUnit(output, unitComponent.Get(targetId));
                         }
                     }
 
@@ -154,7 +154,7 @@ namespace ET.Server
                         break;
                     }
 
-                    TryAddBattleUnit(output, actions.Owner);
+                    TryAddCollectedUnit(output, actions.Owner);
                     break;
                 }
                 case ActionsRunType.BulletAwake:
@@ -169,22 +169,49 @@ namespace ET.Server
 
                     foreach (long targetId in bulletComponent.Targets)
                     {
-                        TryAddBattleUnit(output, unitComponent.Get(targetId));
+                        TryAddCollectedUnit(output, unitComponent.Get(targetId));
                     }
 
                     break;
                 }
             }
+
+            FilterCollectedTargets(actions, output);
         }
 
-        private static void TryAddBattleUnit(List<Unit> output, Unit unit)
+        private static void TryAddCollectedUnit(List<Unit> output, Unit unit)
         {
-            if (unit == null || unit.IsDisposed || !unit.IsBattleUnit())
+            if (unit == null || unit.IsDisposed)
             {
                 return;
             }
 
             output.Add(unit);
+        }
+
+        /// <summary>
+        /// 收集完成后统一过滤：击飞/吸引用 <see cref="ReliveHelper.IsBattleSelect"/>，其余 Action 用 <see cref="UnitSystem.IsBattleUnit"/>。
+        /// </summary>
+        private static void FilterCollectedTargets(Actions actions, List<Unit> output)
+        {
+            bool useBattleSelect = actions.Config.Type == ActionsType.HitFlyTarget
+                || actions.Config.Type == ActionsType.Attract;
+
+            for (int i = output.Count - 1; i >= 0; i--)
+            {
+                Unit unit = output[i];
+                if (unit == null || unit.IsDisposed)
+                {
+                    output.RemoveAt(i);
+                    continue;
+                }
+
+                bool valid = useBattleSelect ? unit.IsBattleSelect() : unit.IsBattleUnit();
+                if (!valid)
+                {
+                    output.RemoveAt(i);
+                }
+            }
         }
 
         private static bool TryCollectHitFlyTargets(Actions actions, ActionsRunType actionsRunType, List<Unit> output)
@@ -244,7 +271,7 @@ namespace ET.Server
                     continue;
                 }
 
-                TryAddBattleUnit(output, unit);
+                TryAddCollectedUnit(output, unit);
             }
         }
     }

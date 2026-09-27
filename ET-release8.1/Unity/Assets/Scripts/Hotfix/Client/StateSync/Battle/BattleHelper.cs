@@ -6,7 +6,6 @@ namespace ET.Client
     {
         public static async ETTask GMCastSimple(Scene root,int castConfigId)
         {
-            Unit monsterUnit = GetNearestMonsterUnit(root);
             Unit playerUnit=UnitHelper.GetMyUnitFromClientScene(root);
             if (playerUnit==null||playerUnit.IsDisposed)
             {
@@ -21,32 +20,20 @@ namespace ET.Client
                 return;
             }
 
-            if (monsterUnit==null||monsterUnit.IsDisposed)
-            {
-                Log.Console("附近没有怪物!!!");
-                return;
-            }
-
-            if (CastConfigCategory.Instance.Get(castConfigId)==null)
+            if (!CastConfigCategory.Instance.Contain(castConfigId))
             {
                 Log.Console($"CastId {castConfigId} 不存在!!!");
                 return;
             }
 
-            C2M_GMTestCast c2MGmTestCast = C2M_GMTestCast.Create();
-            c2MGmTestCast.CastConfigId = castConfigId;
-            c2MGmTestCast.TargetId = monsterUnit.Id;
-            c2MGmTestCast.InputPos = playerUnit.Position;
-            M2C_GMTestCast m2CGmTestCast=await root.GetComponent<ClientSenderComponent>().Call(c2MGmTestCast) as M2C_GMTestCast;
-            if (m2CGmTestCast.Error==ErrorCode.ERR_Success)
+            CastConfig castConfig = CastConfigCategory.Instance.Get(castConfigId);
+            if (!TryBuildGMTestCastInput(root, playerUnit, castConfig, out long targetId, out float3 inputPos, out string failReason))
             {
-                Log.Info("测试施法成功!!!");
+                Log.Console(failReason);
+                return;
             }
-            else
-            {
-                 Log.Info($"测试施法失败 {m2CGmTestCast.Error}!!!");
-                 EventSystem.Instance.Publish(root.CurrentScene(), new CastError(){CasterId = playerUnit.Id});
-            }
+
+            await CallGMTestCastAsync(root, playerUnit, castConfigId, targetId, inputPos);
         }
 
         /// <summary>
@@ -77,11 +64,53 @@ namespace ET.Client
             float3 inputPos = playerUnit.Position + GetCardinalForward(playerUnit.Forward) * distance;
             inputPos.y = playerUnit.Position.y;
 
+            await CallGMTestCastAsync(root, playerUnit, castConfigId, 0, inputPos);
+        }
+
+        /// <summary>
+        /// 按 CastConfig.SelectType 构造 GM 施法输入（与 C2M_CastInput 语义一致：TargetId 即 InputUnitId）。
+        /// Self / ExternalTarget / Position 不要求 TargetId；EnemyTarget / FriendlyTarget 需要有效目标 Unit。
+        /// </summary>
+        private static bool TryBuildGMTestCastInput(Scene root, Unit playerUnit, CastConfig castConfig, out long targetId,
+        out float3 inputPos, out string failReason)
+        {
+            targetId = 0;
+            inputPos = playerUnit.Position;
+            failReason = null;
+
+            switch ((SelectType)castConfig.SelectType)
+            {
+                case SelectType.Self:
+                case SelectType.ExternalTarget:
+                case SelectType.Position:
+                    return true;
+                case SelectType.EnemyTarget:
+                case SelectType.FriendlyTarget:
+                {
+                    Unit targetUnit = GetNearestMonsterUnit(playerUnit);
+                    if (targetUnit == null || targetUnit.IsDisposed)
+                    {
+                        failReason = "附近没有怪物!!!";
+                        return false;
+                    }
+
+                    targetId = targetUnit.Id;
+                    return true;
+                }
+                default:
+                    failReason = $"未知 SelectType: {castConfig.SelectType}";
+                    return false;
+            }
+        }
+
+        private static async ETTask CallGMTestCastAsync(Scene root, Unit playerUnit, int castConfigId, long targetId, float3 inputPos)
+        {
             C2M_GMTestCast c2MGmTestCast = C2M_GMTestCast.Create();
             c2MGmTestCast.CastConfigId = castConfigId;
-            c2MGmTestCast.TargetId = 0;
+            c2MGmTestCast.TargetId = targetId;
             c2MGmTestCast.InputPos = inputPos;
-            M2C_GMTestCast m2CGmTestCast = await root.GetComponent<ClientSenderComponent>().Call(c2MGmTestCast) as M2C_GMTestCast;
+            M2C_GMTestCast m2CGmTestCast =
+                await root.GetComponent<ClientSenderComponent>().Call(c2MGmTestCast) as M2C_GMTestCast;
             if (m2CGmTestCast.Error == ErrorCode.ERR_Success)
             {
                 Log.Info("测试施法成功!!!");

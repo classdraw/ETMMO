@@ -100,8 +100,6 @@ namespace ET.Server
             {
                 unit.GetComponent<BuffComponent>()?.CreateAndAdd(buffId, addUnitId, addCastId);
             }
-
-            Log.Console($"击飞目标 {unit.Id} 新位置: {newPos}");
         }
     }
 }

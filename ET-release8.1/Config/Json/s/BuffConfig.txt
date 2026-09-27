@@ -1,4 +1,7 @@
 {"dict": [
 [55001, {"_t":"BuffConfig","_id":55001,"Type":0,"Name":"","ConverType":4,"NoticeClientType":2,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":7000,"_AddAction":[77005.0],"TickTime":2000,"_TickAction":[77004.0],"_RemoveAction":[77005.0]}],
 [55002, {"_t":"BuffConfig","_id":55002,"Type":0,"Name":"","ConverType":3,"NoticeClientType":0,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":3000,"_AddAction":[],"TickTime":0,"_TickAction":[],"_RemoveAction":[]}],
+[55003, {"_t":"BuffConfig","_id":55003,"Type":0,"Name":"","ConverType":3,"NoticeClientType":0,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":1000,"_AddAction":[77015.0],"TickTime":0,"_TickAction":[],"_RemoveAction":[77015.0]}],
+[55004, {"_t":"BuffConfig","_id":55004,"Type":0,"Name":"","ConverType":3,"NoticeClientType":0,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":1000,"_AddAction":[],"TickTime":100,"_TickAction":[77016.0],"_RemoveAction":[]}],
+[55005, {"_t":"BuffConfig","_id":55005,"Type":0,"Name":"","ConverType":3,"NoticeClientType":0,"FirstAddLayer":1,"LayerLimit":1,"TotalTime":500,"_AddAction":[77017.0,77018.0,77019.0],"TickTime":0,"_TickAction":[],"_RemoveAction":[77017.0,77018.0,77019.0]}],
 ]}

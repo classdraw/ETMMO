@@ -16,21 +16,11 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// 是否可被战斗选中（存活且为可选战斗单位类型）。
+        /// 是否可被战斗选中（<see cref="UnitSystem.IsBattleSelectableType"/> 且存活）。
         /// </summary>
         public static bool IsBattleSelect(this Unit unit)
         {
-            UnitType unitType = unit.Type();
-            if (unitType == UnitType.Player
-                || unitType == UnitType.Monster
-                || unitType == UnitType.Pet
-                || unitType == UnitType.Summon
-                || unitType == UnitType.Robot)
-            {
-                return unit.IsAlive();
-            }
-
-            return false;
+            return unit.IsBattleSelectableType() && unit.IsAlive();
         }
 
         public static int OnSiteRelive(this Unit unit)

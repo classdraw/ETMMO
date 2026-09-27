@@ -8,6 +8,20 @@ namespace ET.Server
         // 可以多次调用，多次调用的话会取消上一次的协程
         public static async ETTask FindPathMoveToAsync(this Unit unit, float3 target)
         {
+            PathfindingComponent pathfindingComponent = unit.GetComponent<PathfindingComponent>();
+            if (pathfindingComponent == null)
+            {
+                unit.ActionStepSetPosition(target, true);
+                return;
+            }
+
+            MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
+            if (moveComponent == null)
+            {
+                unit.ActionStepSetPosition(target, true);
+                return;
+            }
+
             float speed = unit.GetComponent<NumericComponent>().GetAsFloat(NumericType.Speed);
             if (speed < 0.01)
             {
@@ -16,7 +30,7 @@ namespace ET.Server
             }
 
             M2C_PathfindingResult m2CPathfindingResult = M2C_PathfindingResult.Create();
-            unit.GetComponent<PathfindingComponent>().Find(unit.Position, target, m2CPathfindingResult.Points);
+            pathfindingComponent.Find(unit.Position, target, m2CPathfindingResult.Points);
 
             if (m2CPathfindingResult.Points.Count < 2)
             {
@@ -28,8 +42,6 @@ namespace ET.Server
             m2CPathfindingResult.Id = unit.Id;
             MapMessageHelper.Broadcast(unit, m2CPathfindingResult);
 
-            MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
-            
             bool ret = await moveComponent.MoveToAsync(m2CPathfindingResult.Points, speed);
             if (ret) // 如果返回false，说明被其它移动取消了，这时候不需要通知客户端stop
             {

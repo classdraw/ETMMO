@@ -15,7 +15,7 @@ namespace ET.Client
                 return;
             }
 
-            if (unit.IsCasting())
+            if (unit.BlocksMoveWhileCasting())
             {
                 await ETTask.CompletedTask;
                 return;

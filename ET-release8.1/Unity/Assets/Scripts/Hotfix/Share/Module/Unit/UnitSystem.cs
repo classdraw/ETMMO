@@ -20,22 +20,27 @@ namespace ET
         {
             return (UnitType)self.Config().Type;
         }
-        //是否是战斗单位
+        /// <summary>
+        /// 可被技能/形状选中的战斗实体类型（玩家、怪、宠、召唤、机器人；不含子弹、NPC）。
+        /// </summary>
+        public static bool IsBattleSelectableType(this Unit self)
+        {
+            UnitType tt = self.Type();
+            return tt == UnitType.Player
+                || tt == UnitType.Monster
+                || tt == UnitType.Pet
+                || tt == UnitType.Summon
+                || tt == UnitType.Robot;
+        }
+
+        /// <summary>
+        /// 是否参与战斗逻辑的单位（含子弹；不判断存活）。
+        /// </summary>
         public static bool IsBattleUnit(this Unit self)
         {
-            var tt = self.Type();
-            if (tt==UnitType.Player||
-                tt==UnitType.Monster||
-                tt==UnitType.Pet||
-                tt==UnitType.Summon||
-                tt==UnitType.Robot||
-                tt==UnitType.Bullet)
-            {
-                return true;
-            }
-
-            return false;
+            return self.IsBattleSelectableType() || self.IsBullet();
         }
+
         /// <summary>
         /// 是否是玩家
         /// </summary>

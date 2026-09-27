@@ -108,11 +108,6 @@ namespace ET.Server
 
         private static void AttractUnitToward(Unit u, float3 centerPos, float moveStep, float moveStepSq, float moveStepIgnoreSq)
         {
-            if (u == null || u.IsDisposed || !u.IsBattleUnit())
-            {
-                return;
-            }
-
             float3 offset = centerPos - u.Position;
             offset.y = 0;
             float distSq = math.lengthsq(offset);

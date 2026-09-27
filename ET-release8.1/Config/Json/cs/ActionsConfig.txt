@@ -12,4 +12,12 @@
 [77011, {"_t":"ActionsConfig","_id":77011,"Type":5,"_ActionsParam":[1.0,100.0,0.0]}],
 [77012, {"_t":"ActionsConfig","_id":77012,"Type":3,"_ActionsParam":[30003.0,1.0]}],
 [77013, {"_t":"ActionsConfig","_id":77013,"Type":7,"_ActionsParam":[150.0,1.0,0.0]}],
+[77014, {"_t":"ActionsConfig","_id":77014,"Type":5,"_ActionsParam":[1.0,3000.0,1.0]}],
+[77015, {"_t":"ActionsConfig","_id":77015,"Type":1,"_ActionsParam":[10002.0,20000.0]}],
+[77016, {"_t":"ActionsConfig","_id":77016,"Type":8,"_ActionsParam":[1000.0,500.0,55005.0]}],
+[77017, {"_t":"ActionsConfig","_id":77017,"Type":1,"_ActionsParam":[1051.0,1.0]}],
+[77018, {"_t":"ActionsConfig","_id":77018,"Type":1,"_ActionsParam":[1052.0,1.0]}],
+[77019, {"_t":"ActionsConfig","_id":77019,"Type":1,"_ActionsParam":[1050.0,1.0]}],
+[77020, {"_t":"ActionsConfig","_id":77020,"Type":2,"_ActionsParam":[0.0,0.0,1.0,-6.0]}],
+[77021, {"_t":"ActionsConfig","_id":77021,"Type":3,"_ActionsParam":[30004.0,0.0]}],
 ]}

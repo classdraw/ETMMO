@@ -38,6 +38,7 @@ namespace ET.Client
             {
                 self.Test5().Coroutine();
             }
+
             /*    
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -143,7 +144,8 @@ namespace ET.Client
         /// <summary>GM：66006 在输入单位/坐标处生成子弹（77012 spawn=Input）。</summary>
         private static async ETTask Test5(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 66006);
+            //await BattleHelper.GMCastSimple(self.Root(), 66006);
+            await BattleHelper.GMCastSimple(self.Root(), 66008);
         }
     }
 }
