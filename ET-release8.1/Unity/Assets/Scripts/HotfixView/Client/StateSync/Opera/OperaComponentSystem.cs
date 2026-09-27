@@ -36,9 +36,9 @@ namespace ET.Client
             
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                self.Test1().Coroutine();
+                self.Test5().Coroutine();
             }
-                
+            /*    
             if (Input.GetKeyDown(KeyCode.W))
             {
                 self.Test2().Coroutine();
@@ -57,7 +57,7 @@ namespace ET.Client
             if (Input.GetKeyDown(KeyCode.Y))
             {
                 self.Test5().Coroutine();
-            }
+            }*/
 
             if (Input.GetKeyDown(KeyCode.T))
             {

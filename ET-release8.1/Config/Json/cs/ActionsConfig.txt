@@ -11,5 +11,5 @@
 [77010, {"_t":"ActionsConfig","_id":77010,"Type":2,"_ActionsParam":[0.0,0.0,1.0,-7.0]}],
 [77011, {"_t":"ActionsConfig","_id":77011,"Type":5,"_ActionsParam":[1.0,100.0,0.0]}],
 [77012, {"_t":"ActionsConfig","_id":77012,"Type":3,"_ActionsParam":[30003.0,1.0]}],
-[77013, {"_t":"ActionsConfig","_id":77013,"Type":7,"_ActionsParam":[150.0,0.0]}],
+[77013, {"_t":"ActionsConfig","_id":77013,"Type":7,"_ActionsParam":[150.0,1.0,0.0]}],
 ]}

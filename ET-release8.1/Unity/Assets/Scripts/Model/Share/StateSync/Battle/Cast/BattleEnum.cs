@@ -110,5 +110,15 @@ namespace ET
         Caster = 0, // 施法者当前位置（默认）
         Input = 1,  // InputUnitId 有效则用该单位坐标，否则 InputPos
     }
+
+    /// <summary>
+    /// Attract ActionsParam[1]：吸引中心点。
+    /// ActionsParam[0] 步长(mm)；ActionsParam[2] 可选，停止吸引距离(mm)，缺省为 0。
+    /// </summary>
+    public enum AttractCenterOrigin : byte
+    {
+        Caster = 0,     // 施法者位置（原逻辑）
+        InputPos = 1,   // Cast/Bullet 的 InputPos
+    }
 }
 
