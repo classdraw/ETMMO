@@ -103,7 +103,7 @@ namespace ET
     }
 
     /// <summary>
-    /// MoveToTarget ActionsParam[2]：落点是否贴 NavMesh（需 Unit 带 PathfindingComponent）。
+    /// MoveToTarget ActionsParam[2]；HitFlyTarget ActionsParam[3]（可选）：落点是否贴 NavMesh 并射线截断遇障。
     /// </summary>
     public enum MoveToTargetNavSnap : byte
     {

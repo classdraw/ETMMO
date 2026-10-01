@@ -35,6 +35,8 @@ namespace ET.Server
 
             float dir = config.ActionsParam[1] / 1000f;
             int buffId = config.ActionsParam.Length > 2 ? config.ActionsParam[2] : 0;
+            bool snapNavMesh = config.ActionsParam.Length >= 4
+                && (MoveToTargetNavSnap)config.ActionsParam[3] == MoveToTargetNavSnap.SnapNavMesh;
 
             float3 forwardDir = caster.Forward;
             forwardDir.y = 0;
@@ -50,7 +52,7 @@ namespace ET.Server
                 actions.CollectActionTargets(actionsRunType, targets);
                 foreach (Unit target in targets)
                 {
-                    ApplyHitFly(target, forwardDir, dir, buffId, addUnitId, addCastId);
+                    ApplyHitFly(target, forwardDir, dir, buffId, addUnitId, addCastId, snapNavMesh);
                 }
             }
         }
@@ -89,12 +91,12 @@ namespace ET.Server
             return true;
         }
 
-        private static void ApplyHitFly(Unit unit, float3 forwardDir, float dir, int buffId, long addUnitId, int addCastId)
+        private static void ApplyHitFly(Unit unit, float3 forwardDir, float dir, int buffId, long addUnitId, int addCastId, bool snapNavMesh)
         {
             float3 unitPos = unit.Position;
             float3 newPos = unitPos + forwardDir * dir;
             newPos.y = unitPos.y;
-            unit.FindPathMoveToAsync(newPos).Coroutine();
+            unit.ActionDisplacementMove(newPos, snapNavMesh);
 
             if (buffId != 0)
             {

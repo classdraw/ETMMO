@@ -52,7 +52,7 @@ namespace ET
 
             self.NumericDic[numericType] = value;
 
-            if (numericType >= NumericType.Max)
+            if (NumericType.IsComponentKey(numericType))
             {
                 self.Update(numericType, isPublicEvent);
                 return;
@@ -74,18 +74,50 @@ namespace ET
 
         public static void Update(this NumericComponent self, int numericType, bool isPublicEvent)
         {
-            int final = (int)numericType / 10;
-            int bas = final * 10 + 1;
-            int add = final * 10 + 2;
-            int pct = final * 10 + 3;
-            int finalAdd = final * 10 + 4;
-            int finalPct = final * 10 + 5;
+            int final = NumericType.ToFinalNumericType(numericType);
+            int bas = NumericType.ToComponentKey(final, NumericType.ComponentIndexBase);
+            int add = NumericType.ToComponentKey(final, NumericType.ComponentIndexAdd);
+            int pct = NumericType.ToComponentKey(final, NumericType.ComponentIndexPct);
+            int finalAdd = NumericType.ToComponentKey(final, NumericType.ComponentIndexFinalAdd);
+            int finalPct = NumericType.ToComponentKey(final, NumericType.ComponentIndexFinalPct);
+            int tempAdd = NumericType.ToComponentKey(final, NumericType.ComponentIndexTempAdd);
+            int tempPct = NumericType.ToComponentKey(final, NumericType.ComponentIndexTempPct);
+            int tempFinalAdd = NumericType.ToComponentKey(final, NumericType.ComponentIndexTempFinalAdd);
+            int tempFinalPct = NumericType.ToComponentKey(final, NumericType.ComponentIndexTempFinalPct);
 
-            // 一个数值可能会多种情况影响，比如速度,加个buff可能增加速度绝对值100，也有些buff增加10%速度，所以一个值可以由5个值进行控制其最终结果
-            // final = (((base + add) * (100 + pct) / 100) + finalAdd) * (100 + finalPct) / 100;
-            long result = (long)(((self.GetByKey(bas) + self.GetByKey(add)) * (100 + self.GetAsFloat(pct)) / 100f + self.GetByKey(finalAdd)) *
-                (100 + self.GetAsFloat(finalPct)) / 100f);
+            long addSum = self.GetByKey(add) + self.GetByKey(tempAdd);
+            float pctSum = self.GetAsFloat(pct) + self.GetAsFloat(tempPct);
+            long finalAddSum = self.GetByKey(finalAdd) + self.GetByKey(tempFinalAdd);
+            float finalPctSum = self.GetAsFloat(finalPct) + self.GetAsFloat(tempFinalPct);
+
+            // final = (((base + add + tempAdd) * (100 + pct + tempPct) / 100) + finalAdd + tempFinalAdd) * (100 + finalPct + tempFinalPct) / 100;
+            long result = (long)(((self.GetByKey(bas) + addSum) * (100 + pctSum) / 100f + finalAddSum) * (100 + finalPctSum) / 100f);
             self.Insert(final, result, isPublicEvent);
+        }
+
+        /// <summary>登录等场景：清空所有 Temp 分量（+6~+9），并触发对应 Final 重算。</summary>
+        public static bool ResetAllTempComponents(this NumericComponent self)
+        {
+            if (self.NumericDic == null || self.NumericDic.Count == 0)
+            {
+                return false;
+            }
+
+            bool changed = false;
+            int[] keys = new int[self.NumericDic.Count];
+            self.NumericDic.Keys.CopyTo(keys, 0);
+            foreach (int key in keys)
+            {
+                if (!NumericType.IsTempComponentKey(key) || self.GetByKey(key) == 0)
+                {
+                    continue;
+                }
+
+                self.SetNoEvent(key, 0);
+                changed = true;
+            }
+
+            return changed;
         }
     }
     

@@ -46,19 +46,7 @@ namespace ET.Server
 
         private static void MoveUnitStep(Unit unit, float3 destination, bool snapNavMesh)
         {
-            PathfindingComponent pathfindingComponent = unit.GetComponent<PathfindingComponent>();
-            if (pathfindingComponent != null)
-            {
-                if (snapNavMesh)
-                {
-                    destination = pathfindingComponent.RecastFindNearestPoint(destination);
-                }
-
-                unit.FindPathMoveToAsync(destination).Coroutine();
-                return;
-            }
-
-            unit.ActionStepSetPosition(destination, snapNavMesh);
+            unit.ActionDisplacementMove(destination, snapNavMesh);
         }
 
         private static bool TryComputeMoveDestination(Actions actions, ActionsRunType actionsRunType, Unit unit,

@@ -5,6 +5,41 @@ namespace ET.Server
 {
     public static partial class MoveHelper
     {
+        /// <summary>
+        /// snapNavMesh 为 true 时：Nav 射线截断遇障 + 贴最近可走点。
+        /// </summary>
+        public static float3 ResolveSnapNavMeshDestination(this Unit unit, float3 straightDestination, bool snapNavMesh)
+        {
+            if (!snapNavMesh)
+            {
+                return straightDestination;
+            }
+
+            PathfindingComponent pathfinding = unit.GetComponent<PathfindingComponent>();
+            if (pathfinding == null)
+            {
+                return straightDestination;
+            }
+
+            pathfinding.TryClampDestinationByNavRaycast(unit.Position, straightDestination, out float3 clamped);
+            return pathfinding.RecastFindNearestPoint(clamped);
+        }
+
+        /// <summary>
+        /// 技能位移：有 Path 则寻路移动，否则 ActionStepSetPosition。
+        /// </summary>
+        public static void ActionDisplacementMove(this Unit unit, float3 destination, bool snapNavMesh)
+        {
+            destination = unit.ResolveSnapNavMeshDestination(destination, snapNavMesh);
+            if (unit.GetComponent<PathfindingComponent>() != null)
+            {
+                unit.FindPathMoveToAsync(destination).Coroutine();
+                return;
+            }
+
+            unit.ActionStepSetPosition(destination, snapNavMesh);
+        }
+
         // 可以多次调用，多次调用的话会取消上一次的协程
         public static async ETTask FindPathMoveToAsync(this Unit unit, float3 target)
         {

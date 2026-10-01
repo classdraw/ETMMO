@@ -44,4 +44,12 @@ namespace ET
     {
         public Unit Unit;
     }
+
+    /// <summary>
+    /// 从 UnitCache 反序列化后 / 登录进入场景前：初始化不应落库的运行时数据。各模块通过 AEvent 扩展。
+    /// </summary>
+    public struct UnitLoginSceneInit
+    {
+        public Unit Unit;
+    }
 }

@@ -281,6 +281,9 @@ namespace ET
         [MemoryPackOrder(14)]
         public int Gender { get; set; }
 
+        /// <summary>
+        /// 怪物/子弹配表 Id（MonsterConfig / BulletConfig）
+        /// </summary>
         [MemoryPackOrder(15)]
         public int TableConfigId { get; set; }
 

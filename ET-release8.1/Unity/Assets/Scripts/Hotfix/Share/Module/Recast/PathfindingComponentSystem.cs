@@ -96,5 +96,43 @@ namespace ET
             self.query.FindNearestPoly(recastPos, self.extents, self.filter, out _, out RcVec3f nearestPt, out _);
             return new float3(-nearestPt.x, nearestPt.y, nearestPt.z);
         }
+
+        /// <summary>
+        /// 沿 NavMesh 从 start 朝 end 做 walkability 射线；遇墙则把终点截到墙前（冲锋遇障停住）。
+        /// </summary>
+        public static bool TryClampDestinationByNavRaycast(this PathfindingComponent self, float3 start, float3 end, out float3 clamped)
+        {
+            clamped = end;
+            if (self.navMesh == null || self.query == null)
+            {
+                return false;
+            }
+
+            RcVec3f startRc = new(-start.x, start.y, start.z);
+            RcVec3f endRc = new(-end.x, end.y, end.z);
+            self.query.FindNearestPoly(startRc, self.extents, self.filter, out long startRef, out RcVec3f startPt, out _);
+            if (startRef == 0)
+            {
+                return false;
+            }
+
+            DtStatus status = self.query.Raycast(startRef, startPt, endRc, self.filter, 0, 0, out DtRaycastHit hit);
+            if (!status.Succeeded() || hit == null)
+            {
+                return false;
+            }
+
+            if (hit.t >= float.MaxValue * 0.5f)
+            {
+                clamped = end;
+                return true;
+            }
+
+            RcVec3f dir = endRc.Subtract(startPt);
+            float t = math.max(0f, hit.t - 0.05f);
+            RcVec3f hitPos = RcVec3f.Mad(startPt, dir, t);
+            clamped = new float3(-hitPos.x, hitPos.y, hitPos.z);
+            return true;
+        }
     }
 }

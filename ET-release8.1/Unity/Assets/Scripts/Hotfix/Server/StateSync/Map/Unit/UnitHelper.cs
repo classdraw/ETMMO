@@ -26,6 +26,7 @@ namespace ET.Server
             // 先通知视野内玩家移除客户端 Unit，再摘 AOI（与怪物死亡销毁顺序一致）
             MapMessageHelper.NoticeUnitRemoveBroadcast(unit);
             unit.RemoveComponent<AOIEntity>();
+            UnitLoginSceneInitHelper.Apply(unit, persistToCache: false);
             UnitDBSaveComponent dbSave = unit.GetComponent<UnitDBSaveComponent>();
             if (dbSave != null)
             {

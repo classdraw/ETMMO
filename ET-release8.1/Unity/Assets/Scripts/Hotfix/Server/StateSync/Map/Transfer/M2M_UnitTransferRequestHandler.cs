@@ -39,6 +39,7 @@ namespace ET.Server
             if (request.IsEnterGame)
             {   //只要是登陆 都发送离线消息，角色相关数据等 活动账号数据
                 await UnitHelper.DealOfflineMsg(unit);
+                UnitLoginSceneInitHelper.Apply(unit, persistToCache: false);
             }
 
             // 通知客户端开始切场景

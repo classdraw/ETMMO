@@ -9,7 +9,7 @@ namespace ET
         public const int MoveToTarget = 5;//往目标移动
         public const int CreateCast = 6;//释放一个新的Cast
         public const int Attract = 7;//把目标往中心吸引多少米
-        public const int HitFlyTarget = 8;//击飞距离多少米，并给目标增加debuff
+        public const int HitFlyTarget = 8;//击飞：Param[1]距离mm，Param[2]buffId，Param[3]可选 SnapNavMesh
     }
 }
 

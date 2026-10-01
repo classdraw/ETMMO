@@ -44,6 +44,8 @@ namespace ET.Server
                 }
             }
 
+            UnitLoginSceneInitHelper.Apply(unit, persistToCache: !isNewUnit);
+
             return (isNewUnit, unit);
         }
     }
