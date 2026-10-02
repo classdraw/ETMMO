@@ -5,10 +5,11 @@ namespace ET
     [EntitySystemOf(typeof(AIComponent))]
     [FriendOf(typeof(AIComponent))]
     [FriendOf(typeof(AIDispatcherComponent))]
+    [FriendOfAttribute(typeof(ET.XunLuoPathComponent))]
     public static partial class AIComponentSystem
     {
         [Invoke(TimerInvokeType.AITimer)]
-        public class AITimer: ATimer<AIComponent>
+        public class AITimer : ATimer<AIComponent>
         {
             protected override void Run(AIComponent self)
             {
@@ -18,11 +19,11 @@ namespace ET
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"move timer error: {self.Id}\n{e}");
+                    Log.Error($"ai timer error: {self.Id}\n{e}");
                 }
             }
         }
-    
+
         [EntitySystem]
         private static void Awake(this AIComponent self, int aiConfigId)
         {
@@ -34,9 +35,49 @@ namespace ET
         private static void Destroy(this AIComponent self)
         {
             self.Root().GetComponent<TimerComponent>()?.Remove(ref self.Timer);
-            self.CancellationToken?.Cancel();
-            self.CancellationToken = null;
             self.Current = 0;
+        }
+
+        [EntitySystem]
+        private static void Update(this AIComponent self)
+        {
+            if (self.Current == 0)
+            {
+                return;
+            }
+
+            if (!AIConfigCategory.Instance.AIConfigs.TryGetValue(self.AIConfigId, out var nodeConfigs))
+            {
+                self.Current = 0;
+                return;
+            }
+
+            if (!nodeConfigs.TryGetValue(self.Current, out AIConfig aiConfig))
+            {
+                self.Current = 0;
+                return;
+            }
+
+            AAIHandler aaiHandler = AIDispatcherComponent.Instance.Get(aiConfig.Name);
+            if (aaiHandler == null)
+            {
+                Log.Error($"not found aihandler: {aiConfig.Name}");
+                self.Current = 0;
+                return;
+            }
+
+            try
+            {
+                if (aaiHandler.Update(self, aiConfig) != 0)
+                {
+                    self.Current = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"ai update error: {self.Id} node={self.Current}\n{e}");
+                self.Current = 0;
+            }
         }
 
         private static void Check(this AIComponent self)
@@ -52,7 +93,6 @@ namespace ET
 
             foreach (AIConfig aiConfig in oneAI.Values)
             {
-
                 AAIHandler aaiHandler = AIDispatcherComponent.Instance.Get(aiConfig.Name);
 
                 if (aaiHandler == null)
@@ -69,25 +109,33 @@ namespace ET
 
                 if (self.Current == aiConfig.Id)
                 {
-                    break;
+                    continue;
                 }
 
-                self.Cancel(); // 取消之前的行为
-                ETCancellationToken cancellationToken = new();
-                self.CancellationToken = cancellationToken;
-                self.Current = aiConfig.Id;
+                if (self.Current != 0)
+                {
+                    self.OnSwitchNode();
+                }
 
-                aaiHandler.Execute(self, aiConfig, cancellationToken).Coroutine();
+                self.Current = aiConfig.Id;
                 return;
             }
-            
         }
 
-        private static void Cancel(this AIComponent self)
+        private static void OnSwitchNode(this AIComponent self)
         {
-            self.CancellationToken?.Cancel();
-            self.Current = 0;
-            self.CancellationToken = null;
+            Unit unit = self.GetParent<Unit>();
+            if (unit == null || unit.IsDisposed)
+            {
+                return;
+            }
+
+            unit.GetComponent<MoveComponent>()?.Stop(false);
+            XunLuoPathComponent path = unit.GetComponent<XunLuoPathComponent>();
+            if (path != null)
+            {
+                path.PatrolPhase = 0;
+            }
         }
     }
-} 
+}

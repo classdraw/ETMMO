@@ -26,6 +26,12 @@ namespace ET.Server
         [EntitySystem]
         private static void Awake(this ET.Server.UnitDBSaveComponent self)
         {
+            Unit unit = self.GetParent<Unit>();
+            if (unit != null && unit.IsRobot())
+            {
+                return;
+            }
+
             //正式上线 每10-15分钟随机存储一次
             //long time = RandomGenerator.RandomNumber(10, 16) * 60 * 1000;
             long time = 10 * 1000;
@@ -93,6 +99,13 @@ namespace ET.Server
 
             if (unit == null || unit.IsDisposed)
             {
+                return;
+            }
+
+            if (unit.IsRobot())
+            {
+                self.EntityChangeTypeSet.Clear();
+                self.UnitDirty = false;
                 return;
             }
 

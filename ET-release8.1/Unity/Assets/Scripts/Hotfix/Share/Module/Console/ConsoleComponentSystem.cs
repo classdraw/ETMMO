@@ -29,10 +29,13 @@ namespace ET
                     string line = await Task.Factory.StartNew(() =>
                     {
                         Console.Write($"{modeContex?.Mode ?? ""}> ");
+                        Console.Out.Flush();
                         return Console.In.ReadLine();
-                    }, self.CancellationTokenSource.Token);
+                    }, self.CancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
                     
                     line = line.Trim();
+                    // ReadLine 阻塞期间可能已添加 ModeContex（如 Process=2 初始化），必须重新取
+                    modeContex = self.GetComponent<ModeContex>();
 
                     switch (line)
                     {
@@ -46,12 +49,30 @@ namespace ET
                             string[] lines = line.Split(" ");
                             string mode = modeContex == null? lines[0] : modeContex.Mode;
 
-                            IConsoleHandler iConsoleHandler = ConsoleDispatcher.Instance.Get(mode);
-                            if (modeContex == null)
+                            if (modeContex == null && line.StartsWith("Run 3 "))
                             {
-                                modeContex = self.AddComponent<ModeContex>();
-                                modeContex.Mode = mode;
+                                if (ConsoleDispatcher.Instance.TryGet(ConsoleMode.Robot, out IConsoleHandler robotHandler))
+                                {
+                                    modeContex = self.EnsureModeContex(ConsoleMode.Robot);
+                                    mode = ConsoleMode.Robot;
+                                    await robotHandler.Run(self.Fiber(), modeContex, line);
+                                    break;
+                                }
                             }
+
+                            if (!ConsoleDispatcher.Instance.TryGet(mode, out IConsoleHandler iConsoleHandler))
+                            {
+                                if (modeContex == null && mode == "Run")
+                                {
+                                    Log.Console("机器人窗口输入: Run 3 <数量> <地图Id>  示例: Run 3 10 10001");
+                                }
+                                else
+                                {
+                                    Log.Console($"未知控制台命令: {mode}，可用模式例如: Robot");
+                                }
+                                break;
+                            }
+                            modeContex = self.EnsureModeContex(mode);
                             await iConsoleHandler.Run(self.Fiber(), modeContex, line);
                             break;
                         }
@@ -64,6 +85,18 @@ namespace ET
                     Log.Console(e.ToString());
                 }
             }
+        }
+
+        private static ModeContex EnsureModeContex(this ConsoleComponent self, string mode)
+        {
+            ModeContex modeContex = self.GetComponent<ModeContex>();
+            if (modeContex == null)
+            {
+                modeContex = self.AddComponent<ModeContex>();
+            }
+
+            modeContex.Mode = mode;
+            return modeContex;
         }
     }
 }

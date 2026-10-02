@@ -48,8 +48,8 @@ namespace ET.Server
                 roleInfo.ServerId = request.ServerId;
                 roleInfo.AccountName = request.AccountName;
                 roleInfo.State = (int)RoleInfoState.Normal;
-                long nowTime= TimeInfo.Instance.ServerNow();
-                roleInfo.CreateTime = nowTime;
+                long nowTimeDb= TimeInfo.Instance.ServerNow();
+                roleInfo.CreateTime = nowTimeDb;
                 roleInfo.LastLoginTime = 0;
                 roleInfo.Name = request.Name;
                 string baseExternalDisplay = request.BaseExternalDisplay ?? string.Empty;

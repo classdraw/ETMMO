@@ -119,6 +119,7 @@ namespace ET.Server
                     break;
                 }
                 case UnitType.Monster:
+                case UnitType.Robot:
                 {
                     TimerComponent timerComponent = killed.Root().GetComponent<TimerComponent>();
                     long now = TimeInfo.Instance.ServerFrameTime();

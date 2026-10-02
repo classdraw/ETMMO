@@ -24,7 +24,7 @@
             }
 
             Unit ua = a.GetParent<Unit>();
-            if (ua == null || ua.IsDisposed || ua.Type() != UnitType.Player)
+            if (ua == null || ua.IsDisposed || !ua.IsPlayer())
             {
                 return;
             }

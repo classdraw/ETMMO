@@ -134,8 +134,9 @@ namespace ET.Server
                         var ll = list.Select(self.GetChild<MapUnit>).Where(unit => unit.IsAvailable()).ToList();
                         if (ll.Count > 0)
                         {
-                            var unit = RandomGenerator.RandomArray(ll);
-                            Log.Console($"[Map]随机一个已有地图MapConfigId:{mapConfigId} ActorId:{unit.actorId}");
+                            // 优先进入人数最多的分线，避免压测机器人随机到空分线、真实客户端看不见
+                            MapUnit unit = ll.OrderByDescending(u => u.count).First();
+                            Log.Console($"[Map]选择分线 MapConfigId:{mapConfigId} fiberId:{unit.fiberId} count:{unit.count} ActorId:{unit.actorId}");
                             return (ErrorCode.ERR_Success, unit.actorId);
                         }
                         //能分区就再创建一个

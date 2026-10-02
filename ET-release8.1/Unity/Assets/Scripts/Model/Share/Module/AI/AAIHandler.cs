@@ -9,10 +9,10 @@ namespace ET
     [AIHandler]
     public abstract class AAIHandler: HandlerObject
     {
-        // 检查是否满足条件
+        // 检查是否满足条件（定时调度，用于切换 Current 节点）
         public abstract int Check(AIComponent aiComponent, AIConfig aiConfig);
 
-        // 协程编写必须可以取消
-        public abstract ETTask Execute(AIComponent aiComponent, AIConfig aiConfig, ETCancellationToken cancellationToken);
+        /// <summary>Current 指向本节点时每帧 Update；返回 0 保持节点，非 0 结束本节点。</summary>
+        public abstract int Update(AIComponent aiComponent, AIConfig aiConfig);
     }
 }

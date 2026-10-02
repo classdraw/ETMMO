@@ -9,7 +9,13 @@ namespace ET.Server
     {
         private static bool CanSendClientMessage(Unit unit)
         {
-            if (unit == null || unit.IsDisposed || !unit.IsPlayer())
+            if (unit == null || unit.IsDisposed || !unit.IsClientAvatar())
+            {
+                return false;
+            }
+
+            // 地图直刷 Robot 无 GateSession，不能作为 M2C 接收方（仅 Player 有真实客户端）
+            if (unit.IsRobot())
             {
                 return false;
             }
@@ -47,6 +53,11 @@ namespace ET.Server
 
         private static async ETTask NoticeUnitAddAsync(Unit unit, Unit sendUnit)
         {
+            if (sendUnit.IsRobot() && unit.IsPlayer())
+            {
+                Log.Console($"[Robot][AOI] 玩家看见压测机器人 viewer={unit.Id} robot={sendUnit.Id} pos={sendUnit.Position}");
+            }
+
             M2C_CreateUnits createUnits = M2C_CreateUnits.Create();
             createUnits.Units.Add(UnitInfoHelper.CreateUnitInfo(sendUnit));
             await MapMessageHelper.SendToClient(unit, createUnits);
@@ -117,7 +128,7 @@ namespace ET.Server
             {
                 if (!u.Unit.IsPlayer())
                 {
-                    return;                    
+                    continue;
                 }
 
                 oneTypeMessageLocationType.Send(u.Unit.Id, message).Coroutine();
@@ -229,6 +240,12 @@ namespace ET.Server
 
         private static void SendClientSelf(Unit unit, IMessage message)
         {
+            if (!CanSendClientMessage(unit))
+            {
+                (message as MessageObject)?.Dispose();
+                return;
+            }
+
             unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession).Send(unit.Id, message).Coroutine();
         }
         
@@ -244,6 +261,11 @@ namespace ET.Server
             MessageLocationSenderOneType oneTypeMessageLocationType = unit.Root().GetComponent<MessageLocationSenderComponent>().Get(LocationType.GateSession);
             foreach (AOIEntity u in dict.Values)
             {
+                if (!u.Unit.IsPlayer())
+                {
+                    continue;
+                }
+
                 oneTypeMessageLocationType.Send(u.Unit.Id, message).Coroutine();
             }
         }
@@ -266,6 +288,12 @@ namespace ET.Server
                 {
                     continue;
                 }
+
+                if (!u.Unit.IsPlayer())
+                {
+                    continue;
+                }
+
                 oneTypeMessageLocationType.Send(u.Unit.Id, message).Coroutine();
             }
         }

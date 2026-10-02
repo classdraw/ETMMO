@@ -20,6 +20,7 @@ namespace ET.Server
 
                     try
                     {
+                        Log.Console($"[Robot] Run case={caseType} cmd={content}");
                         Log.Debug($"run case start: {caseType}");
                         await EventSystem.Instance.Invoke<RobotInvokeArgs, ETTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content });
                         Log.Debug($"run case finish: {caseType}");

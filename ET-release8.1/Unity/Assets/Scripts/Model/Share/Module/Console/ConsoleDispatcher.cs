@@ -33,6 +33,11 @@ namespace ET
             }
         }
 
+        public bool TryGet(string key, out IConsoleHandler handler)
+        {
+            return this.handlers.TryGetValue(key, out handler);
+        }
+
         public IConsoleHandler Get(string key)
         {
             return this.handlers[key];

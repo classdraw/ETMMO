@@ -33,6 +33,17 @@ namespace ET.Server
 
             return null;
         }
+
+        public static bool IsCasting(this Unit unit)
+        {
+            if (unit == null || unit.IsDisposed)
+            {
+                return false;
+            }
+
+            CastComponent castComponent = unit.GetComponent<CastComponent>();
+            return castComponent != null && !castComponent.IsDisposed && castComponent.GetCasting() != null;
+        }
     }
 }
 

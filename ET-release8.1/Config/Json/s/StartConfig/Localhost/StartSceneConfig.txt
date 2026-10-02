@@ -17,6 +17,7 @@
 [16, {"_t":"StartSceneConfig","_id":16,"Process":1,"Zone":2,"SceneType":"MapManager","Name":"MapManager","Port":0}],
 [17, {"_t":"StartSceneConfig","_id":17,"Process":1,"Zone":2,"SceneType":"Relationship","Name":"Relationship","Port":0}],
 [18, {"_t":"StartSceneConfig","_id":18,"Process":1,"Zone":2,"SceneType":"Rank","Name":"Rank","Port":0}],
+[200, {"_t":"StartSceneConfig","_id":200,"Process":2,"Zone":101,"SceneType":"Robot","Name":"Robot01","Port":0}],
 [300, {"_t":"StartSceneConfig","_id":300,"Process":1,"Zone":3,"SceneType":"RouterManager","Name":"RouterManager","Port":30300}],
 [301, {"_t":"StartSceneConfig","_id":301,"Process":1,"Zone":3,"SceneType":"Router","Name":"Router01","Port":30301}],
 [302, {"_t":"StartSceneConfig","_id":302,"Process":1,"Zone":3,"SceneType":"Router","Name":"Router02","Port":30302}],

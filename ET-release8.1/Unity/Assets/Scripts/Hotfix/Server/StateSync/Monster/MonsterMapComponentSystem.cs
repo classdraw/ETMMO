@@ -142,6 +142,31 @@ namespace ET.Server
             return unit;
         }
 
+        /// <summary>指定坐标刷压测机器人（9101 / Robot），行为由 AIConfig + AIComponent 驱动。</summary>
+        public static Unit CreatePressureRobotAt(this MonsterMapComponent self, float3 pos, int aiConfigId, string name = null)
+        {
+            Unit unit = UnitFactory.CreatePressureRobot(self.Scene(), pos, name);
+            unit.MapId = self.MapConfigId;
+            PressureRobotAiSetupHelper.Setup(unit, aiConfigId, pos);
+            return unit;
+        }
+
+        /// <summary>指定坐标刷怪（压测机器人等），不走 MonsterGroup 刷点。</summary>
+        public static Unit CreateMonsterAt(this MonsterMapComponent self, int monsterConfigId, float3 pos)
+        {
+            if (!MonsterConfigCategory.Instance.Contain(monsterConfigId))
+            {
+                Log.Error($"CreateMonsterAt MonsterConfig not found: {monsterConfigId}");
+                return null;
+            }
+
+            MonsterConfig monsterConfig = MonsterConfigCategory.Instance.Get(monsterConfigId);
+            Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig, pos);
+            unit.MapId = self.MapConfigId;
+            unit.AddComponent<MonsterFlag, int, int>(monsterConfigId, monsterConfig.GroupId);
+            return unit;
+        }
+
     }
 }
 

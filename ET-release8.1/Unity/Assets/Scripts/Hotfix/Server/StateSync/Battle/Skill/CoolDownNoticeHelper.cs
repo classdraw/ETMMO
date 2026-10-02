@@ -7,7 +7,7 @@ namespace ET.Server
     {
         public static void SendCoolDownChange(Unit owner, int castConfigId, long coolDownEndTime, long coolDownStartTime)
         {
-            if (owner == null || owner.IsDisposed)
+            if (owner == null || owner.IsDisposed || owner.IsRobot())
             {
                 return;
             }

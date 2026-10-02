@@ -520,3 +520,54 @@ message Relationship2G_LeaveTeam // IResponse
 
 
 //-------------相关GM-------------
+
+// 地图服同步主角锚点（供压测机器人生成）
+message O2M_UpdateRobotSpawnAnchor // IMessage
+{
+	int32 RpcId = 1;
+	int64 RoleId = 2;
+	int32 MapConfigId = 3;
+	int64 MapFiberId = 4;
+	float PosX = 5;
+	float PosY = 6;
+	float PosZ = 7;
+}
+
+// ResponseType M2O_QueryRobotSpawnAnchorResponse
+message O2M_QueryRobotSpawnAnchorRequest // IRequest
+{
+	int32 RpcId = 1;
+}
+
+message M2O_QueryRobotSpawnAnchorResponse // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int64 RoleId = 4;
+	int32 MapConfigId = 5;
+	int64 MapFiberId = 6;
+	float PosX = 7;
+	float PosY = 8;
+	float PosZ = 9;
+}
+
+// ResponseType M2O_RobotSpawnPressureMonstersResponse
+message O2M_RobotSpawnPressureMonstersRequest // IRequest
+{
+	int32 RpcId = 1;
+	int32 MonsterConfigId = 2;
+	int32 Count = 3;
+	float BaseX = 4;
+	float BaseY = 5;
+	float BaseZ = 6;
+	int32 RadiusMm = 7;
+}
+
+message M2O_RobotSpawnPressureMonstersResponse // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int32 SpawnedCount = 4;
+}

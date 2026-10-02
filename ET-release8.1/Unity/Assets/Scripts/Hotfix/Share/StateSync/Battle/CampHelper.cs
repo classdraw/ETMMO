@@ -36,7 +36,8 @@ namespace ET
                     : new FactionKey(FactionKeyType.Player, unit.Id);
             }
             //|| unit.IsPet() || unit.IsSummon() 理论上这里unit肯定不是召唤物和宠物
-            return unit.IsMonster()  ? CampConst.MonsterCamp : CampConst.PlayerCamp;
+            // 地图服压测 Robot 与怪物同阵营，便于对玩家/异阵营单位放技能
+            return unit.IsMonster() || unit.IsRobot() ? CampConst.MonsterCamp : CampConst.PlayerCamp;
         }
 
         private static Unit ResolveOwner(Unit unit)

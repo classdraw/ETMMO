@@ -18,7 +18,7 @@
                 return;
             }
 
-            if (a.Unit.Type() != UnitType.Player)
+            if (!a.Unit.IsPlayer())
             {
                 return;
             }

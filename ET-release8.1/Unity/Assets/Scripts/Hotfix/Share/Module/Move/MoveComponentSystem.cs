@@ -106,6 +106,12 @@ namespace ET
         // ret: 停止的时候，移动协程的返回值
         private static void MoveForward(this MoveComponent self, bool ret)
         {
+            if (self.Targets.Count == 0 || self.N < 0 || self.N >= self.Targets.Count)
+            {
+                self.MoveFinish(ret);
+                return;
+            }
+
             Unit unit = self.GetParent<Unit>();
             
             long timeNow = TimeInfo.Instance.ClientNow();
@@ -207,7 +213,9 @@ namespace ET
         // ret: 停止的时候，移动协程的返回值
         public static void Stop(this MoveComponent self, bool ret)
         {
-            if (self.Targets.Count > 0)
+            self.Root().GetComponent<TimerComponent>()?.Remove(ref self.MoveTimer);
+
+            if (self.Targets.Count > 0 && self.N >= 0 && self.N < self.Targets.Count)
             {
                 self.MoveForward(ret);
             }

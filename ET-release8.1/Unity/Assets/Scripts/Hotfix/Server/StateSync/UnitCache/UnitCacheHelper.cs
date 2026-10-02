@@ -61,6 +61,11 @@ namespace ET.Server
         //unit上 所有组件序列化 然后AddOrUpdate保存到数据库
         public static void AddOrUpdateUnitAllCache(Unit unit)
         {
+            if (unit.IsRobot())
+            {
+                return;
+            }
+
             Other2UnitCache_AddOrUpdateUnit message = Other2UnitCache_AddOrUpdateUnit.Create();
             message.UnitId = unit.Id;
             

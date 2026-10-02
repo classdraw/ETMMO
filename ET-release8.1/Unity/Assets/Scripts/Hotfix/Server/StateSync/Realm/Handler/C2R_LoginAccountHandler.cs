@@ -52,7 +52,6 @@ namespace ET.Server
                     }
                     else
                     {
-                        
                         //数据库操作
                         DBComponent dbComponent = session?.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
                         var accountList=await dbComponent.Query<Account>(accountInfo => accountInfo.AccountName == request.AccountName);

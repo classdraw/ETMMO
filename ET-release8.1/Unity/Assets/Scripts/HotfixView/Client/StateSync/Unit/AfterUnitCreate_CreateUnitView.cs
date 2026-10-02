@@ -13,7 +13,13 @@ namespace ET.Client
             {
                 case UnitType.Player:
                 {
-                    await CreatePlayer(scene, args);
+                    await CreatePlayerUnitView(scene, args);
+                    break;
+                }
+                case UnitType.Robot:
+                {
+                    Log.Info($"[Robot][View] 创建机器人视图 prefab={RobotUnitHelper.RobotViewPrefabName} unitId={unit.Id} name={unit.Name}");
+                    await CreateRobotUnitView(scene, args);
                     break;
                 }
                 case UnitType.Monster:
@@ -154,10 +160,34 @@ namespace ET.Client
             unit.AddComponent<UnitTopUIComponent>();
         }
 
-        private async ETTask CreatePlayer(Scene scene, AfterUnitCreate args)
+        private async ETTask CreateRobotUnitView(Scene scene, AfterUnitCreate args)
         {
             Unit unit = args.Unit;
-            Log.Info($"AfterUnitCreate_CreateUnitView Player unitId={unit.Id}, name={unit.Name}, configId={unit.ConfigId}, race={unit.Race}, gender={unit.Gender}, baseExternalDisplay={unit.BaseExternalDisplay ?? string.Empty}");
+            string displayName = string.IsNullOrEmpty(unit.Name) ? "Robot" : unit.Name;
+            ResourcesLoaderComponent loader = scene.GetComponent<ResourcesLoaderComponent>();
+            GameObject prefab = await loader.LoadAssetAsync<GameObject>(RobotUnitHelper.RobotViewPrefabAssetPath);
+            if (prefab == null)
+            {
+                Log.Error($"[Robot][View] prefab not found: {RobotUnitHelper.RobotViewPrefabAssetPath}");
+                return;
+            }
+
+            GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
+            GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
+            go.name = $"robot_{unit.Id}_{displayName}";
+            go.transform.position = unit.Position;
+            go.transform.rotation = Quaternion.identity;
+            unit.AddComponent<GameObjectComponent>().GameObject = go;
+            unit.AddComponent<Animator2DComponent>();
+            unit.AddComponent<MountComponent>();
+            unit.AddComponent<UnitTopUIComponent>();
+            await ETTask.CompletedTask;
+        }
+
+        private async ETTask CreatePlayerUnitView(Scene scene, AfterUnitCreate args)
+        {
+            Unit unit = args.Unit;
+            Log.Info($"AfterUnitCreate_CreateUnitView type={unit.Type()} unitId={unit.Id}, name={unit.Name}, configId={unit.ConfigId}, race={unit.Race}, gender={unit.Gender}, baseExternalDisplay={unit.BaseExternalDisplay ?? string.Empty}");
             string name = string.IsNullOrEmpty(unit.Name) ? "Empty" : unit.Name;
             // Unit View层
             string assetsName = $"Assets/Bundles/Unit/Unit.prefab";

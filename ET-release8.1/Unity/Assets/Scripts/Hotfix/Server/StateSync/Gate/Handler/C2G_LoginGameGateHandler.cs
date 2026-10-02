@@ -41,7 +41,6 @@ namespace ET.Server
                     return;
                 }
                 
-                //通知登陆中心服操作
                 G2L_AddLoginRecord g2LAddLoginRecord = G2L_AddLoginRecord.Create();
                 g2LAddLoginRecord.AccountName = request.AccountName;
                 g2LAddLoginRecord.ServerId = root.Zone();

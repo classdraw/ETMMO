@@ -18,36 +18,72 @@ namespace ET.Server
             switch (unitType)
             {
                 case UnitType.Player:
-                    {
-                        UnitConfig unitConfig = UnitConfigCategory.Instance.Get(configId);
-
-                        Unit unit = unitComponent.AddChildWithId<Unit, int, string>(id, configId, name);
-                        unit.AddComponent<UnitDBSaveComponent>();
-
-
-                        unit.AddComponent<MoveComponent>();
-                        unit.Position = new float3(-8.7f, 0f, -15.5f);//最好给新手村第一个场景的坐标 或者新手安全区随机一个 可以写死
-                        NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
-                        InitNumericFromConfigByPlayer(numericComponent, unitConfig, 1);
-
-                        unit.AddComponent<ReliveComponent>();
-                        unit.AddComponent<CastComponent>();
-                        unit.AddComponent<SkillStatusComponent>();
-                        unit.AddComponent<NumericNoticeComponent>();
-                        unit.AddComponent<BuffComponent>();
-                        //背包组件
-                        unit.AddComponent<KnapsackComponent>();
-
-                        unitComponent.Add(unit);
-                        //装备组件后面加
-                        // 加入aoi
-                        var aoiEntity = unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
-                        return unit;
-                    }
+                case UnitType.Robot:
+                {
+                    return CreateHumanoidUnit(unitComponent, id, configId, name, unitType);
+                }
                 default:
                     throw new Exception($"not such unit type: {unitType}");
             }
         }
+
+        private static Unit CreateHumanoidUnit(UnitComponent unitComponent, long id, int configId, string name, UnitType unitType)
+        {
+            UnitConfig unitConfig = UnitConfigCategory.Instance.Get(configId);
+
+            Unit unit = unitComponent.AddChildWithId<Unit, int, string>(id, configId, name);
+            if (unitType != UnitType.Robot)
+            {
+                unit.AddComponent<UnitDBSaveComponent>();
+            }
+
+            unit.AddComponent<MoveComponent>();
+            unit.Position = new float3(-8.7f, 0f, -15.5f);
+            NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
+            InitNumericFromConfigByPlayer(numericComponent, unitConfig, 1);
+
+            unit.AddComponent<ReliveComponent>();
+            unit.AddComponent<CastComponent>();
+            unit.AddComponent<SkillStatusComponent>();
+            unit.AddComponent<NumericNoticeComponent>();
+            unit.AddComponent<BuffComponent>();
+            unit.AddComponent<KnapsackComponent>();
+
+            unitComponent.Add(unit);
+            unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
+            return unit;
+        }
+
+        /// <summary>
+        /// 压测机器人：与 <see cref="CreateMonster"/> 相同流程，固定 UnitConfig 9101（Type=Robot）。
+        /// </summary>
+        public static Unit CreatePressureRobot(Scene scene, float3 pos, string name = null)
+        {
+            int configId = RobotUnitHelper.RobotUnitConfigId;
+            UnitConfig unitConfig = UnitConfigCategory.Instance.Get(configId);
+            UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
+            name = string.IsNullOrEmpty(name) ? unitConfig.Name : name;
+
+            Unit unit = unitComponent.AddChild<Unit, int, string>(configId, name);
+            unit.TableConfigId = 0;
+            unit.AddComponent<MoveComponent>();
+            unit.AddComponent<PathfindingComponent, string>(scene.Name);
+            unit.Position = pos;
+
+            NumericComponent numericComponent = unit.AddComponent<NumericComponent>();
+            InitNumericFromConfigByPlayer(numericComponent, unitConfig, 1);
+
+            unit.AddComponent<ReliveComponent>();
+            unit.AddComponent<CastComponent>();
+            unit.AddComponent<SkillStatusComponent>();
+            unit.AddComponent<NumericNoticeComponent>();
+            unit.AddComponent<BuffComponent>();
+
+            unitComponent.Add(unit);
+            unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, pos);
+            return unit;
+        }
+
         /// <summary>
         /// 创建子弹
         /// </summary>

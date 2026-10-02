@@ -55,6 +55,14 @@ namespace ET
         {
             return self.Type() == UnitType.Robot;
         }
+
+        /// <summary>
+        /// 需要同步 M2C 视野与移动消息的真实客户端控制单位（玩家或压测机器人）。
+        /// </summary>
+        public static bool IsClientAvatar(this Unit self)
+        {
+            return self.IsPlayer() || self.IsRobot();
+        }
         /// <summary>
         /// 是否是怪物
         /// </summary>

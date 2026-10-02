@@ -127,6 +127,11 @@ namespace ET
             return fiber;
         }
 
+        public Scene GetRootScene(int fiberId)
+        {
+            return this.Get(fiberId)?.Root;
+        }
+
         public int Count()
         {
             return this.fibers.Count;
