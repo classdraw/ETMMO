@@ -26,17 +26,13 @@ namespace ET
         }
 
         /// <summary>
-        /// 读取阵营 Id；宠物/召唤物与主人一致。
+        /// 读取阵营 Id。宠物/召唤物始终与主人（Owner 链顶端）相同，与 MapType 无关。
         /// </summary>
         public static int GetFactionId(Unit unit)
         {
-            if (unit.IsPet() || unit.IsSummon())
+            if (TryGetOwnerFactionId(unit, out int ownerFactionId))
             {
-                Unit owner = ResolveOwner(unit);
-                if (owner != null && owner.Id != unit.Id)
-                {
-                    return GetFactionId(owner);
-                }
+                return ownerFactionId;
             }
 
             FactionComponent faction = unit.GetComponent<FactionComponent>();
@@ -51,6 +47,7 @@ namespace ET
 
         /// <summary>
         /// 按当前地图配置分配阵营（创建、切图、队伍变更时调用）。
+        /// 宠物/召唤物不写地图规则，只同步主人 FactionId（全 MapType 生效）。
         /// </summary>
         public static void ApplyMapFaction(Unit unit, int mapConfigId)
         {
@@ -61,7 +58,7 @@ namespace ET
 
             if (unit.IsPet() || unit.IsSummon())
             {
-                Unit owner = ResolveOwner(unit);
+                Unit owner = ResolveCampOwner(unit);
                 if (owner != null && owner.Id != unit.Id)
                 {
                     ApplyMapFaction(owner, mapConfigId);
@@ -72,6 +69,7 @@ namespace ET
 
             int factionId = CalcFactionForMap(unit, mapConfigId);
             SetFactionId(unit, factionId);
+            SyncFollowersFactionFromOwner(unit);
         }
 
         public static void CopyFactionFromUnit(Unit unit, Unit source)
@@ -149,6 +147,53 @@ namespace ET
             return id;
         }
 
+        private static bool TryGetOwnerFactionId(Unit unit, out int factionId)
+        {
+            factionId = 0;
+            if (!unit.IsPet() && !unit.IsSummon())
+            {
+                return false;
+            }
+
+            Unit owner = ResolveCampOwner(unit);
+            if (owner == null || owner.Id == unit.Id)
+            {
+                return false;
+            }
+
+            factionId = GetFactionId(owner);
+            return true;
+        }
+
+        /// <summary>主人切图/组队后，刷新其宠物、召唤物组件上的 FactionId。</summary>
+        private static void SyncFollowersFactionFromOwner(Unit owner)
+        {
+            UnitComponent unitComponent = owner.Scene()?.GetComponent<UnitComponent>();
+            if (unitComponent == null)
+            {
+                return;
+            }
+
+            foreach (Entity entity in unitComponent.Children.Values)
+            {
+                if (entity is not Unit follower || follower.IsDisposed)
+                {
+                    continue;
+                }
+
+                if (!follower.IsPet() && !follower.IsSummon())
+                {
+                    continue;
+                }
+
+                Unit campOwner = ResolveCampOwner(follower);
+                if (campOwner != null && campOwner.Id == owner.Id)
+                {
+                    CopyFactionFromUnit(follower, owner);
+                }
+            }
+        }
+
         private static bool HasValidCampOwner(Unit unit)
         {
             if (unit.OwnerId <= 0)
@@ -156,15 +201,16 @@ namespace ET
                 return true;
             }
 
-            return ResolveOwner(unit) != null;
+            return ResolveCampOwner(unit) != null;
         }
 
-        private static Unit ResolveOwner(Unit unit)
+        /// <summary>OwnerId 链顶端的战斗主人（宠物/召唤物用于跟阵营）。</summary>
+        private static Unit ResolveCampOwner(Unit unit)
         {
-            return ResolveOwner(unit, 0);
+            return ResolveCampOwner(unit, 0);
         }
 
-        private static Unit ResolveOwner(Unit unit, int depth)
+        private static Unit ResolveCampOwner(Unit unit, int depth)
         {
             if (unit.OwnerId <= 0)
             {
@@ -182,7 +228,7 @@ namespace ET
                 return null;//没有找到ownerUnit
             }
 
-            return ResolveOwner(owner, depth + 1);
+            return ResolveCampOwner(owner, depth + 1);
         }
 
         private static MapType GetMapType(int mapConfigId)
