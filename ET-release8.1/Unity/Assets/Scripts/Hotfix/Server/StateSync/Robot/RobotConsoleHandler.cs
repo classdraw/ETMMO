@@ -33,19 +33,19 @@ namespace ET.Server
                 }
                 case "RunAll":
                 {
-                    FieldInfo[] fieldInfos = typeof (RobotCaseType).GetFields();
+                    FieldInfo[] fieldInfos = typeof(RobotCaseType).GetFields();
                     foreach (FieldInfo fieldInfo in fieldInfos)
                     {
-                        int caseType = (int)fieldInfo.GetValue(null);
-                        if (caseType > RobotCaseType.MaxCaseType)
+                        if (fieldInfo.Name == nameof(RobotCaseType.MaxCaseType))
                         {
-                            Log.Debug($"case > {RobotCaseType.MaxCaseType}: {caseType}");
-                            break;
+                            continue;
                         }
+
+                        int caseType = (int)fieldInfo.GetValue(null);
                         try
                         {
                             Log.Debug($"run case start: {caseType}");
-                            await EventSystem.Instance.Invoke<RobotInvokeArgs, ETTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content});
+                            await EventSystem.Instance.Invoke<RobotInvokeArgs, ETTask>(caseType, new RobotInvokeArgs() { Fiber = fiber, Content = content });
                             Log.Debug($"---------run case finish: {caseType}");
                         }
                         catch (Exception e)

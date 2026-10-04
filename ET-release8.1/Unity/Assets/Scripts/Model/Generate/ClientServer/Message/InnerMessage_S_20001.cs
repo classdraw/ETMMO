@@ -948,225 +948,6 @@ namespace ET
         }
     }
 
-    [MemoryPackable]
-    [Message(InnerMessage.O2M_UpdateRobotSpawnAnchor)]
-    public partial class O2M_UpdateRobotSpawnAnchor : MessageObject, IMessage
-    {
-        public static O2M_UpdateRobotSpawnAnchor Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(O2M_UpdateRobotSpawnAnchor), isFromPool) as O2M_UpdateRobotSpawnAnchor;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public long RoleId { get; set; }
-
-        [MemoryPackOrder(2)]
-        public int MapConfigId { get; set; }
-
-        [MemoryPackOrder(3)]
-        public long MapFiberId { get; set; }
-
-        [MemoryPackOrder(4)]
-        public float PosX { get; set; }
-
-        [MemoryPackOrder(5)]
-        public float PosY { get; set; }
-
-        [MemoryPackOrder(6)]
-        public float PosZ { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.RoleId = default;
-            this.MapConfigId = default;
-            this.MapFiberId = default;
-            this.PosX = default;
-            this.PosY = default;
-            this.PosZ = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(InnerMessage.O2M_QueryRobotSpawnAnchorRequest)]
-    [ResponseType(nameof(M2O_QueryRobotSpawnAnchorResponse))]
-    public partial class O2M_QueryRobotSpawnAnchorRequest : MessageObject, IRequest
-    {
-        public static O2M_QueryRobotSpawnAnchorRequest Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(O2M_QueryRobotSpawnAnchorRequest), isFromPool) as O2M_QueryRobotSpawnAnchorRequest;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(InnerMessage.M2O_QueryRobotSpawnAnchorResponse)]
-    public partial class M2O_QueryRobotSpawnAnchorResponse : MessageObject, IResponse
-    {
-        public static M2O_QueryRobotSpawnAnchorResponse Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(M2O_QueryRobotSpawnAnchorResponse), isFromPool) as M2O_QueryRobotSpawnAnchorResponse;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Error { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Message { get; set; }
-
-        [MemoryPackOrder(3)]
-        public long RoleId { get; set; }
-
-        [MemoryPackOrder(4)]
-        public int MapConfigId { get; set; }
-
-        [MemoryPackOrder(5)]
-        public long MapFiberId { get; set; }
-
-        [MemoryPackOrder(6)]
-        public float PosX { get; set; }
-
-        [MemoryPackOrder(7)]
-        public float PosY { get; set; }
-
-        [MemoryPackOrder(8)]
-        public float PosZ { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Error = default;
-            this.Message = default;
-            this.RoleId = default;
-            this.MapConfigId = default;
-            this.MapFiberId = default;
-            this.PosX = default;
-            this.PosY = default;
-            this.PosZ = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(InnerMessage.O2M_RobotSpawnPressureMonstersRequest)]
-    [ResponseType(nameof(M2O_RobotSpawnPressureMonstersResponse))]
-    public partial class O2M_RobotSpawnPressureMonstersRequest : MessageObject, IRequest
-    {
-        public static O2M_RobotSpawnPressureMonstersRequest Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(O2M_RobotSpawnPressureMonstersRequest), isFromPool) as O2M_RobotSpawnPressureMonstersRequest;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int MonsterConfigId { get; set; }
-
-        [MemoryPackOrder(2)]
-        public int Count { get; set; }
-
-        [MemoryPackOrder(3)]
-        public float BaseX { get; set; }
-
-        [MemoryPackOrder(4)]
-        public float BaseY { get; set; }
-
-        [MemoryPackOrder(5)]
-        public float BaseZ { get; set; }
-
-        [MemoryPackOrder(6)]
-        public int RadiusMm { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.MonsterConfigId = default;
-            this.Count = default;
-            this.BaseX = default;
-            this.BaseY = default;
-            this.BaseZ = default;
-            this.RadiusMm = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
-    [MemoryPackable]
-    [Message(InnerMessage.M2O_RobotSpawnPressureMonstersResponse)]
-    public partial class M2O_RobotSpawnPressureMonstersResponse : MessageObject, IResponse
-    {
-        public static M2O_RobotSpawnPressureMonstersResponse Create(bool isFromPool = false)
-        {
-            return ObjectPool.Instance.Fetch(typeof(M2O_RobotSpawnPressureMonstersResponse), isFromPool) as M2O_RobotSpawnPressureMonstersResponse;
-        }
-
-        [MemoryPackOrder(0)]
-        public int RpcId { get; set; }
-
-        [MemoryPackOrder(1)]
-        public int Error { get; set; }
-
-        [MemoryPackOrder(2)]
-        public string Message { get; set; }
-
-        [MemoryPackOrder(3)]
-        public int SpawnedCount { get; set; }
-
-        public override void Dispose()
-        {
-            if (!this.IsFromPool)
-            {
-                return;
-            }
-
-            this.RpcId = default;
-            this.Error = default;
-            this.Message = default;
-            this.SpawnedCount = default;
-
-            ObjectPool.Instance.Recycle(this);
-        }
-    }
-
     // 进入地图
     [MemoryPackable]
     [Message(InnerMessage.O2M_EnterMap)]
@@ -2466,6 +2247,226 @@ namespace ET
     // -------------关系服-------------
     // -------------相关GM-------------
     // -------------相关GM-------------
+    // 地图服同步主角锚点（供压测机器人生成）
+    [MemoryPackable]
+    [Message(InnerMessage.O2M_UpdateRobotSpawnAnchor)]
+    public partial class O2M_UpdateRobotSpawnAnchor : MessageObject, IMessage
+    {
+        public static O2M_UpdateRobotSpawnAnchor Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(O2M_UpdateRobotSpawnAnchor), isFromPool) as O2M_UpdateRobotSpawnAnchor;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long RoleId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long MapFiberId { get; set; }
+
+        [MemoryPackOrder(4)]
+        public float PosX { get; set; }
+
+        [MemoryPackOrder(5)]
+        public float PosY { get; set; }
+
+        [MemoryPackOrder(6)]
+        public float PosZ { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.RoleId = default;
+            this.MapConfigId = default;
+            this.MapFiberId = default;
+            this.PosX = default;
+            this.PosY = default;
+            this.PosZ = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.O2M_QueryRobotSpawnAnchorRequest)]
+    [ResponseType(nameof(M2O_QueryRobotSpawnAnchorResponse))]
+    public partial class O2M_QueryRobotSpawnAnchorRequest : MessageObject, IRequest
+    {
+        public static O2M_QueryRobotSpawnAnchorRequest Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(O2M_QueryRobotSpawnAnchorRequest), isFromPool) as O2M_QueryRobotSpawnAnchorRequest;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2O_QueryRobotSpawnAnchorResponse)]
+    public partial class M2O_QueryRobotSpawnAnchorResponse : MessageObject, IResponse
+    {
+        public static M2O_QueryRobotSpawnAnchorResponse Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2O_QueryRobotSpawnAnchorResponse), isFromPool) as M2O_QueryRobotSpawnAnchorResponse;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public long RoleId { get; set; }
+
+        [MemoryPackOrder(4)]
+        public int MapConfigId { get; set; }
+
+        [MemoryPackOrder(5)]
+        public long MapFiberId { get; set; }
+
+        [MemoryPackOrder(6)]
+        public float PosX { get; set; }
+
+        [MemoryPackOrder(7)]
+        public float PosY { get; set; }
+
+        [MemoryPackOrder(8)]
+        public float PosZ { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.RoleId = default;
+            this.MapConfigId = default;
+            this.MapFiberId = default;
+            this.PosX = default;
+            this.PosY = default;
+            this.PosZ = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.O2M_RobotSpawnPressureMonstersRequest)]
+    [ResponseType(nameof(M2O_RobotSpawnPressureMonstersResponse))]
+    public partial class O2M_RobotSpawnPressureMonstersRequest : MessageObject, IRequest
+    {
+        public static O2M_RobotSpawnPressureMonstersRequest Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(O2M_RobotSpawnPressureMonstersRequest), isFromPool) as O2M_RobotSpawnPressureMonstersRequest;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int MonsterConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public int Count { get; set; }
+
+        [MemoryPackOrder(3)]
+        public float BaseX { get; set; }
+
+        [MemoryPackOrder(4)]
+        public float BaseY { get; set; }
+
+        [MemoryPackOrder(5)]
+        public float BaseZ { get; set; }
+
+        [MemoryPackOrder(6)]
+        public int RadiusMm { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.MonsterConfigId = default;
+            this.Count = default;
+            this.BaseX = default;
+            this.BaseY = default;
+            this.BaseZ = default;
+            this.RadiusMm = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2O_RobotSpawnPressureMonstersResponse)]
+    public partial class M2O_RobotSpawnPressureMonstersResponse : MessageObject, IResponse
+    {
+        public static M2O_RobotSpawnPressureMonstersResponse Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2O_RobotSpawnPressureMonstersResponse), isFromPool) as M2O_RobotSpawnPressureMonstersResponse;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public int SpawnedCount { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.SpawnedCount = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class InnerMessage
     {
         public const ushort ObjectQueryRequest = 20002;

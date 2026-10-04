@@ -31,11 +31,6 @@ namespace ET.Server
                 //playerSessionComponent 可以网络消息处理
                 //player也可以网络消息处理 只是处理消息类型不同
                 player = playerComponent.AddChild<Player, string, string,string>(account,ExternalDisplayHelper.DefaultExternalDisplayVal,"Test");
-                if (RobotUnitHelper.IsRobotAccount(account))
-                {
-                    player.InitRobotProfile();
-                }
-
                 playerComponent.Add(player);
                 //每个玩家保存一个玩家电话组件 用于通信
                 PlayerSessionComponent playerSessionComponent = player.AddComponent<PlayerSessionComponent>();

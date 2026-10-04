@@ -42,8 +42,6 @@ namespace ET.Client
                 }
             }
 
-            unit.AddComponent<ObjectWait>();
-
             unit.AddComponent<XunLuoPathComponent>();
             unit.AddComponent<ClientBuffComponent>();//buff管理器
             unit.AddComponent<ClientCastComponent>();//cast管理器

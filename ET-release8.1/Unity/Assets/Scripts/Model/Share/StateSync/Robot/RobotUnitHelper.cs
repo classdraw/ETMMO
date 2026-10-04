@@ -32,29 +32,6 @@ namespace ET
 
         /// <summary>Run 3（AutoSkill Case）默认 AI 组，对应 AIConfig 表 AIConfigId。</summary>
         public const int RunCase3AiConfigId = 3;
-
-
-
-        /// <summary>仅用于 Gate 账号识别（压测不再走 Gate 登录）。</summary>
-
-        public static bool IsRobotAccount(string account)
-
-        {
-
-            return !string.IsNullOrEmpty(account) && account.StartsWith("RobotCase_");
-
-        }
-
-
-
-        public static void LogConsole(string tag, string message)
-
-        {
-
-            Log.Console($"[Robot][{tag}] {message}");
-
-        }
-
     }
 
 }

@@ -13,9 +13,9 @@ namespace ET.Server
                 unit = UnitFactory.Create(
                     gateMapComponent.Scene,
                     player.Id,
-                    player.GetGateUnitConfigId(),
+                    player.ConfigId,
                     player.Name,
-                    player.GetGateUnitType());
+                    UnitType.Player);
                 player.ApplyProfileToUnit(unit);
                 UnitCacheHelper.AddOrUpdateUnitAllCache(unit);
             }

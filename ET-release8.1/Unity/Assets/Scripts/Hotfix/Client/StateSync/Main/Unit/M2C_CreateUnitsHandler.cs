@@ -14,12 +14,7 @@
 				{
 					continue;
 				}
-				if (unitInfo.Type == (int)UnitType.Robot)
-				{
-					Log.Info($"[Robot][Client] M2C_CreateUnits 收到机器人 unitId={unitInfo.UnitId} name={unitInfo.Name} mapType={unitInfo.Type} scene={currentScene.Name}");
-				}
-
-				Unit unit = UnitFactory.Create(currentScene, unitInfo);
+				UnitFactory.Create(currentScene, unitInfo);
 			}
 			await ETTask.CompletedTask;
 		}

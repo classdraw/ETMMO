@@ -1,7 +1,10 @@
-﻿namespace ET.Client
+namespace ET.Server
 {
+    /// <summary>
+    /// Process=2 配置里仍有 Robot01 纤程；压测 Run 3 在 Main 控制台执行，本纤程仅占位初始化。
+    /// </summary>
     [Invoke((long)SceneType.Robot)]
-    public class FiberInit_Robot: AInvokeHandler<FiberInit, ETTask>
+    public class FiberInit_Robot : AInvokeHandler<FiberInit, ETTask>
     {
         public override async ETTask Handle(FiberInit fiberInit)
         {
@@ -10,13 +13,6 @@
             root.AddComponent<TimerComponent>();
             root.AddComponent<CoroutineLockComponent>();
             root.AddComponent<ProcessInnerSender>();
-            root.AddComponent<PlayerComponent>();
-            root.AddComponent<CurrentScenesComponent>();
-            root.AddComponent<ObjectWait>();
-            root.SceneType = SceneType.StateSync;
-
-            await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
-            RobotUnitHelper.LogConsole(root.Name, "Console/legacy 纤程，压测 Run 3 不再创建登录纤程");
             await ETTask.CompletedTask;
         }
     }

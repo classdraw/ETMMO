@@ -14,11 +14,6 @@ namespace ET.Client
                 {
                     int err = g2CEnterMap?.Error ?? ErrorCode.ERR_None;
                     Log.Error($"进入地图失败: {err}");
-                    if (RobotUnitHelper.IsRobotAccount(root.Name))
-                    {
-                        RobotUnitHelper.LogConsole(root.Name, $"EnterMapAsync 失败 err={err}");
-                    }
-
                     return;
                 }
 

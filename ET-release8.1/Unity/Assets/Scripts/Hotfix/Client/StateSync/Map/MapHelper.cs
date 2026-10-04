@@ -12,12 +12,6 @@ namespace ET.Client
         /// </summary>
         public static async ETTask<int> TransferMapAsync(Scene root, int mapConfigId, long mapFiberId = 0)
         {
-            bool robot = RobotUnitHelper.IsRobotAccount(root.Name);
-            if (robot)
-            {
-                RobotUnitHelper.LogConsole(root.Name, $"TransferMapAsync 请求 map={mapConfigId} fiber={mapFiberId}");
-            }
-
             C2M_TransferMap c2MTransferMap = C2M_TransferMap.Create();
             c2MTransferMap.MapConfigId = mapConfigId;
             c2MTransferMap.MapFiberId = mapFiberId;
@@ -35,10 +29,6 @@ namespace ET.Client
             }
 
             await root.GetComponent<ObjectWait>().Wait<Wait_SceneChangeFinish>();
-            if (robot)
-            {
-                RobotUnitHelper.LogConsole(root.Name, $"TransferMapAsync 切场景完成 map={mapConfigId} curScene={root.CurrentScene()?.Name}");
-            }
 
             Log.Info($"[Map] 传送成功 mapConfigId={mapConfigId} fiber={mapFiberId}");
             return ErrorCode.ERR_Success;

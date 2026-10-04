@@ -30,25 +30,5 @@
             unit.BaseExternalDisplay = self.BaseExternalDisplay ?? string.Empty;
         }
 
-        /// <summary>
-        /// 压测账号：Robot 配表 9101 + 默认外显（与 Player 分离）。
-        /// </summary>
-        public static void InitRobotProfile(this Player self)
-        {
-            self.BaseExternalDisplay = ExternalDisplayHelper.DefaultExternalDisplayVal;
-            self.Race = ExternalDisplayHelper.DefaultRace;
-            self.Gender = ExternalDisplayHelper.DefaultGender;
-            self.ConfigId = RobotUnitHelper.RobotUnitConfigId;
-        }
-
-        public static UnitType GetGateUnitType(this Player self)
-        {
-            return RobotUnitHelper.IsRobotAccount(self.AccountName) ? UnitType.Robot : UnitType.Player;
-        }
-
-        public static int GetGateUnitConfigId(this Player self)
-        {
-            return self.GetGateUnitType() == UnitType.Robot ? RobotUnitHelper.RobotUnitConfigId : self.ConfigId;
-        }
     }
 }
