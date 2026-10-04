@@ -51,6 +51,7 @@ namespace ET.Server
 
             unitComponent.Add(unit);
             unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
+
             return unit;
         }
 
@@ -80,8 +81,13 @@ namespace ET.Server
             unit.AddComponent<BuffComponent>();
 
             unitComponent.Add(unit);
-            unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, pos);
             return unit;
+        }
+
+        /// <summary>地图刷怪/压测 Robot：须在 MapId 与阵营分配完成后再调用。</summary>
+        public static void AddBattleUnitAoi(Unit unit, float3 pos)
+        {
+            unit.AddComponent<AOIEntity, int, float3>(unit.Config().Aoi, pos);
         }
 
         /// <summary>
@@ -142,12 +148,9 @@ namespace ET.Server
             }
 
             numericComponent.Set(NumericType.AOI, aoiDistance);
-            unit.AddComponent<AOIEntity, int, float3>(aoiDistance, unit.Position);
-
+            CampHelper.CopyFactionFromUnit(unit, owner);
             unitComponent.Add(unit);
-
-
-
+            unit.AddComponent<AOIEntity, int, float3>(aoiDistance, unit.Position);
 
             return unit;
         }
@@ -180,8 +183,6 @@ namespace ET.Server
             }
 
             unitComponent.Add(unit);
-            // 加入aoi
-            var aoiEntity = unit.AddComponent<AOIEntity, int, float3>(unitConfig.Aoi, unit.Position);
             return unit;
         }
 

@@ -7,6 +7,11 @@ namespace ET.Server
         {
             await ETTask.CompletedTask;
             unit.TeamId = request.TeamId;
+            if (unit.MapId > 0)
+            {
+                CampHelper.ApplyMapFaction(unit, unit.MapId);
+            }
+
             unit.GetComponent<UnitDBSaveComponent>()?.MarkUnitDirty();
         }
     }

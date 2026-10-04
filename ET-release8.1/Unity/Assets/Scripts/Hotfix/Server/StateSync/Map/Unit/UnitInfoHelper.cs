@@ -4,6 +4,7 @@ namespace ET.Server
 {
     [FriendOf(typeof(MoveComponent))]
     [FriendOf(typeof(NumericComponent))]
+    [FriendOf(typeof(MonsterMapComponent))]
     public static class UnitInfoHelper
     {
         public static UnitInfo CreateUnitInfo(Unit unit)
@@ -23,6 +24,8 @@ namespace ET.Server
             unitInfo.Position = unit.Position;
             unitInfo.Forward = unit.Forward;
             unitInfo.MapId = unit.MapId;
+            SyncFactionBeforeUnitInfo(unit);
+            unitInfo.CampType = CampHelper.GetFactionId(unit);
 
             MoveComponent moveComponent = unit.GetComponent<MoveComponent>();
             if (moveComponent != null)
@@ -48,6 +51,29 @@ namespace ET.Server
             }
 
             return unitInfo;
+        }
+
+        /// <summary>AOI 同步前保证阵营已按地图写入（压测 Robot 无 UnitDBSave，按怪物侧分配）。</summary>
+        private static void SyncFactionBeforeUnitInfo(Unit unit)
+        {
+            int mapConfigId = ResolveMapConfigId(unit);
+            if (mapConfigId <= 0)
+            {
+                return;
+            }
+
+            CampHelper.ApplyMapFaction(unit, mapConfigId);
+        }
+
+        private static int ResolveMapConfigId(Unit unit)
+        {
+            if (unit.MapId > 0)
+            {
+                return unit.MapId;
+            }
+
+            MonsterMapComponent monsterMap = unit.Scene()?.GetComponent<MonsterMapComponent>();
+            return monsterMap != null ? monsterMap.MapConfigId : 0;
         }
     }
 }

@@ -1,43 +1,162 @@
 namespace ET
 {
+    [FriendOf(typeof(FactionComponent))]
     public static class CampHelper
     {
         public static bool IsAlly(Unit a, Unit b)
         {
             if (a.Id == b.Id) return true;
-            a = ResolveOwner(a);
-            b = ResolveOwner(b);
-            if (a == null || b == null)
+            if (!HasValidCampOwner(a) || !HasValidCampOwner(b))
             {
                 return true;//没有主人默认盟友
             }
 
-            return GetFactionKey(a, a.MapId) == GetFactionKey(b, b.MapId);
+            return GetFactionId(a) == GetFactionId(b);
         }
 
         public static bool IsHostile(Unit a, Unit b)
         {
             if (a.Id == b.Id) return false;
-            a = ResolveOwner(a);
-            b = ResolveOwner(b);
-            if (a == null || b == null)
+            if (!HasValidCampOwner(a) || !HasValidCampOwner(b))
             {
                 return false;//没有主人不是敌对
             }
-            return GetFactionKey(a, a.MapId) != GetFactionKey(b, b.MapId);
+
+            return GetFactionId(a) != GetFactionId(b);
         }
 
-        public static FactionKey GetFactionKey(Unit unit, int mapConfigId)
+        /// <summary>
+        /// 读取阵营 Id；宠物/召唤物与主人一致。
+        /// </summary>
+        public static int GetFactionId(Unit unit)
         {
-            if (GetMapType(mapConfigId) == MapType.FreePK && (unit.IsPlayer() || unit.IsRobot()))
+            if (unit.IsPet() || unit.IsSummon())
+            {
+                Unit owner = ResolveOwner(unit);
+                if (owner != null && owner.Id != unit.Id)
+                {
+                    return GetFactionId(owner);
+                }
+            }
+
+            FactionComponent faction = unit.GetComponent<FactionComponent>();
+            if (faction != null)
+            {
+                return faction.FactionId;
+            }
+
+            faction = unit.AddComponent<FactionComponent>();
+            return faction.FactionId;
+        }
+
+        /// <summary>
+        /// 按当前地图配置分配阵营（创建、切图、队伍变更时调用）。
+        /// </summary>
+        public static void ApplyMapFaction(Unit unit, int mapConfigId)
+        {
+            if (unit == null || unit.IsDisposed)
+            {
+                return;
+            }
+
+            if (unit.IsPet() || unit.IsSummon())
+            {
+                Unit owner = ResolveOwner(unit);
+                if (owner != null && owner.Id != unit.Id)
+                {
+                    ApplyMapFaction(owner, mapConfigId);
+                    CopyFactionFromUnit(unit, owner);
+                    return;
+                }
+            }
+
+            int factionId = CalcFactionForMap(unit, mapConfigId);
+            SetFactionId(unit, factionId);
+        }
+
+        public static void CopyFactionFromUnit(Unit unit, Unit source)
+        {
+            SetFactionId(unit, GetFactionId(source));
+        }
+
+        private static void SetFactionId(Unit unit, int factionId)
+        {
+            FactionComponent faction = unit.GetComponent<FactionComponent>() ?? unit.AddComponent<FactionComponent>();
+            faction.FactionId = factionId;
+        }
+
+        private static int CalcFactionForMap(Unit unit, int mapConfigId)
+        {
+            MapType mapType = GetMapType(mapConfigId);
+
+            if (mapType == MapType.SafeZone)
+            {
+                return (int)CampType.CampA;
+            }
+
+            if (UsesWildMapFactionRules(unit))
+            {
+                return (int)CampType.CampB;
+            }
+
+            if (mapType == MapType.FreePK && IsPlayerSideBattleUnit(unit))
             {
                 return unit.TeamId > 0
-                    ? new FactionKey(FactionKeyType.Team, unit.TeamId)
-                    : new FactionKey(FactionKeyType.Player, unit.Id);
+                    ? EncodeFreePkTeamFaction(unit.TeamId)
+                    : EncodeFreePkPlayerFaction(unit.Id);
             }
-            //|| unit.IsPet() || unit.IsSummon() 理论上这里unit肯定不是召唤物和宠物
-            // 地图服压测 Robot 与怪物同阵营，便于对玩家/异阵营单位放技能
-            return unit.IsMonster() || unit.IsRobot() ? CampConst.MonsterCamp : CampConst.PlayerCamp;
+
+            return (int)CampType.CampA;
+        }
+
+        private static bool IsPlayerSideBattleUnit(Unit unit)
+        {
+            return unit.IsPlayer();
+        }
+
+        /// <summary>野怪与地图 Robot（无玩家侧 Robot）共用怪物阵营规则。</summary>
+        private static bool UsesWildMapFactionRules(Unit unit)
+        {
+            return unit.IsMonster() || unit.IsRobot();
+        }
+
+        /// <summary>自由 PK 队伍阵营，与静态 1/2 区分。</summary>
+        private static int EncodeFreePkTeamFaction(long teamId)
+        {
+            int id = (int)(teamId & 0x7FFFFFFF);
+            if (id == 0)
+            {
+                id = 1;
+            }
+
+            return -id;
+        }
+
+        /// <summary>自由 PK 单人阵营，与静态 1/2 区分。</summary>
+        private static int EncodeFreePkPlayerFaction(long unitId)
+        {
+            int id = (int)(unitId & 0x7FFFFFFF);
+            if (id <= (int)CampType.CampB)
+            {
+                id = (int)((unitId >> 32) & 0x7FFFFFFF);
+            }
+
+            if (id <= (int)CampType.CampB)
+            {
+                id = unchecked((int)(unitId ^ 0x40000000));
+            }
+
+            return id;
+        }
+
+        private static bool HasValidCampOwner(Unit unit)
+        {
+            if (unit.OwnerId <= 0)
+            {
+                return true;
+            }
+
+            return ResolveOwner(unit) != null;
         }
 
         private static Unit ResolveOwner(Unit unit)

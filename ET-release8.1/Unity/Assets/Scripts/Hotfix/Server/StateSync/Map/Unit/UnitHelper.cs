@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
@@ -157,6 +157,7 @@ namespace ET.Server
             unit.LastMapId = unit.MapId;
             unit.MapId = mapConfigId;
             unit.MapUid = mapFiberId;
+            CampHelper.ApplyMapFaction(unit, mapConfigId);
             unit.GetComponent<UnitDBSaveComponent>()?.MarkUnitDirty();
         }
     }

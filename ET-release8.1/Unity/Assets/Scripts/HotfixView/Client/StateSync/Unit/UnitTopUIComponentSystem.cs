@@ -17,13 +17,14 @@ namespace ET.Client
             self.HudInfoScript=self.HudInfoObj.AddComponent<HudInfo>();
 
             var unit = self.GetParent<Unit>();
+            string displayName = UnitTopUINameHelper.GetDisplayName(unit);
             if (unit.IsMonster())
             {
-                self.HudInfoScript.DisplayMonster(unit.Name);
+                self.HudInfoScript.DisplayMonster(displayName);
             }
             else
             {
-                self.HudInfoScript.DisplayPlayer(unit.Name);
+                self.HudInfoScript.DisplayPlayer(displayName);
             }
 
             self.RefreshHpBar();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommandLine;
 using UnityEngine;
 
@@ -6,6 +6,25 @@ namespace ET
 {
 	public class Init: MonoBehaviour
 	{
+		[Header("客户端调试")]
+		[Tooltip("勾选后，所有 Unit 头顶名字显示阵营 Id；否则显示实际名字")]
+		public bool ReplaceUnitNameWithFaction;
+
+		private void Awake()
+		{
+			SyncViewDebugSettings();
+		}
+
+		private void OnValidate()
+		{
+			SyncViewDebugSettings();
+		}
+
+		private void SyncViewDebugSettings()
+		{
+			ClientViewDebugSettings.ReplaceUnitNameWithFaction = ReplaceUnitNameWithFaction;
+		}
+
 		private void Start()
 		{
 			this.StartAsync().Coroutine();

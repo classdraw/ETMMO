@@ -138,7 +138,9 @@ namespace ET.Server
 
             Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig, pos);
             unit.MapId = self.MapConfigId;
+            CampHelper.ApplyMapFaction(unit, self.MapConfigId);
             unit.AddComponent<MonsterFlag,int,int>(monsterConfigId,monsterConfig.GroupId);
+            UnitFactory.AddBattleUnitAoi(unit, pos);
             return unit;
         }
 
@@ -147,7 +149,9 @@ namespace ET.Server
         {
             Unit unit = UnitFactory.CreatePressureRobot(self.Scene(), pos, name);
             unit.MapId = self.MapConfigId;
+            CampHelper.ApplyMapFaction(unit, self.MapConfigId);
             PressureRobotAiSetupHelper.Setup(unit, aiConfigId, pos);
+            UnitFactory.AddBattleUnitAoi(unit, pos);
             return unit;
         }
 
@@ -163,7 +167,9 @@ namespace ET.Server
             MonsterConfig monsterConfig = MonsterConfigCategory.Instance.Get(monsterConfigId);
             Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig, pos);
             unit.MapId = self.MapConfigId;
+            CampHelper.ApplyMapFaction(unit, self.MapConfigId);
             unit.AddComponent<MonsterFlag, int, int>(monsterConfigId, monsterConfig.GroupId);
+            UnitFactory.AddBattleUnitAoi(unit, pos);
             return unit;
         }
 

@@ -1,6 +1,7 @@
 namespace ET
 {
     [EntitySystemOf(typeof(Unit))]
+    [FriendOf(typeof(FactionComponent))]
     public static partial class UnitSystem
     {
         [EntitySystem]
@@ -9,6 +10,10 @@ namespace ET
             self.ConfigId = configId;
             self.TableConfigId = 0;
             self.Name = name;
+            if (self.GetComponent<FactionComponent>() == null)
+            {
+                self.AddComponent<FactionComponent>();
+            }
         }
 
         public static UnitConfig Config(this Unit self)
