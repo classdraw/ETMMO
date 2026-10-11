@@ -61,20 +61,12 @@ namespace ET
 	{
 		/// <summary>Id</summary>
 		public int Id { get; set; }
-		/// <summary>显示配表Id</summary>
-		public int DisplayId { get; set; }
-		/// <summary>性别</summary>
-		public int Gender { get; set; }
-		/// <summary>种族</summary>
-		public int Race { get; set; }
-		/// <summary>名字</summary>
-		public string Name { get; set; }
-		/// <summary>体型</summary>
-		public int BodyType { get; set; }
-		/// <summary>是否看身材体型</summary>
-		public int NeedBodyType { get; set; }
+		/// <summary>部件位置</summary>
+		public int PartSlotKey { get; set; }
+		/// <summary>图片名字</summary>
+		public string SpriteName { get; set; }
 		/// <summary>描述</summary>
-		public string Desc { get; set; }
+		public string desc { get; set; }
 
 	}
 }

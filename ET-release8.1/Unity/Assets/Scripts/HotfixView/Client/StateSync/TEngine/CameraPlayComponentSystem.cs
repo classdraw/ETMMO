@@ -40,7 +40,7 @@ namespace ET.Client
 
             GameObject mainCamera = await LoadGameObjectInstance(resLoader, self.MainCameraPath);
             mainCamera.transform.SetParent(globalComponent.Global, false);
-            mainCamera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.Euler(90f, 0f, 0f));
+            mainCamera.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.Euler(55f, 0f, 0f));
             mainCamera.name = "CameraPlayComponent(Camera)";
             self.MainCameraObj = mainCamera;
 

@@ -27,7 +27,7 @@ namespace XEngine.Hud
             HudTitleInfo titleInfo = HudTitleRender.GetInstance().GetTitle(m_iTitleUUID);
             titleInfo.Clear();
 
-            titleInfo.SetOffsetY(1.5f);
+            titleInfo.SetOffsetY(0.7f);
             titleInfo.ShowTitle();
 
             titleInfo.BeginTitle();
@@ -50,7 +50,7 @@ namespace XEngine.Hud
             HudTitleInfo titleInfo = HudTitleRender.GetInstance().GetTitle(m_iTitleUUID);
             titleInfo.Clear();
 
-            titleInfo.SetOffsetY(1.5f);
+            titleInfo.SetOffsetY(0.7f);
             titleInfo.ShowTitle();
 
             titleInfo.BeginTitle();

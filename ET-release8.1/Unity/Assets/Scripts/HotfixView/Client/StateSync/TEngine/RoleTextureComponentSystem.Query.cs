@@ -16,11 +16,6 @@ namespace ET.Client
             return (int displayId, out ExternalDisplayEntryInfo entryInfo) =>
             {
                 entryInfo = default;
-                if (!FrameRoleTextureId.TryDecode(displayId, out int partKey, out _, out _, out _))
-                {
-                    return false;
-                }
-
                 if (!ExternalDisplayConfigHelper.TryGetConfig(displayId, out ExternalDisplayConfig config))
                 {
                     return false;
@@ -28,9 +23,9 @@ namespace ET.Client
 
                 entryInfo = new ExternalDisplayEntryInfo
                 {
-                    PartKey = partKey,
-                    BodyType = config.BodyType,
-                    NeedBodyType = config.NeedBodyType,
+                    PartKey = config.PartSlotKey,
+                    BodyType = 0,
+                    NeedBodyType = 0,
                 };
                 return true;
             };
@@ -38,7 +33,7 @@ namespace ET.Client
 
         public static bool IsExternalDisplayValid(this RoleTextureComponent self, string externalDisplay)
         {
-            return ExternalDisplayHelper.IsExternalDisplayValid(externalDisplay, self.CreatePartIdsQuery());
+            return ExternalDisplayConfigHelper.IsExternalDisplayValid(externalDisplay);
         }
 
         public static ExternalDisplayAppearance CreateDefaultAppearance(this RoleTextureComponent self, int race, int gender, int bodyType)
@@ -108,11 +103,6 @@ namespace ET.Client
 
         public static int GetCharacterBodyType(this RoleTextureComponent self, int bodyDisplayId)
         {
-            if (ExternalDisplayConfigHelper.TryGetConfig(bodyDisplayId, out ExternalDisplayConfig config))
-            {
-                return config.BodyType;
-            }
-
             return 0;
         }
 
@@ -173,11 +163,6 @@ namespace ET.Client
 
                         int entryBodyType = entry.bodyType;
                         int entryNeedBodyType = entry.needBodyType;
-                        if (ExternalDisplayConfigHelper.TryGetConfig(entry.displayId, out ExternalDisplayConfig wearConfig))
-                        {
-                            entryBodyType = wearConfig.BodyType;
-                            entryNeedBodyType = wearConfig.NeedBodyType;
-                        }
 
                         if (ExternalDisplayHelper.CanWearDisplay(
                                 config.partKey,
@@ -232,6 +217,12 @@ namespace ET.Client
                 }
             }
 
+            if (ExternalDisplayConfigHelper.TryGetConfig(displayId, out ExternalDisplayConfig wearConfig)
+                && !string.IsNullOrEmpty(wearConfig.desc))
+            {
+                return wearConfig.desc;
+            }
+
             return displayId.ToString();
         }
 
@@ -243,7 +234,17 @@ namespace ET.Client
             int gender,
             int bodyDisplayId = 0)
         {
-            if (displayId <= 0 || !ExternalDisplayHelper.MatchesEncodedRaceGender(displayId, race, gender))
+            if (displayId <= 0)
+            {
+                return false;
+            }
+
+            if (ExternalDisplayConfigHelper.TryGetConfig(displayId, out _))
+            {
+                return true;
+            }
+
+            if (!ExternalDisplayHelper.MatchesEncodedRaceGender(displayId, race, gender))
             {
                 return false;
             }
@@ -255,12 +256,6 @@ namespace ET.Client
 
             int entryBodyType = entry.bodyType;
             int entryNeedBodyType = entry.needBodyType;
-            if (ExternalDisplayConfigHelper.TryGetConfig(displayId, out ExternalDisplayConfig config))
-            {
-                entryBodyType = config.BodyType;
-                entryNeedBodyType = config.NeedBodyType;
-            }
-
             int characterBodyType = part == FrameRolePartType.Body ? 0 : self.GetCharacterBodyType(bodyDisplayId);
             if (!ExternalDisplayHelper.MatchesNeedBodyType((int)part, entryNeedBodyType, entryBodyType, characterBodyType))
             {

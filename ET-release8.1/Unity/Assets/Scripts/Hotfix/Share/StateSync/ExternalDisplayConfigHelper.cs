@@ -1,28 +1,20 @@
 namespace ET
 {
     /// <summary>
-    /// 外显配置表（ExternalDisplayConfig）查询与校验，供服务端及客户端 BodyType / 种族性别读表。
+    /// ExternalDisplayConfig（Id / PartSlotKey / SpriteName / desc）查询与校验。
     /// </summary>
     public static class ExternalDisplayConfigHelper
     {
-        public static bool TryGetConfig(int displayId, out ExternalDisplayConfig config)
+        public static bool TryGetConfig(int id, out ExternalDisplayConfig config)
         {
             config = null;
-            if (displayId <= 0)
+            if (id <= 0 || !ExternalDisplayConfigCategory.Instance.Contain(id))
             {
                 return false;
             }
 
-            foreach (ExternalDisplayConfig item in ExternalDisplayConfigCategory.Instance.GetAll().Values)
-            {
-                if (item.DisplayId == displayId)
-                {
-                    config = item;
-                    return true;
-                }
-            }
-
-            return false;
+            config = ExternalDisplayConfigCategory.Instance.Get(id);
+            return true;
         }
 
         public static bool IsExternalDisplayValid(string externalDisplay)
@@ -32,41 +24,15 @@ namespace ET
                 return false;
             }
 
-            if (appearance.BodyDisplayId <= 0)
+            if (appearance.BodyDisplayId <= 0 || !TryGetConfig(appearance.BodyDisplayId, out _))
             {
                 return false;
             }
 
-            if (!TryGetConfig(appearance.BodyDisplayId, out ExternalDisplayConfig bodyConfig))
-            {
-                return false;
-            }
-
-            int race = bodyConfig.Race;
-            int gender = bodyConfig.Gender;
-            int characterBodyType = bodyConfig.BodyType;
-
-            if (!IsSlotValid(appearance.BodyDisplayId, (int)FrameRolePartType.Body, race, gender, characterBodyType, required: true))
-            {
-                return false;
-            }
-
-            if (!IsSlotValid(appearance.HeadDisplayId, (int)FrameRolePartType.Head, race, gender, characterBodyType, required: false))
-            {
-                return false;
-            }
-
-            if (!IsSlotValid(appearance.TailDisplayId, (int)FrameRolePartType.Tail, race, gender, characterBodyType, required: false))
-            {
-                return false;
-            }
-
-            if (!IsSlotValid(appearance.ShirtDisplayId, (int)FrameRolePartType.Shirt, race, gender, characterBodyType, required: false))
-            {
-                return false;
-            }
-
-            return IsSlotValid(appearance.PantsDisplayId, (int)FrameRolePartType.Pants, race, gender, characterBodyType, required: false);
+            return IsOptionalSlotValid(appearance.HeadDisplayId)
+                   && IsOptionalSlotValid(appearance.TailDisplayId)
+                   && IsOptionalSlotValid(appearance.ShirtDisplayId)
+                   && IsOptionalSlotValid(appearance.PantsDisplayId);
         }
 
         public static void ResolveRoleProfile(string baseExternalDisplay, out int race, out int gender, out int configId)
@@ -75,26 +41,17 @@ namespace ET
             gender = ExternalDisplayHelper.DefaultGender;
             configId = ExternalDisplayHelper.DefaultUnitConfigId;
 
-            if (!TryGetFirstNonZeroDisplayId(baseExternalDisplay, out int displayId))
+            if (TryGetFirstNonZeroDisplayId(baseExternalDisplay, out int id)
+                && TryGetConfig(id, out ExternalDisplayConfig config)
+                && config.PartSlotKey == (int)UnitPartSlot.BodyBody)
             {
-                return;
+                configId = id;
             }
-
-            if (!TryGetConfig(displayId, out ExternalDisplayConfig config) || config.Race <= 0 || config.Gender <= 0)
-            {
-                return;
-            }
-
-            race = config.Race;
-            gender = config.Gender;
         }
 
-        /// <summary>
-        /// 从外显字符串中取 DisplayId：须在配置表中存在，且解码 PartKey 为 Body。
-        /// </summary>
-        public static bool TryGetFirstNonZeroDisplayId(string externalDisplay, out int displayId)
+        public static bool TryGetFirstNonZeroDisplayId(string externalDisplay, out int id)
         {
-            displayId = 0;
+            id = 0;
             if (!ExternalDisplayHelper.TryParseExternalDisplayString(externalDisplay, out ExternalDisplayAppearance appearance))
             {
                 return false;
@@ -111,43 +68,20 @@ namespace ET
 
             for (int i = 0; i < ids.Length; i++)
             {
-                int id = ids[i];
-                if (id <= 0 || !TryGetConfig(id, out _))
+                int candidate = ids[i];
+                if (candidate > 0 && TryGetConfig(candidate, out _))
                 {
-                    continue;
+                    id = candidate;
+                    return true;
                 }
-
-                if (!FrameRoleTextureId.TryDecode(id, out int partKey, out _, out _, out _)
-                    || partKey != (int)FrameRolePartType.Body)
-                {
-                    continue;
-                }
-
-                displayId = id;
-                return true;
             }
 
             return false;
         }
 
-        private static bool IsSlotValid(int displayId, int partKey, int race, int gender, int characterBodyType, bool required)
+        private static bool IsOptionalSlotValid(int id)
         {
-            if (displayId <= 0)
-            {
-                return !required;
-            }
-
-            if (!TryGetConfig(displayId, out ExternalDisplayConfig config))
-            {
-                return false;
-            }
-
-            if (!ExternalDisplayHelper.MatchesRace(config.Race, race) || !ExternalDisplayHelper.MatchesGender(config.Gender, gender))
-            {
-                return false;
-            }
-
-            return ExternalDisplayHelper.MatchesNeedBodyType(partKey, config.NeedBodyType, config.BodyType, characterBodyType);
+            return id <= 0 || TryGetConfig(id, out _);
         }
     }
 }

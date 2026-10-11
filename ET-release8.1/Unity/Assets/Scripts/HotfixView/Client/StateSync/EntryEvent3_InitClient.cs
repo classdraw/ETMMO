@@ -17,8 +17,10 @@ namespace ET.Client
             await root.AddComponent<TEngineComponent>().Init();
             //相机需要一些准备（MainCamera + CameraRoot）
             await root.AddComponent<CameraPlayComponent>().Init();
-            //角色贴图准备
-            await root.AddComponent<RoleTextureComponent>().Init();
+            // 分部件外显配置（FrameRoleTexture_*）；未进包或未启用创角换装时不要加载
+            RoleTextureComponent roleTextureComponent = root.AddComponent<RoleTextureComponent>();
+            // roleTextureComponent.LoadConfigOnInit = true;
+            await roleTextureComponent.Init();
             //hud需要一些准备
             root.AddComponent<HudComponent>();
             

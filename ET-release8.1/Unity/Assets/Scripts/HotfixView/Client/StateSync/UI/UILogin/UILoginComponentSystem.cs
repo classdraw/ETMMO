@@ -72,29 +72,29 @@ namespace ET.Client
 			self.m_btnGenderLeftL.onClick.AddListener(() => { self.OnGenderLeftL(); });
 			self.m_textBodyL = m_bindComponent.GetComponent<Text>(31);
 			self.m_btnBodyRightL = m_bindComponent.GetComponent<Button>(32);
-			self.m_btnBodyRightL.onClick.AddListener(() => { self.OnBodyRightL(); });
+			// self.m_btnBodyRightL.onClick.AddListener(() => { self.OnBodyRightL(); });
 			self.m_btnBodyLeftL = m_bindComponent.GetComponent<Button>(33);
-			self.m_btnBodyLeftL.onClick.AddListener(() => { self.OnBodyLeftL(); });
+			// self.m_btnBodyLeftL.onClick.AddListener(() => { self.OnBodyLeftL(); });
 			self.m_textHeadL = m_bindComponent.GetComponent<Text>(34);
 			self.m_btnHeadRightL = m_bindComponent.GetComponent<Button>(35);
-			self.m_btnHeadRightL.onClick.AddListener(() => { self.OnHeadRightL(); });
+			// self.m_btnHeadRightL.onClick.AddListener(() => { self.OnHeadRightL(); });
 			self.m_btnHeadLeftL = m_bindComponent.GetComponent<Button>(36);
-			self.m_btnHeadLeftL.onClick.AddListener(() => { self.OnHeadLeftL(); });
+			// self.m_btnHeadLeftL.onClick.AddListener(() => { self.OnHeadLeftL(); });
 			self.m_textTailL = m_bindComponent.GetComponent<Text>(37);
 			self.m_btnTailRightL = m_bindComponent.GetComponent<Button>(38);
-			self.m_btnTailRightL.onClick.AddListener(() => { self.OnTailRightL(); });
+			// self.m_btnTailRightL.onClick.AddListener(() => { self.OnTailRightL(); });
 			self.m_btnTailLeftL = m_bindComponent.GetComponent<Button>(39);
-			self.m_btnTailLeftL.onClick.AddListener(() => { self.OnTailLeftL(); });
+			// self.m_btnTailLeftL.onClick.AddListener(() => { self.OnTailLeftL(); });
 			self.m_textShirtL = m_bindComponent.GetComponent<Text>(40);
 			self.m_btnShirtRightL = m_bindComponent.GetComponent<Button>(41);
-			self.m_btnShirtRightL.onClick.AddListener(() => { self.OnShirtRightL(); });
+			// self.m_btnShirtRightL.onClick.AddListener(() => { self.OnShirtRightL(); });
 			self.m_btnShirtLeftL = m_bindComponent.GetComponent<Button>(42);
-			self.m_btnShirtLeftL.onClick.AddListener(() => { self.OnShirtLeftL(); });
+			// self.m_btnShirtLeftL.onClick.AddListener(() => { self.OnShirtLeftL(); });
 			self.m_textPantsL = m_bindComponent.GetComponent<Text>(43);
 			self.m_btnPantsRightL = m_bindComponent.GetComponent<Button>(44);
-			self.m_btnPantsRightL.onClick.AddListener(() => { self.OnPantsRightL(); });
+			// self.m_btnPantsRightL.onClick.AddListener(() => { self.OnPantsRightL(); });
 			self.m_btnPantsLeftL = m_bindComponent.GetComponent<Button>(45);
-			self.m_btnPantsLeftL.onClick.AddListener(() => { self.OnPantsLeftL(); });
+			// self.m_btnPantsLeftL.onClick.AddListener(() => { self.OnPantsLeftL(); });
 			self.m_goRightChoose = m_bindComponent.GetGameObject(46);
 			self.m_textRaceR = m_bindComponent.GetComponent<Text>(47);
 			self.m_btnRaceRightR = m_bindComponent.GetComponent<Button>(48);
@@ -108,29 +108,29 @@ namespace ET.Client
 			self.m_btnGenderLeftR.onClick.AddListener(() => { self.OnGenderLeftR(); });
 			self.m_textBodyR = m_bindComponent.GetComponent<Text>(53);
 			self.m_btnBodyRightR = m_bindComponent.GetComponent<Button>(54);
-			self.m_btnBodyRightR.onClick.AddListener(() => { self.OnBodyRightR(); });
+			// self.m_btnBodyRightR.onClick.AddListener(() => { self.OnBodyRightR(); });
 			self.m_btnBodyLeftR = m_bindComponent.GetComponent<Button>(55);
-			self.m_btnBodyLeftR.onClick.AddListener(() => { self.OnBodyLeftR(); });
+			// self.m_btnBodyLeftR.onClick.AddListener(() => { self.OnBodyLeftR(); });
 			self.m_textHeadR = m_bindComponent.GetComponent<Text>(56);
 			self.m_btnHeadRightR = m_bindComponent.GetComponent<Button>(57);
-			self.m_btnHeadRightR.onClick.AddListener(() => { self.OnHeadRightR(); });
+			// self.m_btnHeadRightR.onClick.AddListener(() => { self.OnHeadRightR(); });
 			self.m_btnHeadLeftR = m_bindComponent.GetComponent<Button>(58);
-			self.m_btnHeadLeftR.onClick.AddListener(() => { self.OnHeadLeftR(); });
+			// self.m_btnHeadLeftR.onClick.AddListener(() => { self.OnHeadLeftR(); });
 			self.m_textTailR = m_bindComponent.GetComponent<Text>(59);
 			self.m_btnTailRightR = m_bindComponent.GetComponent<Button>(60);
-			self.m_btnTailRightR.onClick.AddListener(() => { self.OnTailRightR(); });
+			// self.m_btnTailRightR.onClick.AddListener(() => { self.OnTailRightR(); });
 			self.m_btnTailLeftR = m_bindComponent.GetComponent<Button>(61);
-			self.m_btnTailLeftR.onClick.AddListener(() => { self.OnTailLeftR(); });
+			// self.m_btnTailLeftR.onClick.AddListener(() => { self.OnTailLeftR(); });
 			self.m_textShirtR = m_bindComponent.GetComponent<Text>(62);
 			self.m_btnShirtRightR = m_bindComponent.GetComponent<Button>(63);
-			self.m_btnShirtRightR.onClick.AddListener(() => { self.OnShirtRightR(); });
+			// self.m_btnShirtRightR.onClick.AddListener(() => { self.OnShirtRightR(); });
 			self.m_btnShirtLeftR = m_bindComponent.GetComponent<Button>(64);
-			self.m_btnShirtLeftR.onClick.AddListener(() => { self.OnShirtLeftR(); });
+			// self.m_btnShirtLeftR.onClick.AddListener(() => { self.OnShirtLeftR(); });
 			self.m_textPantsR = m_bindComponent.GetComponent<Text>(65);
 			self.m_btnPantsRightR = m_bindComponent.GetComponent<Button>(66);
-			self.m_btnPantsRightR.onClick.AddListener(() => { self.OnPantsRightR(); });
+			// self.m_btnPantsRightR.onClick.AddListener(() => { self.OnPantsRightR(); });
 			self.m_btnPantsLeftR = m_bindComponent.GetComponent<Button>(67);
-			self.m_btnPantsLeftR.onClick.AddListener(() => { self.OnPantsLeftR(); });
+			// self.m_btnPantsLeftR.onClick.AddListener(() => { self.OnPantsLeftR(); });
 			self.m_goUIRoleLeft = m_bindComponent.GetGameObject(68);
 			self.m_goUIRoleRight = m_bindComponent.GetGameObject(69);
 			self.m_playerUIRoleLeft = self.m_goUIRoleLeft != null ? self.m_goUIRoleLeft.GetComponent<FrameSheetAnimPlayer>() : null;
@@ -236,31 +236,32 @@ namespace ET.Client
 		public static void OnRaceLeftL(this UILoginComponent self) => self.CycleLeftAppearanceRace(-1);
 		public static void OnGenderRightL(this UILoginComponent self) => self.CycleLeftAppearanceGender(1);
 		public static void OnGenderLeftL(this UILoginComponent self) => self.CycleLeftAppearanceGender(-1);
-		public static void OnBodyRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Body, 1);
-		public static void OnBodyLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Body, -1);
-		public static void OnHeadRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Head, 1);
-		public static void OnHeadLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Head, -1);
-		public static void OnTailRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Tail, 1);
-		public static void OnTailLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Tail, -1);
-		public static void OnShirtRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Shirt, 1);
-		public static void OnShirtLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Shirt, -1);
-		public static void OnPantsRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Pants, 1);
-		public static void OnPantsLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Pants, -1);
+		// 创角部件换装（Body/Head/Tail/Shirt/Pants）暂关闭
+		// public static void OnBodyRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Body, 1);
+		// public static void OnBodyLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Body, -1);
+		// public static void OnHeadRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Head, 1);
+		// public static void OnHeadLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Head, -1);
+		// public static void OnTailRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Tail, 1);
+		// public static void OnTailLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Tail, -1);
+		// public static void OnShirtRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Shirt, 1);
+		// public static void OnShirtLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Shirt, -1);
+		// public static void OnPantsRightL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Pants, 1);
+		// public static void OnPantsLeftL(this UILoginComponent self) => self.CycleLeftAppearancePart(FrameRolePartType.Pants, -1);
 
 		public static void OnRaceRightR(this UILoginComponent self) => self.CycleRightAppearanceRace(1);
 		public static void OnRaceLeftR(this UILoginComponent self) => self.CycleRightAppearanceRace(-1);
 		public static void OnGenderRightR(this UILoginComponent self) => self.CycleRightAppearanceGender(1);
 		public static void OnGenderLeftR(this UILoginComponent self) => self.CycleRightAppearanceGender(-1);
-		public static void OnBodyRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Body, 1);
-		public static void OnBodyLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Body, -1);
-		public static void OnHeadRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Head, 1);
-		public static void OnHeadLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Head, -1);
-		public static void OnTailRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Tail, 1);
-		public static void OnTailLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Tail, -1);
-		public static void OnShirtRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Shirt, 1);
-		public static void OnShirtLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Shirt, -1);
-		public static void OnPantsRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Pants, 1);
-		public static void OnPantsLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Pants, -1);
+		// public static void OnBodyRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Body, 1);
+		// public static void OnBodyLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Body, -1);
+		// public static void OnHeadRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Head, 1);
+		// public static void OnHeadLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Head, -1);
+		// public static void OnTailRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Tail, 1);
+		// public static void OnTailLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Tail, -1);
+		// public static void OnShirtRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Shirt, 1);
+		// public static void OnShirtLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Shirt, -1);
+		// public static void OnPantsRightR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Pants, 1);
+		// public static void OnPantsLeftR(this UILoginComponent self) => self.CycleRightAppearancePart(FrameRolePartType.Pants, -1);
 		#endregion
 		
 		#region Logic方法
@@ -722,17 +723,17 @@ namespace ET.Client
 			self.RefreshLeftRolePreview();
 		}
 
-		private static void CycleLeftAppearancePart(this UILoginComponent self, FrameRolePartType part, int delta)
-		{
-			RoleTextureComponent roleTex = self.RoleTextures();
-			if (roleTex == null)
-			{
-				return;
-			}
-
-			roleTex.CycleAppearancePart(ref self.LeftAppearance, part, delta);
-			self.RefreshLeftRolePreview();
-		}
+		// private static void CycleLeftAppearancePart(this UILoginComponent self, FrameRolePartType part, int delta)
+		// {
+		// 	RoleTextureComponent roleTex = self.RoleTextures();
+		// 	if (roleTex == null)
+		// 	{
+		// 		return;
+		// 	}
+		//
+		// 	roleTex.CycleAppearancePart(ref self.LeftAppearance, part, delta);
+		// 	self.RefreshLeftRolePreview();
+		// }
 
 		private static void CycleRightAppearanceRace(this UILoginComponent self, int delta)
 		{
@@ -758,17 +759,17 @@ namespace ET.Client
 			self.RefreshRightRolePreview();
 		}
 
-		private static void CycleRightAppearancePart(this UILoginComponent self, FrameRolePartType part, int delta)
-		{
-			RoleTextureComponent roleTex = self.RoleTextures();
-			if (roleTex == null)
-			{
-				return;
-			}
-
-			roleTex.CycleAppearancePart(ref self.RightAppearance, part, delta);
-			self.RefreshRightRolePreview();
-		}
+		// private static void CycleRightAppearancePart(this UILoginComponent self, FrameRolePartType part, int delta)
+		// {
+		// 	RoleTextureComponent roleTex = self.RoleTextures();
+		// 	if (roleTex == null)
+		// 	{
+		// 		return;
+		// 	}
+		//
+		// 	roleTex.CycleAppearancePart(ref self.RightAppearance, part, delta);
+		// 	self.RefreshRightRolePreview();
+		// }
 
 		private static void RefreshLeftRolePreview(this UILoginComponent self)
 		{
