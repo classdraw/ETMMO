@@ -93,9 +93,7 @@ namespace ET
 
         public static void InitDefaultAppearance(ref ExternalDisplayAppearance appearance, ExternalDisplayPartIdsQuery getPartDisplayIds)
         {
-            appearance = default;
-            appearance.Race = DefaultRace;
-            appearance.Gender = DefaultGender;
+            RoleCreateProfileHelper.InitDefaultProfile(ref appearance);
         }
 
         public static void ValidatePartSelections(ref ExternalDisplayAppearance appearance, ExternalDisplayPartIdsQuery getPartDisplayIds)
@@ -131,8 +129,6 @@ namespace ET
             {
                 appearance.Gender = genders[0];
             }
-
-            ValidatePartSelections(ref appearance, getPartDisplayIds);
         }
 
         public static void CycleGender(
@@ -148,7 +144,6 @@ namespace ET
             }
 
             appearance.Gender = CycleValue(genders, appearance.Gender, delta);
-            ValidatePartSelections(ref appearance, getPartDisplayIds);
         }
 
         public static void CyclePart(

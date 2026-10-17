@@ -22,11 +22,12 @@ namespace ET
     public enum FrameRoleRaceType:byte
     {
         None = 0,
-        Human = 1,
-        Orc = 2,
-        DarkElf = 3,
-        Wolf = 4,
-        Rabbit =5
+        Human = 1,//人类
+        Elf = 2,//精灵
+        Dwarf = 3,//矮人
+        Halfling = 4,//半身人
+        Gnome = 5,//侏儒
+        Orc = 6,//shouren
     }
 
     /// <summary>
@@ -38,5 +39,18 @@ namespace ET
         None = 0,
         Male = 1,
         Female = 2,
+    }
+
+    /// <summary>
+    /// 职业 Key 遗留枚举（1~5）。创角档案 Job 现以 JobConfig 表 Id（如 1001）为准，见 <see cref="JobConfigHelper"/>。
+    /// </summary>
+    public enum FrameRoleJobType:byte
+    {
+        None = 0,
+        Archer = 1,
+        Assassin = 2,
+        Knight = 3,
+        Pastor = 4,
+        Witch = 5,
     }
 }

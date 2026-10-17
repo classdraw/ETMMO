@@ -19,6 +19,7 @@ namespace ET.Client
             await root.AddComponent<CameraPlayComponent>().Init();
             // 分部件外显配置（FrameRoleTexture_*）；未进包或未启用创角换装时不要加载
             RoleTextureComponent roleTextureComponent = root.AddComponent<RoleTextureComponent>();
+            root.AddComponent<LoginRoleModelPreviewComponent>();
             // roleTextureComponent.LoadConfigOnInit = true;
             await roleTextureComponent.Init();
             //hud需要一些准备

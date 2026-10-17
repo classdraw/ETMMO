@@ -18,7 +18,7 @@ namespace ET
         public int ServerId;
         
         
-        //avatar数据
+        /// <summary>创角档案：Race,Gender,Job（枚举 int，0=None，逗号分隔）。协议字段名仍为 BaseExternalDisplay。</summary>
         public string BaseExternalDisplay;
 
     }

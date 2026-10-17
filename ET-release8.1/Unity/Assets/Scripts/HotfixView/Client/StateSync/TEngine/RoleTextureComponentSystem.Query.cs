@@ -58,7 +58,11 @@ namespace ET.Client
 
         public static void ValidateAppearance(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance)
         {
-            ExternalDisplayHelper.ValidatePartSelections(ref appearance, self.CreatePartIdsQuery());
+            RoleCreateProfileHelper.ValidateProfile(
+                ref appearance,
+                RoleCreateProfileHelper.GetAvailableRaceIds,
+                _ => RoleCreateProfileHelper.GetAvailableGenderIds(),
+                () => self.GetAvailableJobs());
         }
 
         public static void CycleAppearanceRace(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance, int delta)
@@ -66,8 +70,8 @@ namespace ET.Client
             ExternalDisplayHelper.CycleRace(
                 ref appearance,
                 delta,
-                () => self.GetAvailableRaces(),
-                race => self.GetAvailableGenders(race),
+                RoleCreateProfileHelper.GetAvailableRaceIds,
+                _ => RoleCreateProfileHelper.GetAvailableGenderIds(),
                 self.CreatePartIdsQuery());
         }
 
@@ -76,8 +80,18 @@ namespace ET.Client
             ExternalDisplayHelper.CycleGender(
                 ref appearance,
                 delta,
-                race => self.GetAvailableGenders(race),
+                _ => RoleCreateProfileHelper.GetAvailableGenderIds(),
                 self.CreatePartIdsQuery());
+        }
+
+        public static void CycleAppearanceJob(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance, int delta)
+        {
+            RoleCreateProfileHelper.CycleJob(ref appearance, delta, () => self.GetAvailableJobs());
+        }
+
+        public static List<int> GetAvailableJobs(this RoleTextureComponent self)
+        {
+            return RoleModelPrefabHelper.GetAvailableJobIds();
         }
 
         public static void CycleAppearancePart(this RoleTextureComponent self, ref ExternalDisplayAppearance appearance, FrameRolePartType part, int delta)

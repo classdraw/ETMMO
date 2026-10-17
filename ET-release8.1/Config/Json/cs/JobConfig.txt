@@ -1,0 +1,7 @@
+{"dict": [
+[1001, {"_t":"JobConfig","_id":1001,"UnitId":1001,"Type":3,"Name":"骑士","Model":"Role_Knight_01"}],
+[1002, {"_t":"JobConfig","_id":1002,"UnitId":1002,"Type":5,"Name":"巫师","Model":"Role_Witch_01"}],
+[1003, {"_t":"JobConfig","_id":1003,"UnitId":1003,"Type":2,"Name":"盗贼","Model":"Role_Assassin_01"}],
+[1004, {"_t":"JobConfig","_id":1004,"UnitId":1004,"Type":4,"Name":"牧师","Model":"Role_Pastor_01"}],
+[1005, {"_t":"JobConfig","_id":1005,"UnitId":1005,"Type":1,"Name":"弓箭手","Model":"Role_Archer_01"}],
+]}

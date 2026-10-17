@@ -21,7 +21,7 @@ namespace ET.Client
             c2GLoginGameGate.Key = request.RealmKey;
             c2GLoginGameGate.AccountName = request.AccountName;
             c2GLoginGameGate.RoleId = request.RoleId;
-            c2GLoginGameGate.BaseExternalDisplay = ExternalDisplayHelper.NormalizeExternalDisplayForStorage(request.BaseExternalDisplay);
+            c2GLoginGameGate.BaseExternalDisplay = RoleCreateProfileHelper.NormalizeForStorage(request.BaseExternalDisplay);
             c2GLoginGameGate.Name = request.Name;
             G2C_LoginGameGate g2CLoginGameGate = (G2C_LoginGameGate)await gateSession.Call(c2GLoginGameGate);
 

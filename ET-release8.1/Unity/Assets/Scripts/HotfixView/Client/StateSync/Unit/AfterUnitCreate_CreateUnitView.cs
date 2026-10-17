@@ -189,11 +189,21 @@ namespace ET.Client
             Unit unit = args.Unit;
             Log.Info($"AfterUnitCreate_CreateUnitView type={unit.Type()} unitId={unit.Id}, name={unit.Name}, configId={unit.ConfigId}, race={unit.Race}, gender={unit.Gender}, baseExternalDisplay={unit.BaseExternalDisplay ?? string.Empty}");
             string name = string.IsNullOrEmpty(unit.Name) ? "Empty" : unit.Name;
-            // Unit View层
-            string assetsName = $"Assets/Bundles/Unit/Unit.prefab";
-            GameObject bundleGameObject = await scene.GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
-            string prefabKey = "Skeleton1001";
-            GameObject prefab = bundleGameObject.Get<GameObject>(prefabKey);
+
+            if (!TryResolvePlayerRolePrefab(unit, out string prefabAssetPath, out int job, out int gender))
+            {
+                Log.Error($"CreatePlayerUnitView: invalid role profile unitId={unit.Id}, profile={unit.BaseExternalDisplay ?? string.Empty}");
+                return;
+            }
+
+            ResourcesLoaderComponent loader = scene.GetComponent<ResourcesLoaderComponent>();
+            GameObject prefab = await loader.LoadAssetAsync<GameObject>(prefabAssetPath);
+            if (prefab == null)
+            {
+                Log.Error($"CreatePlayerUnitView: prefab not found path={prefabAssetPath}, job={job}, gender={gender}");
+                return;
+            }
+
             GlobalComponent globalComponent = scene.Root().GetComponent<GlobalComponent>();
             GameObject go = UnityEngine.Object.Instantiate(prefab, globalComponent.Unit, true);
             NetworkCacheComponent netCache = scene.Root().GetComponent<NetworkCacheComponent>();
@@ -201,17 +211,67 @@ namespace ET.Client
             go.name = isMainPlayerUnit ? $"unit_{unit.Id}_{name}*" : $"unit_{unit.Id}_{name}";
             go.transform.position = unit.Position;
             go.transform.rotation = unit.Rotation;
-            unit.AddComponent<GameObjectComponent>().GameObject = go;
-            unit.AddComponent<Avatar2DComponent>();
-            unit.AddComponent<Animator2DComponent>();
-            unit.AddComponent<MountComponent>();
-            unit.AddComponent<UnitTopUIComponent>();
+            AttachPlayerViewComponents(unit, go);
 
             if (isMainPlayerUnit)
             {
                 EventSystem.Instance.Publish(scene.Root(), new MainPlayerUnitViewCreate { Unit = unit });
             }
+
             await ETTask.CompletedTask;
+        }
+
+        private static bool TryResolvePlayerRolePrefab(Unit unit, out string prefabAssetPath, out int job, out int gender)
+        {
+            prefabAssetPath = null;
+            job = 0;
+            gender = unit.Gender;
+
+            if (RoleCreateProfileHelper.TryParseProfileString(unit.BaseExternalDisplay, out ExternalDisplayAppearance profile))
+            {
+                job = profile.Job;
+                if (profile.Gender > 0)
+                {
+                    gender = profile.Gender;
+                }
+
+                if (profile.Race > 0)
+                {
+                    unit.Race = profile.Race;
+                }
+            }
+            else if (gender <= 0)
+            {
+                gender = ExternalDisplayHelper.DefaultGender;
+            }
+
+            if (job <= 0)
+            {
+                job = JobConfigHelper.GetDefaultJobId();
+            }
+            else
+            {
+                job = JobConfigHelper.NormalizeJobId(job);
+            }
+
+            return RoleModelPrefabHelper.TryGetPrefabAssetPath(job, gender, out prefabAssetPath);
+        }
+
+        private static void AttachPlayerViewComponents(Unit unit, GameObject go)
+        {
+            unit.AddComponent<GameObjectComponent>().GameObject = go;
+            if (go.GetComponentInChildren<FrameSheetAnimPlayer>() != null)
+            {
+                unit.AddComponent<Avatar2DComponent>();
+                unit.AddComponent<Animator2DComponent>();
+            }
+            else if (UnitViewAnimatorHelper.TryGetRoleAnimator(go, out _))
+            {
+                unit.AddComponent<AnimatorComponent>();
+            }
+
+            unit.AddComponent<MountComponent>();
+            unit.AddComponent<UnitTopUIComponent>();
         }
     }
 }

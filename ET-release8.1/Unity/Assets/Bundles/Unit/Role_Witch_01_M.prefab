@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4587115874896630817}
+  - component: {fileID: 2946213464612756076}
   m_Layer: 0
   m_Name: Role_Witch_01_M
   m_TagString: Untagged
@@ -32,6 +33,21 @@ Transform:
   - {fileID: 8695282421828630549}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2946213464612756076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2814801450537491322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 502d8cafd6a5a0447ab1db9a24cdcb10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+  - key: Root
+    gameObject: {fileID: 8349684599512326831}
 --- !u!1001 &9160708904113823742
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -268,8 +284,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d05aaf4ef33d80408127dd01907c4ef,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8132855777837683285}
   m_SourcePrefab: {fileID: 100100000, guid: 6d05aaf4ef33d80408127dd01907c4ef, type: 3}
+--- !u!1 &8349684599512326831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d05aaf4ef33d80408127dd01907c4ef,
+    type: 3}
+  m_PrefabInstance: {fileID: 9160708904113823742}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8132855777837683285
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8349684599512326831}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: d49c65de9fce66146b5d0e164b1f9d2d, type: 3}
+  m_Controller: {fileID: 22100000, guid: 07903df8ed222ba47adae661d9ab0769, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &8695282421828630549 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6d05aaf4ef33d80408127dd01907c4ef,

@@ -21,6 +21,13 @@ namespace ET.Client
                 return;
             }
 
+            if (UnitViewAnimatorHelper.Uses3DAnimator(unit))
+            {
+                UnitViewAnimatorHelper.TryPlayMotion(unit, MotionType.Move, 1f);
+                await ETTask.CompletedTask;
+                return;
+            }
+
             Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
             if (animator == null)
             {

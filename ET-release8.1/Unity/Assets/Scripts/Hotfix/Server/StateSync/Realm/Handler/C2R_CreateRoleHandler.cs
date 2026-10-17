@@ -52,8 +52,9 @@ namespace ET.Server
                 roleInfo.CreateTime = nowTimeDb;
                 roleInfo.LastLoginTime = 0;
                 roleInfo.Name = request.Name;
-                string baseExternalDisplay = ExternalDisplayHelper.NormalizeExternalDisplayForStorage(request.BaseExternalDisplay);
-                if (!ExternalDisplayConfigHelper.IsExternalDisplayValid(baseExternalDisplay))
+                string baseExternalDisplay = RoleCreateProfileHelper.NormalizeForStorage(request.BaseExternalDisplay);
+                if (RoleCreateProfileHelper.IsBlankProfile(baseExternalDisplay)
+                    || !ExternalDisplayConfigHelper.IsExternalDisplayValid(baseExternalDisplay))
                 {
                     response.Error = ErrorCode.ERR_ExternalDisplayInvalid;
                     return;

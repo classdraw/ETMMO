@@ -141,12 +141,12 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-    - GroupName: Anime
+    - GroupName: Animator
       GroupDesc: 
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Bundles/Anime
+      - CollectPath: Assets/Bundles/Animator
         CollectorGUID: 528bf597a1d79f24cb5960a87d6d4e8e
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -200,6 +200,19 @@ MonoBehaviour:
       Collectors:
       - CollectPath: Assets/Bundles/Bullet
         CollectorGUID: 1cea8b3118c25c14abfc4f6f5498c3d9
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Animation
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Bundles/Animation
+        CollectorGUID: 42e089ebf39711a46a087161da750326
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

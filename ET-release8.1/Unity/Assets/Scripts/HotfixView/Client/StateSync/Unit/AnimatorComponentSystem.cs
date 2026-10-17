@@ -67,7 +67,7 @@ namespace ET.Client
 				//self.Animator.SetFloat("MotionSpeed", self.MontionSpeed);
 				//Log.Console("____"+self.MotionType);
 				//self.Animator.SetTrigger(self.MotionType.ToString());
-				self.Animator.CrossFade(self.MotionType.ToString().ToLower(),0.1f);
+				self.Animator.CrossFade(ResolveAnimatorStateName(self.MotionType), 0.1f);
 				self.Animator.speed = self.MontionSpeed;
 				if (self.MotionType==MotionType.Move)
 				{
@@ -85,6 +85,11 @@ namespace ET.Client
 			{
 				throw new Exception($"动作播放失败: {self.MotionType}", ex);
 			}
+		}
+
+		public static bool IsReady(this AnimatorComponent self)
+		{
+			return self.Animator != null;
 		}
 
 		public static bool HasParameter(this AnimatorComponent self, string parameter)
@@ -256,6 +261,19 @@ namespace ET.Client
 		public static void ResetAnimatorSpeed(this AnimatorComponent self)
 		{
 			self.Animator.speed = self.stopSpeed;
+		}
+
+		public static string ResolveAnimatorStateName(MotionType motionType)
+		{
+			switch (motionType)
+			{
+				case MotionType.Move:
+					return "Run";
+				case MotionType.Death:
+					return "Death01";
+				default:
+					return motionType.ToString();
+			}
 		}
 	}
 }

@@ -17,65 +17,15 @@ namespace ET
             return true;
         }
 
+        /// <summary>创角档案 Race,Gender,Job 字符串校验。</summary>
         public static bool IsExternalDisplayValid(string externalDisplay)
         {
-            if (ExternalDisplayHelper.IsBlankExternalDisplay(externalDisplay))
-            {
-                return true;
-            }
-
-            if (!ExternalDisplayHelper.TryParseExternalDisplayString(externalDisplay, out ExternalDisplayAppearance appearance))
-            {
-                return false;
-            }
-
-            if (!IsAppearanceSlotValid(appearance.BodyDisplayId, (int)FrameRolePartType.Body, required: true))
-            {
-                return false;
-            }
-
-            return IsAppearanceSlotValid(appearance.HeadDisplayId, (int)FrameRolePartType.Head, required: false)
-                   && IsAppearanceSlotValid(appearance.TailDisplayId, (int)FrameRolePartType.Tail, required: false)
-                   && IsAppearanceSlotValid(appearance.ShirtDisplayId, (int)FrameRolePartType.Shirt, required: false)
-                   && IsAppearanceSlotValid(appearance.PantsDisplayId, (int)FrameRolePartType.Pants, required: false);
+            return RoleCreateProfileHelper.IsProfileValid(externalDisplay);
         }
 
         public static void ResolveRoleProfile(string baseExternalDisplay, out int race, out int gender, out int configId)
         {
-            race = ExternalDisplayHelper.DefaultRace;
-            gender = ExternalDisplayHelper.DefaultGender;
-            configId = ExternalDisplayHelper.DefaultUnitConfigId;
-
-            if (!ExternalDisplayHelper.TryParseExternalDisplayString(baseExternalDisplay, out ExternalDisplayAppearance appearance))
-            {
-                return;
-            }
-
-            if (appearance.BodyDisplayId > 0
-                && FrameRoleTextureId.TryDecode(
-                    appearance.BodyDisplayId,
-                    out int partKey,
-                    out int bodyRace,
-                    out int bodyGender,
-                    out _)
-                && partKey == (int)FrameRolePartType.Body)
-            {
-                race = bodyRace;
-                gender = bodyGender;
-                return;
-            }
-
-            if (TryGetFirstNonZeroDisplayId(baseExternalDisplay, out int id)
-                && TryGetConfig(id, out ExternalDisplayConfig config)
-                && config.PartSlotKey == (int)UnitPartSlot.BodyBody)
-            {
-                configId = id;
-            }
-
-            if (configId <= 0)
-            {
-                configId = ExternalDisplayHelper.DefaultUnitConfigId;
-            }
+            RoleCreateProfileHelper.ResolveRoleProfile(baseExternalDisplay, out race, out gender, out configId);
         }
 
         public static bool TryGetFirstNonZeroDisplayId(string externalDisplay, out int id)

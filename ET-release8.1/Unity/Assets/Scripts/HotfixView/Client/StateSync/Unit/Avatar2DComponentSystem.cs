@@ -22,8 +22,8 @@ namespace ET.Client
 				return;
 			}
 
-			// 仅在外显拼装场景下挂载/驱动 RedressAvatar；整模 prefab 保留材质贴图。
-			if (!string.IsNullOrEmpty(unit.BaseExternalDisplay))
+			// 仅怪物五段外显拼装时驱动 RedressAvatar；玩家创角档案为 Race,Gender,Job 三段。
+			if (ShouldUsePartAssemblyRedress(unit.BaseExternalDisplay))
 			{
 				self.RedressAvatar = self.AnimPlayer.GetComponent<RedressAvatar>();
 				if (self.RedressAvatar == null)
@@ -56,7 +56,8 @@ namespace ET.Client
 				return;
 			}
 
-			if (!ExternalDisplayHelper.TryParseExternalDisplayString(baseExternalDisplay, out ExternalDisplayAppearance appearance))
+			if (!ShouldUsePartAssemblyRedress(baseExternalDisplay)
+			    || !ExternalDisplayHelper.TryParseExternalDisplayString(baseExternalDisplay, out ExternalDisplayAppearance appearance))
 			{
 				return;
 			}
@@ -69,6 +70,21 @@ namespace ET.Client
 
 			roleTex.ValidateAppearance(ref appearance);
 			UILoginRolePreviewHelper.ApplyPreview(self.AnimPlayer, roleTex, appearance);
+		}
+
+		private static bool ShouldUsePartAssemblyRedress(string baseExternalDisplay)
+		{
+			if (string.IsNullOrEmpty(baseExternalDisplay))
+			{
+				return false;
+			}
+
+			if (RoleCreateProfileHelper.TryParseProfileString(baseExternalDisplay, out _))
+			{
+				return false;
+			}
+
+			return ExternalDisplayHelper.TryParseExternalDisplayString(baseExternalDisplay, out _);
 		}
 	}
 }

@@ -79,6 +79,7 @@ namespace ET
         /// <summary>
         /// 角色显示外显，一般创建角色用到
         /// </summary>
+        /// <summary>玩家为创角档案 Race,Gender,Job；怪物部位拼装仍为五段 DisplayId。</summary>
         public string BaseExternalDisplay { get; set; }
         public int ConfigId { get; set; } //UnitConfig id
         /// <summary>

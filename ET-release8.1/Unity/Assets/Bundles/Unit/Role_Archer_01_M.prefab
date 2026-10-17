@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2631153437473878511}
+  - component: {fileID: 8692384578962081975}
   m_Layer: 0
   m_Name: Role_Archer_01_M
   m_TagString: Untagged
@@ -32,6 +33,21 @@ Transform:
   - {fileID: 2821692944799532360}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8692384578962081975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750666941906105746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 502d8cafd6a5a0447ab1db9a24cdcb10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+  - key: Root
+    gameObject: {fileID: 3198534730592083954}
 --- !u!1001 &2351463627690468003
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -268,7 +284,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ff2b31d9a952e74e9139bf271881974,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1159556931277826202}
   m_SourcePrefab: {fileID: 100100000, guid: 4ff2b31d9a952e74e9139bf271881974, type: 3}
 --- !u!4 &2821692944799532360 stripped
 Transform:
@@ -276,3 +296,30 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2351463627690468003}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3198534730592083954 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4ff2b31d9a952e74e9139bf271881974,
+    type: 3}
+  m_PrefabInstance: {fileID: 2351463627690468003}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1159556931277826202
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3198534730592083954}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: d49c65de9fce66146b5d0e164b1f9d2d, type: 3}
+  m_Controller: {fileID: 22100000, guid: 69ed018f0bb010e4a95301ddb96519d2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

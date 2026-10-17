@@ -1,4 +1,4 @@
 {"dict": [
 [10001, {"_t":"MapConfig","_id":10001,"Type":1,"Title":"普隆德拉","LogicName":"Map3D1","Type":1,"MaxPlayer":50,"AutoCreate":true,"Div":true,"ValidTime":0,"_StartPoint":[-1.74,0.0,-2.86],"_CmdList":[]}],
-[10002, {"_t":"MapConfig","_id":10002,"Type":1,"Title":"野外","LogicName":"Map2","Type":2,"MaxPlayer":50,"AutoCreate":true,"Div":true,"ValidTime":0,"_StartPoint":[-6.51,0.0,4.62],"_CmdList":[]}],
+[10002, {"_t":"MapConfig","_id":10002,"Type":1,"Title":"野外","LogicName":"Map3D2","Type":2,"MaxPlayer":50,"AutoCreate":true,"Div":true,"ValidTime":0,"_StartPoint":[-6.51,0.0,4.62],"_CmdList":[]}],
 ]}

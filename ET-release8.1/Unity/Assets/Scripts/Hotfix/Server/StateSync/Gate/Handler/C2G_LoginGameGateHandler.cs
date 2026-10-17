@@ -61,7 +61,7 @@ namespace ET.Server
                     //playerSessionComponent 可以网络消息处理
                     //player也可以网络消息处理 只是处理消息类型不同
                     //player的id和player的unitId一样
-                    string baseExternalDisplay = ExternalDisplayHelper.NormalizeExternalDisplayForStorage(request.BaseExternalDisplay);
+                    string baseExternalDisplay = RoleCreateProfileHelper.NormalizeForStorage(request.BaseExternalDisplay);
                     player = playerComponent.AddChildWithId<Player, string, string, string>(
                         request.RoleId, account, baseExternalDisplay, request.Name);
                     player.UnitId = request.RoleId;
@@ -86,7 +86,7 @@ namespace ET.Server
                 else
                 {
                     player.Name = request.Name;
-                    player.BaseExternalDisplay = ExternalDisplayHelper.NormalizeExternalDisplayForStorage(request.BaseExternalDisplay);
+                    player.BaseExternalDisplay = RoleCreateProfileHelper.NormalizeForStorage(request.BaseExternalDisplay);
                     player.SyncProfileFromExternalDisplay();
                     //这里是第二次登陆
                     player.RemoveComponent<PlayerOfflineOutTimeComponent>();//离线就需要增加这个组件

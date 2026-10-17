@@ -79,6 +79,12 @@ namespace ET.Client
                 return;
             }
 
+            if (UnitViewAnimatorHelper.Uses3DAnimator(unit))
+            {
+                UnitViewAnimatorHelper.TryPlayMotion(unit, motionType, 1f);
+                return;
+            }
+
             Animator2DComponent animator = unit.GetComponent<Animator2DComponent>();
             if (animator == null || animator.IsDisposed || animator.AnimPlayer == null)
             {

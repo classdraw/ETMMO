@@ -89,23 +89,11 @@ namespace ET
                 }
             }
 
-            if (GUILayout.Button("导出到 ExternalDisplayConfig", GUILayout.Height(28)))
-            {
-                if (UnitPartSlotCollectionExcelExporter.ExportToExternalDisplay(out string exportMessage))
-                {
-                    EditorUtility.DisplayDialog("导出 Excel", exportMessage, "确定");
-                }
-                else
-                {
-                    EditorUtility.DisplayDialog("导出 Excel", exportMessage, "确定");
-                }
-            }
-
             EditorGUILayout.Space(4);
             EditorGUILayout.HelpBox(
                 "扫描上述 0_Sprite 目录内 PNG 的子图（Sprite），按 UnitPartSlot 分组写入 "
                 + UnitPartSlotCollectionBuilder.OutputAssetPath
-                + "；导出会清空 ExternalDisplayConfig.xlsx 旧数据后全量写入（C~F：Id、PartSlotKey、SpriteName、desc）。\n"
+                + "。\n"
                 + "若指定带 SPUM_MatchingList 的预制体，会额外写入 "
                 + SpineDataConfigBuilder.OutputAssetPath
                 + "（slotPart=行序，index=MatchingElement.Index）。",

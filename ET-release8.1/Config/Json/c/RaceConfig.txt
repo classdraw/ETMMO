@@ -1,0 +1,8 @@
+{"dict": [
+[1001, {"_t":"RaceConfig","_id":1001,"Type":1,"Name":"人类"}],
+[1002, {"_t":"RaceConfig","_id":1002,"Type":2,"Name":"精灵"}],
+[1003, {"_t":"RaceConfig","_id":1003,"Type":3,"Name":"矮人"}],
+[1004, {"_t":"RaceConfig","_id":1004,"Type":4,"Name":"半身人"}],
+[1005, {"_t":"RaceConfig","_id":1005,"Type":5,"Name":"侏儒"}],
+[1006, {"_t":"RaceConfig","_id":1006,"Type":6,"Name":"兽人"}],
+]}
