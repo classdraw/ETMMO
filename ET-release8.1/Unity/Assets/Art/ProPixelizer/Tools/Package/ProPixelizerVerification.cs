@@ -19,22 +19,61 @@ namespace ProPixelizer
 #endif
     public class ProPixelizerVerification
     {
+        const string VariantLimitPrefKey = "UnityEditor.ShaderGraph.VariantLimit";
+        const int RequiredShaderGraphVariantLimit = 128;
+
         static ProPixelizerVerification()
         {
 #if UNITY_EDITOR
-            //EditorApplication.delayCall += ReimportShaders;
+            EditorApplication.delayCall += OnEditorDelayedInit;
 #endif
         }
+
+#if UNITY_EDITOR
+        static void OnEditorDelayedInit()
+        {
+            EnsureShaderGraphVariantLimit();
+            if (!SessionState.GetBool("ProPixelizer.ET.ShadersReimported", false))
+            {
+                ReimportShaders();
+                SessionState.SetBool("ProPixelizer.ET.ShadersReimported", true);
+            }
+        }
+
+        public static void EnsureShaderGraphVariantLimit()
+        {
+            int limit = EditorPrefs.GetInt(VariantLimitPrefKey, RequiredShaderGraphVariantLimit);
+            if (limit < RequiredShaderGraphVariantLimit)
+            {
+                EditorPrefs.SetInt(VariantLimitPrefKey, RequiredShaderGraphVariantLimit);
+                Debug.Log(
+                    $"[ProPixelizer] Shader Graph Variant Limit 已从 {limit} 调整为 {RequiredShaderGraphVariantLimit}（不升级 URP，仅编辑器偏好设置）。");
+            }
+        }
+#endif
 
         /// <summary>
         /// Forces ProPixelizer shaders to be imported in the correct order.
         /// This is to fix a Unity issue with UsePass, where sometimes shaders do not correctly import passes from SG shaders if imported before them.
         /// </summary>
+#if UNITY_EDITOR
+        [MenuItem("Tools/ProPixelizer/修复 Shader 编译（不升级 URP）")]
+        public static void MenuFixShadersForET()
+        {
+            EnsureShaderGraphVariantLimit();
+            ReimportShaders();
+            SessionState.SetBool("ProPixelizer.ET.ShadersReimported", true);
+            GenerateWarnings();
+        }
+#endif
+
         public static void ReimportShaders()
         {
 #if UNITY_EDITOR
             AssetDatabase.ImportAsset(Utils.PackageLocation + "/ShaderGraph/ProPixelizerBase.shadergraph", ImportAssetOptions.ForceUpdate);
+            AssetDatabase.ImportAsset(Utils.PackageLocation + "/ShaderGraph/ProPixelizerUberShader.shadergraph", ImportAssetOptions.ForceUpdate);
             AssetDatabase.ImportAsset(Utils.PackageLocation + "/SRP/ShaderLibrary/PixelizedWithOutline.shader", ImportAssetOptions.ForceUpdate);
+            Debug.Log("[ProPixelizer] 已按顺序重新导入 ShaderGraph / PixelizedWithOutline（路径: " + Utils.PackageLocation + "）。");
 #endif
         }
 

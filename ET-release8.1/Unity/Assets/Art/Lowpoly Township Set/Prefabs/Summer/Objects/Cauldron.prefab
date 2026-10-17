@@ -9854,23 +9854,26 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: a4e34e517b35e8e4dbb2247074a8b331, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c7cce8e2be38a2d43b4491be8b138057, type: 2}
+      objectReference: {fileID: 2100000, guid: 3768873ff130420468db6ddf5b9025e3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 100000, guid: a4e34e517b35e8e4dbb2247074a8b331, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: a4e34e517b35e8e4dbb2247074a8b331,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 119911109402628013}
   m_SourcePrefab: {fileID: 100100000, guid: a4e34e517b35e8e4dbb2247074a8b331, type: 3}
 --- !u!4 &4547296417158520283 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: a4e34e517b35e8e4dbb2247074a8b331, type: 3}
+  m_CorrespondingSourceObject: {fileID: 400000, guid: a4e34e517b35e8e4dbb2247074a8b331,
+    type: 3}
   m_PrefabInstance: {fileID: 4547296417158645595}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &4547296417158545915 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: a4e34e517b35e8e4dbb2247074a8b331, type: 3}
+  m_CorrespondingSourceObject: {fileID: 100000, guid: a4e34e517b35e8e4dbb2247074a8b331,
+    type: 3}
   m_PrefabInstance: {fileID: 4547296417158645595}
   m_PrefabAsset: {fileID: 0}
 --- !u!64 &119911109402628013

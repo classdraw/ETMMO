@@ -91,18 +91,20 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 3cf3d0db83614cb418e24a84b0e990b4, type: 2}
+      objectReference: {fileID: 2100000, guid: ba4ad2d6788298743aafeae77b03ca7a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 100000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 2830289514219610797}
   m_SourcePrefab: {fileID: 100100000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef, type: 3}
 --- !u!1 &1417193989305580701 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef, type: 3}
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef,
+    type: 3}
   m_PrefabInstance: {fileID: 1417193989305612861}
   m_PrefabAsset: {fileID: 0}
 --- !u!64 &2830289514219610797
@@ -129,6 +131,7 @@ MeshCollider:
   m_Mesh: {fileID: 4300000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef, type: 3}
 --- !u!4 &1417193989305999549 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef, type: 3}
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 4757fcfaaa2638a43a2a3e1ecf3c66ef,
+    type: 3}
   m_PrefabInstance: {fileID: 1417193989305612861}
   m_PrefabAsset: {fileID: 0}

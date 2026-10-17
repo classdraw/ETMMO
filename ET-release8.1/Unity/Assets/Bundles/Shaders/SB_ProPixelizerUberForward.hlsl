@@ -9,8 +9,9 @@
 
 half SB_SampleMaterialAlpha(float2 uv, half4 baseSample)
 {
-    half alpha = baseSample.a * _BaseColor.a;
+    half alpha = SB_ResolveOpaqueAlpha(baseSample);
     half bodyAlpha = SAMPLE_TEXTURE2D(_BodyMap, sampler_BodyMap, uv).a;
+    bodyAlpha *= SB_AssignedMapMask(_BodyMap_TexelSize);
     return max(alpha, bodyAlpha * _BaseColor.a);
 }
 
@@ -34,8 +35,12 @@ struct SBVaryings
     half4 color : COLOR;
     half3 viewDirWS : TEXCOORD4;
     float4 shadowCoord : TEXCOORD5;
+    float4 screenPos : TEXCOORD6;
+    half fogFactor : TEXCOORD7;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
+
+#include "SB_ProPixelizerLighting.hlsl"
 
 half3 SB_SampleNormalWS(SBVaryings input, float2 uv)
 {
@@ -62,6 +67,8 @@ SBVaryings SB_Vert(SBAttributes input)
     output.color = input.color;
     output.viewDirWS = GetWorldSpaceViewDir(posInputs.positionWS);
     output.shadowCoord = GetShadowCoord(posInputs);
+    output.screenPos = ComputeScreenPos(output.positionCS);
+    output.fogFactor = ComputeFogFactor(output.positionCS.z);
     return output;
 }
 
@@ -72,37 +79,30 @@ half4 SB_Frag(SBVaryings input) : SV_Target
     float2 uv = input.uv;
     half4 baseSample = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
     half4 bodySample = SAMPLE_TEXTURE2D(_BodyMap, sampler_BodyMap, uv);
-    half3 albedo = lerp(baseSample.rgb, bodySample.rgb, bodySample.a) * _BaseColor.rgb;
+    half bodyBlend = bodySample.a * SB_AssignedMapMask(_BodyMap_TexelSize);
+    half3 albedo = lerp(baseSample.rgb, bodySample.rgb, bodyBlend) * _BaseColor.rgb;
     albedo *= lerp(half3(1, 1, 1), input.color.rgb, _DiffuseVertexColorWeight);
     half alpha = SB_SampleMaterialAlpha(uv, baseSample);
 
     half3 normalWS = SB_SampleNormalWS(input, uv);
-    half3 viewDirWS = SafeNormalize(input.viewDirWS);
-
-    Light mainLight = SR_GetMainLightOptional(input.shadowCoord);
-
-    half NdotL = saturate(dot(normalWS, mainLight.direction));
-    half ramp = SAMPLE_TEXTURE2D(_LightingRamp, sampler_LightingRamp, half2(NdotL, 0.5)).r;
-    half3 diffuse = albedo * (mainLight.color * ramp * mainLight.shadowAttenuation + _AmbientLight.rgb);
 
 #if defined(_SPECULAR_SETUP)
     half3 specColor = _SpecColor.rgb;
     half smoothness = _Smoothness;
+    half specMapMask = SB_AssignedMapMask(_SpecGlossMap_TexelSize);
     half4 specMask = SAMPLE_TEXTURE2D(_SpecGlossMap, sampler_SpecGlossMap, uv);
-    specColor *= specMask.rgb;
-    smoothness *= specMask.a;
+    specColor *= lerp(half3(1, 1, 1), specMask.rgb, specMapMask);
+    smoothness *= lerp(1, specMask.a, specMapMask);
 #else
     half4 metallicGloss = SAMPLE_TEXTURE2D(_MetallicGlossMap, sampler_MetallicGlossMap, uv);
     half3 specColor = lerp(half3(0.04, 0.04, 0.04), albedo, metallicGloss.r * _Metallic);
     half smoothness = metallicGloss.a * _Smoothness;
 #endif
 
-    half3 specular = LightingSpecular(mainLight.color * mainLight.shadowAttenuation, mainLight.direction, normalWS, viewDirWS, half4(specColor, 1), exp2(10 * smoothness + 1));
-
     half3 emission = SAMPLE_TEXTURE2D(_EmissionMap, sampler_EmissionMap, uv).rgb * _EmissionColor.rgb;
     emission += input.color.rgb * _EmissiveVertexColorWeight * _EmissionColor.rgb;
 
-    half3 color = diffuse + specular + emission;
+    half3 color = SB_ShadeProPixelizer(input, albedo, normalWS, emission, smoothness, specColor);
 
     float alphaOut;
     float2 ditherUV;
@@ -122,7 +122,10 @@ half4 SB_Frag(SBVaryings input) : SV_Target
     else
     {
         ditherUV = float2(0.5, 0.5);
-        clip(alpha - _AlphaClipThreshold);
+        if (_AlphaClip > 0.5h)
+        {
+            clip(alpha - _AlphaClipThreshold);
+        }
     }
 
 #if defined(_COLOR_GRADING_ON)

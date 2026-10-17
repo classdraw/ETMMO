@@ -157,6 +157,8 @@ GameObject:
   - component: {fileID: 1545531314021646017}
   - component: {fileID: 1443164030524627251}
   - component: {fileID: -4828213881871092331}
+  - component: {fileID: 8829012345678901234}
+  - component: {fileID: 8829012345678901235}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -262,8 +264,8 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
-  m_Antialiasing: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
   m_AntialiasingQuality: 1
   m_StopNaN: 0
   m_Dithering: 0
@@ -331,3 +333,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxResolution: 512
   debugMode: 0
+--- !u!114 &8829012345678901234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8213698763997535744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673db127ebcbeb1469f3f1386b9de813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SubCamera: {fileID: 0}
+  SubcameraExcludedLayers:
+    serializedVersion: 2
+    m_Bits: 34
+  FixedTargetResolution: 320
+  ClampCameraOrthoSize: 1
+  Mode: 1
+  PixelSize: 0.032
+  overrideUsePixelExpansion: 0
+  UsePixelExpansion: 1
+  PixelizationFilter: 0
+  UsePixelArtUpscalingFilter: 0
+  TargetScale: 0.45
+  FullscreenColorGradingLUT: {fileID: 0}
+  EnableProPixelizer: 1
+--- !u!114 &8829012345678901235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8213698763997535744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d4f2a015c3497e8f1b2c3d4e5f6a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetScale: 0.45
+  DisableCameraAntialiasing: 1

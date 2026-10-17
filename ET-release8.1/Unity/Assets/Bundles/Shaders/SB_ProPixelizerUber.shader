@@ -27,7 +27,9 @@ Shader "Custom/SB_ProPixelizerUber"
         [Header(ProPixelizer)]
         _LightingRamp("LightingRamp", 2D) = "white" {}
         _PaletteLUT("PaletteLUT", 2D) = "white" {}
-        _AmbientLight("AmbientLight", Color) = (0.2, 0.2, 0.2, 1)
+        _AmbientLight("AmbientLight", Color) = (0.2, 0.2, 0.2, 0.2)
+        _LightingRampRange("Lighting Ramp Range", Float) = 1
+        _ShadowTintColor("Shadow Tint Color", Color) = (0, 0, 0, 0)
         [IntRange] _PixelSize("PixelSize", Range(1, 5)) = 3
         _PixelGridOrigin("PixelGridOrigin", Vector) = (0, 0, 0, 0)
         [IntRange] _ID("Object ID", Range(0, 255)) = 1
@@ -69,9 +71,11 @@ Shader "Custom/SB_ProPixelizerUber"
             #pragma fragment SB_Frag
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
-            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             #pragma shader_feature_local _ _SPECULAR_SETUP
             #pragma shader_feature_local _ _COLOR_GRADING_ON
             #pragma shader_feature_local _ _PROPIXELIZER_DITHERING_ON
@@ -107,8 +111,7 @@ Shader "Custom/SB_ProPixelizerUber"
             #include "../../Art/ProPixelizer/SRP/ShaderLibrary/PixelUtils.hlsl"
             #include "../../Art/ProPixelizer/SRP/ShaderLibrary/PackingUtils.hlsl"
             #include "../../Art/ProPixelizer/SRP/ShaderLibrary/ScreenUtils.hlsl"
-            #include "SB_ProPixelizerUberInput.hlsl"
-            #include "../../Art/ProPixelizer/SRP/ShaderLibrary/OutlinePass.hlsl"
+            #include "SB_ProPixelizerOutlinePass.hlsl"
             ENDHLSL
         }
 
@@ -176,10 +179,14 @@ Shader "Custom/SB_ProPixelizerUber"
             half4 ShadowFrag(Varyings input) : SV_Target
             {
                 half4 baseSample = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv);
-                half alpha = baseSample.a * _BaseColor.a;
+                half alpha = SB_ResolveOpaqueAlpha(baseSample);
                 half bodyAlpha = SAMPLE_TEXTURE2D(_BodyMap, sampler_BodyMap, input.uv).a * _BaseColor.a;
+                bodyAlpha *= SB_AssignedMapMask(_BodyMap_TexelSize);
                 alpha = max(alpha, bodyAlpha);
-                clip(alpha - _AlphaClipThreshold);
+                if (_AlphaClip > 0.5)
+                {
+                    clip(alpha - _AlphaClipThreshold);
+                }
                 return 0;
             }
             ENDHLSL
@@ -227,8 +234,12 @@ Shader "Custom/SB_ProPixelizerUber"
 
             half4 DepthFrag(Varyings input) : SV_Target
             {
-                half alpha = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).a * _BaseColor.a;
-                clip(alpha - _AlphaClipThreshold);
+                half4 baseSample = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv);
+                half alpha = SB_ResolveOpaqueAlpha(baseSample);
+                if (_AlphaClip > 0.5)
+                {
+                    clip(alpha - _AlphaClipThreshold);
+                }
                 return 0;
             }
             ENDHLSL
@@ -284,8 +295,12 @@ Shader "Custom/SB_ProPixelizerUber"
 
             half4 DepthNormalsFrag(Varyings input) : SV_Target
             {
-                half alpha = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv).a * _BaseColor.a;
-                clip(alpha - _AlphaClipThreshold);
+                half4 baseSample = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv);
+                half alpha = SB_ResolveOpaqueAlpha(baseSample);
+                if (_AlphaClip > 0.5)
+                {
+                    clip(alpha - _AlphaClipThreshold);
+                }
                 half3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_BumpMap, sampler_BumpMap, input.uv));
                 half3 bitangentWS = input.tangentWS.w * cross(input.normalWS, input.tangentWS.xyz);
                 half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, bitangentWS, input.normalWS);

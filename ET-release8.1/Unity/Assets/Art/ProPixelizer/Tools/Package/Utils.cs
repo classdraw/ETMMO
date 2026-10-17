@@ -3,6 +3,6 @@ namespace ProPixelizer
 {
 	public static class Utils
 	{
-		public const string PackageLocation = "Assets/ProPixelizer";
+		public const string PackageLocation = "Assets/Art/ProPixelizer";
 	}
 }

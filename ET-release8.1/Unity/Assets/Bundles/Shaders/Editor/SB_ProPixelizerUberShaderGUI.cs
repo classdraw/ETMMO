@@ -24,11 +24,23 @@ public class SB_ProPixelizerUberShaderGUI : ShaderGUI
 
         if (EditorGUI.EndChangeCheck() && material != null)
         {
+            SyncMainTex(material);
             SyncKeywords(material);
         }
         else if (material != null)
         {
+            SyncMainTex(material);
             SyncKeywords(material);
+        }
+    }
+
+    static void SyncMainTex(Material material)
+    {
+        if (material.HasProperty("_MainTex") && material.HasProperty("_BaseMap"))
+        {
+            material.SetTexture("_MainTex", material.GetTexture("_BaseMap"));
+            material.SetTextureScale("_MainTex", material.GetTextureScale("_BaseMap"));
+            material.SetTextureOffset("_MainTex", material.GetTextureOffset("_BaseMap"));
         }
     }
 

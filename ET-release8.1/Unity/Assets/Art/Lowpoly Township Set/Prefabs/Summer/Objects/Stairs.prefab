@@ -45,6 +45,10 @@ PrefabInstance:
       value: Stairs
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
+      propertyPath: m_TagString
+      value: NavMesh
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -91,18 +95,20 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2183194ddac7f134b84c2aab21ac5305, type: 2}
+      objectReference: {fileID: 2100000, guid: a7864f33c4fc1954f80e4155994ca19c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 100000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 487f60bb91f66eb4ba1bff5653002087,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 6344043961905175853}
   m_SourcePrefab: {fileID: 100100000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
 --- !u!1 &5405329367402312807 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
+  m_CorrespondingSourceObject: {fileID: 100000, guid: 487f60bb91f66eb4ba1bff5653002087,
+    type: 3}
   m_PrefabInstance: {fileID: 5405329367402410695}
   m_PrefabAsset: {fileID: 0}
 --- !u!64 &6344043961905175853
@@ -129,6 +135,7 @@ MeshCollider:
   m_Mesh: {fileID: 4300000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
 --- !u!4 &5405329367402801223 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: 487f60bb91f66eb4ba1bff5653002087, type: 3}
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 487f60bb91f66eb4ba1bff5653002087,
+    type: 3}
   m_PrefabInstance: {fileID: 5405329367402410695}
   m_PrefabAsset: {fileID: 0}

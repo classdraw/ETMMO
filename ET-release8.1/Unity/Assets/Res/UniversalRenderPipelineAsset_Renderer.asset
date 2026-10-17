@@ -29,16 +29,16 @@ MonoBehaviour:
   m_Active: 1
   UseDepthTestingForIDOutlines: 1
   DepthTestThreshold: 0.0001
-  UseNormalsForEdgeDetection: 1
+  UseNormalsForEdgeDetection: 0
   NormalEdgeDetectionThreshold: 2
-  UseDepthTestingForEdgeOutlines: 1
-  DefaultLowResScale: 0.5
+  UseDepthTestingForEdgeOutlines: 0
+  DefaultLowResScale: 0.45
   UsePixelExpansion: 1
   PixelizedLayers:
     serializedVersion: 2
     m_Bits: 0
   PrepassConfiguration: 0
-  EditorPixelExpansion: 1
+  EditorPixelExpansion: 0
   GenerateWarnings: 1
   Shaders:
     CopyDepth: {fileID: 4800000, guid: 5854eec6cff8aa8449c5f14562cf9c11, type: 3}
