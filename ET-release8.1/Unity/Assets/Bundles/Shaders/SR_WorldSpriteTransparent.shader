@@ -9,6 +9,9 @@ Shader "Custom/SR_WorldSpriteTransparent"
         _OcclusionFade("Occlusion Fade", Range(0, 1)) = 1
         _BorderClip("Border Clip (Left, Top, Right, Bottom)", Vector) = (0, 0, 0, 0)
 
+        [Header(Realtime Light)]
+        [Toggle] _ReceiveShadows("Receive Realtime Shadows", Float) = 1
+
         [Header(Scene Shadow)]
         [Toggle] _UseSceneShadow("Use Scene Shadow", Float) = 1
         _SceneShadowChannelMask("Scene Shadow Channel Mask", Vector) = (1, 0, 0, 0)
@@ -49,7 +52,7 @@ Shader "Custom/SR_WorldSpriteTransparent"
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
             #endif
-            #include "SR_SceneShadowIntegration.hlsl"
+            #include "SR_RealtimeSceneShadowLighting.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST;
@@ -125,33 +128,22 @@ Shader "Custom/SR_WorldSpriteTransparent"
                 half alpha = color.a * _OcclusionFade;
 
                 half3 normalWS = normalize(input.normalWS);
-                Light mainLight = GetMainLight(input.shadowCoord);
-                half ndotl = saturate(dot(normalWS, mainLight.direction) * 0.5h + 0.5h);
-                half3 mainLightColor = mainLight.color
-                    * mainLight.distanceAttenuation
-                    * mainLight.shadowAttenuation
-                    * ndotl;
-
+                Light mainLight = SR_GetMainLightRealtime(input.shadowCoord);
                 half3 bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
-                MixRealtimeAndBakedGI(mainLight, normalWS, bakedGI);
-
-                // Scene shadow on unlit albedo first, then soft lighting tint.
-                half3 shadedAlbedo = ApplySRSceneShadow(
-                    albedo,
-                    input.positionCS,
-                    _SceneShadowChannelMask,
-                    _UseSceneShadow,
-                    _SceneShadowColor.rgb,
-                    _SceneShadowIntensity);
-
-                half3 lighting = bakedGI + mainLightColor;
-                half lightLuma = max(max(lighting.r, lighting.g), lighting.b);
-                half3 litColor = shadedAlbedo * lerp(half3(1.0h, 1.0h, 1.0h), lighting, saturate(lightLuma * 1000.0h));
+                half3 litColor = SR_ApplySpriteRealtimeLighting(albedo, mainLight, normalWS, bakedGI);
                 litColor += GetFakeLight(input.positionWS, normalWS);
 
                 #if defined(_SSCS_RECEIVE)
                     litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
                 #endif
+
+                litColor = SR_ApplySceneShadowOnLit(
+                    litColor,
+                    input.positionCS,
+                    _SceneShadowChannelMask,
+                    _UseSceneShadow,
+                    _SceneShadowColor.rgb,
+                    _SceneShadowIntensity);
 
                 litColor = MixFog(litColor, input.fogFactor);
                 return half4(litColor, alpha);
@@ -159,4 +151,6 @@ Shader "Custom/SR_WorldSpriteTransparent"
             ENDHLSL
         }
     }
+
+    CustomEditor "SR_ReceiveShadowsShaderGUI"
 }

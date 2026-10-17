@@ -230,7 +230,7 @@ namespace ET.Client
             c2RCreateRole.AccountName = cache.Account;
             c2RCreateRole.ServerId = cache.ServerId;
             c2RCreateRole.Name = roleName;
-            c2RCreateRole.BaseExternalDisplay = baseExternalDisplay ?? string.Empty;
+            c2RCreateRole.BaseExternalDisplay = ExternalDisplayHelper.NormalizeExternalDisplayForStorage(baseExternalDisplay);
 
             R2C_CreateRole r2CCreateRole = await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
             if (r2CCreateRole == null || r2CCreateRole.Error != ErrorCode.ERR_Success)

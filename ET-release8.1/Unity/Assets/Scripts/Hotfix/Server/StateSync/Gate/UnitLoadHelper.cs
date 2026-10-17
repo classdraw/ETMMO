@@ -10,10 +10,11 @@ namespace ET.Server
             bool isNewUnit = unit == null;
             if (isNewUnit)
             {
+                int unitConfigId = player.ConfigId > 0 ? player.ConfigId : ExternalDisplayHelper.DefaultUnitConfigId;
                 unit = UnitFactory.Create(
                     gateMapComponent.Scene,
                     player.Id,
-                    player.ConfigId,
+                    unitConfigId,
                     player.Name,
                     UnitType.Player);
                 player.ApplyProfileToUnit(unit);

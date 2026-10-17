@@ -12,6 +12,9 @@ Shader "Custom/SR_TilemapSpriteLit"{
         _NormalScale("Normal Scale", Float) = 1.0
         [Toggle] _ZWrite("ZWrite", Float) = 0
 
+        [Header(Realtime Light)]
+        [Toggle] _ReceiveShadows("Receive Realtime Shadows", Float) = 1
+
         [Header(Scene Shadow)]
         [Toggle] _UseSceneShadow("Use Scene Shadow", Float) = 1
         _SceneShadowChannelMask("Scene Shadow Channel Mask", Vector) = (1, 1, 1, 1)
@@ -62,7 +65,7 @@ Shader "Custom/SR_TilemapSpriteLit"{
             #if defined(_SSCS_RECEIVE)
                 #include "SR_CloudShadowsIntegration.hlsl"
             #endif
-            #include "SR_SceneShadowIntegration.hlsl"
+            #include "SR_RealtimeSceneShadowLighting.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
@@ -158,25 +161,16 @@ Shader "Custom/SR_TilemapSpriteLit"{
                 half3 albedo = color.rgb;
                 half3 normalWS = GetNormalWS(input);
 
-                Light mainLight = GetMainLight(input.shadowCoord);
-                half ndotl = saturate(dot(normalWS, mainLight.direction));
-                half3 mainLightColor = mainLight.color
-                    * mainLight.distanceAttenuation
-                    * mainLight.shadowAttenuation
-                    * ndotl;
-
+                Light mainLight = SR_GetMainLightRealtime(input.shadowCoord);
                 half3 bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
-                MixRealtimeAndBakedGI(mainLight, normalWS, bakedGI);
-
-                half3 lighting = bakedGI + mainLightColor;
-                half3 litColor = albedo * lighting;
+                half3 litColor = SR_ApplySpriteRealtimeLighting(albedo, mainLight, normalWS, bakedGI);
                 litColor += GetFakeLight(input.positionWS, normalWS);
 
                 #if defined(_SSCS_RECEIVE)
                     litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
                 #endif
 
-                litColor = ApplySRSceneShadow(
+                litColor = SR_ApplySceneShadowOnLit(
                     litColor,
                     input.positionCS,
                     _SceneShadowChannelMask,
@@ -258,4 +252,5 @@ Shader "Custom/SR_TilemapSpriteLit"{
     }
 
     FallBack "Sprites/Default"
+    CustomEditor "SR_ReceiveShadowsShaderGUI"
 }

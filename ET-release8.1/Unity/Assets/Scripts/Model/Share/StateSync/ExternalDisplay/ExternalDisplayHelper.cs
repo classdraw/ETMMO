@@ -12,11 +12,12 @@ namespace ET
     /// </summary>
     public static class ExternalDisplayHelper
     {
-        public const string DefaultExternalDisplayVal = "1001,1023,1050,1053";
+        public const string DefaultExternalDisplayVal = "0,0,0,0,0";
         public const int DefaultRace = (int)FrameRoleRaceType.Human;
         public const int DefaultGender = (int)FrameRoleGenderType.Male;
         public const char ExternalDisplaySeparator = ',';
         public const int ExternalDisplayPartCount = 5;
+        /// <summary>UnitConfig 表 Id（通用玩家模板），与外显 DefaultExternalDisplayVal 无关。</summary>
         public const int DefaultUnitConfigId = 1001;
 
         public static bool MatchesRace(int configRaceKey, int race)
@@ -92,9 +93,9 @@ namespace ET
 
         public static void InitDefaultAppearance(ref ExternalDisplayAppearance appearance, ExternalDisplayPartIdsQuery getPartDisplayIds)
         {
+            appearance = default;
             appearance.Race = DefaultRace;
             appearance.Gender = DefaultGender;
-            ValidatePartSelections(ref appearance, getPartDisplayIds);
         }
 
         public static void ValidatePartSelections(ref ExternalDisplayAppearance appearance, ExternalDisplayPartIdsQuery getPartDisplayIds)
@@ -284,6 +285,38 @@ namespace ET
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// 空串或五段均为 0（未选外显，创角默认）。
+        /// </summary>
+        public static bool IsBlankExternalDisplay(string externalDisplay)
+        {
+            if (string.IsNullOrWhiteSpace(externalDisplay))
+            {
+                return true;
+            }
+
+            if (!TryParseExternalDisplayString(externalDisplay, out ExternalDisplayAppearance appearance))
+            {
+                return false;
+            }
+
+            return appearance.BodyDisplayId <= 0
+                   && appearance.HeadDisplayId <= 0
+                   && appearance.TailDisplayId <= 0
+                   && appearance.ShirtDisplayId <= 0
+                   && appearance.PantsDisplayId <= 0;
+        }
+
+        public static string NormalizeExternalDisplayForStorage(string externalDisplay)
+        {
+            if (IsBlankExternalDisplay(externalDisplay))
+            {
+                return DefaultExternalDisplayVal;
+            }
+
+            return externalDisplay.Trim();
         }
 
         /// <summary>

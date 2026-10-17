@@ -52,7 +52,7 @@ namespace ET.Server
                 roleInfo.CreateTime = nowTimeDb;
                 roleInfo.LastLoginTime = 0;
                 roleInfo.Name = request.Name;
-                string baseExternalDisplay = request.BaseExternalDisplay ?? string.Empty;
+                string baseExternalDisplay = ExternalDisplayHelper.NormalizeExternalDisplayForStorage(request.BaseExternalDisplay);
                 if (!ExternalDisplayConfigHelper.IsExternalDisplayValid(baseExternalDisplay))
                 {
                     response.Error = ErrorCode.ERR_ExternalDisplayInvalid;

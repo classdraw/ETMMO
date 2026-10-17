@@ -43,7 +43,7 @@ namespace ET
             self.Speed = 0;
             self.N = 0;
             self.TurnTime = 0;
-            self.DisableMoveRotation = true;
+            self.DisableMoveRotation = false;
         }
         
         public static bool IsArrived(this MoveComponent self)
@@ -91,7 +91,7 @@ namespace ET
             self.IsTurnHorizontal = true;
             self.TurnTime = turnTime;
             self.Speed = speed;
-            self.DisableMoveRotation = true;
+            self.DisableMoveRotation = false;
             self.tcs = ETTask<bool>.Create(true);
 
             self.StartMove();
@@ -124,14 +124,13 @@ namespace ET
                     return;
                 }
                 
-                // 计算位置插值
+                long segmentElapsedMs = moveTime >= self.NeedTime ? self.NeedTime : moveTime;
                 if (moveTime >= self.NeedTime)
                 {
                     unit.Position = self.NextTarget;
                 }
                 else
                 {
-                    // 计算位置插值
                     float amount = moveTime * 1f / self.NeedTime;
                     if (amount > 0)
                     {
@@ -139,6 +138,8 @@ namespace ET
                         unit.Position = newPos;
                     }
                 }
+
+                ApplyMoveRotation(self, unit, segmentElapsedMs);
 
                 moveTime -= self.NeedTime;
 
@@ -183,9 +184,18 @@ namespace ET
             float3 v = self.GetFaceV();
             float3 faceDir = v;
             faceDir.y = 0;
-            if (math.lengthsq(faceDir) > math.EPSILON && !unit.IsForbidRotation())
+            if (!self.DisableMoveRotation && math.lengthsq(faceDir) > math.EPSILON && !unit.IsForbidRotation())
             {
-                unit.Forward = math.normalize(faceDir);
+                faceDir = math.normalize(faceDir);
+                if (self.TurnTime <= 0)
+                {
+                    unit.Forward = faceDir;
+                }
+                else
+                {
+                    self.From = unit.Rotation;
+                    self.To = quaternion.LookRotation(faceDir, math.up());
+                }
             }
 
             float distance = math.length(v);
@@ -201,6 +211,30 @@ namespace ET
         private static float3 GetFaceV(this MoveComponent self)
         {
             return self.NextTarget - self.PreTarget;
+        }
+
+        private static void ApplyMoveRotation(MoveComponent self, Unit unit, long segmentElapsedMs)
+        {
+            if (self.DisableMoveRotation || unit.IsForbidRotation())
+            {
+                return;
+            }
+
+            if (self.TurnTime > 0)
+            {
+                float t = math.clamp(segmentElapsedMs * 1f / self.TurnTime, 0f, 1f);
+                unit.Rotation = math.slerp(self.From, self.To, t);
+                return;
+            }
+
+            float3 faceDir = self.GetFaceV();
+            faceDir.y = 0;
+            if (math.lengthsq(faceDir) <= math.EPSILON)
+            {
+                return;
+            }
+
+            unit.Forward = math.normalize(faceDir);
         }
 
         public static bool FlashTo(this MoveComponent self, float3 target)

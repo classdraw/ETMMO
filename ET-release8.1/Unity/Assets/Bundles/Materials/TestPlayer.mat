@@ -8,13 +8,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TestPlayer
-  m_Shader: {fileID: 4800000, guid: 5df2ef1df22547669010cb5d5ea8b96f, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7c4e9a2b1d8f4036a5e0b9c3d2f1a8e7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _LOOP_ON
-  - _USESCENESHADOW_ON
+  m_ValidKeywords:
+  - _PROPIXELIZER_DITHERING_ON
+  - _RECEIVE_SHADOWS_ON
+  - _SPECULAR_SETUP
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -65,6 +66,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 1dd9ed36eb2cf634b8ad852bcb02e71b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _LightingRamp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -78,6 +83,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PaletteLUT:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -112,10 +121,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AlphaClipThreshold: 0.5
     - _AlphaToMask: 0
+    - _AnimStartTime: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _COLOR_GRADING: 0
     - _ChromaKey: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -123,8 +135,11 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DiffuseVertexColorWeight: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _EdgeBevelWeight: 0
+    - _EmissiveVertexColorWeight: 0
     - _EndColumn: 8
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
@@ -132,6 +147,7 @@ Material:
     - _GlossyReflections: 0
     - _GridColumns: 13
     - _GridRows: 21
+    - _ID: 1
     - _IgnoreColumn: -1
     - _IgnoreRow: -1
     - _Interval: 0.2
@@ -141,8 +157,11 @@ Material:
     - _Metallic: 0
     - _OcclusionFade: 1
     - _OcclusionStrength: 1
+    - _PROPIXELIZER_DITHERING: 1
     - _Parallax: 0.005
+    - _PixelSize: 3
     - _QueueOffset: 0
+    - _RECEIVE_SHADOWS: 1
     - _ReceiveShadows: 1
     - _Row: 10
     - _SceneShadowIntensity: 0.5
@@ -153,18 +172,22 @@ Material:
     - _SrcBlendAlpha: 1
     - _StartColumn: 1
     - _Surface: 0
+    - _USE_OBJECT_POSITION_FOR_PIXEL_GRID: 0
     - _UseSceneShadow: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _AmbientLight: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _BaseColor: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
     - _BodyColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EdgeHighlightColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5058824}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EquipColor1: {r: 1, g: 1, b: 1, a: 1}
     - _EquipColor2: {r: 1, g: 1, b: 1, a: 1}
     - _KeyColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 1}
+    - _PixelGridOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _SceneShadowChannelMask: {r: 1, g: 0, b: 0, a: 0}
     - _SceneShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
