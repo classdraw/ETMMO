@@ -48,3 +48,6 @@ MonoBehaviour:
   - key: Skeleton1001
     gameObject: {fileID: 7153520222090993161, guid: 0eb23eb4a2855424680e63705efb5952,
       type: 3}
+  - key: 
+    gameObject: {fileID: 4730161125091027903, guid: f1a7959afc961c147a2a5801d4f2ad2e,
+      type: 3}
