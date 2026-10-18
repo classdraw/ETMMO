@@ -17,8 +17,28 @@ namespace ET.Client
 		
 		public static async ETTask<UI> Create(this UIComponent self, string uiType)
 		{
+			if (self.UIs.TryGetValue(uiType, out EntityRef<UI> existingRef))
+			{
+				UI existing = existingRef;
+				if (existing != null)
+				{
+					ShowExistingUI(self, existing);
+					return existing;
+				}
+			}
 
 			UI ui = await self.UIGlobalComponent.OnCreate(self, uiType);
+			if (self.UIs.TryGetValue(uiType, out EntityRef<UI> concurrentRef))
+			{
+				UI concurrent = concurrentRef;
+				ui?.Dispose();
+				if (concurrent != null)
+				{
+					ShowExistingUI(self, concurrent);
+					return concurrent;
+				}
+			}
+
 			if (UIEventComponent.Instance.UIFullScreens.TryGetValue(uiType, out bool fullScreen))
 			{
 				ui.FullScreen = fullScreen;
@@ -36,6 +56,13 @@ namespace ET.Client
 			}
 
 			return ui;
+		}
+
+		private static void ShowExistingUI(UIComponent self, UI ui)
+		{
+			ui.IsHide = false;
+			ui.Visible(true);
+			RefreshUIStackVisibility(self);
 		}
 
 		public static void Remove(this UIComponent self, string uiType)
