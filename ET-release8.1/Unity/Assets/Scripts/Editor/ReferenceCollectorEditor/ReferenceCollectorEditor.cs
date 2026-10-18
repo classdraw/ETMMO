@@ -173,11 +173,23 @@ public class ReferenceCollectorEditor: Editor
 
 	private void CollectBindBones(SerializedProperty dataProperty)
 	{
-		Transform root = referenceCollector.transform;
+		Transform root = TryGetRootTransform(dataProperty);
+		if (root == null)
+		{
+			return;
+		}
+
+		Transform boneParent = root.parent;
+		if (boneParent == null)
+		{
+			EditorUtility.DisplayDialog("角色骨骼", "Root 必须有父节点，骨骼需与 Root 同级创建。", "确定");
+			return;
+		}
+
 		foreach (BindBoneType boneType in Enum.GetValues(typeof(BindBoneType)))
 		{
 			string boneName = boneType.ToString();
-			Transform found = FindChildByBoneName(root, boneName);
+			Transform found = FindDirectBoneSibling(root, boneName);
 			GameObject boneGo;
 			if (found != null)
 			{
@@ -187,8 +199,8 @@ public class ReferenceCollectorEditor: Editor
 			{
 				boneGo = new GameObject(boneName);
 				Undo.RegisterCreatedObjectUndo(boneGo, "Create BindBone");
-				Undo.SetTransformParent(boneGo.transform, root, "Create BindBone");
-				boneGo.transform.localPosition = Vector3.zero;
+				Undo.SetTransformParent(boneGo.transform, boneParent, "Create BindBone");
+				boneGo.transform.localPosition = GetDefaultBoneLocalPosition(boneType);
 				boneGo.transform.localRotation = Quaternion.identity;
 				boneGo.transform.localScale = Vector3.one;
 			}
@@ -197,26 +209,80 @@ public class ReferenceCollectorEditor: Editor
 		EditorUtility.SetDirty(referenceCollector);
 	}
 
-	private static Transform FindChildByBoneName(Transform root, string boneName)
+	private Transform TryGetRootTransform(SerializedProperty dataProperty)
 	{
-		Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
-		Transform contains = null;
-		for (int i = 0; i < transforms.Length; i++)
+		for (int i = 0; i < dataProperty.arraySize; i++)
 		{
-			Transform t = transforms[i];
-			if (t == root)
+			SerializedProperty element = dataProperty.GetArrayElementAtIndex(i);
+			if (element.FindPropertyRelative("key").stringValue != "Root")
 			{
 				continue;
 			}
-			if (string.Equals(t.name, boneName, StringComparison.OrdinalIgnoreCase))
+
+			Object rootRef = element.FindPropertyRelative("gameObject").objectReferenceValue;
+			if (rootRef is GameObject rootGo)
 			{
-				return t;
+				return rootGo.transform;
 			}
-			if (contains == null && t.name.IndexOf(boneName, StringComparison.OrdinalIgnoreCase) >= 0)
+
+			if (rootRef is Component rootComponent)
 			{
-				contains = t;
+				return rootComponent.transform;
+			}
+
+			break;
+		}
+
+		Transform rootChild = referenceCollector.transform.Find("Root");
+		if (rootChild != null)
+		{
+			return rootChild;
+		}
+
+		EditorUtility.DisplayDialog("角色骨骼", "请先在 ReferenceCollector 中配置 key 为 Root 的节点引用。", "确定");
+		return null;
+	}
+
+	private static Vector3 GetDefaultBoneLocalPosition(BindBoneType boneType)
+	{
+		switch (boneType)
+		{
+			case BindBoneType.Head:
+				return new Vector3(0f, 2f, 0f);
+			case BindBoneType.Body:
+				return new Vector3(0f, 1f, 0f);
+			case BindBoneType.Foot:
+				return new Vector3(0f, 0f, 0f);
+			default:
+				return Vector3.zero;
+		}
+	}
+
+	/// <summary>
+	/// 仅认与 Root 同级的直接兄弟节点，且名称须与骨骼 key 完全一致。
+	/// </summary>
+	private static Transform FindDirectBoneSibling(Transform root, string boneName)
+	{
+		Transform parent = root.parent;
+		if (parent == null)
+		{
+			return null;
+		}
+
+		for (int i = 0; i < parent.childCount; i++)
+		{
+			Transform sibling = parent.GetChild(i);
+			if (sibling == root)
+			{
+				continue;
+			}
+
+			if (sibling.name == boneName)
+			{
+				return sibling;
 			}
 		}
-		return contains;
+
+		return null;
 	}
 }

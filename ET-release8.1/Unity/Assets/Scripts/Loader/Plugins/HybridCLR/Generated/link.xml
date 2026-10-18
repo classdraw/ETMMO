@@ -57,6 +57,7 @@
     <type fullname="System.Collections.Generic.HashSet`1" preserve="all" />
     <type fullname="System.Collections.Generic.HashSet`1/Enumerator" preserve="all" />
     <type fullname="System.Linq.Enumerable" preserve="all" />
+    <type fullname="System.Linq.IOrderedEnumerable`1" preserve="all" />
   </assembly>
   <assembly fullname="System.Net.Http">
     <type fullname="System.Net.Http.HttpClient" preserve="all" />
@@ -201,6 +202,7 @@
     <type fullname="ET.World" preserve="all" />
   </assembly>
   <assembly fullname="Unity.Loader">
+    <type fullname="ET.ClientViewDebugSettings" preserve="all" />
     <type fullname="ET.CodeLoader" preserve="all" />
     <type fullname="ET.GlobalComponent" preserve="all" />
     <type fullname="ET.GlobalConfig" preserve="all" />
@@ -240,6 +242,7 @@
     <type fullname="DotRecast.Detour.DtNavMesh" preserve="all" />
     <type fullname="DotRecast.Detour.DtNavMeshQuery" preserve="all" />
     <type fullname="DotRecast.Detour.DtQueryDefaultFilter" preserve="all" />
+    <type fullname="DotRecast.Detour.DtRaycastHit" preserve="all" />
     <type fullname="DotRecast.Detour.DtStatus" preserve="all" />
     <type fullname="DotRecast.Detour.IDtQueryFilter" preserve="all" />
     <type fullname="DotRecast.Detour.Io.DtMeshSetReader" preserve="all" />
@@ -339,6 +342,7 @@
     <type fullname="System.Char" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2/Enumerator" preserve="all" />
+    <type fullname="System.Collections.Generic.Dictionary`2/KeyCollection" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2/ValueCollection" preserve="all" />
     <type fullname="System.Collections.Generic.Dictionary`2/ValueCollection/Enumerator" preserve="all" />
     <type fullname="System.Collections.Generic.IEnumerable`1" preserve="all" />
@@ -371,12 +375,15 @@
     <type fullname="System.IO.SeekOrigin" preserve="all" />
     <type fullname="System.IO.Stream" preserve="all" />
     <type fullname="System.IO.TextReader" preserve="all" />
+    <type fullname="System.IO.TextWriter" preserve="all" />
     <type fullname="System.Int32" preserve="all" />
     <type fullname="System.Int64" preserve="all" />
     <type fullname="System.Math" preserve="all" />
     <type fullname="System.MulticastDelegate" preserve="all" />
     <type fullname="System.NotSupportedException" preserve="all" />
     <type fullname="System.Object" preserve="all" />
+    <type fullname="System.ObsoleteAttribute" preserve="all" />
+    <type fullname="System.ParamArrayAttribute" preserve="all" />
     <type fullname="System.Random" preserve="all" />
     <type fullname="System.Reflection.BindingFlags" preserve="all" />
     <type fullname="System.Reflection.DefaultMemberAttribute" preserve="all" />
@@ -405,7 +412,9 @@
     <type fullname="System.Threading.CancellationTokenSource" preserve="all" />
     <type fullname="System.Threading.Monitor" preserve="all" />
     <type fullname="System.Threading.Tasks.Task" preserve="all" />
+    <type fullname="System.Threading.Tasks.TaskCreationOptions" preserve="all" />
     <type fullname="System.Threading.Tasks.TaskFactory" preserve="all" />
+    <type fullname="System.Threading.Tasks.TaskScheduler" preserve="all" />
     <type fullname="System.Threading.Tasks.Task`1" preserve="all" />
     <type fullname="System.Type" preserve="all" />
     <type fullname="System.UInt16" preserve="all" />
