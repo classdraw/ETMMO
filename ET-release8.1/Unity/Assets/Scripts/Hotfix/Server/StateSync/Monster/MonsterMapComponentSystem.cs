@@ -133,7 +133,7 @@ namespace ET.Server
                 return null;
             }
 
-            float3 pos = new float3(groupConfig.Pos[0] / 1000f, groupConfig.Pos[1] / 1000f, groupConfig.Pos[2] / 1000f);
+            float3 pos = new float3(groupConfig.Pos[0], groupConfig.Pos[1], groupConfig.Pos[2]);
             pos += new float3(RandomGenerator.RandomNumber(-groupConfig.Range, groupConfig.Range)/1000f, 0f, RandomGenerator.RandomNumber(-groupConfig.Range, groupConfig.Range)/1000f);
 
             Unit unit = UnitFactory.CreateMonster(self.Scene(), monsterConfig, pos);

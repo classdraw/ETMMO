@@ -62,15 +62,15 @@ namespace ET
 		/// <summary>Id</summary>
 		public int Id { get; set; }
 		/// <summary>位置/1000</summary>
-		public int[] _Pos;
+		public float[] _Pos;
 		
 		[BsonIgnore]
-		public int[] Pos
+		public float[] Pos
 		{
 			get
 			{
 				if(_Pos == null)
-					_Pos = new int[] { };
+					_Pos = new float[] { };
 				return _Pos;
 			}
 		}

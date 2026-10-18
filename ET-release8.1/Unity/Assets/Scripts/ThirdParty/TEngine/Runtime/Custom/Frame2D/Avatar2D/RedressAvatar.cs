@@ -103,7 +103,7 @@ namespace ET
 
         private void ApplyClipTextureRouting(Renderer renderer, FrameSheetAnimClip clip, FrameSheetFacing facing)
         {
-            // 未通过 ApplyTextures 注入贴图时，保留 prefab / 材质上已配置的贴图（ModelType=1 整模）。
+            // 未通过 ApplyTextures 注入贴图时，保留 prefab / 材质上已配置的贴图（怪物整模等）。
             if (!this.HasRuntimeTextures())
             {
                 return;

@@ -87,7 +87,7 @@ namespace ET.Client
                 return;
             }
 
-            if (!TryPrepareMonsterModel(unit, monsterConfig, out string prefabAssetPath))
+            if (!TryPrepareMonsterModel(monsterConfig, out string prefabAssetPath))
             {
                 return;
             }
@@ -111,45 +111,23 @@ namespace ET.Client
         }
 
         /// <summary>
-        /// ModelType=0：Monster.prefab 骨架 + Model 部位拼装。
-        /// ModelType=1：Model 指定整模 prefab，脚本栈相同，预制体已做好贴图无需拼装。
+        /// Model 为整模 prefab 名（ModelType=1），加载 Assets/Bundles/Unit/{Model}.prefab。
         /// </summary>
-        private static bool TryPrepareMonsterModel(Unit unit, MonsterConfig monsterConfig, out string prefabAssetPath)
+        private static bool TryPrepareMonsterModel(MonsterConfig monsterConfig, out string prefabAssetPath)
         {
             prefabAssetPath = null;
-            switch (monsterConfig.ModelType)
+            if (monsterConfig.ModelType != (int)MonsterModelType.Prefab)
             {
-                case (int)MonsterModelType.PartAssembly:
-                {
-                    if (!ExternalDisplayHelper.TryParseExternalDisplayString(monsterConfig.Model, out _))
-                    {
-                        Log.Error($"Monster part assembly Model invalid: monsterConfigId={monsterConfig.Id}, model={monsterConfig.Model}");
-                        return false;
-                    }
-
-                    if (string.IsNullOrEmpty(unit.BaseExternalDisplay))
-                    {
-                        unit.BaseExternalDisplay = monsterConfig.Model;
-                    }
-
-                    prefabAssetPath = "Assets/Bundles/Unit/Monster.prefab";
-                    return true;
-                }
-                case (int)MonsterModelType.Prefab:
-                {
-                    prefabAssetPath = $"Assets/Bundles/Unit/{monsterConfig.Model}.prefab";
-                    return true;
-                }
-                default:
-                {
-                    Log.Error($"Unknown Monster ModelType: {monsterConfig.ModelType}, monsterConfigId={monsterConfig.Id}");
-                    return false;
-                }
+                Log.Error($"Monster ModelType must be Prefab(1): type={monsterConfig.ModelType}, monsterConfigId={monsterConfig.Id}");
+                return false;
             }
+
+            prefabAssetPath = $"Assets/Bundles/Unit/{monsterConfig.Model}.prefab";
+            return true;
         }
 
         /// <summary>
-        /// 两种 ModelType 共用同一套 2D View 组件；仅 PartAssembly 会通过 Avatar2D 拼装部件。
+        /// 怪物 2D View 组件；整模 prefab 自带贴图，不走部位拼装。
         /// </summary>
         private static void AttachMonsterViewComponents(Unit unit, GameObject go)
         {
