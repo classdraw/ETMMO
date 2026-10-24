@@ -126,7 +126,7 @@ Material:
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
-    - _PixelSize: 2
+    - _PixelSize: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _R_Metallic: 0

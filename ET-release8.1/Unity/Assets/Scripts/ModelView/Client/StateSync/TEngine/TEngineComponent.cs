@@ -9,8 +9,12 @@ namespace ET.Client
     public class TEngineComponent: Entity, IAwake,IDestroy
     {
         public string GameEntryPath = $"Assets/Bundles/Tools/GameEntry.prefab";
-        
+
+        public const string PostProcessingResourcesPath = "TEngine/PostProcessing";
+
         public GameObject GameEntryObj;
+
+        public GameObject PostProcessingObj;
         
         public TEngineGlobal EngineGlobal;
         

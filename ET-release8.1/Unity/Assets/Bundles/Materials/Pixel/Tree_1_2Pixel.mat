@@ -54,7 +54,7 @@ Material:
     - _ProPixelizerMaterialVersion: 2002
     m_Floats:
     - _Glossiness: 0.5
-    - _PixelSize: 3
+    - _PixelSize: 2
     - _Smoothness: 0
     m_Colors:
     - _EdgeHighlightColor: {r: 0.7764706, g: 0.7764706, b: 0.7764706, a: 1}

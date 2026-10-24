@@ -125,7 +125,7 @@ Material:
     - _OcclusionStrength: 1
     - _PROPIXELIZER_DITHERING: 1
     - _Parallax: 0.02
-    - _PixelSize: 3
+    - _PixelSize: 2
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RECEIVE_SHADOWS: 1

@@ -6,6 +6,11 @@
 		protected override async ETTask Run(Scene root, AppStartInitFinish args)
 		{
 			await SceneChangeHelper.SceneChangeToSimple(root, "Login", 0);
+			TEngineComponent tEngine = root.GetComponent<TEngineComponent>();
+			if (tEngine != null)
+			{
+				await tEngine.LoadPostProcessingPrefabAsync();
+			}
 			// UILogin 由 SceneChangeFinishEvent_CreateUIHelp 在 Login 场景下创建
 			/*
 			var computer1=root.GetComponent<ComputersComponent>().AddChild<Computer>();

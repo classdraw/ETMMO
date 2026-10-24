@@ -16,6 +16,9 @@ public class SB_ProPixelizerMainCameraSetup : MonoBehaviour
     [Tooltip("Disable SMAA/TAA on pixel cameras; they cause edge shimmer.")]
     public bool DisableCameraAntialiasing = true;
 
+    [Tooltip("URP Post Processing (Volume stack). Do not turn off with antialiasing.")]
+    public bool EnablePostProcessing = true;
+
     void Awake()
     {
         Camera camera = GetComponent<Camera>();
@@ -33,13 +36,13 @@ public class SB_ProPixelizerMainCameraSetup : MonoBehaviour
         proPixelizer.ClampCameraOrthoSize = true;
         proPixelizer.UsePixelArtUpscalingFilter = true;
 
-        if (DisableCameraAntialiasing)
+        UniversalAdditionalCameraData urp = GetComponent<UniversalAdditionalCameraData>();
+        if (urp != null)
         {
-            UniversalAdditionalCameraData urp = GetComponent<UniversalAdditionalCameraData>();
-            if (urp != null)
+            urp.renderPostProcessing = EnablePostProcessing;
+            if (DisableCameraAntialiasing)
             {
                 urp.antialiasing = AntialiasingMode.None;
-                urp.renderPostProcessing = false;
             }
         }
     }

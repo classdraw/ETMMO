@@ -254,6 +254,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	// ET.StateMachineWrap<ET.Client.SessionDisposeNotify_CreateUISessionError.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.TEngineComponentSystem.<Init>d__1>
 	// ET.StateMachineWrap<ET.Client.TEngineComponentSystem.<LoadGameObjectInstance>d__2>
+	// ET.StateMachineWrap<ET.Client.TEngineComponentSystem.<LoadPostProcessingPrefabAsync>d__4>
 	// ET.StateMachineWrap<ET.Client.TestEventSee_Debug.<Run>d__0>
 	// ET.StateMachineWrap<ET.Client.TestEventSee_Debug.<Test1>d__1>
 	// ET.StateMachineWrap<ET.Client.TestEventSee_Debug.<Test2>d__2>
@@ -1041,6 +1042,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.SceneChangeStart_CreateLoading.<Run>d__0>(object&,ET.Client.SceneChangeStart_CreateLoading.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.SessionDisposeNotify_CreateUISessionError.<Run>d__0>(object&,ET.Client.SessionDisposeNotify_CreateUISessionError.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.TEngineComponentSystem.<Init>d__1>(object&,ET.Client.TEngineComponentSystem.<Init>d__1&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.TEngineComponentSystem.<LoadPostProcessingPrefabAsync>d__4>(object&,ET.Client.TEngineComponentSystem.<LoadPostProcessingPrefabAsync>d__4&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.TestEventSee_Debug.<Run>d__0>(object&,ET.Client.TestEventSee_Debug.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.TestEventSee_Debug.<Test1>d__1>(object&,ET.Client.TestEventSee_Debug.<Test1>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.AwaitUnsafeOnCompleted<object,ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1>(object&,ET.Client.UILSLobbyComponentSystem.<EnterMap>d__1&)
@@ -1240,6 +1242,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.SceneChangeStart_CreateLoading.<Run>d__0>(ET.Client.SceneChangeStart_CreateLoading.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.SessionDisposeNotify_CreateUISessionError.<Run>d__0>(ET.Client.SessionDisposeNotify_CreateUISessionError.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.TEngineComponentSystem.<Init>d__1>(ET.Client.TEngineComponentSystem.<Init>d__1&)
+		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.TEngineComponentSystem.<LoadPostProcessingPrefabAsync>d__4>(ET.Client.TEngineComponentSystem.<LoadPostProcessingPrefabAsync>d__4&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.TestEventSee_Debug.<Run>d__0>(ET.Client.TestEventSee_Debug.<Run>d__0&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.TestEventSee_Debug.<Test1>d__1>(ET.Client.TestEventSee_Debug.<Test1>d__1&)
 		// System.Void ET.ETAsyncTaskMethodBuilder.Start<ET.Client.UIHelper.<Hide>d__2>(ET.Client.UIHelper.<Hide>d__2&)
@@ -1606,6 +1609,7 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 		// object UnityEngine.Object.Instantiate<object>(object)
 		// object UnityEngine.Object.Instantiate<object>(object,UnityEngine.Transform)
 		// object UnityEngine.Object.Instantiate<object>(object,UnityEngine.Transform,bool)
+		// UnityEngine.ResourceRequest UnityEngine.Resources.LoadAsync<object>(string)
 		// YooAsset.AllAssetsHandle YooAsset.ResourcePackage.LoadAllAssetsAsync<object>(string,uint)
 		// YooAsset.AssetHandle YooAsset.ResourcePackage.LoadAssetAsync<object>(string,uint)
 		// YooAsset.AssetHandle YooAsset.ResourcePackage.LoadAssetSync<object>(string)

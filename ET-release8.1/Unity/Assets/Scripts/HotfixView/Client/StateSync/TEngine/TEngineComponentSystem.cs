@@ -43,6 +43,12 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this TEngineComponent self)
         {
+            if (self.PostProcessingObj != null)
+            {
+                UnityEngine.Object.Destroy(self.PostProcessingObj);
+                self.PostProcessingObj = null;
+            }
+
             if (self.GameEntryObj != null)
             {
                 GameObject.Destroy(self.GameEntryObj);
@@ -50,6 +56,38 @@ namespace ET.Client
             }
         }
 
+        /// <summary>Resources.LoadAsync 加载后效 prefab（路径见 TEngineComponent.PostProcessingResourcesPath）</summary>
+        public static async ETTask LoadPostProcessingPrefabAsync(this TEngineComponent self)
+        {
+            if (self.PostProcessingObj != null)
+            {
+                return;
+            }
+
+            ResourceRequest request = Resources.LoadAsync<GameObject>(TEngineComponent.PostProcessingResourcesPath);
+            TimerComponent timer = self.Root().GetComponent<TimerComponent>();
+            while (!request.isDone)
+            {
+                await timer.WaitFrameAsync();
+            }
+
+            GameObject prefab = request.asset as GameObject;
+            if (prefab == null)
+            {
+                Log.Error($"Resources 未找到后效 prefab: {TEngineComponent.PostProcessingResourcesPath}");
+                return;
+            }
+
+            GameObject instance = UnityEngine.Object.Instantiate(prefab);
+            instance.name = "PostProcessing";
+            UnityEngine.Object.DontDestroyOnLoad(instance);
+            if (self.GameEntryObj != null)
+            {
+                instance.transform.SetParent(self.GameEntryObj.transform, false);
+            }
+
+            self.PostProcessingObj = instance;
+        }
 
         private static void LoadSetting(this TEngineComponent self)
         {
