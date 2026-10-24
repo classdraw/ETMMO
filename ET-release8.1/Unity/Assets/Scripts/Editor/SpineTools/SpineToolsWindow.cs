@@ -15,7 +15,7 @@ namespace ET
         [SerializeField]
         private UnityEngine.GameObject matchingListPrefab;
 
-        [MenuItem("Tools/Spine", false, 54)]
+        // [MenuItem("Tools/Spine", false, 54)]
         public static void Open()
         {
             var window = GetWindow<SpineToolsWindow>(true, "Spine", true);

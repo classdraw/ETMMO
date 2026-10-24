@@ -57,8 +57,6 @@ namespace ET.Client
 		public Text m_textJobR;
 		public Button m_btnJobRightR;
 		public Button m_btnJobLeftR;
-		public GameObject m_goUIRoleLeft;
-		public GameObject m_goUIRoleRight;
 	}
 }
 
@@ -137,8 +135,6 @@ namespace ET.Client
 			self.m_btnJobRightR.onClick.AddListener(() => { self.OnJobRightR(); });
 			self.m_btnJobLeftR = m_bindComponent.GetComponent<Button>(43);
 			self.m_btnJobLeftR.onClick.AddListener(() => { self.OnJobLeftR(); });
-			self.m_goUIRoleLeft = m_bindComponent.GetGameObject(44);
-			self.m_goUIRoleRight = m_bindComponent.GetGameObject(45);
 		}
 
 		[EntitySystem]

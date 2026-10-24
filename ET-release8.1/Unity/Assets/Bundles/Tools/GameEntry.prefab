@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSetting: {fileID: 11400000, guid: 71ccd815f8a6b944fa8bbca723f8e8e9, type: 2}
   procedureSetting: {fileID: 11400000, guid: ca4d0c17593a26541ad0cd54d7ddb4dd, type: 2}
-  updateSetting: {fileID: 0}
+  updateSetting: {fileID: 11400000, guid: b4c8d2e6f0a14893a7c5e1f2d3b4c567, type: 2}
 --- !u!1 &6121966458320758349
 GameObject:
   m_ObjectHideFlags: 0

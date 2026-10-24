@@ -279,7 +279,7 @@ namespace ET.Editor.Frame2D
     {
         private const string DefaultFolder = "Assets/Bundles/ScriptObject/FrameBone";
 
-        [MenuItem("Tools/旧的序列帧/Frame2D/Create Frame Anim Bone Config", false, 1)]
+        // [MenuItem("Tools/旧的序列帧/Frame2D/Create Frame Anim Bone Config", false, 1)]
         public static void CreateAsset()
         {
             EnsureFolder(DefaultFolder);

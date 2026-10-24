@@ -356,7 +356,7 @@ MonoBehaviour:
   overrideUsePixelExpansion: 0
   UsePixelExpansion: 1
   PixelizationFilter: 0
-  UsePixelArtUpscalingFilter: 0
+  UsePixelArtUpscalingFilter: 1
   TargetScale: 0.45
   FullscreenColorGradingLUT: {fileID: 0}
   EnableProPixelizer: 1

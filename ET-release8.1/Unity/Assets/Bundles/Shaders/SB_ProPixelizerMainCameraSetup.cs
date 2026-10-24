@@ -31,7 +31,7 @@ public class SB_ProPixelizerMainCameraSetup : MonoBehaviour
         proPixelizer.TargetScale = TargetScale;
         proPixelizer.UsePixelExpansion = true;
         proPixelizer.ClampCameraOrthoSize = true;
-        proPixelizer.UsePixelArtUpscalingFilter = false;
+        proPixelizer.UsePixelArtUpscalingFilter = true;
 
         if (DisableCameraAntialiasing)
         {

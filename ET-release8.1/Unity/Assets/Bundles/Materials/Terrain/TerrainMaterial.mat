@@ -25,7 +25,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _PROPIXELIZER_DITHERING_ON
   - _RECEIVE_SHADOWS_ON
   m_InvalidKeywords:
   - _USESCENESHADOW_ON
@@ -193,7 +192,7 @@ Material:
     - _Metallic3: 0
     - _NumLayersCount: 1
     - _OcclusionStrength: 1
-    - _PROPIXELIZER_DITHERING: 1
+    - _PROPIXELIZER_DITHERING: 0
     - _Parallax: 0.005
     - _PixelSize: 4
     - _QueueOffset: 0
@@ -211,7 +210,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _USE_OBJECT_POSITION_FOR_PIXEL_GRID: 0
-    - _UseSceneShadow: 1
+    - _UseSceneShadow: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
@@ -220,7 +219,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeHighlightColor: {r: 0.7764706, g: 0.7764706, b: 0.7764706, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 0}
     - _PixelGridOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _SceneShadowChannelMask: {r: 1, g: 0, b: 0, a: 0}
     - _SceneShadowColor: {r: 0, g: 0, b: 0, a: 1}

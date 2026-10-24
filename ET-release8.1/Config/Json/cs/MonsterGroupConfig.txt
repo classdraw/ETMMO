@@ -3,4 +3,5 @@
 [3002, {"_t":"MonsterGroupConfig","_id":3002,"_Pos":[78.0,0.0,-53.42],"Range":500,"mapId":10002}],
 [3003, {"_t":"MonsterGroupConfig","_id":3003,"_Pos":[86.0,0.0,-54.42],"Range":500,"mapId":10002}],
 [3004, {"_t":"MonsterGroupConfig","_id":3004,"_Pos":[90.0,0.0,-65.42],"Range":500,"mapId":10002}],
+[3005, {"_t":"MonsterGroupConfig","_id":3005,"_Pos":[75.3,0.0,-60.0],"Range":500,"mapId":10001}],
 ]}

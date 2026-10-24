@@ -41,10 +41,36 @@ namespace TEngine
         [SerializeField]
         private ProcedureSetting procedureSetting;
 
+        [SerializeField]
+        private UpdateSetting updateSetting;
 
         public static AudioSetting AudioSetting => Instance.audioSetting;
 
         public static ProcedureSetting ProcedureSetting => Instance.procedureSetting;
+
+        public static UpdateSetting UpdateSetting
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (Instance != null && Instance.updateSetting != null)
+                {
+                    return Instance.updateSetting;
+                }
+
+                string[] guids = UnityEditor.AssetDatabase.FindAssets("t:UpdateSetting");
+                if (guids.Length >= 1)
+                {
+                    string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guids[0]);
+                    return UnityEditor.AssetDatabase.LoadAssetAtPath<UpdateSetting>(path);
+                }
+
+                return null;
+#else
+                return Instance != null ? Instance.updateSetting : null;
+#endif
+            }
+        }
 
 
         #region 用户设置的一些值

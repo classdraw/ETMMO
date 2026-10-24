@@ -77,7 +77,7 @@ namespace ET
         [SerializeField] private ImageRecolorTab imageRecolorTab = new ImageRecolorTab();
         [SerializeField] private FrameBoneExportTab frameBoneExportTab = new FrameBoneExportTab();
 
-        [MenuItem("Tools/旧的序列帧/序列帧", false, 0)]
+        // [MenuItem("Tools/旧的序列帧/序列帧", false, 0)]
         public static void Open()
         {
             var window = GetWindow<SpriteSheetToolsWindow>(true, "序列帧", true);

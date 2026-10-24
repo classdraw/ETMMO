@@ -110,7 +110,7 @@ namespace TEngine.Editor.UI
             }
 
             ScriptGeneratorSetting setting = CreateInstance<ScriptGeneratorSetting>();
-            AssetDatabase.CreateAsset(setting, "Assets/Editor/ScriptGeneratorSetting.asset");
+            AssetDatabase.CreateAsset(setting, "Assets/Scripts/Editor/TEngine/Editor/UIScriptGenerator/ScriptGeneratorSetting.asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }

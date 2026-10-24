@@ -15,7 +15,7 @@ namespace TEngine.Editor
     {
         private const string MenuPath = "Tools/图集工具/拆分图集为单图PNG";
 
-        [MenuItem(MenuPath, false, 25)]
+        // [MenuItem(MenuPath, false, 25)]
         private static void SplitSelected()
         {
             var texturePaths = CollectTargetTexturePaths();
@@ -50,7 +50,7 @@ namespace TEngine.Editor
             }
         }
 
-        [MenuItem(MenuPath, true)]
+        // [MenuItem(MenuPath, true)]
         private static bool SplitSelectedValidate()
         {
             return CollectTargetTexturePaths().Count > 0;

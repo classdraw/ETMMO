@@ -25,7 +25,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _PROPIXELIZER_DITHERING_ON
   - _RECEIVE_SHADOWS_ON
   - _SPECULAR_SETUP
   m_InvalidKeywords: []
@@ -91,20 +90,21 @@ Material:
     - _ID: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _PROPIXELIZER_DITHERING: 1
+    - _PROPIXELIZER_DITHERING: 0
     - _Parallax: 0.08
     - _PixelSize: 3
     - _RECEIVE_SHADOWS: 1
     - _Smoothness: 0.117
     - _SpecularHighlights: 1
     - _USE_OBJECT_POSITION_FOR_PIXEL_GRID: 0
+    - _UseSceneShadow: 0
     - _WorkflowMode: 1
     m_Colors:
     - _AmbientLight: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _BaseColor: {r: 0.5647059, g: 0.53333336, b: 0.50980395, a: 1}
     - _EdgeHighlightColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0.21999997, g: 0.21999997, b: 0.21999997, a: 1}
+    - _OutlineColor: {r: 0.21999997, g: 0.21999997, b: 0.21999997, a: 0}
     - _PixelGridOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

@@ -138,7 +138,7 @@ Material:
     - _OcclusionStrength: 1
     - _PROPIXELIZER_DITHERING: 1
     - _Parallax: 0.02
-    - _PixelSize: 4
+    - _PixelSize: 3
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RECEIVE_SHADOWS: 1
@@ -166,7 +166,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeHighlightColor: {r: 0.7764706, g: 0.7764706, b: 0.7764706, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 0.69803923}
     - _PixelGridOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _SceneShadowChannelMask: {r: 1, g: 0, b: 0, a: 0}
     - _SceneShadowColor: {r: 0, g: 0, b: 0, a: 1}
