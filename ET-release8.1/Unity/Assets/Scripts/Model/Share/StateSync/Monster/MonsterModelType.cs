@@ -6,7 +6,7 @@ namespace ET
     public enum MonsterModelType
     {
         /// <summary>
-        /// Model 为 prefab 名称（不含路径与后缀），加载 Assets/Bundles/Unit/{Model}.prefab。
+        /// Model 为 prefab 名称（不含路径与后缀），加载 Assets/Bundles/Unit/Monster/{Model}.prefab。
         /// </summary>
         Prefab = 1,
     }

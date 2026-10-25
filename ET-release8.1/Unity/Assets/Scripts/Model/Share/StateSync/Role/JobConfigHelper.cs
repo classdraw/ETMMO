@@ -8,7 +8,8 @@ namespace ET
     /// </summary>
     public static class JobConfigHelper
     {
-        public const string UnitBundleFolder = "Assets/Bundles/Unit";
+        public const string UnitBundleFolder = UnitBundlePathHelper.Root;
+        public const string UnitRoleBundleFolder = UnitBundlePathHelper.RoleFolder;
         public const string UiObjectLayerName = "UIObject";
 
         /// <summary>旧档案 Job 为 1~5 枚举时，映射为 Job 表 Id（1001 起）。</summary>
@@ -105,7 +106,7 @@ namespace ET
                 return false;
             }
 
-            assetPath = $"{UnitBundleFolder}/{prefabName}.prefab";
+            assetPath = UnitBundlePathHelper.GetRolePrefabPath(prefabName);
             return true;
         }
 

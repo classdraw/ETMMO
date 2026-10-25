@@ -18,7 +18,7 @@ namespace ET
 
         public const string RobotViewPrefabName = "Robot001";
 
-        public const string RobotViewPrefabAssetPath = "Assets/Bundles/Unit/Robot001.prefab";
+        public const string RobotViewPrefabAssetPath = UnitBundlePathHelper.MonsterFolder + "/" + RobotViewPrefabName + ".prefab";
 
 
 

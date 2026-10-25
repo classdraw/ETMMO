@@ -111,7 +111,7 @@ namespace ET.Client
         }
 
         /// <summary>
-        /// Model 为整模 prefab 名（ModelType=1），加载 Assets/Bundles/Unit/{Model}.prefab。
+        /// Model 为整模 prefab 名（ModelType=1），加载 Assets/Bundles/Unit/Monster/{Model}.prefab。
         /// </summary>
         private static bool TryPrepareMonsterModel(MonsterConfig monsterConfig, out string prefabAssetPath)
         {
@@ -122,7 +122,7 @@ namespace ET.Client
                 return false;
             }
 
-            prefabAssetPath = $"Assets/Bundles/Unit/{monsterConfig.Model}.prefab";
+            prefabAssetPath = UnitBundlePathHelper.GetMonsterPrefabPath(monsterConfig.Model);
             return true;
         }
 
