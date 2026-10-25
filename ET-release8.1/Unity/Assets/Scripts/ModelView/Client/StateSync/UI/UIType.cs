@@ -10,6 +10,8 @@ namespace ET.Client
 	    public const string UILogin = "UILogin";
 	    public const string UILobby = "UILobby";
 	    public const string UIHelp = "UIHelp";
+	    public const string UIMain = "UIMain";
+	    public const string UIBag = "UIBag";
 	    public const string UISessionError = "UISessionError";    
 			    
 	    public const int WINDOW_HIDE_LAYER = 2; // Ignore Raycast

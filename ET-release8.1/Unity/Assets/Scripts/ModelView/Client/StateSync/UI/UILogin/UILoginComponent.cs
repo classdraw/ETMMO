@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TEngine;
-using GameLogic;
 
 namespace ET.Client
 {

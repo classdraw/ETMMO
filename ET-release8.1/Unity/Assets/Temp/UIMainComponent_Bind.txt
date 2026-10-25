@@ -1,0 +1,42 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UIMainComponent : Entity, IAwake, IDestroy
+	{
+		public Button m_btnBag;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UIMainComponent))]
+	[FriendOf(typeof(UIMainComponent))]
+	public static partial class UIMainComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UIMainComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_btnBag = m_bindComponent.GetComponent<Button>(0);
+			self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UIMainComponent self)
+		{
+		}
+
+		public static void OnBag(this UIMainComponent self)
+		{
+		}
+	}
+}

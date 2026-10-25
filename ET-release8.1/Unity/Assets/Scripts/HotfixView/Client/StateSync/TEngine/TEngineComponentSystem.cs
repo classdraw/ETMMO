@@ -103,23 +103,7 @@ namespace ET.Client
 
         public static void RefreshSetting(this TEngineComponent self)
         {
-            //VolumeManager.
-            /***
-            bool enablePostProcessing = self.SettingValues.TryGetValue(Setting_Key_Enum.PostProcessingKey, out float cacheValue)
-                ? cacheValue >= 0.5f
-                : SettingHelper.LoadBool(Setting_Key_Enum.PostProcessingKey);
 
-            PostProcessVolume[] volumes = UnityEngine.Object.FindObjectsOfType<PostProcessVolume>(true);
-            foreach (PostProcessVolume volume in volumes)
-            {
-                volume.enabled = enablePostProcessing;
-            }
-
-            PostProcessLayer[] layers = UnityEngine.Object.FindObjectsOfType<PostProcessLayer>(true);
-            foreach (PostProcessLayer layer in layers)
-            {
-                layer.enabled = enablePostProcessing;
-            }*/
         }
 
         public static void SaveSetting(this TEngineComponent self, Setting_Key_Enum key, object obj)

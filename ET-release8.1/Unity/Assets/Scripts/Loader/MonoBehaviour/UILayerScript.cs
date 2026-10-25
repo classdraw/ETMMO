@@ -12,13 +12,14 @@ namespace ET
     }*/
         
     /// <summary>
-    /// UI层级枚举。
+    /// UI层级。数值直接作为 Canvas.sortingOrder。
+    /// Bottom 常驻主界面；Popup 弹窗，叠在主界面上且不隐藏主界面。
     /// </summary>
     public enum UISortingOrder : int
     {
         Bottom = 0,
         UI = 1,
-        Top = 2,
+        Popup = 2,
         Tips = 3,
         System = 4,
     }

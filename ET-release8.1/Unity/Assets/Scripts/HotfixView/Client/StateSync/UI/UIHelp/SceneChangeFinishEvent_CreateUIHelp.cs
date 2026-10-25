@@ -13,6 +13,7 @@
             }
             else
             {
+                await UIHelper.Create(scene, UIType.UIMain);
                 await UIHelper.Create(scene, UIType.UIHelp);
             }
         }
