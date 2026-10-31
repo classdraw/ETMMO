@@ -71,6 +71,8 @@ namespace ET
 		public int Quality { get; set; }
 		/// <summary>堆叠上限</summary>
 		public int StackingLimit { get; set; }
+		/// <summary>模型</summary>
+		public string Model { get; set; }
 
 	}
 }
