@@ -7,14 +7,15 @@ namespace ET
         [EntitySystem]
         private static void Awake(this ET.Item self, int configId)
         {
-
             self.ConfigId = configId;
+            self.Index = KnapsackSlotHelper.UnassignedIndex;
         }
         [EntitySystem]
         private static void Destroy(this ET.Item self)
         {
             self.ConfigId = default;
             self.ContainerType = (int)KnapsackContainerType.None;
+            self.Index = KnapsackSlotHelper.UnassignedIndex;
         }
 
         public static void FromMessage(this Item self, ItemProto itemProto)
@@ -23,6 +24,7 @@ namespace ET
             self.ContainerType = itemProto.ContainerType;
             self.Count = itemProto.Count;
             self.Quality = itemProto.ItemQuality;
+            self.Index = itemProto.Index;
             
             /**
              
@@ -47,6 +49,7 @@ namespace ET
             message.ContainerType = self.ContainerType;
             message.Count = self.Count;
             message.ItemQuality = self.Quality;
+            message.Index = self.Index;
             
             if (!isAllInfo)
             {

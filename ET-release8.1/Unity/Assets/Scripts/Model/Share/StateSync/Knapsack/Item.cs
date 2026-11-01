@@ -11,6 +11,9 @@ namespace ET
         public int Count { get; set; }//数量
         public int Quality { get; set; }//品质
 
+        /// <summary>背包容器内格子下标，从 0 开始，范围 0 ~ 上限-1；未分配为 -1。</summary>
+        public int Index { get; set; } = -1;
+
         //配置数据 不会存入数据库
         [BsonIgnore]
         public ItemConfig Config => ItemConfigCategory.Instance.Get(this.ConfigId);

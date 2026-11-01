@@ -93,14 +93,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_components:
-  - {fileID: 7706221458790453240}
+  - {fileID: 202177603244321488}
   - {fileID: 1094576921354038694}
   - {fileID: 6898737802495500973}
   - {fileID: 9199958341044595649}
   - {fileID: 1616736656655972764}
   - {fileID: 3298434721799688541}
   - {fileID: 2593078258076765911}
-  - {fileID: 3773208030482247261}
+  - {fileID: 7016407363787717811}
   - {fileID: 2837712087793769976}
   - {fileID: 8114635762760779703}
   - {fileID: 1764842926637481883}
@@ -110,13 +110,13 @@ MonoBehaviour:
   - {fileID: 9172693613432738728}
   - {fileID: 3157315214525165694}
   - {fileID: 8302478755819271313}
-  - {fileID: 8738411579747639641}
+  - {fileID: 2763941182804079697}
   - {fileID: 622891383293971049}
-  - {fileID: 4982584655080772585}
+  - {fileID: 6167243383771976417}
   - {fileID: 2410217242800855409}
   - {fileID: 7620709790504123019}
   - {fileID: 3633837394762673396}
-  - {fileID: 5980999630684183302}
+  - {fileID: 3967655489819586256}
   - {fileID: 2015369446651558411}
   genCodePath: 
   className: UIHelpComponent
@@ -771,7 +771,7 @@ GameObject:
   - component: {fileID: 5897897264344127570}
   - component: {fileID: 622891383293971049}
   m_Layer: 5
-  m_Name: m_btnP2CastSimple
+  m_Name: m_btnP2SetSkillLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2475,7 +2475,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u91CA\u653E\u6280\u80FD(\u6D4B\u8BD5)"
+  m_Text: "\u8BBE\u7F6E\u6280\u80FD\u7B49\u7EA7"
 --- !u!1 &3698274593408032927
 GameObject:
   m_ObjectHideFlags: 0

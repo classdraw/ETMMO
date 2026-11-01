@@ -5,6 +5,8 @@ namespace ET.Server
     [FriendOfAttribute(typeof(ET.Server.Cast))]
     public static partial class SkillStatusComponentSystem
     {
+        public const int DefaultSkillLevel = 1;
+
         [EntitySystem]
         private static void Awake(this ET.Server.SkillStatusComponent self)
         {
@@ -18,7 +20,7 @@ namespace ET.Server
             self.CoolDownStartTimes.Clear();
         }
 
-        public static int CanCastSkill(this SkillStatusComponent self, int castConfigId)
+        public static int CanCastSkill(this SkillStatusComponent self, int castConfigId, bool checkLearned = false)
         {
             Unit unit = self.GetParent<Unit>();
             if (unit == null || unit.IsDisposed)
@@ -41,6 +43,12 @@ namespace ET.Server
             {
                 return ErrorCode.ERR_CastPreForbidSkill;
             }
+
+            if (checkLearned && (!self.SkillLevels.TryGetValue(castConfigId, out int lv) || lv < DefaultSkillLevel))
+            {
+                return ErrorCode.ERR_CastPreSkillNotLearned;
+            }
+
             //判断冷却状态
             if (self.CoolDowns.TryGetValue(castConfigId, out long tarTime))
             {
@@ -108,6 +116,28 @@ namespace ET.Server
             self.CurrentSkillCastID = default;
             self.CurrentSkillStartTime = default;
             self.CurrentSkillStatus = SkillStatusType.New;
+        }
+
+        public static int GetSkillLevel(this SkillStatusComponent self, int castConfigId)
+        {
+            return self.SkillLevels.TryGetValue(castConfigId, out int level) && level >= DefaultSkillLevel ? level : 0;
+        }
+
+        public static void SetSkillLevel(this SkillStatusComponent self, int castConfigId, int level)
+        {
+            if (level < DefaultSkillLevel)
+            {
+                level = DefaultSkillLevel;
+            }
+
+            if (self.SkillLevels.TryGetValue(castConfigId, out int oldLevel) && oldLevel == level)
+            {
+                return;
+            }
+
+            self.SkillLevels[castConfigId] = level;
+            Unit unit = self.GetParent<Unit>();
+            unit?.GetComponent<UnitDBSaveComponent>()?.AddChange(typeof(SkillStatusComponent));
         }
     }
 }

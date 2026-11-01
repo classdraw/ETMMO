@@ -2110,6 +2110,9 @@ namespace ET
         [MemoryPackOrder(5)]
         public EquipInfoProto EquipInfo { get; set; }
 
+        [MemoryPackOrder(6)]
+        public int Index { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -2123,6 +2126,7 @@ namespace ET
             this.Count = default;
             this.ItemQuality = default;
             this.EquipInfo = default;
+            this.Index = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -3710,6 +3714,73 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_GMSetSkillLevel)]
+    [ResponseType(nameof(M2C_GMSetSkillLevel))]
+    public partial class C2M_GMSetSkillLevel : MessageObject, ILocationRequest
+    {
+        public static C2M_GMSetSkillLevel Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_GMSetSkillLevel), isFromPool) as C2M_GMSetSkillLevel;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int CastConfigId { get; set; }
+
+        [MemoryPackOrder(2)]
+        public int Level { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.CastConfigId = default;
+            this.Level = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_GMSetSkillLevel)]
+    public partial class M2C_GMSetSkillLevel : MessageObject, ILocationResponse
+    {
+        public static M2C_GMSetSkillLevel Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_GMSetSkillLevel), isFromPool) as M2C_GMSetSkillLevel;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 相关GM///////////////////////////////////////////
     /// </summary>
@@ -3818,5 +3889,7 @@ namespace ET
         public const ushort Mail2C_GMAddMail = 10102;
         public const ushort C2M_GMTestCast = 10103;
         public const ushort M2C_GMTestCast = 10104;
+        public const ushort C2M_GMSetSkillLevel = 10105;
+        public const ushort M2C_GMSetSkillLevel = 10106;
     }
 }

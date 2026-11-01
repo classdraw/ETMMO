@@ -103,6 +103,30 @@ namespace ET.Client
             }
         }
 
+        /// <summary>GM：设置已学技能等级，例如 66001,5。</summary>
+        public static async ETTask GMSetSkillLevel(Scene root, int castConfigId, int level)
+        {
+            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            {
+                Log.Console($"CastId {castConfigId} 不存在!!!");
+                return;
+            }
+
+            C2M_GMSetSkillLevel request = C2M_GMSetSkillLevel.Create();
+            request.CastConfigId = castConfigId;
+            request.Level = level;
+            M2C_GMSetSkillLevel response =
+                await root.GetComponent<ClientSenderComponent>().Call(request) as M2C_GMSetSkillLevel;
+            if (response.Error == ErrorCode.ERR_Success)
+            {
+                Log.Info(response.Message ?? $"技能 {castConfigId} 设为 {level} 级");
+            }
+            else
+            {
+                Log.Info($"设置技能等级失败 Error={response.Error} {response.Message}");
+            }
+        }
+
         private static async ETTask CallGMTestCastAsync(Scene root, Unit playerUnit, int castConfigId, long targetId, float3 inputPos)
         {
             C2M_GMTestCast c2MGmTestCast = C2M_GMTestCast.Create();

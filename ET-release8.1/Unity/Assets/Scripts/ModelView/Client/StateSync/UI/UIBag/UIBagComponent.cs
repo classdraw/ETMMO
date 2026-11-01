@@ -8,7 +8,6 @@ namespace ET.Client
     [ComponentOf(typeof(UI))]
     public class UIBagComponent : Entity, IAwake, IDestroy
     {
-        public const int DefaultTotalSlots = 30;
         public const int SlotsPerRow = 5;
         public const string RowItemPrefabName = "UIBagItem";
 

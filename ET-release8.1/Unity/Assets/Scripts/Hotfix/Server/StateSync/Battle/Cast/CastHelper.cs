@@ -84,17 +84,16 @@ namespace ET.Server
         /// <param name="inputUnitId"></param>
         /// <param name="inputPos"></param>
         /// <param name="needStop"></param>
-        /// <param name="targets">非空时写入 cast.Targets；SelectType 为外部传入目标时沿用该列表</param>
-        /// <returns></returns>
-        public static int CreateAndCast(this Unit caster,int castConfigId,long inputUnitId,float3 inputPos,bool needStop,List<long> targets = null)//这里可能传入前端选择的目标或者坐标
+        /// <param name="checkLearned">玩家 C2M/GM 为 true；子弹、Action、AI 为 false。</param>
+        public static int CreateAndCast(this Unit caster,int castConfigId,long inputUnitId,float3 inputPos,bool needStop,List<long> targets = null,bool checkLearned = false)
         {
-            SkillStatusComponent skillStatusComponent = caster.GetComponent<SkillStatusComponent>();
-            if (skillStatusComponent == null || skillStatusComponent.IsDisposed)
+            SkillStatusComponent skillStatus = caster.GetComponent<SkillStatusComponent>();
+            if (skillStatus == null || skillStatus.IsDisposed)
             {
                 return ErrorCode.ERR_CastSkillError;
             }
 
-            int err = skillStatusComponent.CanCastSkill(castConfigId);
+            int err = skillStatus.CanCastSkill(castConfigId, checkLearned);
             if (err != ErrorCode.ERR_Success)
             {
                 return err;
@@ -130,7 +129,7 @@ namespace ET.Server
             }
 
             // 瞬发技能可能在 CastBeginAsync 内已 CastFinish/Dispose，不可再读 cast.Config
-            skillStatusComponent.SetCoolDown(castConfigId, coolDownMs);
+            skillStatus.SetCoolDown(castConfigId, coolDownMs);
             return ErrorCode.ERR_Success;
         }
     }

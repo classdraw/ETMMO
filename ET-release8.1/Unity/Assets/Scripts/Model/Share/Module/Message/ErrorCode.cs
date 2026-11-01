@@ -65,6 +65,8 @@ namespace ET
         public const int ERR_CastPreNumericIsNull = 200060;//施法对象数值组件没有
         public const int ERR_CastPreForbidSkill = 200061;//施法角色禁止释放技能状态
         public const int ERR_CastPreCoolDown = 200062;//施法技能cd中
+        public const int ERR_CastPreSkillNotLearned = 200063;//技能未学习
+        public const int ERR_GMSetSkillLevelError = 200064;//GM设置技能等级失败
         //一些unit战斗状态
         public const int ERR_Relive_Alive = 200090;//存活
         //地图

@@ -67,7 +67,7 @@ namespace ET.Client
             if (error != ErrorCode.ERR_Success)
             {
                 Log.Error($"UIBag 拉取背包失败 Error={error}");
-                self.SlotItems = new EntityRef<Item>[UIBagComponent.DefaultTotalSlots];
+                self.SlotItems = new EntityRef<Item>[KnapsackConfigHelper.GetKnapsackMaxLoad()];
             }
             else
             {
@@ -127,10 +127,11 @@ namespace ET.Client
             self.m_loopList2.RefreshAllShownItem();
         }
 
-        /// <summary>从 ClientKnapsack 背包容器 ListComponent&lt;Item&gt; 映射到固定 30 格 UI。</summary>
+        /// <summary>从 ClientKnapsack 背包容器 ListComponent&lt;Item&gt; 映射到 ConstantConfig 90001 格数的 UI。</summary>
         private static void RebuildSlotItemsFromKnapsack(this UIBagComponent self)
         {
-            self.SlotItems = new EntityRef<Item>[UIBagComponent.DefaultTotalSlots];
+            int totalSlots = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            self.SlotItems = new EntityRef<Item>[totalSlots];
 
             ClientKnapsackComponent knapsack = self.Root().GetComponent<ClientKnapsackComponent>();
             if (knapsack == null)
@@ -142,12 +143,27 @@ namespace ET.Client
             using (ListComponent<Item> items = ListComponent<Item>.Create())
             {
                 knapsack.GetInventoryItems(items);
-                items.Sort((a, b) => a.Id.CompareTo(b.Id));
-
-                int count = Mathf.Min(items.Count, UIBagComponent.DefaultTotalSlots);
-                for (int i = 0; i < count; i++)
+                foreach (Item item in items)
                 {
-                    self.SlotItems[i] = items[i];
+                    if (item == null || item.IsDisposed)
+                    {
+                        continue;
+                    }
+
+                    if (!KnapsackSlotHelper.IsValidSlotIndex(item.Index, totalSlots))
+                    {
+                        Log.Warning($"[UIBag] 物品 Index 非法，已忽略 ItemId={item.Id}, Index={item.Index}");
+                        continue;
+                    }
+
+                    Item itemTemp = self.SlotItems[item.Index];
+                    if (itemTemp != null)
+                    {
+                        Log.Warning($"[UIBag] 格子 Index={item.Index} 重复，ItemId={item.Id}");
+                        continue;
+                    }
+
+                    self.SlotItems[item.Index] = item;
                 }
             }
         }
@@ -164,8 +180,8 @@ namespace ET.Client
                 return;
             }
 
-            int rowCount = (UIBagComponent.DefaultTotalSlots + UIBagComponent.SlotsPerRow - 1) /
-                           UIBagComponent.SlotsPerRow;
+            int totalSlots = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            int rowCount = (totalSlots + UIBagComponent.SlotsPerRow - 1) / UIBagComponent.SlotsPerRow;
             self.m_loopList2.InitListView(rowCount, (listView, rowIndex) => self.OnGetRowItemByIndex(listView, rowIndex));
             self.ListInited = true;
         }
@@ -240,7 +256,7 @@ namespace ET.Client
                     continue;
                 }
 
-                if (slotIndex >= UIBagComponent.DefaultTotalSlots)
+                if (slotIndex >= KnapsackConfigHelper.GetKnapsackMaxLoad())
                 {
                     slotTransform.gameObject.SetActive(false);
                     continue;
@@ -388,7 +404,7 @@ namespace ET.Client
         private static void OnSlotClicked(this UIBagComponent self, LoopListViewItem2 rowItem, int column)
         {
             int slotIndex = rowItem.ItemIndex * UIBagComponent.SlotsPerRow + column;
-            if (slotIndex < 0 || slotIndex >= UIBagComponent.DefaultTotalSlots)
+            if (slotIndex < 0 || slotIndex >= KnapsackConfigHelper.GetKnapsackMaxLoad())
             {
                 return;
             }

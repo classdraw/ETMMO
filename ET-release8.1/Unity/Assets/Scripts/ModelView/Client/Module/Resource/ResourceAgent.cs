@@ -14,6 +14,13 @@ namespace TEngine
     [FriendOfAttribute(typeof(ET.Client.ResourcesLoaderComponent))]
     public class ResourceAgent : IResourceModuleET
     {
+        private const string AssetHandleKeyPrefix = "Asset|";
+        private const string AllAssetsHandleKeyPrefix = "AllAssets|";
+
+        private static string AssetHandleCacheKey(string location) => AssetHandleKeyPrefix + location;
+
+        private static string AllAssetsHandleCacheKey(string location) => AllAssetsHandleKeyPrefix + location;
+
         private ResourcesLoaderComponent resourcesLoader;
         private ResourcePackage DefaultPackage;
 
@@ -57,7 +64,8 @@ namespace TEngine
 
             lock (resourcesLoader.handlers)
             {
-                if (resourcesLoader.handlers.TryGetValue(location, out HandleBase existingHandler))
+                string cacheKey = AssetHandleCacheKey(location);
+                if (resourcesLoader.handlers.TryGetValue(cacheKey, out HandleBase existingHandler))
                 {
                     return existingHandler as AssetHandle;
                 }
@@ -65,7 +73,7 @@ namespace TEngine
                 AssetHandle handle = package.LoadAssetSync(location, type);
                 if (handle != null)
                 {
-                    resourcesLoader.handlers.Add(location, handle);
+                    resourcesLoader.handlers.Add(cacheKey, handle);
                 }
                 return handle;
             }
@@ -84,7 +92,8 @@ namespace TEngine
                 return null;
             }
 
-            if (resourcesLoader.handlers.TryGetValue(location, out HandleBase existingHandler))
+            string cacheKey = AssetHandleCacheKey(location);
+            if (resourcesLoader.handlers.TryGetValue(cacheKey, out HandleBase existingHandler))
             {
                 return existingHandler as AssetHandle;
             }
@@ -92,7 +101,7 @@ namespace TEngine
             AssetHandle handle = package.LoadAssetAsync(location, assetType);
             if (handle != null)
             {
-                resourcesLoader.handlers.Add(location, handle);
+                resourcesLoader.handlers.Add(cacheKey, handle);
             }
             return handle;
         }
@@ -107,8 +116,9 @@ namespace TEngine
 
             using CoroutineLock coroutineLock = await resourcesLoader.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
+            string cacheKey = AssetHandleCacheKey(location);
             HandleBase handler;
-            if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+            if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
             {
                 ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                 if (package == null)
@@ -119,7 +129,7 @@ namespace TEngine
 
                 handler = package.LoadAssetAsync<T>(location);
                 await handler.Task;
-                resourcesLoader.handlers.Add(location, handler);
+                resourcesLoader.handlers.Add(cacheKey, handler);
             }
 
             T asset = (T)((AssetHandle)handler).AssetObject;
@@ -135,8 +145,9 @@ namespace TEngine
 
             using CoroutineLock coroutineLock = await resourcesLoader.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
+            string cacheKey = AssetHandleCacheKey(location);
             HandleBase handler;
-            if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+            if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
             {
                 ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                 if (package == null)
@@ -146,10 +157,16 @@ namespace TEngine
 
                 handler = package.LoadAssetAsync<T>(location);
                 await handler.Task;
-                resourcesLoader.handlers.Add(location, handler);
+                resourcesLoader.handlers.Add(cacheKey, handler);
             }
 
-            return (T)((AssetHandle)handler).AssetObject;
+            if (handler is not AssetHandle assetHandle)
+            {
+                Log.Error($"LoadAssetAsync 缓存类型错误 location={location} handler={handler?.GetType().Name}");
+                return null;
+            }
+
+            return assetHandle.AssetObject as T;
         }
 
         public async ETTask<UnityEngine.Object> LoadAssetAsync(string location, Type assetType, CancellationToken cancellationToken = default, string packageName = "")
@@ -161,8 +178,9 @@ namespace TEngine
 
             using CoroutineLock coroutineLock = await resourcesLoader.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
+            string cacheKey = AssetHandleCacheKey(location);
             HandleBase handler;
-            if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+            if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
             {
                 ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                 if (package == null)
@@ -172,10 +190,16 @@ namespace TEngine
 
                 handler = package.LoadAssetAsync(location, assetType);
                 await handler.Task;
-                resourcesLoader.handlers.Add(location, handler);
+                resourcesLoader.handlers.Add(cacheKey, handler);
             }
 
-            return ((AssetHandle)handler).AssetObject;
+            if (handler is not AssetHandle assetHandle)
+            {
+                Log.Error($"LoadAssetAsync 缓存类型错误 location={location} handler={handler?.GetType().Name}");
+                return null;
+            }
+
+            return assetHandle.AssetObject;
         }
 
         public async ETTask<GameObject> LoadGameObjectAsync(string location, Transform parent = null, CancellationToken cancellationToken = default, string packageName = "")
@@ -187,8 +211,9 @@ namespace TEngine
 
             using CoroutineLock coroutineLock = await resourcesLoader.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
+            string cacheKey = AssetHandleCacheKey(location);
             HandleBase handler;
-            if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+            if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
             {
                 ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                 if (package == null)
@@ -198,7 +223,7 @@ namespace TEngine
 
                 handler = package.LoadAssetAsync<GameObject>(location);
                 await handler.Task;
-                resourcesLoader.handlers.Add(location, handler);
+                resourcesLoader.handlers.Add(cacheKey, handler);
             }
 
             GameObject prefab = ((AssetHandle)handler).AssetObject as GameObject;
@@ -220,8 +245,9 @@ namespace TEngine
 
             lock (resourcesLoader.handlers)
             {
+                string cacheKey = AssetHandleCacheKey(location);
                 HandleBase handler;
-                if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+                if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
                 {
                     ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                     if (package == null)
@@ -230,7 +256,7 @@ namespace TEngine
                     }
 
                     handler = package.LoadAssetSync<T>(location);
-                    resourcesLoader.handlers.Add(location, handler);
+                    resourcesLoader.handlers.Add(cacheKey, handler);
                 }
 
                 return (T)((AssetHandle)handler).AssetObject;
@@ -246,8 +272,9 @@ namespace TEngine
 
             lock (resourcesLoader.handlers)
             {
+                string cacheKey = AssetHandleCacheKey(location);
                 HandleBase handler;
-                if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+                if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
                 {
                     ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                     if (package == null)
@@ -256,7 +283,7 @@ namespace TEngine
                     }
 
                     handler = package.LoadAssetSync(location, assetType);
-                    resourcesLoader.handlers.Add(location, handler);
+                    resourcesLoader.handlers.Add(cacheKey, handler);
                 }
 
                 return ((AssetHandle)handler).AssetObject;
@@ -272,8 +299,9 @@ namespace TEngine
 
             lock (resourcesLoader.handlers)
             {
+                string cacheKey = AssetHandleCacheKey(location);
                 HandleBase handler;
-                if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+                if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
                 {
                     ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                     if (package == null)
@@ -282,7 +310,7 @@ namespace TEngine
                     }
 
                     handler = package.LoadAssetSync<GameObject>(location);
-                    resourcesLoader.handlers.Add(location, handler);
+                    resourcesLoader.handlers.Add(cacheKey, handler);
                 }
 
                 GameObject prefab = ((AssetHandle)handler).AssetObject as GameObject;
@@ -305,8 +333,9 @@ namespace TEngine
 
             using CoroutineLock coroutineLock = await resourcesLoader.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.ResourcesLoader, location.GetHashCode());
 
+            string cacheKey = AllAssetsHandleCacheKey(location);
             HandleBase handler;
-            if (!resourcesLoader.handlers.TryGetValue(location, out handler))
+            if (!resourcesLoader.handlers.TryGetValue(cacheKey, out handler))
             {
                 ResourcePackage package = string.IsNullOrEmpty(packageName) ? DefaultPackage : YooAssets.GetPackage(packageName);
                 if (package == null)
@@ -316,11 +345,17 @@ namespace TEngine
 
                 handler = package.LoadAllAssetsAsync<T>(location);
                 await handler.Task;
-                resourcesLoader.handlers.Add(location, handler);
+                resourcesLoader.handlers.Add(cacheKey, handler);
+            }
+
+            if (handler is not AllAssetsHandle allAssetsHandle)
+            {
+                Log.Error($"LoadAllAssetsAsync 缓存类型错误 location={location} handler={handler?.GetType().Name}");
+                return new Dictionary<string, T>();
             }
 
             Dictionary<string, T> dictionary = new Dictionary<string, T>();
-            foreach (UnityEngine.Object assetObj in ((AllAssetsHandle)handler).AllAssetObjects)
+            foreach (UnityEngine.Object assetObj in allAssetsHandle.AllAssetObjects)
             {
                 T t = assetObj as T;
                 if (t != null)

@@ -77,6 +77,7 @@ namespace ET
         {
             return self.Type() == UnitType.Monster;
         }
+
         /// <summary>
         /// 是否是npc
         /// </summary>

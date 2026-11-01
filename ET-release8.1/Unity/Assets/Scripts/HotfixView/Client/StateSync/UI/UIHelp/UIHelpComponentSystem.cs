@@ -15,7 +15,7 @@ namespace ET.Client
         [EntitySystem]
 		private static void Awake(this UIHelpComponent self)
 		{
-						UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_goPanel = m_bindComponent.GetGameObject(0);
 			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
 			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
@@ -47,8 +47,8 @@ namespace ET.Client
 			self.m_btnP1DissolveTeam = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnP1DissolveTeam.onClick.AddListener(() => { self.OnP1DissolveTeam(); });
 			self.m_goP2 = m_bindComponent.GetGameObject(17);
-			self.m_btnP2CastSimple = m_bindComponent.GetComponent<Button>(18);
-			self.m_btnP2CastSimple.onClick.AddListener(() => { self.OnP2CastSimple(); });
+			self.m_btnP2SetSkillLevel = m_bindComponent.GetComponent<Button>(18);
+			self.m_btnP2SetSkillLevel.onClick.AddListener(() => { self.OnP2SetSkillLevel(); });
 			self.m_goP3 = m_bindComponent.GetGameObject(19);
 			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(20);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
@@ -229,11 +229,44 @@ namespace ET.Client
 
 		}
 		
+		
+		//设置技能等级：CastConfigId,等级，例如 66001,5
+		public static void OnP2SetSkillLevel(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				return;
+			}
+
+			val = val.Trim();
+			int castConfigId;
+			int level = 1;
+			int comma = val.IndexOf(',');
+			if (comma >= 0)
+			{
+				if (!int.TryParse(val.Substring(0, comma).Trim(), out castConfigId))
+				{
+					return;
+				}
+
+				if (!int.TryParse(val.Substring(comma + 1).Trim(), out level) || level <= 0)
+				{
+					return;
+				}
+			}
+			else if (!int.TryParse(val, out castConfigId))
+			{
+				return;
+			}
+
+			BattleHelper.GMSetSkillLevel(self.Root(), castConfigId, level).Coroutine();
+		}
 
 		#endregion
 		
 		#region p3
-		//背包按钮：打开 UIBag 界面（内部会拉取服务器背包数据）
+		// 背包按钮：已打开则关闭，否则打开并拉取服务器背包数据
 		public static void OnP3bag(this UIHelpComponent self)
 		{
 			Scene scene = self.Root().CurrentScene();
@@ -276,19 +309,44 @@ namespace ET.Client
 			KnapsackHelper.RequestAddItem(self.Root(), KnapsackContainerType.Inventory, configId, count).Coroutine();
 		}
 		
-		//移除道具
+		// 移除道具：输入背包格子 Index 0~29，客户端换算 ItemId 后走原删除协议
 		public static void OnP3removeItem(this UIHelpComponent self)
 		{
 			var val = self.m_inputAll.text;
-			if (string.IsNullOrEmpty(val))
+			if (string.IsNullOrWhiteSpace(val))
 			{
 				return;
 			}
 
-			if (long.TryParse(val,out long result))
+			if (!int.TryParse(val.Trim(), out int slotIndex))
 			{
-				KnapsackHelper.RequestRemoveItem(self.Root(),KnapsackContainerType.Inventory,result).Coroutine();
+				return;
 			}
+
+			int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+			if (!KnapsackSlotHelper.IsValidSlotIndex(slotIndex, maxLoad))
+			{
+				Log.Warning($"GM 移除道具：Index 须在 0~{maxLoad - 1}，当前={slotIndex}");
+				return;
+			}
+
+			ClientKnapsackComponent knapsack = self.Root().GetComponent<ClientKnapsackComponent>();
+			if (knapsack == null)
+			{
+				Log.Error("GM 移除道具：未找到 ClientKnapsackComponent");
+				return;
+			}
+
+			ClientKnapsackContainerComponent inventory =
+				knapsack.GetContainer((int)KnapsackContainerType.Inventory);
+			Item item = inventory?.GetItemBySlotIndex(slotIndex);
+			if (item == null)
+			{
+				Log.Warning($"GM 移除道具：格子 {slotIndex} 为空");
+				return;
+			}
+
+			KnapsackHelper.RequestRemoveItem(self.Root(), KnapsackContainerType.Inventory, item.Id).Coroutine();
 		}
 
 		#endregion

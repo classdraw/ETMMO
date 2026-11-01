@@ -1,29 +1,11 @@
+using System.Collections.Generic;
+
 namespace ET.Server
 {
     [EntitySystemOf(typeof(KnapsackContainerComponent))]
     [FriendOfAttribute(typeof(ET.Server.KnapsackContainerComponent))]
     public static partial class KnapsackContainerComponentSystem
     {
-        
-
-        private static int GetKnapsackMaxLoad()
-        {
-            if (!ConstantConfigCategory.Instance.Contain(ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId))
-            {
-                Log.Warning($"ConstantConfig 缺少 Id={ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId}，背包上限使用回退值 500");
-                return 200;
-            }
-
-            int v = ConstantConfigCategory.Instance.Get(ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId).IntValue;
-            if (v <= 0)
-            {
-                Log.Warning($"ConstantConfig Id={ConstantConfigKeys.ConstantKnapsackMaxLoadConfigId} IntValue<=0，背包上限使用回退值 500");
-                return 200;
-            }
-
-            return v;
-        }
-
         [EntitySystem]
         private static void Awake(this ET.Server.KnapsackContainerComponent self, int knapsackContainerType)
         {
@@ -46,6 +28,8 @@ namespace ET.Server
                     self.Items.Add(item.Id,item);
                 }
             }
+
+            self.NormalizeItemSlotIndices();
         }
 
         public static void GetItems(this KnapsackContainerComponent self, ListComponent<Item> itemList)
@@ -61,7 +45,7 @@ namespace ET.Server
             self.Items.TryGetValue(itemId, out EntityRef<Item> itemRef);
             return itemRef;
         }
-        
+
         public static bool HasItem(this KnapsackContainerComponent self, long itemId)
         {
             self.Items.TryGetValue(itemId, out EntityRef<Item> itemRef);
@@ -71,7 +55,7 @@ namespace ET.Server
 
         public static bool IsMaxLoad(this KnapsackContainerComponent self)
         {
-            return self.Items.Count >= GetKnapsackMaxLoad();
+            return self.TryFindFirstFreeSlotIndex() < 0;
         }
 
         public static bool IsCanAddItem(this KnapsackContainerComponent self,Item item)
@@ -93,11 +77,6 @@ namespace ET.Server
                 return false;
             }
             
-            if(self.IsMaxLoad())
-            {
-                return false;
-            }
-
             if (self.Items.ContainsKey(item.Id))
             {
                 return false;
@@ -108,7 +87,13 @@ namespace ET.Server
                 return false;
             }
 
-            return true;
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            if (KnapsackSlotHelper.IsValidSlotIndex(item.Index, maxLoad))
+            {
+                return !self.IsSlotOccupied(item.Index, item.Id);
+            }
+
+            return self.TryFindFirstFreeSlotIndex() >= 0;
         }
         //添加直接增加
         private static bool AddItem(this KnapsackContainerComponent self,Item item)
@@ -132,11 +117,6 @@ namespace ET.Server
                 return false;
             }
 
-            if(self.IsMaxLoad())
-            {
-                Log.Error("bag is IsMaxLoad!");
-                return false;
-            }
             if (item.Parent != self)
             {
                 self.AddChild(item);
@@ -146,9 +126,17 @@ namespace ET.Server
             {
                 return false;
             }
+
+            if (!self.TryEnsureItemSlotIndex(item))
+            {
+                Log.Error("bag has no free slot for item!");
+                return false;
+            }
             
             item.ContainerType = self.KnapsackContainerType;
             self.Items.Add(item.Id,item);
+            Log.Info(
+                $"Knapsack AddItem ConfigId={item.ConfigId} ItemId={item.Id} Count={item.Count} Index={item.Index} Container={self.KnapsackContainerType}");
             ItemNoticeHelper.SyncItemInfo(self.Parent.GetParent<Unit>(),item,ItemOpType.Add);
              
             //M2C_UpdateItemInfo m2CUpdateItemInfo = M2C_UpdateItemInfo.Create();
@@ -240,9 +228,8 @@ namespace ET.Server
                 }
             }
 
-            int maxLoad = GetKnapsackMaxLoad();
             int newStacks = (remaining + stackingLimit - 1) / stackingLimit;
-            return self.Items.Count + newStacks <= maxLoad;
+            return self.GetFreeSlotCount() >= newStacks;
         }
 
         //根据堆叠上限增加物品
@@ -298,6 +285,110 @@ namespace ET.Server
             }
 
             return true;
+        }
+
+        private static int GetFreeSlotCount(this KnapsackContainerComponent self)
+        {
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            HashSet<int> occupied = self.CollectOccupiedSlotIndices();
+            return KnapsackSlotHelper.GetFreeSlotCount(maxLoad, occupied);
+        }
+
+        private static int TryFindFirstFreeSlotIndex(this KnapsackContainerComponent self, long excludeItemId = 0)
+        {
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            HashSet<int> occupied = self.CollectOccupiedSlotIndices(excludeItemId);
+            return KnapsackSlotHelper.FindFirstFreeSlotIndex(occupied, maxLoad);
+        }
+
+        private static bool IsSlotOccupied(this KnapsackContainerComponent self, int index, long excludeItemId = 0)
+        {
+            foreach (EntityRef<Item> itemRef in self.Items.Values)
+            {
+                Item item = itemRef;
+                if (item == null || item.IsDisposed || item.Id == excludeItemId)
+                {
+                    continue;
+                }
+
+                if (item.Index == index)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static HashSet<int> CollectOccupiedSlotIndices(this KnapsackContainerComponent self, long excludeItemId = 0)
+        {
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            HashSet<int> occupied = new HashSet<int>();
+            using (ListComponent<Item> itemList = ListComponent<Item>.Create())
+            {
+                self.GetItems(itemList);
+                KnapsackSlotHelper.CollectOccupiedIndices(itemList, maxLoad, occupied, excludeItemId);
+            }
+
+            return occupied;
+        }
+
+        /// <summary>保留已有合法空位；否则按 0..max-1 找第一个空格子补位。</summary>
+        private static bool TryEnsureItemSlotIndex(this KnapsackContainerComponent self, Item item)
+        {
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            if (KnapsackSlotHelper.IsValidSlotIndex(item.Index, maxLoad) && !self.IsSlotOccupied(item.Index, item.Id))
+            {
+                return true;
+            }
+
+            int slot = self.TryFindFirstFreeSlotIndex(item.Id);
+            if (slot < 0)
+            {
+                return false;
+            }
+
+            item.Index = slot;
+            return true;
+        }
+
+        /// <summary>修复非法或重复的 Index（老存档或未带 Index 的数据）。</summary>
+        private static void NormalizeItemSlotIndices(this KnapsackContainerComponent self)
+        {
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            using (ListComponent<Item> itemList = ListComponent<Item>.Create())
+            {
+                self.GetItems(itemList);
+                if (itemList.Count == 0)
+                {
+                    return;
+                }
+
+                itemList.Sort((a, b) => a.Id.CompareTo(b.Id));
+                HashSet<int> used = new HashSet<int>();
+                foreach (Item item in itemList)
+                {
+                    if (item == null || item.IsDisposed)
+                    {
+                        continue;
+                    }
+
+                    if (KnapsackSlotHelper.IsValidSlotIndex(item.Index, maxLoad) && used.Add(item.Index))
+                    {
+                        continue;
+                    }
+
+                    int slot = KnapsackSlotHelper.FindFirstFreeSlotIndex(used, maxLoad);
+                    if (slot < 0)
+                    {
+                        Log.Error($"背包格子已满，无法为 ItemId={item.Id} 分配 Index");
+                        continue;
+                    }
+
+                    item.Index = slot;
+                    used.Add(slot);
+                }
+            }
         }
     }
 }

@@ -11,12 +11,6 @@ namespace ET.Server
                 return;
             }
 
-            if (!unit.IsAlive())
-            {
-                response.Error = ErrorCode.ERR_CastUnitDead;
-                return;
-            }
-
             int breakErr = unit.TryBreakCastingBeforeCast();
             if (breakErr != ErrorCode.ERR_Success)
             {
@@ -24,20 +18,7 @@ namespace ET.Server
                 return;
             }
 
-            SkillStatusComponent skillStatusComponent = unit.GetComponent<SkillStatusComponent>();
-            if (skillStatusComponent == null || skillStatusComponent.IsDisposed)
-            {
-                response.Error = ErrorCode.ERR_CastSkillError;
-                return;
-            }
-
-            int canCastErr = skillStatusComponent.CanCastSkill(request.CastConfigId);
-            if (canCastErr != ErrorCode.ERR_Success)
-            {
-                response.Error = canCastErr;
-                return;
-            }
-            response.Error = unit.CreateAndCast(request.CastConfigId, request.TargetId, request.InputPos,true);
+            response.Error = unit.CreateAndCast(request.CastConfigId, request.TargetId, request.InputPos, true, null, true);
             await ETTask.CompletedTask;
         }
     }

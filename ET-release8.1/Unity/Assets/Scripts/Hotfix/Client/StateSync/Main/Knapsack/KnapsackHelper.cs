@@ -15,7 +15,8 @@ namespace ET.Client
             Log.Info($"Knapsack GetAllItems count={m2CGetAllKnapsack.ItemList.Count}");
             foreach (var itemProto in m2CGetAllKnapsack.ItemList)
             {
-                Log.Info($"Knapsack Item Id={itemProto.Id} Count={itemProto.Count} ContainerType={itemProto.ContainerType}");
+                Log.Info(
+                    $"Knapsack Item Id={itemProto.Id} ConfigId={itemProto.ConfigId} Count={itemProto.Count} Index={itemProto.Index} ContainerType={itemProto.ContainerType}");
                 root.GetComponent<ClientKnapsackComponent>().GetContainer(itemProto.ContainerType).AddItemFromMessage(itemProto);
             }
             return ErrorCode.ERR_Success;

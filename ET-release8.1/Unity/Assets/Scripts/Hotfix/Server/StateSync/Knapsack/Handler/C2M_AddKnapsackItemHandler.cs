@@ -5,7 +5,7 @@ namespace ET.Server
     {
         protected override async ETTask Run(Unit unit, C2M_AddKnapsackItem request, M2C_AddKnapsackItem response)
         {
-            //KnapsackContainerComponent containerComponent = unit.GetComponent<KnapsackComponent>().GetContainer(request.ContainerType);
+            // GM/客户端只传 ConfigId+Count，格子 Index 由服务端 AddItem 自动找空位分配（0 起、可断档补位）。
             bool flag = KnapsackHelper.AddItemByConfigId(unit, request.ContainerType, request.ConfigId, request.Count);
             if (!flag)
             {

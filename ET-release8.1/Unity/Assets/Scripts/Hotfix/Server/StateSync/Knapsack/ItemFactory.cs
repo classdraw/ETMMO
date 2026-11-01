@@ -28,6 +28,7 @@ namespace ET.Server
             Item item = parent.AddChild<Item, int>(configId);
             item.ContainerType = parent.KnapsackContainerType;
             item.Count = count;
+            item.Index = KnapsackSlotHelper.UnassignedIndex;
             item.Init();
             return item;
         }

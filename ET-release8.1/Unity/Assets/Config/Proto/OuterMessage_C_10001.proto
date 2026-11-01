@@ -483,6 +483,7 @@ message ItemProto
 	int32 Count = 4;
 	int32 ItemQuality  = 5;
 	EquipInfoProto EquipInfo = 6;
+	int32 Index = 7;
 }
 
 message M2C_UpdateItemInfo // IMessage
@@ -824,6 +825,20 @@ message  C2M_GMTestCast // ILocationRequest
 }
 
 message M2C_GMTestCast // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+// ResponseType M2C_GMSetSkillLevel
+message C2M_GMSetSkillLevel // ILocationRequest
+{
+	int32 RpcId = 1;
+	int32 CastConfigId = 2;
+	int32 Level = 3;
+}
+
+message M2C_GMSetSkillLevel // ILocationResponse
 {
 	int32 RpcId = 1;
 	int32 Error = 2;

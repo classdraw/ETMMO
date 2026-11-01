@@ -15,6 +15,13 @@ namespace ET.Client
                 return;
             }
 
+            UIComponent uiComponent = scene.GetComponent<UIComponent>();
+            if (uiComponent?.Get(UIType.UIBag) != null)
+            {
+                await UIHelper.Remove(scene, UIType.UIBag);
+                return;
+            }
+
             UI ui = await UIHelper.Create(scene, UIType.UIBag);
             if (ui == null)
             {

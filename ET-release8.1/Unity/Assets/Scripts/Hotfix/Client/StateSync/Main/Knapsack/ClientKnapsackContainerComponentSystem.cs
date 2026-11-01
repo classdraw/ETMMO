@@ -72,6 +72,31 @@ namespace ET.Client
             return itemRef;
         }
 
+        public static Item GetItemBySlotIndex(this ClientKnapsackContainerComponent self, int slotIndex)
+        {
+            int maxLoad = KnapsackConfigHelper.GetKnapsackMaxLoad();
+            if (!KnapsackSlotHelper.IsValidSlotIndex(slotIndex, maxLoad))
+            {
+                return null;
+            }
+
+            foreach (EntityRef<Item> itemRef in self.Items.Values)
+            {
+                Item item = itemRef;
+                if (item == null || item.IsDisposed)
+                {
+                    continue;
+                }
+
+                if (item.Index == slotIndex)
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
         public static void GetItems(this ClientKnapsackContainerComponent self, ListComponent<Item> itemList)
         {
             foreach (EntityRef<Item> itemRef in self.Items.Values)
