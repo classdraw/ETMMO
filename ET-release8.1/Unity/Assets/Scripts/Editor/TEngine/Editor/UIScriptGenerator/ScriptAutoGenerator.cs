@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using SuperScrollView;
 using TEngine;
 
 namespace TEngine.Editor.UI
@@ -272,8 +273,7 @@ namespace TEngine.Editor.UI
         {
             string varName = child.name;
             // 查找相关的规则定义
-            var rule = ScriptGeneratorSetting.GetScriptGenerateRule()
-                .Find(r => varName.StartsWith(r.uiElementRegex));
+            var rule = ScriptGeneratorSetting.FindBestMatchingRule(varName);
 
             if (rule == null)
             {
@@ -435,8 +435,7 @@ namespace TEngine.Editor.UI
         {
             string varName = child.name;
             // 查找相关的规则定义
-            var rule = ScriptGeneratorSetting.GetScriptGenerateRule()
-                .Find(r => varName.StartsWith(r.uiElementRegex));
+            var rule = ScriptGeneratorSetting.FindBestMatchingRule(varName);
 
             if (rule == null)
             {
@@ -553,8 +552,7 @@ namespace TEngine.Editor.UI
         {
             string varName = child.name;
             // 查找相关的规则定义
-            var rule = ScriptGeneratorSetting.GetScriptGenerateRule()
-                .Find(r => varName.StartsWith(r.uiElementRegex));
+            var rule = ScriptGeneratorSetting.FindBestMatchingRule(varName);
 
             if (rule == null)
             {
@@ -663,6 +661,7 @@ namespace TEngine.Editor.UI
                 UIComponentName.Dropdown => typeof(Dropdown),
                 UIComponentName.TextMeshProUGUI => typeof(TextMeshProUGUI),
                 UIComponentName.LayoutLoopList => typeof(LayoutLoopList),
+                UIComponentName.LoopListView2 => typeof(LoopListView2),
                 _ => null,
             };
         }

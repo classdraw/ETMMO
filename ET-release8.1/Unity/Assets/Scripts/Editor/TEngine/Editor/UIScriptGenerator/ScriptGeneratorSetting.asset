@@ -58,6 +58,12 @@ MonoBehaviour:
   - uiElementRegex: m_scroll
     componentName: 8
     isUIWidget: 0
+  - uiElementRegex: m_loopList2
+    componentName: 23
+    isUIWidget: 0
+  - uiElementRegex: m_loopList
+    componentName: 22
+    isUIWidget: 0
   - uiElementRegex: m_input
     componentName: 10
     isUIWidget: 0

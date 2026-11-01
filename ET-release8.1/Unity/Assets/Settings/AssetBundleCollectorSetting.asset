@@ -232,3 +232,29 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+    - GroupName: Atlas
+      GroupDesc: Atlas
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Bundles/Atlas
+        CollectorGUID: 1b41bcd1534280b418c0ad8b1d0f06d3
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: ItemIconSource
+      GroupDesc: ItemConfig.Icon single sprites (fallback when atlas sub-asset empty)
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/UI/Icons_Atlas
+        CollectorGUID: 47708037da5c49142a75158de5de358a
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

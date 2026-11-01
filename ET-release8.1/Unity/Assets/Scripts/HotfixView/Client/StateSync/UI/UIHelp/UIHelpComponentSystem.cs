@@ -233,25 +233,47 @@ namespace ET.Client
 		#endregion
 		
 		#region p3
-		//背包按钮
+		//背包按钮：打开 UIBag 界面（内部会拉取服务器背包数据）
 		public static void OnP3bag(this UIHelpComponent self)
 		{
-			KnapsackHelper.GetAllItems(self.Root()).Coroutine();
+			Scene scene = self.Root().CurrentScene();
+			if (scene != null)
+			{
+				UIBagHelper.Open(scene);
+			}
 		}
 		
-		//增加道具
+		//增加道具：配置Id 或 配置Id,数量，例如 1001 或 1001,5
 		public static void OnP3addItem(this UIHelpComponent self)
 		{
 			var val = self.m_inputAll.text;
-			if (string.IsNullOrEmpty(val))
+			if (string.IsNullOrWhiteSpace(val))
 			{
 				return;
 			}
 
-			if (int.TryParse(val,out int result))
+			val = val.Trim();
+			int configId;
+			int count = 1;
+			int comma = val.IndexOf(',');
+			if (comma >= 0)
 			{
-				KnapsackHelper.RequestAddItem(self.Root(),KnapsackContainerType.Inventory,result).Coroutine();
+				if (!int.TryParse(val.Substring(0, comma).Trim(), out configId))
+				{
+					return;
+				}
+
+				if (!int.TryParse(val.Substring(comma + 1).Trim(), out count) || count <= 0)
+				{
+					return;
+				}
 			}
+			else if (!int.TryParse(val, out configId))
+			{
+				return;
+			}
+
+			KnapsackHelper.RequestAddItem(self.Root(), KnapsackContainerType.Inventory, configId, count).Coroutine();
 		}
 		
 		//移除道具

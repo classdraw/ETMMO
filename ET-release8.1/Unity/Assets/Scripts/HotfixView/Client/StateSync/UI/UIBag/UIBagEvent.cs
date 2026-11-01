@@ -12,6 +12,7 @@ namespace ET.Client
             string assetsName = $"Assets/Bundles/UI/UIBag/{UIType.UIBag}.prefab";
             GameObject bundleGameObject = await uiComponent.Scene().GetComponent<ResourcesLoaderComponent>().LoadAssetAsync<GameObject>(assetsName);
             GameObject gameObject = UnityEngine.Object.Instantiate(bundleGameObject, uiComponent.UIGlobalComponent.UICanvas);
+            gameObject.SetActive(true);
             UI ui = uiComponent.AddChild<UI, string, GameObject, int>(UIType.UIBag, gameObject,
                 UIEventComponent.Instance.UISortingOrders[UIType.UIBag]);
             ui.AddComponent<UIBagComponent>();

@@ -6,7 +6,7 @@ namespace ET.Server
         protected override async ETTask Run(Unit unit, C2M_AddKnapsackItem request, M2C_AddKnapsackItem response)
         {
             //KnapsackContainerComponent containerComponent = unit.GetComponent<KnapsackComponent>().GetContainer(request.ContainerType);
-            bool flag=KnapsackHelper.AddItemByConfigId(unit,request.ConfigId);
+            bool flag = KnapsackHelper.AddItemByConfigId(unit, request.ContainerType, request.ConfigId, request.Count);
             if (!flag)
             {
                 response.Error = ErrorCode.ERR_AddKnapsackItemError;

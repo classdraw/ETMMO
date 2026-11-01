@@ -84,6 +84,7 @@ namespace TEngine.Editor.UI
                 new ScriptGenerateRuler("m_rimg", UIComponentName.RawImage),
                 new ScriptGenerateRuler("m_scrollBar", UIComponentName.Scrollbar),
                 new ScriptGenerateRuler("m_scroll", UIComponentName.ScrollRect),
+                new ScriptGenerateRuler("m_loopList2", UIComponentName.LoopListView2),
                 new ScriptGenerateRuler("m_loopList", UIComponentName.LayoutLoopList),
                 new ScriptGenerateRuler("m_input", UIComponentName.InputField),
                 new ScriptGenerateRuler("m_grid", UIComponentName.GridLayoutGroup),
@@ -155,6 +156,35 @@ namespace TEngine.Editor.UI
             }
 
             return merged;
+        }
+
+        /// <summary>按最长前缀匹配 UI 命名规则（例如 m_loopList2 优先于 m_loopList）。</summary>
+        public static ScriptGenerateRuler FindBestMatchingRule(string objectName)
+        {
+            if (string.IsNullOrEmpty(objectName))
+            {
+                return null;
+            }
+
+            List<ScriptGenerateRuler> rules = GetScriptGenerateRule();
+            ScriptGenerateRuler best = null;
+            int bestLen = -1;
+            for (int i = 0; i < rules.Count; i++)
+            {
+                ScriptGenerateRuler rule = rules[i];
+                if (!objectName.StartsWith(rule.uiElementRegex, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                if (rule.uiElementRegex.Length > bestLen)
+                {
+                    best = rule;
+                    bestLen = rule.uiElementRegex.Length;
+                }
+            }
+
+            return best;
         }
 
         public static string GetUINameSpace()

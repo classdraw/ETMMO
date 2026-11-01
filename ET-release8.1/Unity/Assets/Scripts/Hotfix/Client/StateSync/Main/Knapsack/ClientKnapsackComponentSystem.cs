@@ -39,6 +39,22 @@ namespace ET.Client
                 container.Clear();
             }
         }
+
+        /// <summary>与服务器 KnapsackComponent.GetAllItems 一致，汇总各容器物品。</summary>
+        public static void GetAllItems(this ClientKnapsackComponent self, ListComponent<Item> itemList)
+        {
+            foreach (EntityRef<ClientKnapsackContainerComponent> containerRef in self.ContainerInfoDic.Values)
+            {
+                ClientKnapsackContainerComponent container = containerRef;
+                container?.GetItems(itemList);
+            }
+        }
+
+        public static void GetInventoryItems(this ClientKnapsackComponent self, ListComponent<Item> itemList)
+        {
+            ClientKnapsackContainerComponent inventory = self.GetContainer((int)KnapsackContainerType.Inventory);
+            inventory?.GetItems(itemList);
+        }
     }
 }
 

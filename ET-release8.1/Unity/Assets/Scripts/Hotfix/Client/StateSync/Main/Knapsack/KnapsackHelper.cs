@@ -21,15 +21,21 @@ namespace ET.Client
             return ErrorCode.ERR_Success;
         }
         
-        public static async ETTask<int> RequestAddItem(Scene root, KnapsackContainerType containerType, int configId)
+        public static async ETTask<int> RequestAddItem(Scene root, KnapsackContainerType containerType, int configId, int count = 1)
         {
+            if (count <= 0)
+            {
+                count = 1;
+            }
+
             C2M_AddKnapsackItem c2MAddKnapsackItem = C2M_AddKnapsackItem.Create();
             c2MAddKnapsackItem.ContainerType = (int)containerType;
             c2MAddKnapsackItem.ConfigId = configId;
+            c2MAddKnapsackItem.Count = count;
             M2C_AddKnapsackItem m2CAddKnapsackItem = (M2C_AddKnapsackItem)await root.GetComponent<ClientSenderComponent>().Call(c2MAddKnapsackItem);
             if (m2CAddKnapsackItem.Error==ErrorCode.ERR_Success)
             {
-                Log.Info($"RequestAddItem Id={configId} ContainerType={containerType} Success");
+                Log.Info($"RequestAddItem ConfigId={configId} Count={count} ContainerType={containerType} Success");
             }
 
             return m2CAddKnapsackItem.Error;

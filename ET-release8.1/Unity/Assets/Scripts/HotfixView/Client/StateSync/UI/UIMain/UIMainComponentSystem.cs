@@ -51,7 +51,14 @@ namespace ET.Client
 
         public static void OnBag(this UIMainComponent self)
         {
-            UIHelper.Create(self.Scene(), UIType.UIBag).Coroutine();
+            Scene scene = self.Root().CurrentScene();
+            if (scene == null)
+            {
+                Log.Error("打开背包失败：未进入地图场景");
+                return;
+            }
+
+            UIBagHelper.Open(scene);
         }
 
         public static void OnJoystickPointerDown(this UIMainComponent self, Vector2 value)

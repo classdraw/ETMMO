@@ -1,0 +1,45 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+using SuperScrollView;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UIBagComponent : Entity, IAwake, IDestroy
+	{
+		public Button m_btnClose;
+		public LoopListView2 m_loopList2;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UIBagComponent))]
+	[FriendOf(typeof(UIBagComponent))]
+	public static partial class UIBagComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UIBagComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_btnClose = m_bindComponent.GetComponent<Button>(0);
+			self.m_btnClose.onClick.AddListener(() => { self.OnClose(); });
+			self.m_loopList2 = m_bindComponent.GetComponent<LoopListView2>(1);
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UIBagComponent self)
+		{
+		}
+
+		public static void OnClose(this UIBagComponent self)
+		{
+		}
+	}
+}

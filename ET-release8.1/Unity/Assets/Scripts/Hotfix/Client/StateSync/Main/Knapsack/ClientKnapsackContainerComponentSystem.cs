@@ -71,6 +71,20 @@ namespace ET.Client
             self.Items.TryGetValue(itemId, out EntityRef<Item> itemRef);
             return itemRef;
         }
+
+        public static void GetItems(this ClientKnapsackContainerComponent self, ListComponent<Item> itemList)
+        {
+            foreach (EntityRef<Item> itemRef in self.Items.Values)
+            {
+                Item item = itemRef;
+                if (item == null || item.IsDisposed)
+                {
+                    continue;
+                }
+
+                itemList.Add(item);
+            }
+        }
         
         public static bool AddItem(this ClientKnapsackContainerComponent self, Item item)
         {

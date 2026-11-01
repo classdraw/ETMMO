@@ -208,6 +208,11 @@ namespace GameLogic
                 usings.AppendLine("using TEngine;");
             }
 
+            if (extraUsings.Contains("SuperScrollView"))
+            {
+                usings.AppendLine("using SuperScrollView;");
+            }
+
 #if ENABLE_TEXTMESHPRO
             if (extraUsings.Contains("TMPro"))
             {
@@ -282,8 +287,7 @@ namespace GameLogic
             }
 
             string fieldName = FormatFieldName(comp.gameObject.name);
-            var rule = ScriptGeneratorSetting.GetScriptGenerateRule()
-                .Find(r => comp.gameObject.name.StartsWith(r.uiElementRegex));
+            var rule = ScriptGeneratorSetting.FindBestMatchingRule(comp.gameObject.name);
             if (rule != null && rule.componentName == UIComponentName.GameObject)
             {
                 fields.AppendLine($"\t\tpublic GameObject {fieldName};");
@@ -370,6 +374,12 @@ namespace GameLogic
             if (ns == "TEngine")
             {
                 extraUsings.Add("TEngine");
+                return t.Name;
+            }
+
+            if (ns == "SuperScrollView")
+            {
+                extraUsings.Add("SuperScrollView");
                 return t.Name;
             }
 

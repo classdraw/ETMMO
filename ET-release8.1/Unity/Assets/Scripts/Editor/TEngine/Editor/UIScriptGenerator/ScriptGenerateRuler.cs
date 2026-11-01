@@ -95,5 +95,6 @@ namespace TEngine.Editor.UI
         Canvas,
         Dropdown,
         LayoutLoopList,
+        LoopListView2,
     }
 }

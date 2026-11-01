@@ -2239,6 +2239,9 @@ namespace ET
         [MemoryPackOrder(2)]
         public int ConfigId { get; set; }
 
+        [MemoryPackOrder(3)]
+        public int Count { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -2249,6 +2252,7 @@ namespace ET
             this.RpcId = default;
             this.ContainerType = default;
             this.ConfigId = default;
+            this.Count = default;
 
             ObjectPool.Instance.Recycle(this);
         }
