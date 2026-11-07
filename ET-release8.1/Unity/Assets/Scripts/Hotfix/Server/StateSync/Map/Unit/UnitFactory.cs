@@ -206,6 +206,7 @@ namespace ET.Server
             numericComponent.Set(NumericType.HpBase, hp);
             numericComponent.Set(NumericType.MaxHpBase, hp);
             numericComponent.Set(NumericType.SpBase, sp);
+            numericComponent.Set(NumericType.MaxSpBase, sp);
 
             bool isRanged = unitConfig.Range > 1;
             int atk = isRanged

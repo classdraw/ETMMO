@@ -20,7 +20,11 @@ namespace ET.Client
         private static void Awake(this UIMainComponent self)
         {
             UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
-            self.m_btnBag = m_bindComponent.GetComponent<Button>(0);
+            self.m_sliderHeadHP = m_bindComponent.GetComponent<Slider>(0);
+            self.m_sliderHeadMP = m_bindComponent.GetComponent<Slider>(1);
+            self.m_sliderHP = m_bindComponent.GetComponent<Slider>(2);
+            self.m_sliderMP = m_bindComponent.GetComponent<Slider>(3);
+            self.m_btnBag = m_bindComponent.GetComponent<Button>(4);
             self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
 
             self.m_joystick = self.GetParent<UI>().GameObject.GetComponentInChildren<JoystickCtrl>(true);
@@ -33,6 +37,8 @@ namespace ET.Client
             self.m_joystick.SetPointerDownAction(value => { self.OnJoystickPointerDown(value); });
             self.m_joystick.SetValueChangeAction(value => { self.OnJoystickValueChanged(value); });
             self.m_joystick.SetPointerUpAction(value => { self.OnJoystickPointerUp(value); });
+
+            self.RefreshHpAndSp();
         }
         
         [EntitySystem]
@@ -47,6 +53,99 @@ namespace ET.Client
             self.m_joystick.SetValueChangeAction(null);
             self.m_joystick.SetPointerUpAction(null);
             self.m_joystick = null;
+        }
+
+        /// <summary>根据主角数值刷新头像血蓝条与底部血蓝条。</summary>
+        public static void RefreshHpAndSp(this UIMainComponent self)
+        {
+            if (self == null || self.IsDisposed)
+            {
+                return;
+            }
+
+            Scene currentScene = self.Root().CurrentScene();
+            if (currentScene == null)
+            {
+                return;
+            }
+
+            Unit myUnit = UnitHelper.GetMyUnitFromCurrentScene(currentScene);
+            if (myUnit == null || myUnit.IsDisposed)
+            {
+                return;
+            }
+
+            NumericComponent numericComponent = myUnit.GetComponent<NumericComponent>();
+            if (numericComponent == null)
+            {
+                return;
+            }
+
+            long hp = numericComponent[NumericType.Hp];
+            long sp = numericComponent[NumericType.Sp];
+            long maxHp = GetDisplayMax(numericComponent, NumericType.MaxHp, NumericType.MaxHpBase, hp);
+            long maxSp = GetDisplayMax(numericComponent, NumericType.MaxSp, NumericType.MaxSpBase, sp);
+            ApplyHpAndSpToSliders(self, hp, sp, maxHp, maxSp);
+        }
+
+        public static void RefreshHpMpSlider(this UIMainComponent self) => self.RefreshHpAndSp();
+
+        private static void ApplyHpAndSpToSliders(UIMainComponent self, long hp, long sp, long maxHp, long maxSp)
+        {
+            float hpRatio = maxHp > 0 ? hp / (float)maxHp : 0f;
+            float spRatio = maxSp > 0 ? sp / (float)maxSp : 0f;
+            SetRatioSlider(self.m_sliderHeadHP, hpRatio);
+            SetRatioSlider(self.m_sliderHeadMP, spRatio);
+            SetResourceSlider(self.m_sliderHP, hp, maxHp);
+            SetResourceSlider(self.m_sliderMP, sp, maxSp);
+        }
+
+        private static void SetRatioSlider(Slider slider, float ratio)
+        {
+            if (slider == null)
+            {
+                return;
+            }
+
+            slider.minValue = 0;
+            slider.maxValue = 1;
+            slider.wholeNumbers = false;
+            slider.value = Mathf.Clamp01(ratio);
+        }
+
+        private static long GetDisplayMax(NumericComponent numeric, int maxFinal, int maxBase, long current)
+        {
+            long max = numeric[maxFinal];
+            if (max > 0)
+            {
+                return max;
+            }
+
+            max = numeric.GetByKey(maxBase);
+            if (max > 0)
+            {
+                return max;
+            }
+
+            return current > 0 ? current : 1;
+        }
+
+        private static void SetResourceSlider(Slider slider, long current, long max)
+        {
+            if (slider == null)
+            {
+                return;
+            }
+
+            long safeMax = max > 0 ? max : 1;
+            float targetValue = Mathf.Clamp(current, 0, safeMax);
+
+            slider.minValue = 0;
+            slider.maxValue = safeMax;
+            slider.wholeNumbers = true;
+            // 先归零再赋值，否则仅改 max 时 FillRect 可能不刷新
+            slider.value = 0;
+            slider.value = targetValue;
         }
 
         public static void OnBag(this UIMainComponent self)

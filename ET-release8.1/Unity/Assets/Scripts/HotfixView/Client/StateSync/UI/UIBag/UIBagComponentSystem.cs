@@ -8,12 +8,12 @@ namespace ET.Client
 {
     [EntitySystemOf(typeof(UIBagComponent))]
     [FriendOf(typeof(UIBagComponent))]
+    [FriendOfAttribute(typeof(ET.Client.IconAtlasComponent))]
     public static partial class UIBagComponentSystem
     {
         [EntitySystem]
         private static void Awake(this UIBagComponent self)
         {
-            self.IconSpriteCache = new Dictionary<string, Sprite>();
             UIBindComponent bind = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
             self.m_btnClose = bind.GetComponent<Button>(0);
             self.m_loopList2 = bind.GetComponent<LoopListView2>(1);
@@ -26,10 +26,11 @@ namespace ET.Client
             self.m_loopList2 = null;
             self.SlotItems = null;
             self.ListInited = false;
-            self.IconSpriteCache = null;
-            self.ItemIconAtlasLoadFailed = false;
-            self.ItemIconAtlasSpritesIndexed = false;
-            self.ItemIconAtlasIndexing = false;
+        }
+
+        private static IconAtlasComponent GetIconAtlas(this UIBagComponent self)
+        {
+            return self.GetParent<UI>().GetIconAtlas();
         }
 
         public static async ETTask ReloadFromServerAsync(this UIBagComponent self)
@@ -46,7 +47,7 @@ namespace ET.Client
 
         private static async ETTask RefreshBagIconsAsync(this UIBagComponent self)
         {
-            await self.EnsureItemIconAtlasAsync();
+            await self.EnsureIconAtlasAsync();
             self.RefreshBagListViewIfAlive();
         }
 
@@ -77,14 +78,15 @@ namespace ET.Client
             self.InitBagList();
             self.RefreshBagListView();
             Log.Info($"[UIBag] 列表已刷新，背包格内物品数={self.CountOccupiedSlots()}，开始加载图标");
-            await self.EnsureItemIconAtlasAsync();
+            await self.EnsureIconAtlasAsync();
             self.RefreshBagListViewIfAlive();
             if (self.IsDisposed)
             {
                 return;
             }
 
-            Log.Info($"[UIBag] 界面已刷新完成，图标缓存数={self.IconSpriteCache?.Count ?? 0}");
+            IconAtlasComponent atlas = self.GetIconAtlas();
+            Log.Info($"[UIBag] 界面已刷新完成，图标缓存数={atlas?.SpriteCache?.Count ?? 0}");
         }
 
         private static void RefreshBagListViewIfAlive(this UIBagComponent self)
@@ -300,7 +302,8 @@ namespace ET.Client
             }
 
             string iconKey = config.Icon;
-            if (AtlasHelper.TryGetSprite(self.IconSpriteCache, iconKey, out Sprite cached))
+            IconAtlasComponent itemAtlas = self.GetIconAtlas();
+            if (itemAtlas != null && itemAtlas.TryGetSprite(iconKey, out Sprite cached))
             {
                 itemImage.sprite = cached;
                 itemImageTransform.gameObject.SetActive(true);
@@ -316,8 +319,10 @@ namespace ET.Client
         private static async ETTask LoadItemIconAsync(this UIBagComponent self, Image itemImage, string iconKey, int slotIndex,
             long itemInstanceId)
         {
-            Sprite sprite = await AtlasHelper.GetItemIconSpriteAsync(
-                self, self.Root(), self.GetBagResourcesLoader(), iconKey, CollectItemConfigIconNames());
+            IconAtlasComponent atlas = self.GetIconAtlas();
+            Sprite sprite = atlas == null
+                ? null
+                : await atlas.GetSpriteAsync(iconKey, IconAtlasComponentSystem.CollectItemConfigIconNames());
             if (self.IsDisposed || itemImage == null)
             {
                 return;
@@ -325,10 +330,10 @@ namespace ET.Client
 
             if (sprite == null)
             {
-                if (!self.ItemIconAtlasLoadFailed)
+                if (atlas != null && !atlas.LoadFailed)
                 {
                     Log.Warning(
-                        $"[UIBag] 图集中无此 Icon={iconKey}，请核对 ItemConfig 与图集内 Sprite 名称，Atlas={UIBagComponent.ItemIconAtlasLocation}");
+                        $"[UIBag] 图集中无此 Icon={iconKey}，请核对 ItemConfig 与图集内 Sprite 名称，Atlas={IconAtlasComponent.AtlasLocation}");
                 }
 
                 return;
@@ -345,34 +350,15 @@ namespace ET.Client
             itemImage.gameObject.SetActive(true);
         }
 
-        private static ResourcesLoaderComponent GetBagResourcesLoader(this UIBagComponent self)
+        private static async ETTask EnsureIconAtlasAsync(this UIBagComponent self)
         {
-            Scene scene = self.Scene();
-            ResourcesLoaderComponent loader = scene?.GetComponent<ResourcesLoaderComponent>();
-            if (loader != null)
+            IconAtlasComponent atlas = self.GetIconAtlas();
+            if (atlas == null)
             {
-                return loader;
+                return;
             }
 
-            return self.Root().GetComponent<ResourcesLoaderComponent>();
-        }
-
-        private static async ETTask EnsureItemIconAtlasAsync(this UIBagComponent self)
-        {
-            await AtlasHelper.EnsureItemIconAtlasIndexedAsync(
-                self, self.Root(), self.GetBagResourcesLoader(), CollectItemConfigIconNames());
-        }
-
-        private static IEnumerable<string> CollectItemConfigIconNames()
-        {
-            foreach (KeyValuePair<int, ItemConfig> pair in ItemConfigCategory.Instance.GetAll())
-            {
-                ItemConfig config = pair.Value;
-                if (config != null && !string.IsNullOrEmpty(config.Icon))
-                {
-                    yield return config.Icon;
-                }
-            }
+            await atlas.EnsureIndexedAsync(IconAtlasComponentSystem.CollectItemConfigIconNames());
         }
 
         /// <summary>仅把堆叠数量写入 Prefab 上的 ItemCount（Text），不再使用 StackCount。</summary>

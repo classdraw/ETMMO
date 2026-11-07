@@ -12,6 +12,10 @@ namespace ET.Client
 	[ComponentOf(typeof(UI))]
 	public class UIMainComponent : Entity, IAwake, IDestroy
 	{
+		public Slider m_sliderHeadHP;
+		public Slider m_sliderHeadMP;
+		public Slider m_sliderHP;
+		public Slider m_sliderMP;
 		public Button m_btnBag;
 	}
 }
@@ -26,7 +30,11 @@ namespace ET.Client
 		private static void Awake(this UIMainComponent self)
 		{
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
-			self.m_btnBag = m_bindComponent.GetComponent<Button>(0);
+			self.m_sliderHeadHP = m_bindComponent.GetComponent<Slider>(0);
+			self.m_sliderHeadMP = m_bindComponent.GetComponent<Slider>(1);
+			self.m_sliderHP = m_bindComponent.GetComponent<Slider>(2);
+			self.m_sliderMP = m_bindComponent.GetComponent<Slider>(3);
+			self.m_btnBag = m_bindComponent.GetComponent<Button>(4);
 			self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
 		}
 

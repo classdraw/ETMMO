@@ -118,6 +118,17 @@
 	    public const int Sp = 1011;//蓝量
 	    public const int SpBase = Sp * ComponentMultiplier + 1;
 
+	    public const int MaxSp = 1013;
+	    public const int MaxSpBase = MaxSp * ComponentMultiplier + 1;
+	    public const int MaxSpAdd = MaxSp * ComponentMultiplier + 2;
+	    public const int MaxSpTempAdd = MaxSp * ComponentMultiplier + 6;
+	    public const int MaxSpPct = MaxSp * ComponentMultiplier + 3;
+	    public const int MaxSpTempPct = MaxSp * ComponentMultiplier + 7;
+	    public const int MaxSpFinalAdd = MaxSp * ComponentMultiplier + 4;
+	    public const int MaxSpTempFinalAdd = MaxSp * ComponentMultiplier + 8;
+	    public const int MaxSpFinalPct = MaxSp * ComponentMultiplier + 5;
+	    public const int MaxSpTempFinalPct = MaxSp * ComponentMultiplier + 9;
+
 	    public const int Element = 1012;//元素
 	    //预留1012 1019
 	    

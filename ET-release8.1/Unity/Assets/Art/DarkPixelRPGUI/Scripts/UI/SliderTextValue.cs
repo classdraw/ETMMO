@@ -15,6 +15,7 @@ namespace DarkPixelRPGUI.Scripts.UI
             if (slider)
             {
                 slider.onValueChanged.AddListener(UpdateText);
+                UpdateText(slider.value);
             }
         }
 
