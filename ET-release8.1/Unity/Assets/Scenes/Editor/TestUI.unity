@@ -1895,6 +1895,11 @@ PrefabInstance:
       propertyPath: mLocalizeTarget
       value: 
       objectReference: {fileID: 348238826}
+    - target: {fileID: 8091201112086013386, guid: 9f6d9adc6f537764fa0fea29671e77bf,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000061035156
+      objectReference: {fileID: 0}
     - target: {fileID: 8527634746634045769, guid: 9f6d9adc6f537764fa0fea29671e77bf,
         type: 3}
       propertyPath: mLocalizeTarget

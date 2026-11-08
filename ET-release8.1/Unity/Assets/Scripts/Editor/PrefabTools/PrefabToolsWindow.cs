@@ -23,7 +23,7 @@ namespace ET
         private int effectSortingOrder;
         private Vector2 scrollPosition;
 
-        [MenuItem("Tools/预制体处理工具合集", false, 50)]
+        [MenuItem("Tools/预制体处理/预制体处理工具", false, 50)]
         public static void Open()
         {
             var w = GetWindow<PrefabToolsWindow>(true, "预制体处理工具", true);
