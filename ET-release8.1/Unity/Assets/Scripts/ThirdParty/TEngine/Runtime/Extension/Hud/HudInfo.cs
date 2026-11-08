@@ -8,6 +8,9 @@ namespace XEngine.Hud
 
     public class HudInfo : MonoBehaviour
     {
+        /// <summary>头顶 HUD（含血条）相对 Unit 原点的世界高度偏移，与 HudBoardSetting.m_fTitleOffsetY 叠加。</summary>
+        private const float TitleWorldOffsetY = 1.5f;
+
         private int m_iTitleUUID = 0;
 
         private GameObject m_kTarget;
@@ -27,7 +30,7 @@ namespace XEngine.Hud
             HudTitleInfo titleInfo = HudTitleRender.GetInstance().GetTitle(m_iTitleUUID);
             titleInfo.Clear();
 
-            titleInfo.SetOffsetY(0.7f);
+            titleInfo.SetOffsetY(TitleWorldOffsetY);
             titleInfo.ShowTitle();
 
             titleInfo.BeginTitle();
@@ -50,7 +53,7 @@ namespace XEngine.Hud
             HudTitleInfo titleInfo = HudTitleRender.GetInstance().GetTitle(m_iTitleUUID);
             titleInfo.Clear();
 
-            titleInfo.SetOffsetY(0.7f);
+            titleInfo.SetOffsetY(TitleWorldOffsetY);
             titleInfo.ShowTitle();
 
             titleInfo.BeginTitle();
