@@ -176,6 +176,11 @@ namespace ET.Server
             unit.AddComponent<NumericNoticeComponent>();
             unit.AddComponent<BuffComponent>();
 
+            if (monsterConfig.AIConfigId > 0)
+            {
+                MonsterAiSetupHelper.Setup(unit, monsterConfig.AIConfigId, pos);
+            }
+
             unitComponent.Add(unit);
             return unit;
         }

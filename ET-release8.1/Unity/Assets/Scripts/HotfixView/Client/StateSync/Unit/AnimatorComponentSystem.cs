@@ -19,11 +19,8 @@ namespace ET.Client
 		[EntitySystem]
 		private static void Awake(this AnimatorComponent self)
 		{
-			var gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
-			var refCtrl = gameObject.GetComponent<ReferenceCollector>();
-
-			Animator animator = (refCtrl.GetObject("Root") as GameObject).GetComponent<Animator>();
-			if (animator == null)
+			GameObject gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
+			if (!UnitViewAnimatorHelper.TryGetRoleAnimator(gameObject, out Animator animator))
 			{
 				return;
 			}

@@ -67,6 +67,8 @@ namespace ET
 		public int GroupId { get; set; }
 		/// <summary>模型类型</summary>
 		public int ModelType { get; set; }
+		/// <summary>AI</summary>
+		public int AIConfigId { get; set; }
 		/// <summary>模型</summary>
 		public string Model { get; set; }
 		/// <summary>等级</summary>

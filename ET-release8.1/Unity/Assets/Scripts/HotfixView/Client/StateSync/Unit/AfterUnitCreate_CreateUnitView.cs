@@ -126,16 +126,9 @@ namespace ET.Client
             return true;
         }
 
-        /// <summary>
-        /// 怪物 2D View 组件；整模 prefab 自带贴图，不走部位拼装。
-        /// </summary>
         private static void AttachMonsterViewComponents(Unit unit, GameObject go)
         {
-            unit.AddComponent<GameObjectComponent>().GameObject = go;
-            unit.AddComponent<Avatar2DComponent>();
-            unit.AddComponent<Animator2DComponent>();
-            unit.AddComponent<MountComponent>();
-            unit.AddComponent<UnitTopUIComponent>();
+            AttachRoleStyleViewComponents(unit, go);
         }
 
         private async ETTask CreateRobotUnitView(Scene scene, AfterUnitCreate args)
@@ -236,6 +229,14 @@ namespace ET.Client
         }
 
         private static void AttachPlayerViewComponents(Unit unit, GameObject go)
+        {
+            AttachRoleStyleViewComponents(unit, go);
+        }
+
+        /// <summary>
+        /// 玩家与怪物共用：2D 帧动画或 3D Animator，与 MoveStart/Cast 等视图事件一致。
+        /// </summary>
+        private static void AttachRoleStyleViewComponents(Unit unit, GameObject go)
         {
             unit.AddComponent<GameObjectComponent>().GameObject = go;
             if (go.GetComponentInChildren<FrameSheetAnimPlayer>() != null)

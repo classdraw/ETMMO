@@ -6,6 +6,7 @@ namespace ET
     [FriendOf(typeof(AIComponent))]
     [FriendOf(typeof(AIDispatcherComponent))]
     [FriendOfAttribute(typeof(ET.XunLuoPathComponent))]
+    [FriendOfAttribute(typeof(ET.MonsterPatrolComponent))]
     public static partial class AIComponentSystem
     {
         [Invoke(TimerInvokeType.AITimer)]
@@ -135,6 +136,14 @@ namespace ET
             if (path != null)
             {
                 path.PatrolPhase = 0;
+            }
+
+            MonsterPatrolComponent monsterPatrol = unit.GetComponent<MonsterPatrolComponent>();
+            if (monsterPatrol != null)
+            {
+                monsterPatrol.PatrolPhase = 0;
+                monsterPatrol.MoveIntent = 0;
+                monsterPatrol.ChaseTargetId = 0;
             }
         }
     }

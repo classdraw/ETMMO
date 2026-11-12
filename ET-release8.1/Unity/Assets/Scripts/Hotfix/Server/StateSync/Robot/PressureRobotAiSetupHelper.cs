@@ -10,6 +10,12 @@ namespace ET.Server
     {
         public static void Setup(Unit unit, int aiConfigId, float3 patrolCenter)
         {
+            if (MonsterAiConfigHelper.IsMonsterOnlyAiGroup(aiConfigId))
+            {
+                Log.Error($"[Robot] 不可使用怪物专用 AIConfigId: {aiConfigId} unit={unit.Id}");
+                return;
+            }
+
             if (!AIConfigCategory.Instance.AIConfigs.ContainsKey(aiConfigId))
             {
                 Log.Error($"[Robot] AIConfigId 不存在: {aiConfigId} unit={unit.Id}");
