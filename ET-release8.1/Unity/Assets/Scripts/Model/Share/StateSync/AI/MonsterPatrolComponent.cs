@@ -22,13 +22,16 @@ namespace ET
         /// <summary>C=1 时追击玩家。</summary>
         public bool ChaseEnabled;
 
-        /// <summary>D/1000：追击范围（相对出生点），0 不限制（仅 C=1）。</summary>
+        /// <summary>D/1000：警戒范围（怪物与玩家水平距离），进入后开始追击；0 不限制（仅 C=1）。</summary>
+        public float AlertRangeM;
+
+        /// <summary>E/1000：追击范围（相对出生点），超出则脱战回巢；0 不限制（仅 C=1）。</summary>
         public float ChaseRangeM;
 
-        /// <summary>E/1000：追击间隔/休息时间（毫秒，仅 C=1）。</summary>
+        /// <summary>F/1000：追击间隔/休息时间（毫秒，仅 C=1）。</summary>
         public int ChaseRestMs;
 
-        /// <summary>F/1000：追击时与玩家最近停靠距离（仅 C=1）。</summary>
+        /// <summary>G/1000：追击时与玩家最近停靠距离（仅 C=1）。</summary>
         public float ChaseMinDistanceM;
 
         /// <summary>0 巡逻；1 追击；2 返回出生点。</summary>

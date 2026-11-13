@@ -4,5 +4,5 @@
 [201, {"_t":"AIConfig","_id":201,"AIConfigId":2,"Order":1,"Name":"AI_XunLuo","_NodeParams":[]}],
 [301, {"_t":"AIConfig","_id":301,"AIConfigId":3,"Order":1,"Name":"AI_XunLuo","_NodeParams":[]}],
 [302, {"_t":"AIConfig","_id":302,"AIConfigId":3,"Order":2,"Name":"AI_AutoSkill","_NodeParams":[66002.0]}],
-[901, {"_t":"AIConfig","_id":901,"AIConfigId":10,"Order":1,"Name":"AI_Monster_XunLuo","_NodeParams":[3000.0,1000.0,1.0,5000.0,800.0,800.0]}],
+[901, {"_t":"AIConfig","_id":901,"AIConfigId":10,"Order":1,"Name":"AI_Monster_XunLuo","_NodeParams":[3000.0,1000.0,1.0,4000.0,8000.0,800.0,800.0]}],
 ]}

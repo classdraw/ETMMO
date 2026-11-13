@@ -3,7 +3,7 @@ using Unity.Mathematics;
 namespace ET.Server
 {
     /// <summary>
-    /// 怪物出生点巡逻。NodeParams：A 距离 B 间隔 C 追击 D 追击范围 E 追击休息 F 最近距离（见 MonsterAiSetupHelper）。
+    /// 怪物出生点巡逻。A～G 见 MonsterAiSetupHelper（D 警戒、E 追击范围脱战）。
     /// </summary>
     [FriendOf(typeof(MonsterPatrolComponent))]
     public class AI_Monster_XunLuo : AAIHandler
@@ -239,8 +239,12 @@ namespace ET.Server
                         continue;
                     }
 
-                    if (patrol.ChaseRangeM > 0f
-                        && HorizontalDistance(candidate.Position, patrol.SpawnCenter) > patrol.ChaseRangeM)
+                    if (!IsPlayerInChaseLeash(patrol, candidate.Position))
+                    {
+                        continue;
+                    }
+
+                    if (!IsPlayerInAlertRange(unit, candidate, patrol))
                     {
                         continue;
                     }
@@ -277,8 +281,12 @@ namespace ET.Server
                     continue;
                 }
 
-                if (patrol.ChaseRangeM > 0f
-                    && HorizontalDistance(candidate.Position, patrol.SpawnCenter) > patrol.ChaseRangeM)
+                if (!IsPlayerInChaseLeash(patrol, candidate.Position))
+                {
+                    continue;
+                }
+
+                if (!IsPlayerInAlertRange(unit, candidate, patrol))
                 {
                     continue;
                 }
@@ -319,6 +327,28 @@ namespace ET.Server
             float3 d = a - b;
             d.y = 0f;
             return math.length(d);
+        }
+
+        /// <summary>玩家相对出生点仍在追击（脱战）范围内，才允许选中或继续追。</summary>
+        private static bool IsPlayerInChaseLeash(MonsterPatrolComponent patrol, float3 playerPos)
+        {
+            if (patrol.ChaseRangeM <= 0f)
+            {
+                return true;
+            }
+
+            return HorizontalDistance(playerPos, patrol.SpawnCenter) <= patrol.ChaseRangeM;
+        }
+
+        /// <summary>玩家进入以怪物为圆心的警戒范围才开追。</summary>
+        private static bool IsPlayerInAlertRange(Unit unit, Unit player, MonsterPatrolComponent patrol)
+        {
+            if (patrol.AlertRangeM <= 0f)
+            {
+                return true;
+            }
+
+            return HorizontalDistance(unit.Position, player.Position) <= patrol.AlertRangeM;
         }
     }
 }

@@ -48,8 +48,8 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// A 巡逻距离、B 巡逻间隔、C 是否追击、D 追击范围、E 追击休息、F 追击最近距离；
-        /// A/B/D/E/F 配置 /1000（距离或时间）；C=0 时 D/E/F 按 0。
+        /// A 巡逻距离、B 巡逻间隔、C 是否追击、D 警戒范围、E 追击范围、F 追击休息、G 最近距离；
+        /// A/B/D/E/F/G 配置 /1000；C=0 时 D～G 按 0。
         /// </summary>
         private static void InitMonsterXunLuo(Unit unit, float3 spawnCenter, AIConfig node)
         {
@@ -59,11 +59,13 @@ namespace ET.Server
             int paramD = 0;
             int paramE = 0;
             int paramF = 0;
+            int paramG = 0;
             if (paramC == 1)
             {
                 paramD = node.NodeParams.Length > 3 ? (int)node.NodeParams[3] : 0;
                 paramE = node.NodeParams.Length > 4 ? (int)node.NodeParams[4] : 0;
                 paramF = node.NodeParams.Length > 5 ? (int)node.NodeParams[5] : 0;
+                paramG = node.NodeParams.Length > 6 ? (int)node.NodeParams[6] : 0;
             }
 
             MonsterPatrolComponent patrol = unit.GetComponent<MonsterPatrolComponent>() ?? unit.AddComponent<MonsterPatrolComponent>();
@@ -71,9 +73,10 @@ namespace ET.Server
             patrol.PatrolRadiusM = paramA / 1000f;
             patrol.PatrolIntervalMs = ConfigTimeToMs(paramB);
             patrol.ChaseEnabled = paramC == 1;
-            patrol.ChaseRangeM = paramC == 1 ? paramD / 1000f : 0f;
-            patrol.ChaseRestMs = paramC == 1 ? ConfigTimeToMs(paramE) : 0;
-            patrol.ChaseMinDistanceM = paramC == 1 ? paramF / 1000f : 0f;
+            patrol.AlertRangeM = paramC == 1 ? paramD / 1000f : 0f;
+            patrol.ChaseRangeM = paramC == 1 ? paramE / 1000f : 0f;
+            patrol.ChaseRestMs = paramC == 1 ? ConfigTimeToMs(paramF) : 0;
+            patrol.ChaseMinDistanceM = paramC == 1 ? paramG / 1000f : 0f;
             patrol.PatrolPhase = 0;
             patrol.MoveIntent = 0;
             patrol.ChaseTargetId = 0;
