@@ -7,13 +7,11 @@ namespace ET
     {
         None = 0,
         Idle = 1,//上下起伏idle
-        Stand = 2,//站立不动
-        Move = 3,//移动
-        Archery = 4,//射箭
-        Cast = 5,//施法
-        Attack1 = 6,//攻击1
-        Attack2 = 7,//攻击2
-        Hit = 8,
-        Death = 9
+        Run = 2,//移动
+        Attack1 = 3,//攻击1
+        Attack2 = 4,//攻击2
+        Hit = 5,
+        Death01 = 6,
+        Death02 = 7,
     }
 }

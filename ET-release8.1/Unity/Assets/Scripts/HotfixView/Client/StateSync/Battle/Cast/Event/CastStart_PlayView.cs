@@ -81,7 +81,7 @@ namespace ET.Client
 
             if (UnitViewAnimatorHelper.Uses3DAnimator(unit))
             {
-                UnitViewAnimatorHelper.TryPlayMotion(unit, motionType, 1f);
+                UnitViewAnimatorHelper.TryPlayMotionInTime(unit, motionType, castConfig.TotalTime);
                 return;
             }
 
@@ -99,7 +99,19 @@ namespace ET.Client
 
             // 立即播放，避免 MoveStart/MoveStop 在同一帧覆盖 MotionType 队列。
             animator.SyncFacingFromUnit();
-            animator.AnimPlayer.Play((int)motionType, animator.Facing, 1f);
+            float speed = 1f;
+            float clipDuration = animator.AnimationTime(motionType);
+            if (castConfig.TotalTime > 0 && clipDuration > 0f)
+            {
+                speed = clipDuration / (castConfig.TotalTime / 1000f);
+                if (speed < 0.01f || speed > 1000f)
+                {
+                    Log.Error($"motionSpeed数值异常, {speed}, 动作 {motionType} 按原速播放");
+                    speed = 1f;
+                }
+            }
+
+            animator.AnimPlayer.Play((int)motionType, animator.Facing, speed);
         }
     }
 }

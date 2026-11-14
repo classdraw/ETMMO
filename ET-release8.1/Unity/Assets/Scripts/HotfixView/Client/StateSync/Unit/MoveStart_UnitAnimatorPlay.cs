@@ -23,7 +23,7 @@ namespace ET.Client
 
             if (UnitViewAnimatorHelper.Uses3DAnimator(unit))
             {
-                UnitViewAnimatorHelper.TryPlayMotion(unit, MotionType.Move, 1f);
+                UnitViewAnimatorHelper.TryPlayMotion(unit, MotionType.Run, 1f);
                 await ETTask.CompletedTask;
                 return;
             }
@@ -35,14 +35,14 @@ namespace ET.Client
                 return;
             }
 
-            if (Animator2DComponentSystem.ShouldSuppressLocomotionAnimation(unit, animator, MotionType.Move))
+            if (Animator2DComponentSystem.ShouldSuppressLocomotionAnimation(unit, animator, MotionType.Run))
             {
                 await ETTask.CompletedTask;
                 return;
             }
 
             animator.SyncFacingFromUnit();
-            animator.Play(MotionType.Move, 1f);
+            animator.Play(MotionType.Run, 1f);
             await ETTask.CompletedTask;
         }
     }

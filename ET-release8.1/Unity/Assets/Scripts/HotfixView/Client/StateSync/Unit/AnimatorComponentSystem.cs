@@ -45,6 +45,7 @@ namespace ET.Client
 		[EntitySystem]
 		private static void Awake(this AnimatorComponent self)
 		{
+			self.InnerCDs[MotionType.Hit] = UnitViewAnimatorHelper.HitReplayIntervalMs;
 			GameObject gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
 			if (!TryGetRoleAnimator(gameObject, out Animator animator))
 			{
@@ -92,7 +93,7 @@ namespace ET.Client
 				//self.Animator.SetTrigger(self.MotionType.ToString());
 				self.Animator.CrossFade(ResolveAnimatorStateName(self.MotionType), 0.1f);
 				self.Animator.speed = self.MontionSpeed;
-				if (self.MotionType==MotionType.Move)
+				if (self.MotionType==MotionType.Run)
 				{
 					self.Animator.SetBool("isMoveing",true);
 				}
@@ -120,6 +121,38 @@ namespace ET.Client
 			return self.Parameter.Contains(parameter);
 		}
 
+		public static bool TryGetClipLength(this AnimatorComponent self, MotionType motionType, out float length)
+		{
+			length = 0f;
+			if (self.animationClips == null || self.animationClips.Count == 0)
+			{
+				return false;
+			}
+
+			string stateName = ResolveAnimatorStateName(motionType);
+			if (self.animationClips.TryGetValue(stateName, out AnimationClip clip) && clip != null && clip.length > 0f)
+			{
+				length = clip.length;
+				return true;
+			}
+
+			foreach (var kv in self.animationClips)
+			{
+				if (kv.Value == null || kv.Value.length <= 0f)
+				{
+					continue;
+				}
+
+				if (string.Equals(kv.Key, stateName, StringComparison.OrdinalIgnoreCase))
+				{
+					length = kv.Value.length;
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		public static void PlayInTime(this AnimatorComponent self, MotionType motionType, float time)
 		{
 			if (!self.CanPlayByInnerCD(motionType))
@@ -127,13 +160,13 @@ namespace ET.Client
 				return;
 			}
 
-			AnimationClip animationClip;
-			if (!self.animationClips.TryGetValue(motionType.ToString().ToLower(), out animationClip))
+			if (time <= 0f || !self.TryGetClipLength(motionType, out float clipLength))
 			{
-				throw new Exception($"找不到该动作: {motionType}");
+				Log.Error($"找不到该动作或时长无效: {motionType}, time={time}");
+				return;
 			}
 
-			float motionSpeed = animationClip.length / time;
+			float motionSpeed = clipLength / time;
 			if (motionSpeed < 0.01f || motionSpeed > 1000f)
 			{
 				Log.Error($"motionSpeed数值异常, {motionSpeed}, 此动作跳过");
@@ -290,9 +323,9 @@ namespace ET.Client
 		{
 			switch (motionType)
 			{
-				case MotionType.Move:
+				case MotionType.Run:
 					return "Run";
-				case MotionType.Death:
+				case MotionType.Death01:
 					return "Death01";
 				default:
 					return motionType.ToString();

@@ -60,6 +60,30 @@ namespace ET.Client
             self.Casts.Clear();
         }
 
+        public static bool HasOtherCast(this ClientCastComponent self, long castId)
+        {
+            if (self == null || self.IsDisposed)
+            {
+                return false;
+            }
+
+            foreach (var kv in self.Casts)
+            {
+                if (kv.Key == castId)
+                {
+                    continue;
+                }
+
+                ClientCast cast = kv.Value;
+                if (cast != null && !cast.IsDisposed)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static bool IsCasting(this ClientCastComponent self)
         {
             if (self == null || self.IsDisposed)

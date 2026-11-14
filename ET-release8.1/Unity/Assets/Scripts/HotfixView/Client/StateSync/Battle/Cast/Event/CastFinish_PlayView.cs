@@ -12,9 +12,21 @@ namespace ET.Client
             {
                 return;
             }
-            ClientCast clientCast = unit.GetComponent<ClientCastComponent>().Get(args.CastId);
+            ClientCastComponent clientCastComponent = unit.GetComponent<ClientCastComponent>();
+            ClientCast clientCast = clientCastComponent.Get(args.CastId);
             if (clientCast == null || clientCast.IsDisposed)
             {
+                return;
+            }
+
+            if (UnitViewAnimatorHelper.Uses3DAnimator(unit))
+            {
+                if (!clientCastComponent.HasOtherCast(args.CastId))
+                {
+                    UnitViewAnimatorHelper.TryPlayMotion(unit, MotionType.Idle, 1f);
+                }
+
+                await ETTask.CompletedTask;
                 return;
             }
 

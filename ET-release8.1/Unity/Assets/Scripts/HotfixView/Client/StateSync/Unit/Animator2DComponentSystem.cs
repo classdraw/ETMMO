@@ -19,6 +19,7 @@ namespace ET.Client
 		[EntitySystem]
 		private static void Awake(this Animator2DComponent self)
 		{
+			self.InnerCDs[MotionType.Hit] = UnitViewAnimatorHelper.HitReplayIntervalMs;
 			GameObject gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
 			FrameSheetAnimPlayer animPlayer = gameObject.GetComponentInChildren<FrameSheetAnimPlayer>();
 			if (animPlayer == null)
@@ -268,7 +269,7 @@ namespace ET.Client
 
 		public static bool ShouldSuppressLocomotionAnimation(Unit unit, Animator2DComponent animator, MotionType requestedMotion)
 		{
-			if (requestedMotion != MotionType.Move && requestedMotion != MotionType.Idle)
+			if (requestedMotion != MotionType.Run && requestedMotion != MotionType.Idle)
 			{
 				return false;
 			}
@@ -284,7 +285,7 @@ namespace ET.Client
 				return false;
 			}
 
-			if (requestedMotion == MotionType.Move && (MotionType)animPlayer.CurrentAnim == MotionType.Move)
+			if (requestedMotion == MotionType.Run && (MotionType)animPlayer.CurrentAnim == MotionType.Run)
 			{
 				return false;
 			}
@@ -296,7 +297,7 @@ namespace ET.Client
 		{
 			return motionType switch
 			{
-				MotionType.Death => MotionType.Stand,
+				MotionType.Death01 => MotionType.Idle,
 				_ => motionType,
 			};
 		}
