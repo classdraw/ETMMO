@@ -20,6 +20,7 @@ namespace ET.Server
             self.CoolDownStartTimes.Clear();
         }
 
+        /// <param name="castConfigId">CastConfig.Id。</param>
         public static int CanCastSkill(this SkillStatusComponent self, int castConfigId, bool checkLearned = false)
         {
             Unit unit = self.GetParent<Unit>();
@@ -63,6 +64,7 @@ namespace ET.Server
         }
 
         /// <summary>写入技能 CD 与 CD 开始时间，行为技能与附属技能均生效。</summary>
+        /// <param name="castConfigId">CastConfig.Id。</param>
         public static void SetCoolDown(this SkillStatusComponent self, int castConfigId, int coolDownMs)
         {
             if (coolDownMs <= 0)

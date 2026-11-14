@@ -26,6 +26,7 @@ namespace ET.Client
 		public Button m_btnP1DissolveTeam;
 		public GameObject m_goP2;
 		public Button m_btnP2SetSkillLevel;
+		public Button m_btnP2SetHPSPFull;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;
 		public Button m_btnP3addItem;

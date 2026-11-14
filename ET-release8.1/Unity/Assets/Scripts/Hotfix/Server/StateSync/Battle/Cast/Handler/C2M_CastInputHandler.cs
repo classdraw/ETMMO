@@ -5,7 +5,9 @@ namespace ET.Server
     {
         protected override async ETTask Run(Unit unit, C2M_CastInput request, M2C_CastInput response)
         {
-            if (!CastConfigCategory.Instance.Contain(request.CastConfigId))
+            // 协议字段仍为 CastConfigId，语义为 SkillConfig.Id
+            int skillConfigId = request.CastConfigId;
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
             {
                 response.Error = ErrorCode.ERR_CastArgsError;
                 return;
@@ -18,7 +20,7 @@ namespace ET.Server
                 return;
             }
 
-            response.Error = unit.CreateAndCast(request.CastConfigId, request.TargetId, request.InputPos, true, null, true);
+            response.Error = unit.CreateAndCastBySkill(skillConfigId, request.TargetId, request.InputPos, true, null, true);
             await ETTask.CompletedTask;
         }
     }

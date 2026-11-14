@@ -4,7 +4,7 @@ namespace ET.Client
 {
     public static class BattleHelper
     {
-        public static async ETTask GMCastSimple(Scene root,int castConfigId)
+        public static async ETTask GMCastSimple(Scene root, int skillConfigId)
         {
             Unit playerUnit=UnitHelper.GetMyUnitFromClientScene(root);
             if (playerUnit==null||playerUnit.IsDisposed)
@@ -20,9 +20,15 @@ namespace ET.Client
                 return;
             }
 
-            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
             {
-                Log.Console($"CastId {castConfigId} 不存在!!!");
+                Log.Console($"SkillId {skillConfigId} 不存在!!!");
+                return;
+            }
+
+            if (!SkillConfigHelper.TryGetCastConfigId(skillConfigId, out int castConfigId))
+            {
+                Log.Console($"SkillId {skillConfigId} 的 CastId 无效!!!");
                 return;
             }
 
@@ -33,13 +39,13 @@ namespace ET.Client
                 return;
             }
 
-            await CallGMTestCastAsync(root, playerUnit, castConfigId, targetId, inputPos);
+            await CallGMTestCastAsync(root, playerUnit, skillConfigId, targetId, inputPos);
         }
 
         /// <summary>
         /// 朝角色真前方指定距离的坐标点释放技能（不选单位）。
         /// </summary>
-        public static async ETTask GMCastForward(Scene root, int castConfigId, float distance = 5f)
+        public static async ETTask GMCastForward(Scene root, int skillConfigId, float distance = 5f)
         {
             Unit playerUnit = UnitHelper.GetMyUnitFromClientScene(root);
             if (playerUnit == null || playerUnit.IsDisposed)
@@ -55,16 +61,16 @@ namespace ET.Client
                 return;
             }
 
-            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
             {
-                Log.Console($"CastId {castConfigId} 不存在!!!");
+                Log.Console($"SkillId {skillConfigId} 不存在!!!");
                 return;
             }
 
             float3 inputPos = playerUnit.Position + GetCardinalForward(playerUnit.Forward) * distance;
             inputPos.y = playerUnit.Position.y;
 
-            await CallGMTestCastAsync(root, playerUnit, castConfigId, 0, inputPos);
+            await CallGMTestCastAsync(root, playerUnit, skillConfigId, 0, inputPos);
         }
 
         /// <summary>
@@ -103,23 +109,45 @@ namespace ET.Client
             }
         }
 
-        /// <summary>GM：设置已学技能等级，例如 66001,5。</summary>
-        public static async ETTask GMSetSkillLevel(Scene root, int castConfigId, int level)
+        /// <summary>GM：当前角色 HP/SP 回满，无参数。</summary>
+        public static async ETTask GMSetHPSPFull(Scene root)
         {
-            if (!CastConfigCategory.Instance.Contain(castConfigId))
+            C2M_GMSetHPSPFull request = C2M_GMSetHPSPFull.Create();
+            M2C_GMSetHPSPFull response =
+                await root.GetComponent<ClientSenderComponent>().Call(request) as M2C_GMSetHPSPFull;
+            if (response == null)
             {
-                Log.Console($"CastId {castConfigId} 不存在!!!");
+                Log.Warning("GMSetHPSPFull 无响应");
+                return;
+            }
+
+            if (response.Error == ErrorCode.ERR_Success)
+            {
+                Log.Info(response.Message ?? "HP/SP 已满");
+            }
+            else
+            {
+                Log.Info($"回满 HP/SP 失败 Error={response.Error} {response.Message}");
+            }
+        }
+
+        /// <summary>GM：入参 SkillConfig.Id，服务端按 CastId 写入等级，例如 1,5。</summary>
+        public static async ETTask GMSetSkillLevel(Scene root, int skillConfigId, int level)
+        {
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
+            {
+                Log.Console($"SkillId {skillConfigId} 不存在!!!");
                 return;
             }
 
             C2M_GMSetSkillLevel request = C2M_GMSetSkillLevel.Create();
-            request.CastConfigId = castConfigId;
+            request.CastConfigId = skillConfigId;
             request.Level = level;
             M2C_GMSetSkillLevel response =
                 await root.GetComponent<ClientSenderComponent>().Call(request) as M2C_GMSetSkillLevel;
             if (response.Error == ErrorCode.ERR_Success)
             {
-                Log.Info(response.Message ?? $"技能 {castConfigId} 设为 {level} 级");
+                Log.Info(response.Message ?? $"技能 {skillConfigId} 设为 {level} 级");
             }
             else
             {
@@ -127,10 +155,10 @@ namespace ET.Client
             }
         }
 
-        private static async ETTask CallGMTestCastAsync(Scene root, Unit playerUnit, int castConfigId, long targetId, float3 inputPos)
+        private static async ETTask CallGMTestCastAsync(Scene root, Unit playerUnit, int skillConfigId, long targetId, float3 inputPos)
         {
             C2M_GMTestCast c2MGmTestCast = C2M_GMTestCast.Create();
-            c2MGmTestCast.CastConfigId = castConfigId;
+            c2MGmTestCast.CastConfigId = skillConfigId;
             c2MGmTestCast.TargetId = targetId;
             c2MGmTestCast.InputPos = inputPos;
             M2C_GMTestCast m2CGmTestCast =

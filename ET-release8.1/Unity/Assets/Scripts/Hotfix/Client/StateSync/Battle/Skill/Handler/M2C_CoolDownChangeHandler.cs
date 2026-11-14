@@ -33,7 +33,7 @@ namespace ET.Client
                 int castConfigId = message.CastConfigIds[i];
                 long coolDownEndTime = message.CoolDownTimes[i];
                 long coolDownStartTime = message.CoolDownStartTimes[i];
-                Log.Console($"[CoolDown] 玩家 {unit.Id} 技能 {castConfigId} CD变更 StartTime={coolDownStartTime} EndTime={coolDownEndTime}");
+                Log.Console($"[CoolDown] 玩家 {unit.Id} 技能 CastId={castConfigId} CD变更 StartTime={coolDownStartTime} EndTime={coolDownEndTime}");
 
                 CoolDownChange coolDownChange = new CoolDownChange
                 {

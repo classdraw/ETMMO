@@ -132,6 +132,75 @@ namespace ET.Server
             skillStatus.SetCoolDown(castConfigId, coolDownMs);
             return ErrorCode.ERR_Success;
         }
+
+        /// <summary>
+        /// 玩家/GM 外围施法：入参为 <see cref="SkillConfig"/> Id；内部解析 <see cref="SkillConfig.CastId"/> 后走原有 Cast 流程。
+        /// </summary>
+        public static int CreateAndCastBySkill(this Unit caster, int skillConfigId, long inputUnitId, float3 inputPos, bool needStop,
+            List<long> targets = null, bool checkLearned = false)
+        {
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
+            {
+                return ErrorCode.ERR_CastArgsError;
+            }
+
+            if (!SkillConfigHelper.TryGetCastConfigId(skillConfigId, out int castConfigId))
+            {
+                return ErrorCode.ERR_CastArgsError;
+            }
+
+            SkillStatusComponent skillStatus = caster.GetComponent<SkillStatusComponent>();
+            if (skillStatus == null || skillStatus.IsDisposed)
+            {
+                return ErrorCode.ERR_CastSkillError;
+            }
+
+            int err = skillStatus.CanCastSkill(castConfigId, checkLearned);
+            if (err != ErrorCode.ERR_Success)
+            {
+                return err;
+            }
+
+            SkillConfig skillConfig = SkillConfigCategory.Instance.Get(skillConfigId);
+            err = SkillFunctionHelper.ValidateCheckFunc(caster, castConfigId, skillConfig.CheckFunc);
+            if (err != ErrorCode.ERR_Success)
+            {
+                return err;
+            }
+
+            err = SkillFunctionHelper.ApplyConsumeFunc(caster, castConfigId, skillConfig.ConsumeFunc);
+            if (err != ErrorCode.ERR_Success)
+            {
+                return err;
+            }
+
+            int coolDownMs = CastConfigCategory.Instance.Get(castConfigId).CoolDown;
+
+            Cast cast = caster.Create(castConfigId, inputUnitId, inputPos);
+            if (cast == null)
+            {
+                return ErrorCode.ERR_CastSkillError;
+            }
+
+            if (targets != null && targets.Count > 0)
+            {
+                cast.Targets.AddRange(targets);
+            }
+
+            if (needStop)
+            {
+                caster.Stop(1);
+            }
+
+            err = cast.Cast();
+            if (err != ErrorCode.ERR_Success)
+            {
+                return err;
+            }
+
+            skillStatus.SetCoolDown(castConfigId, coolDownMs);
+            return ErrorCode.ERR_Success;
+        }
     }
 }
 

@@ -15,7 +15,7 @@ namespace ET.Client
         [EntitySystem]
 		private static void Awake(this UIHelpComponent self)
 		{
-			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+						UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_goPanel = m_bindComponent.GetGameObject(0);
 			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
 			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
@@ -49,15 +49,17 @@ namespace ET.Client
 			self.m_goP2 = m_bindComponent.GetGameObject(17);
 			self.m_btnP2SetSkillLevel = m_bindComponent.GetComponent<Button>(18);
 			self.m_btnP2SetSkillLevel.onClick.AddListener(() => { self.OnP2SetSkillLevel(); });
-			self.m_goP3 = m_bindComponent.GetGameObject(19);
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnP2SetHPSPFull = m_bindComponent.GetComponent<Button>(19);
+			self.m_btnP2SetHPSPFull.onClick.AddListener(() => { self.OnP2SetHPSPFull(); });
+			self.m_goP3 = m_bindComponent.GetGameObject(20);
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(21);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(22);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(22);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(23);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetGameObject(23);
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(24);
+			self.m_goP4 = m_bindComponent.GetGameObject(24);
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(25);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 		
 			self.m_GOs.Clear();
@@ -230,7 +232,7 @@ namespace ET.Client
 		}
 		
 		
-		//设置技能等级：CastConfigId,等级，例如 66001,5
+		// 学技能：输入 SkillConfig.Id,等级（如 1,1）；服务端 SkillLevels 存 CastId,等级（如 66001,1）
 		public static void OnP2SetSkillLevel(this UIHelpComponent self)
 		{
 			var val = self.m_inputAll.text;
@@ -240,12 +242,12 @@ namespace ET.Client
 			}
 
 			val = val.Trim();
-			int castConfigId;
+			int skillConfigId;
 			int level = 1;
 			int comma = val.IndexOf(',');
 			if (comma >= 0)
 			{
-				if (!int.TryParse(val.Substring(0, comma).Trim(), out castConfigId))
+				if (!int.TryParse(val.Substring(0, comma).Trim(), out skillConfigId))
 				{
 					return;
 				}
@@ -255,12 +257,17 @@ namespace ET.Client
 					return;
 				}
 			}
-			else if (!int.TryParse(val, out castConfigId))
+			else if (!int.TryParse(val, out skillConfigId))
 			{
 				return;
 			}
 
-			BattleHelper.GMSetSkillLevel(self.Root(), castConfigId, level).Coroutine();
+			BattleHelper.GMSetSkillLevel(self.Root(), skillConfigId, level).Coroutine();
+		}
+		
+		public static void OnP2SetHPSPFull(this UIHelpComponent self)
+		{
+			BattleHelper.GMSetHPSPFull(self.Root()).Coroutine();
 		}
 
 		#endregion

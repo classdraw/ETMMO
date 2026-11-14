@@ -1,0 +1,3 @@
+{"dict": [
+[1, {"_t":"SkillConfig","_id":1,"CastId":66001,"Title":"血誓斩（牺牲）","_CheckFunc":[300.0,20.0],"_ConsumeFunc":[100.0,2.0,4.0,2.0]}],
+]}

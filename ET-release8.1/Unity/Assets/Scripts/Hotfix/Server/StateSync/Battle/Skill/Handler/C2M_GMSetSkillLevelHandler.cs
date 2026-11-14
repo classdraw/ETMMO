@@ -12,7 +12,15 @@ namespace ET.Server
                 return;
             }
 
-            if (!CastConfigCategory.Instance.Contain(request.CastConfigId))
+            // 协议字段为外围 SkillConfig.Id，入库等级按 CastId
+            int skillConfigId = request.CastConfigId;
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
+            {
+                response.Error = ErrorCode.ERR_CastArgsError;
+                return;
+            }
+
+            if (!SkillConfigHelper.TryGetCastConfigId(skillConfigId, out int castConfigId))
             {
                 response.Error = ErrorCode.ERR_CastArgsError;
                 return;
@@ -24,7 +32,7 @@ namespace ET.Server
                 return;
             }
 
-            skillStatus.SetSkillLevel(request.CastConfigId, request.Level);
+            skillStatus.SetSkillLevel(castConfigId, request.Level);
             await ETTask.CompletedTask;
         }
     }

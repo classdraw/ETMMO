@@ -16,11 +16,37 @@ namespace ET.Client
 			self.InnerCDLastPlayTimes.Clear();
 		}
 			
+		public static bool TryGetRoleAnimator(GameObject unitGo, out Animator animator)
+		{
+			animator = null;
+			if (unitGo == null)
+			{
+				return false;
+			}
+
+			ReferenceCollector referenceCollector = unitGo.GetComponent<ReferenceCollector>();
+			if (referenceCollector != null)
+			{
+				GameObject rootGo = referenceCollector.Get<GameObject>("Root");
+				if (rootGo != null)
+				{
+					animator = rootGo.GetComponent<Animator>();
+					if (animator != null && animator.runtimeAnimatorController != null)
+					{
+						return true;
+					}
+				}
+			}
+
+			animator = unitGo.GetComponentInChildren<Animator>();
+			return animator != null && animator.runtimeAnimatorController != null;
+		}
+
 		[EntitySystem]
 		private static void Awake(this AnimatorComponent self)
 		{
 			GameObject gameObject = self.GetParent<Unit>().GetComponent<GameObjectComponent>().GameObject;
-			if (!UnitViewAnimatorHelper.TryGetRoleAnimator(gameObject, out Animator animator))
+			if (!TryGetRoleAnimator(gameObject, out Animator animator))
 			{
 				return;
 			}

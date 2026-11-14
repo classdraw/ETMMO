@@ -67,6 +67,10 @@ namespace ET
         public const int ERR_CastPreCoolDown = 200062;//施法技能cd中
         public const int ERR_CastPreSkillNotLearned = 200063;//技能未学习
         public const int ERR_GMSetSkillLevelError = 200064;//GM设置技能等级失败
+        public const int ERR_CastPreCheckFunc = 200065;//技能 CheckFunc 未通过
+        public const int ERR_CastPreHpNotEnough = 200066;//技能释放血量不足
+        public const int ERR_CastPreSpNotEnough = 200067;//技能释放蓝量不足
+        public const int ERR_CastPreConsumeFunc = 200068;//技能消耗 Function 失败
         //一些unit战斗状态
         public const int ERR_Relive_Alive = 200090;//存活
         //地图

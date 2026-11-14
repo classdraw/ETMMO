@@ -120,32 +120,32 @@ namespace ET.Client
             return Camera.main;
         }
 
+        /// <summary>Q：GM 施法，入参为 <see cref="SkillConfig"/> Id（1 → Cast 66001）。</summary>
         private static async ETTask Test1(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 66001);
+            await BattleHelper.GMCastSimple(self.Root(), 1);
         }
             
         private static async ETTask Test2(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 66002);
+            await BattleHelper.GMCastSimple(self.Root(), 2);
         }
 
         private static async ETTask Test3(this OperaComponent self)
         {
-            await BattleHelper.GMCastForward(self.Root(), 66003, 2.9f);
+            await BattleHelper.GMCastForward(self.Root(), 3, 2.9f);
         }
 
-        /// <summary>GM：释放真子弹技能 66004（SelfHit 创建 Bullet 30002）。</summary>
+        /// <summary>GM：SkillConfig → Cast 66004（SelfHit 创建 Bullet 30002）。</summary>
         private static async ETTask Test4(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 66004);
+            await BattleHelper.GMCastSimple(self.Root(), 4);
         }
 
-        /// <summary>GM：66006 在输入单位/坐标处生成子弹（77012 spawn=Input）。</summary>
+        /// <summary>GM：SkillConfig → Cast 66008 等（需在 SkillConfig 表配置 CastId）。</summary>
         private static async ETTask Test5(this OperaComponent self)
         {
-            //await BattleHelper.GMCastSimple(self.Root(), 66006);
-            await BattleHelper.GMCastSimple(self.Root(), 66008);
+            await BattleHelper.GMCastSimple(self.Root(), 5);
         }
     }
 }

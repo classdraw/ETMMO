@@ -5,7 +5,8 @@ namespace ET.Server
     {
         protected override async ETTask Run(Unit unit, C2M_GMTestCast request, M2C_GMTestCast response)
         {
-            if (!CastConfigCategory.Instance.Contain(request.CastConfigId))
+            int skillConfigId = request.CastConfigId;
+            if (!SkillConfigCategory.Instance.Contain(skillConfigId))
             {
                 response.Error = ErrorCode.ERR_CastArgsError;
                 return;
@@ -18,7 +19,7 @@ namespace ET.Server
                 return;
             }
 
-            response.Error = unit.CreateAndCast(request.CastConfigId, request.TargetId, request.InputPos, true, null, true);
+            response.Error = unit.CreateAndCastBySkill(skillConfigId, request.TargetId, request.InputPos, true, null, true);
             await ETTask.CompletedTask;
         }
     }

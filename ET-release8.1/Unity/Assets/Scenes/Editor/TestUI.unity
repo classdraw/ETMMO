@@ -1927,22 +1927,22 @@ PrefabInstance:
     - target: {fileID: 577167801122920758, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 577167801122920758, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2959161701845672921, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2959161701845672921, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3531756647879416975, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
@@ -2027,12 +2027,12 @@ PrefabInstance:
     - target: {fileID: 3531756648425830353, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3531756648425830353, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3531756648987729859, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
@@ -2117,17 +2117,22 @@ PrefabInstance:
     - target: {fileID: 4948631482736707221, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4948631482736707221, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5768204152438771065, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}
       propertyPath: m_Name
       value: UIMain
+      objectReference: {fileID: 0}
+    - target: {fileID: 5768204152438771065, guid: 22703463e67693b48b50306bf05a078f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6068969976667096695, guid: 22703463e67693b48b50306bf05a078f,
         type: 3}

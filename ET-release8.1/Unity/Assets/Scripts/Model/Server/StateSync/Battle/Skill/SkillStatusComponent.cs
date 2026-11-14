@@ -8,7 +8,7 @@ namespace ET.Server
     [ComponentOf(typeof(Unit))]
     public class SkillStatusComponent: Entity, IAwake, IDestroy, ITransfer, IUnitCache
     {
-        /// <summary>已学技能等级：CastConfigId → 等级（1 起）；无条目表示未学习。</summary>
+        /// <summary>已学技能等级：CastConfig.Id → 等级（1 起）；无条目表示未学习。</summary>
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<int, int> SkillLevels = new Dictionary<int, int>();
 
@@ -25,11 +25,12 @@ namespace ET.Server
         [BsonIgnore]
         public SkillStatusType CurrentSkillStatus = SkillStatusType.New;
         
+        /// <summary>CastConfig.Id → CD 结束时间。</summary>
         [BsonIgnore]
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<int, long> CoolDowns = new Dictionary<int, long>();
 
-        /// <summary>各技能 CD 开始时间（行为技能与附属技能均记录）</summary>
+        /// <summary>CastConfig.Id → CD 开始时间。</summary>
         [BsonIgnore]
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<int, long> CoolDownStartTimes = new Dictionary<int, long>();
