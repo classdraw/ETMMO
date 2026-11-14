@@ -44,6 +44,24 @@ MonoBehaviour:
       - "\u5BC6\u7801\uFF1A"
       Flags: 000000
       Languages_Touch: []
+    - Term: ui_BagTitle
+      TermType: 0
+      Description: 
+      Languages:
+      - Bag
+      - "\u80CC\u5305"
+      - "\u80CC\u5305"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_SkillTitle
+      TermType: 0
+      Description: 
+      Languages:
+      - Skill
+      - "\u6280\u80FD"
+      - "\u6280\u80FD"
+      Flags: 000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

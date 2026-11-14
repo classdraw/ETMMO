@@ -12,6 +12,7 @@ namespace ET.Client
             GlobalComponent globalComponent = root.AddComponent<GlobalComponent>();
 
             root.AddComponent<ResourcesLoaderComponent>();
+            root.AddComponent<IconAtlasComponent>();
             root.AddComponent<PoolComponent>();
             //显示层框架入口 资源加载用到ResourcesLoaderComponent 在这个后面
             await root.AddComponent<TEngineComponent>().Init();
@@ -39,8 +40,10 @@ namespace ET.Client
             // 根据配置修改掉Main Fiber的SceneType
             SceneType sceneType = EnumHelper.FromString<SceneType>(globalComponent.GlobalConfig.AppType.ToString());
             root.SceneType = sceneType;
-            
+
             await EventSystem.Instance.PublishAsync(root, new AppStartInitFinish());
+
+            await ClientPreloadHelper.PreloadOnStartupAsync(root);
             //await EventSystem.Instance.PublishAsync(root, new TestEventSee());
         }
     }

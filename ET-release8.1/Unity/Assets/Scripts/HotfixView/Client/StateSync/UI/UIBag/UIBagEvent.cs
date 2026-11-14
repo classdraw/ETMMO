@@ -15,7 +15,6 @@ namespace ET.Client
             gameObject.SetActive(true);
             UI ui = uiComponent.AddChild<UI, string, GameObject, int>(UIType.UIBag, gameObject,
                 UIEventComponent.Instance.UISortingOrders[UIType.UIBag]);
-            ui.AddComponent<IconAtlasComponent>();
             ui.AddComponent<UIBagComponent>();
             return ui;
         }

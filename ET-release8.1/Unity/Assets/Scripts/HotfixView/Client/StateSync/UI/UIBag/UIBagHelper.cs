@@ -22,6 +22,11 @@ namespace ET.Client
                 return;
             }
 
+            if (uiComponent.Get(UIType.UISkill) != null)
+            {
+                await UIHelper.Remove(scene, UIType.UISkill);
+            }
+
             UI ui = await UIHelper.Create(scene, UIType.UIBag);
             if (ui == null)
             {

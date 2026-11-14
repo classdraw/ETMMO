@@ -26,6 +26,8 @@ namespace ET.Client
             self.m_sliderMP = m_bindComponent.GetComponent<Slider>(3);
             self.m_btnBag = m_bindComponent.GetComponent<Button>(4);
             self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
+            self.m_btnSkill = m_bindComponent.GetComponent<Button>(5);
+            self.m_btnSkill.onClick.AddListener(() => { self.OnSkill(); });
 
             self.m_joystick = self.GetParent<UI>().GameObject.GetComponentInChildren<JoystickCtrl>(true);
             if (self.m_joystick == null)
@@ -160,6 +162,19 @@ namespace ET.Client
             UIBagHelper.Open(scene);
         }
 
+        public static void OnSkill(this UIMainComponent self)
+        {
+            Scene scene = self.Root().CurrentScene();
+            if (scene == null)
+            {
+                Log.Error("打开技能界面失败：未进入地图场景");
+                return;
+            }
+
+            UISkillHelper.Open(scene);
+        }
+
+        
         public static void OnJoystickPointerDown(this UIMainComponent self, Vector2 value)
         {
             //Log.Info($"Joystick PointerDown: {value}");

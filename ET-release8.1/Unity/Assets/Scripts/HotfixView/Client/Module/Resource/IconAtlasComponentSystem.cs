@@ -22,32 +22,34 @@ namespace ET.Client
         [EntitySystem]
         private static void Destroy(this IconAtlasComponent self)
         {
+            // 会话级：切地图不 Release 句柄，退出进程时由 Root ResourcesLoaderComponent.Destroy 统一释放
             self.SpriteCache = null;
             self.SpritesIndexed = false;
             self.Indexing = false;
             self.LoadFailed = false;
         }
 
-        public static IconAtlasComponent GetIconAtlas(this UI ui)
+        public static IconAtlasComponent GetIconAtlas(this Scene scene)
         {
-            return ui?.GetComponent<IconAtlasComponent>();
+            return scene?.Root()?.GetComponent<IconAtlasComponent>();
         }
 
-        /// <summary>若未挂载则自动添加（弹窗 UI 通用）。</summary>
-        public static IconAtlasComponent GetOrAddIconAtlas(this UI ui)
+        public static IconAtlasComponent GetIconAtlas(this Entity entity)
         {
-            if (ui == null)
-            {
-                return null;
-            }
+            return entity?.Root()?.GetComponent<IconAtlasComponent>();
+        }
 
-            IconAtlasComponent atlas = ui.GetComponent<IconAtlasComponent>();
-            if (atlas != null)
-            {
-                return atlas;
-            }
+        public static IconAtlasComponent GetIconAtlas(this UI ui)
+        {
+            return ((Entity)ui).GetIconAtlas();
+        }
 
-            return ui.AddComponent<IconAtlasComponent>();
+        /// <summary>从 Root 会话图集缓存取 Sprite（Loading 阶段已索引）。</summary>
+        public static bool TryGetIconSprite(this Entity entity, string spriteName, out Sprite sprite)
+        {
+            sprite = null;
+            IconAtlasComponent atlas = entity.GetIconAtlas();
+            return atlas != null && atlas.TryGetSprite(spriteName, out sprite);
         }
 
         public static bool TryGetSprite(this IconAtlasComponent self, string spriteName, out Sprite sprite)
@@ -83,15 +85,21 @@ namespace ET.Client
                 return;
             }
 
-            if (self.SpritesIndexed || self.LoadFailed || self.Indexing)
+            if (self.SpritesIndexed || self.LoadFailed)
             {
+                return;
+            }
+
+            if (self.Indexing)
+            {
+                await WaitIndexingAsync(self);
                 return;
             }
 
             self.Indexing = true;
             try
             {
-                ResourcesLoaderComponent loader = GetUiResourcesLoader(self.GetParent<UI>());
+                ResourcesLoaderComponent loader = GetResourcesLoader(self);
                 if (loader == null)
                 {
                     Log.Error($"[{IconAtlasComponent.LogTag}] ResourcesLoaderComponent 为空");
@@ -111,6 +119,11 @@ namespace ET.Client
                     Log.Warning($"[{IconAtlasComponent.LogTag}] 图集未收录：{IconAtlasComponent.AtlasLocation}，将尝试单张路径");
                     self.SpritesIndexed = true;
                     return;
+                }
+
+                if (self.SpritesIndexed && self.SpriteCache.Count == 0)
+                {
+                    self.SpritesIndexed = false;
                 }
 
                 Scene root = self.Root();
@@ -140,15 +153,15 @@ namespace ET.Client
                     await IndexFromSpriteAtlasAssetAsync(self.SpriteCache, loader, atlasLocation);
                 }
 
-                self.SpritesIndexed = true;
                 if (self.SpriteCache.Count > countBefore)
                 {
+                    self.SpritesIndexed = true;
                     Log.Info($"[{IconAtlasComponent.LogTag}] 批量索引成功，Sprite 数={self.SpriteCache.Count}");
                 }
                 else
                 {
                     Log.Warning(
-                        $"[{IconAtlasComponent.LogTag}] 批量索引为 0，将单张加载：{IconAtlasComponent.SingleSpriteFolder}/{{name}}.png");
+                        $"[{IconAtlasComponent.LogTag}] 批量索引为 0，保留未索引状态以便重试/单张加载：{IconAtlasComponent.SingleSpriteFolder}/{{name}}.png");
                 }
             }
             finally
@@ -157,6 +170,25 @@ namespace ET.Client
                 {
                     self.Indexing = false;
                 }
+            }
+        }
+
+        private static async ETTask WaitIndexingAsync(IconAtlasComponent self)
+        {
+            if (self == null || self.IsDisposed || !self.Indexing)
+            {
+                return;
+            }
+
+            TimerComponent timer = self.Root().GetComponent<TimerComponent>();
+            if (timer == null)
+            {
+                return;
+            }
+
+            while (self.Indexing && !self.IsDisposed)
+            {
+                await timer.WaitFrameAsync();
             }
         }
 
@@ -187,7 +219,7 @@ namespace ET.Client
                 return cached;
             }
 
-            ResourcesLoaderComponent loader = GetUiResourcesLoader(self.GetParent<UI>());
+            ResourcesLoaderComponent loader = GetResourcesLoader(self);
             return await LoadSingleSpriteAsync(loader, self.SpriteCache, spriteName);
         }
 
@@ -204,21 +236,9 @@ namespace ET.Client
             }
         }
 
-        private static ResourcesLoaderComponent GetUiResourcesLoader(UI ui)
+        private static ResourcesLoaderComponent GetResourcesLoader(IconAtlasComponent self)
         {
-            if (ui == null)
-            {
-                return null;
-            }
-
-            Scene scene = ui.Scene();
-            ResourcesLoaderComponent loader = scene?.GetComponent<ResourcesLoaderComponent>();
-            if (loader != null)
-            {
-                return loader;
-            }
-
-            return ui.Root().GetComponent<ResourcesLoaderComponent>();
+            return self?.Root()?.GetComponent<ResourcesLoaderComponent>();
         }
 
         private static string ResolveAtlasLocation(ResourcePackage package, string atlasLocation, string shortAtlasLocation)

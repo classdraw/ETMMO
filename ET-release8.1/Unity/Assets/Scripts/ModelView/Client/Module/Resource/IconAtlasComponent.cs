@@ -4,10 +4,10 @@ using UnityEngine;
 namespace ET.Client
 {
     /// <summary>
-    /// UI 通用图标图集（物品、技能等）：挂在 <see cref="UI"/> 上；
-    /// 关界面时销毁组件级 Sprite 名字缓存，YooAsset 图集句柄由 <see cref="ResourcesLoaderComponent"/> 复用。
+    /// 客户端会话级图标图集：挂在 Root <see cref="Scene"/>，<see cref="ClientPreloadHelper.PreloadOnStartupAsync"/> 索引后进游戏常驻；
+    /// UI 通过 <see cref="IconAtlasComponentSystem.TryGetIconSprite"/> 读缓存即可。
     /// </summary>
-    [ComponentOf(typeof(UI))]
+    [ComponentOf(typeof(Scene))]
     public class IconAtlasComponent : Entity, IAwake, IDestroy
     {
         public const string AtlasLocation = "Assets/Bundles/Atlas/IconAtlas.spriteatlasv2";

@@ -114,20 +114,31 @@ namespace ET
                 string modelPath = GetModelPath();
                 string hotfixPath = GetHotfixPath();
                 
-                // 创建Component文件
                 string componentFilePath = Path.Combine(modelPath, $"{componentName}.cs");
+                string systemFilePath = Path.Combine(hotfixPath, $"{systemName}.cs");
+
+                if (File.Exists(componentFilePath))
+                {
+                    EditorUtility.DisplayDialog("错误", $"文件已存在:\n{componentFilePath}", "确定");
+                    return;
+                }
+
+                if (this.createSystem && File.Exists(systemFilePath))
+                {
+                    EditorUtility.DisplayDialog("错误", $"文件已存在:\n{systemFilePath}", "确定");
+                    return;
+                }
+
                 CreateComponentFile(componentFilePath, componentName);
-                
-                // 如果选择了创建System，创建System文件
+
                 if (this.createSystem)
                 {
-                    string systemFilePath = Path.Combine(hotfixPath, $"{systemName}.cs");
                     CreateSystemFile(systemFilePath, componentName, systemName);
                 }
                 
                 AssetDatabase.Refresh();
-                EditorUtility.DisplayDialog("成功", $"代码创建成功！\nComponent: {componentFilePath}\n" + 
-                    (this.createSystem ? $"System: {Path.Combine(hotfixPath, $"{systemName}.cs")}" : ""), "确定");
+                EditorUtility.DisplayDialog("成功", $"代码创建成功！\nComponent: {componentFilePath}\n" +
+                    (this.createSystem ? $"System: {systemFilePath}" : ""), "确定");
             }
             catch (System.Exception e)
             {
@@ -138,35 +149,70 @@ namespace ET
 
         private string GetModelPath()
         {
-            string basePath = "Assets/Scripts/Model";
             string clientServer = this.serverClientType == ServerClientType.Client ? "Client" : "Server";
-            return Path.Combine(basePath, clientServer);
+            if (this.isViewLayer)
+            {
+                return Path.Combine("Assets/Scripts/ModelView", clientServer, "StateSync", "UI", GetUiFolderName());
+            }
+
+            return Path.Combine("Assets/Scripts/Model", clientServer);
         }
 
         private string GetHotfixPath()
         {
-            string basePath = this.isViewLayer ? "Assets/Scripts/HotfixView" : "Assets/Scripts/Hotfix";
             string clientServer = this.serverClientType == ServerClientType.Client ? "Client" : "Server";
+            if (this.isViewLayer)
+            {
+                return Path.Combine("Assets/Scripts/HotfixView", clientServer, "StateSync", "UI", GetUiFolderName());
+            }
+
+            string basePath = "Assets/Scripts/Hotfix";
             return Path.Combine(basePath, clientServer);
+        }
+
+        private string GetUiFolderName()
+        {
+            return this.nameInput.Trim();
         }
 
         private void CreateComponentFile(string filePath, string componentName)
         {
             string namespaceName = this.serverClientType == ServerClientType.Client ? "ET.Client" : "ET.Server";
-            
+
             string interfaces;
-            if (this.codeType == CodeType.Simple)
+            if (this.isViewLayer)
+            {
+                interfaces = this.codeType == CodeType.Simple
+                    ? "Entity, IAwake, IDestroy"
+                    : "Entity, IAwake, IUpdate, IDestroy";
+            }
+            else if (this.codeType == CodeType.Simple)
             {
                 interfaces = "Entity, IAwake";
             }
-            else // Normal
+            else
             {
                 interfaces = "Entity, IAwake, IUpdate, IDestroy";
             }
-            
-            string content = $@"namespace {namespaceName}
-{{
-    public class {componentName}: {interfaces}
+
+            string componentOf = this.isViewLayer
+                ? $@"
+    [ComponentOf(typeof(UI))]
+    public class {componentName}: {interfaces}"
+                : $@"
+    public class {componentName}: {interfaces}";
+
+            string componentUsings = this.isViewLayer
+                ? @"using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+"
+                : "";
+
+            string content = $@"{componentUsings}namespace {namespaceName}
+{{{componentOf}
     {{
     }}
 }}";
@@ -183,16 +229,54 @@ namespace ET
         private void CreateSystemFile(string filePath, string componentName, string systemName)
         {
             string namespaceName = this.serverClientType == ServerClientType.Client ? "ET.Client" : "ET.Server";
-            
+
+            string awakeBody = this.isViewLayer
+                ? $@"            UIBindComponent bind = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();"
+                : "";
+
             string methods;
-            if (this.codeType == CodeType.Simple)
+            if (this.isViewLayer)
+            {
+                if (this.codeType == CodeType.Simple)
+                {
+                    methods = $@"        [EntitySystem]
+        private static void Awake(this {componentName} self)
+        {{
+{awakeBody}
+        }}
+
+        [EntitySystem]
+        private static void Destroy(this {componentName} self)
+        {{
+        }}";
+                }
+                else
+                {
+                    methods = $@"        [EntitySystem]
+        private static void Awake(this {componentName} self)
+        {{
+{awakeBody}
+        }}
+
+        [EntitySystem]
+        private static void Update(this {componentName} self)
+        {{
+        }}
+
+        [EntitySystem]
+        private static void Destroy(this {componentName} self)
+        {{
+        }}";
+                }
+            }
+            else if (this.codeType == CodeType.Simple)
             {
                 methods = $@"        [EntitySystem]
         private static void Awake(this {componentName} self)
         {{
         }}";
             }
-            else // Normal
+            else
             {
                 methods = $@"        [EntitySystem]
         private static void Awake(this {componentName} self)
@@ -210,7 +294,17 @@ namespace ET
         }}";
             }
             
-            string content = $@"namespace {namespaceName}
+            string usings = this.isViewLayer
+                ? @"using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+using XEngine.UI;
+
+"
+                : "";
+
+            string content = $@"{usings}namespace {namespaceName}
 {{
     [EntitySystemOf(typeof({componentName}))]
     [FriendOf(typeof({componentName}))]
