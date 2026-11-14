@@ -3,6 +3,8 @@ using System;
 namespace ET.Server
 {
     [FriendOfAttribute(typeof(ET.Server.ReliveComponent))]
+    [FriendOfAttribute(typeof(ET.Server.Cast))]
+    [FriendOfAttribute(typeof(ET.Server.Buff))]
     public static class BattleHelper
     {
         /// <summary>
@@ -13,13 +15,14 @@ namespace ET.Server
         public static void CalcAttack(Unit attacker, Unit target, Actions actions)
         {
             int[] param = actions.Config.ActionsParam;
-            if (param == null || param.Length < 4)
+            if (param == null || param.Length < 3)
             {
                 Log.Error($"CalcAttack ActionsParam invalid: configId={actions.Config.Id}");
                 return;
             }
 
-            int damage = CalcDamage(attacker, param);
+            int castId = GetCastConfigId(actions);
+            int damage = CalcDamage(attacker, castId, param);
             if (damage == 0)
             {
                 return;
@@ -58,26 +61,35 @@ namespace ET.Server
         }
 
         /// <summary>
-        /// ActionsParam: [0属性, 1物理/魔法, 2是否固定值(1固定), 3系数或固定伤害]
+        /// 命中、结束动作同步执行，此时 Cast 还在。子弹和 Buff 在 Cast 销毁后结算是正常的，伤害仍然要打。
+        /// Cast 上取 ConfigId；Buff 上取创建时记下的 AddCastConfigId。子弹没有施法配置 Id。
         /// </summary>
-        private static int CalcDamage(Unit attacker, int[] param)
+        private static int GetCastConfigId(Actions actions)
         {
-            int isFixed = param[2];
-            int coefficient = param[3];
-
-            if (isFixed == 1)
+            Cast cast = actions.CastSelf;
+            if (cast != null)
             {
-                return coefficient;
+                return cast.ConfigId;
             }
 
-            NumericComponent numericComponent = attacker.GetComponent<NumericComponent>();
-            if (numericComponent == null)
+            Buff buff = actions.BuffSelf;
+            if (buff != null)
             {
-                return 0;
+                return buff.AddCastConfigId;
             }
 
-            int atk = numericComponent.GetAsInt(NumericType.Atk);
-            return (int)(atk * (coefficient / 100d));
+            return 0;
+        }
+
+        private const int DamageFuncKeyIndex = 2;
+
+        /// <summary>
+        /// 伤害 ActionsParam：A 属性，B <see cref="DamageAttackType"/>，C Func 编号，其后为 Func 参数。A/B/C 必填。
+        /// 整段参数作为 args 传入，函数编号取下标 2。返回 int 即伤害，负数扣血。
+        /// </summary>
+        private static int CalcDamage(Unit attacker, int castId, int[] param)
+        {
+            return SkillFunctionHelper.RunFunc(attacker, castId, param, DamageFuncKeyIndex);
         }
 
         /// <summary>
@@ -114,18 +126,18 @@ namespace ET.Server
             switch (killed.Type())
             {
                 case UnitType.Player:
-                {
-                    //被动死亡buff等
-                    break;
-                }
+                    {
+                        //被动死亡buff等
+                        break;
+                    }
                 case UnitType.Monster:
                 case UnitType.Robot:
-                {
-                    TimerComponent timerComponent = killed.Root().GetComponent<TimerComponent>();
-                    long now = TimeInfo.Instance.ServerFrameTime();
-                    timerComponent.NewOnceTimer(now + 1000, TimerInvokeType.DeadMonsterTimer, killed);
-                    break;
-                }
+                    {
+                        TimerComponent timerComponent = killed.Root().GetComponent<TimerComponent>();
+                        long now = TimeInfo.Instance.ServerFrameTime();
+                        timerComponent.NewOnceTimer(now + 1000, TimerInvokeType.DeadMonsterTimer, killed);
+                        break;
+                    }
             }
         }
     }

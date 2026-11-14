@@ -64,7 +64,7 @@ namespace ET.Server
             self.ConfigId = 0;
             self.Owner = null;
             self.AddUnitId = 0;
-            self.AddSkillId = 0;
+            self.AddCastConfigId = 0;
             self.CreateTime = 0;
             self.TickTime = 0;
             self.TickBeginTime = 0;
@@ -185,7 +185,7 @@ namespace ET.Server
             BuffExtraData extraData = new BuffExtraData
             {
                 AddUnitId = self.AddUnitId,
-                AddSkillId = self.AddSkillId,
+                AddCastConfigId = self.AddCastConfigId,
                 TickTime = self.TickTime,
                 TickBeginTime = self.TickBeginTime,
                 Layer = self.Layer,
@@ -198,7 +198,7 @@ namespace ET.Server
             if (bytes == null || bytes.Length == 0)
             {
                 self.AddUnitId = 0;
-                self.AddSkillId = 0;
+                self.AddCastConfigId = 0;
                 self.TickTime = 0;
                 self.TickBeginTime = 0;
                 self.Layer = 0;
@@ -207,7 +207,7 @@ namespace ET.Server
 
             BuffExtraData extraData = MongoHelper.Deserialize<BuffExtraData>(bytes);
             self.AddUnitId = extraData.AddUnitId;
-            self.AddSkillId = extraData.AddSkillId;
+            self.AddCastConfigId = extraData.AddCastConfigId;
             self.TickTime = extraData.TickTime;
             self.TickBeginTime = extraData.TickBeginTime;
             self.Layer = extraData.Layer;

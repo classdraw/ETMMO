@@ -122,6 +122,15 @@ namespace ET
     }
 
     /// <summary>
+    /// 伤害 ActionsParam[1]。ActionsParam[0] 属性，ActionsParam[2] Func 编号，其后参数一并传入 Function。
+    /// </summary>
+    public enum DamageAttackType : byte
+    {
+        Physical = 0,
+        Magic = 1,
+    }
+
+    /// <summary>
     /// Attract ActionsParam[1]：吸引中心点。
     /// ActionsParam[0] 步长(mm)；ActionsParam[2] 可选，停止吸引距离(mm)，缺省为 0。
     /// </summary>

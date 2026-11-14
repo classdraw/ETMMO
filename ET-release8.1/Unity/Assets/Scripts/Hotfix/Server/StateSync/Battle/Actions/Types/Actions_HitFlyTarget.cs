@@ -15,7 +15,7 @@ namespace ET.Server
                 return;
             }
 
-            if (!TryGetBuffContext(actions, actionsRunType, out long addUnitId, out int addCastId))
+            if (!TryGetBuffContext(actions, actionsRunType, out long addUnitId, out int addCastConfigId))
             {
                 return;
             }
@@ -52,15 +52,15 @@ namespace ET.Server
                 actions.CollectActionTargets(actionsRunType, targets);
                 foreach (Unit target in targets)
                 {
-                    ApplyHitFly(target, forwardDir, dir, buffId, addUnitId, addCastId, snapNavMesh);
+                    ApplyHitFly(target, forwardDir, dir, buffId, addUnitId, addCastConfigId, snapNavMesh);
                 }
             }
         }
 
-        private static bool TryGetBuffContext(Actions actions, ActionsRunType actionsRunType, out long addUnitId, out int addCastId)
+        private static bool TryGetBuffContext(Actions actions, ActionsRunType actionsRunType, out long addUnitId, out int addCastConfigId)
         {
             addUnitId = 0;
-            addCastId = 0;
+            addCastConfigId = 0;
 
             if (actionsRunType == ActionsRunType.BuffTick)
             {
@@ -71,7 +71,7 @@ namespace ET.Server
                 }
 
                 addUnitId = buff.AddUnitId;
-                addCastId = buff.AddSkillId;
+                addCastConfigId = buff.AddCastConfigId;
                 return true;
             }
 
@@ -87,11 +87,11 @@ namespace ET.Server
                 addUnitId = caster.Id;
             }
 
-            addCastId = cast.ConfigId;
+            addCastConfigId = cast.ConfigId;
             return true;
         }
 
-        private static void ApplyHitFly(Unit unit, float3 forwardDir, float dir, int buffId, long addUnitId, int addCastId, bool snapNavMesh)
+        private static void ApplyHitFly(Unit unit, float3 forwardDir, float dir, int buffId, long addUnitId, int addCastConfigId, bool snapNavMesh)
         {
             float3 unitPos = unit.Position;
             float3 newPos = unitPos + forwardDir * dir;
@@ -100,7 +100,7 @@ namespace ET.Server
 
             if (buffId != 0)
             {
-                unit.GetComponent<BuffComponent>()?.CreateAndAdd(buffId, addUnitId, addCastId);
+                unit.GetComponent<BuffComponent>()?.CreateAndAdd(buffId, addUnitId, addCastConfigId);
             }
         }
     }

@@ -5,7 +5,13 @@
     {
         protected override async ETTask Run(Scene root, A2NetClient_Message message)
         {
-            root.GetComponent<SessionComponent>().Session.Send(message.MessageObject);
+            Session session = root.GetComponent<SessionComponent>()?.Session;
+            if (session == null || message.MessageObject == null)
+            {
+                return;
+            }
+
+            session.Send(message.MessageObject);
             await ETTask.CompletedTask;
         }
     }

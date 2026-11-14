@@ -102,7 +102,11 @@ namespace ET.Client
             A2NetClient_Request a2NetClientRequest = A2NetClient_Request.Create();
             a2NetClientRequest.MessageObject = request;
             using A2NetClient_Response a2NetClientResponse = await self.Root().GetComponent<ProcessInnerSender>().Call(self.netClientActorId, a2NetClientRequest) as A2NetClient_Response;
-            IResponse response = a2NetClientResponse.MessageObject;
+            IResponse response = a2NetClientResponse?.MessageObject;
+            if (response == null)
+            {
+                return null;
+            }
                         
             if (response.Error == ErrorCore.ERR_MessageTimeout)
             {

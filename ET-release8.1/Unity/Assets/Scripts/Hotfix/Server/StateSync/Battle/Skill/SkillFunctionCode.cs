@@ -3,15 +3,15 @@ using System;
 namespace ET.Server
 {
     /// <summary>
-    /// 各 Function 实现。返回值为 <see cref="ErrorCode"/>，仅 <see cref="ErrorCode.ERR_Success"/> 表示成功。
-    /// 签名 <c>int Function{编号}(Unit unit, int castId, float[] args)</c>，castId 由外部传入。
+    /// 各 Function 实现。castId 为 Cast 配置 Id，L 为该施法的技能等级。
+    /// 100、300 返回 <see cref="ErrorCode"/>；500 返回伤害数值。
     /// </summary>
     public static class SkillFunctionCode
     {
+        #region 施法消耗100开始
         /// <summary>
-        /// 血誓斩消耗方法
         /// 消耗：args[1]+L 点血；长度≥4 时再扣 args[2]+args[3]*L 蓝。先校验血蓝均够，再一并扣除；任一不够则不扣并返回对应 ErrorCode。
-        /// 配置示例：100,2,4,2
+        /// SkillConfig的1的ConsumeFunc
         /// </summary>
         public static int Function100(Unit unit, int castId, float[] args)
         {
@@ -77,8 +77,15 @@ namespace ET.Server
             return ErrorCode.ERR_Success;
         }
         
+
+        #endregion
         
-        /// <summary>血量百分比须严格大于 args[1]（如 20 表示 &gt;20%）。</summary>
+
+        #region 施法条件300开始
+        /// <summary>
+        /// 血量百分比须大于等于 args[1]（如 20 表示 ≥20%）。
+        /// SkillConfig的1的CheckFunc
+        /// </summary>
         public static int Function300(Unit unit, int castId, float[] args)
         {
             if (args == null || args.Length < 2)
@@ -104,5 +111,48 @@ namespace ET.Server
             float hpPercent = hp * 100f / maxHp;
             return hpPercent >= minPercent ? ErrorCode.ERR_Success : ErrorCode.ERR_CastPreCheckFunc;
         }
+        
+
+        #endregion
+
+        #region Cast里面用到500开始
+
+        /// <summary>
+        /// 返回 Atk × (args[3] + args[4] × L)%。
+        /// ActionsConfig的77001的ActionsParam
+        /// ActionsConfig的77002的ActionsParam
+        /// </summary>
+        public static int Function500(Unit unit, int castId, int[] args)
+        {
+            if (args == null || args.Length < 5)
+            {
+                Log.Warning($"[SkillFunction] Function500 参数不足 castId={castId}");
+                return 0;
+            }
+
+            SkillStatusComponent skillStatus = unit.GetComponent<SkillStatusComponent>();
+            if (skillStatus == null || skillStatus.IsDisposed)
+            {
+                return 0;
+            }
+
+            NumericComponent numeric = unit.GetComponent<NumericComponent>();
+            if (numeric == null)
+            {
+                return 0;
+            }
+
+            int level = skillStatus.GetSkillLevel(castId);
+            int atk = numeric.GetAsInt(NumericType.Atk);
+            int percent = args[3] + args[4] * level;
+            return (int)(atk * (percent / 100d)) * -1;
+        }
+
+
+        #endregion
+        
+        
+        
+        
     }
 }

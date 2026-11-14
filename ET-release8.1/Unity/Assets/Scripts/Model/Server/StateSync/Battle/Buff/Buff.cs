@@ -8,7 +8,7 @@ namespace ET.Server
         public int ConfigId;
         //有很多变量  辅助创建buff
         public long AddUnitId;//创建者UnitId
-        public int AddCastId;//增加的技能id
+        public int AddCastConfigId;//施法配置Id
         public int FirstLayer;//>0时替代配置的FirstAddLayer
     }
 
@@ -27,7 +27,7 @@ namespace ET.Server
 
 
         public long AddUnitId;//创建者UnitId
-        public int AddSkillId;//添加的技能id
+        public int AddCastConfigId;//施法配置Id
 
         public long CreateTime;//创建时间
         public int TickTime;//间隔时间
@@ -49,7 +49,7 @@ namespace ET.Server
     public class BuffExtraData
     {
         public long AddUnitId;
-        public int AddSkillId;
+        public int AddCastConfigId;
         public int TickTime;
         public long TickBeginTime;
         public int Layer;

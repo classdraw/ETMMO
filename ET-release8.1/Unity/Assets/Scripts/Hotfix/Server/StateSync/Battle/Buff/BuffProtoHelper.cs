@@ -19,7 +19,7 @@ namespace ET.Server
             BuffExtraData extraData = new BuffExtraData
             {
                 AddUnitId = buff.AddUnitId,
-                AddSkillId = buff.AddSkillId,
+                AddCastConfigId = buff.AddCastConfigId,
                 TickTime = buff.TickTime,
                 TickBeginTime = buff.TickBeginTime,
                 Layer = buff.Layer,
