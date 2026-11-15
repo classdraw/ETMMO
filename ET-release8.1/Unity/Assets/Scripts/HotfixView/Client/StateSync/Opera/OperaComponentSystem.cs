@@ -123,7 +123,7 @@ namespace ET.Client
         /// <summary>Q：GM 施法，入参为 <see cref="SkillConfig"/> Id（1 → Cast 66001）。</summary>
         private static async ETTask Test1(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 1);
+            await BattleHelper.GMCastSimple(self.Root(), 2); 
         }
             
         private static async ETTask Test2(this OperaComponent self)

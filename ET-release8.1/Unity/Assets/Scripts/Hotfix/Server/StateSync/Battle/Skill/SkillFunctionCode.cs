@@ -4,7 +4,7 @@ namespace ET.Server
 {
     /// <summary>
     /// 各 Function 实现。castId 为 Cast 配置 Id，L 为该施法的技能等级。
-    /// 100、300 返回 <see cref="ErrorCode"/>；500 返回伤害数值。
+    /// 100、101、300 返回 <see cref="ErrorCode"/>；500 返回伤害数值。
     /// </summary>
     public static class SkillFunctionCode
     {
@@ -76,7 +76,52 @@ namespace ET.Server
 
             return ErrorCode.ERR_Success;
         }
-        
+
+        /// <summary>
+        /// 消耗：args[1]+args[2]×L 点蓝（Sp）。先校验蓝量，不足则返回 <see cref="ErrorCode.ERR_CastPreSpNotEnough"/> 且不扣；足够则扣除。
+        /// 配置示例 <c>[101,8,2]</c> 表示消耗 8+2L 蓝量。
+        /// 技能未配 ConsumeFunc（空表或首项≤0）时由 <see cref="SkillFunctionHelper"/> 跳过，不会进入本方法。
+        /// SkillConfig 的 ConsumeFunc
+        /// </summary>
+        public static int Function101(Unit unit, int castId, float[] args)
+        {
+            if (args == null || args.Length < 3)
+            {
+                Log.Warning($"[SkillFunction] Function101 参数不足 castId={castId}");
+                return ErrorCode.ERR_CastArgsError;
+            }
+
+            SkillStatusComponent skillStatus = unit.GetComponent<SkillStatusComponent>();
+            if (skillStatus == null || skillStatus.IsDisposed)
+            {
+                return ErrorCode.ERR_CastSkillError;
+            }
+
+            int level = skillStatus.GetSkillLevel(castId);
+            int spCost = (int)(args[1] + args[2] * level);
+
+            NumericComponent numeric = unit.GetComponent<NumericComponent>();
+            if (numeric == null)
+            {
+                return ErrorCode.ERR_CastPreNumericIsNull;
+            }
+
+            if (spCost <= 0)
+            {
+                return ErrorCode.ERR_Success;
+            }
+
+            long curSp = numeric[NumericType.Sp];
+            long maxSp = numeric[NumericType.MaxSp];
+
+            if (curSp < spCost)
+            {
+                return ErrorCode.ERR_CastPreSpNotEnough;
+            }
+
+            numeric[NumericType.SpBase] = Math.Clamp(curSp - spCost, 0, maxSp);
+            return ErrorCode.ERR_Success;
+        }
 
         #endregion
         

@@ -162,16 +162,22 @@ namespace ET.Server
             }
 
             SkillConfig skillConfig = SkillConfigCategory.Instance.Get(skillConfigId);
-            err = SkillFunctionHelper.ValidateCheckFunc(caster, castConfigId, skillConfig.CheckFunc);
-            if (err != ErrorCode.ERR_Success)
+            if (SkillFunctionHelper.IsFuncConfigured(skillConfig.CheckFunc))
             {
-                return err;
+                err = SkillFunctionHelper.ValidateCheckFunc(caster, castConfigId, skillConfig.CheckFunc);
+                if (err != ErrorCode.ERR_Success)
+                {
+                    return err;
+                }
             }
 
-            err = SkillFunctionHelper.ApplyConsumeFunc(caster, castConfigId, skillConfig.ConsumeFunc);
-            if (err != ErrorCode.ERR_Success)
+            if (SkillFunctionHelper.IsFuncConfigured(skillConfig.ConsumeFunc))
             {
-                return err;
+                err = SkillFunctionHelper.ApplyConsumeFunc(caster, castConfigId, skillConfig.ConsumeFunc);
+                if (err != ErrorCode.ERR_Success)
+                {
+                    return err;
+                }
             }
 
             int coolDownMs = CastConfigCategory.Instance.Get(castConfigId).CoolDown;

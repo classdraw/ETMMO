@@ -6,6 +6,14 @@ namespace ET.Server
     /// </summary>
     public static class SkillFunctionHelper
     {
+        /// <summary>
+        /// 配置表是否填写了 Function：null/空数组或首项≤0 视为未配置（无 CheckFunc、无 ConsumeFunc 的技能）。
+        /// </summary>
+        public static bool IsFuncConfigured(float[] funcArgs)
+        {
+            return funcArgs != null && funcArgs.Length > 0 && (int)funcArgs[0] > 0;
+        }
+
         /// <summary>执行 Function 并返回原始 int。keyIndex 为函数编号在 args 中的下标，不做 ErrorCode 判断。</summary>
         public static int RunFunc(Unit unit, int castId, int[] funcArgs, int keyIndex)
         {
@@ -14,7 +22,7 @@ namespace ET.Server
 
         private static int RunFunc(Unit unit, int castId, float[] funcArgs, string logTag)
         {
-            if (funcArgs == null || funcArgs.Length == 0)
+            if (!IsFuncConfigured(funcArgs))
             {
                 return ErrorCode.ERR_Success;
             }
@@ -65,13 +73,13 @@ namespace ET.Server
             return Evaluate(funcArgs[keyIndex], unit, castId, funcArgs, fallback);
         }
 
-        /// <summary><see cref="SkillConfig.CheckFunc"/>，仅校验不消耗。</summary>
+        /// <summary><see cref="SkillConfig.CheckFunc"/>，仅校验不消耗；未配置则直接成功。</summary>
         public static int ValidateCheckFunc(Unit unit, int castId, float[] checkFunc)
         {
             return RunFunc(unit, castId, checkFunc, "CheckFunc");
         }
 
-        /// <summary>执行 <see cref="SkillConfig.ConsumeFunc"/>，成功则真实扣资源。</summary>
+        /// <summary>执行 <see cref="SkillConfig.ConsumeFunc"/>，成功则真实扣资源；未配置则直接成功。</summary>
         public static int ApplyConsumeFunc(Unit unit, int castId, float[] consumeFunc)
         {
             return RunFunc(unit, castId, consumeFunc, "ConsumeFunc");
@@ -92,6 +100,8 @@ namespace ET.Server
             {
                 case 100:
                     return SkillFunctionCode.Function100(unit, castId, args);
+                case 101:
+                    return SkillFunctionCode.Function101(unit, castId, args);
                 case 300:
                     return SkillFunctionCode.Function300(unit, castId, args);
                 default:

@@ -1,3 +1,4 @@
 {"dict": [
-[1, {"_t":"SkillConfig","_id":1,"CastId":66001,"Title":"血誓斩（牺牲）","_CheckFunc":[300.0,20.0],"_ConsumeFunc":[100.0,2.0,4.0,2.0]}],
+[1, {"_t":"SkillConfig","_id":1,"CastId":66001,"Title":"血誓斩（牺牲）","MaxLevel":5,"_CheckFunc":[300.0,20.0],"_ConsumeFunc":[100.0,2.0,4.0,2.0]}],
+[2, {"_t":"SkillConfig","_id":2,"CastId":66002,"Title":"盾徽猛击（重击）","MaxLevel":5,"_CheckFunc":[],"_ConsumeFunc":[101.0,8.0,2.0]}],
 ]}

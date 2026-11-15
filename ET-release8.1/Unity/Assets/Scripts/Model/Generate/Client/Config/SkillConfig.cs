@@ -65,7 +65,9 @@ namespace ET
 		public int CastId { get; set; }
 		/// <summary>名字</summary>
 		public string Title { get; set; }
-		/// <summary>属性Check</summary>
+		/// <summary>最大等级</summary>
+		public int MaxLevel { get; set; }
+		/// <summary>释放属性Check</summary>
 		public float[] _CheckFunc;
 		
 		[BsonIgnore]
@@ -78,7 +80,7 @@ namespace ET
 				return _CheckFunc;
 			}
 		}
-		/// <summary>消耗方法</summary>
+		/// <summary>释放消耗方法</summary>
 		public float[] _ConsumeFunc;
 		
 		[BsonIgnore]

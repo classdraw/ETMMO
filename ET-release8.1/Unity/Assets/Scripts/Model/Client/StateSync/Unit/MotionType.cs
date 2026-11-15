@@ -8,10 +8,16 @@ namespace ET
         None = 0,
         Idle = 1,//上下起伏idle
         Run = 2,//移动
-        Attack1 = 3,//攻击1
-        Attack2 = 4,//攻击2
-        Hit = 5,
-        Death01 = 6,
-        Death02 = 7,
+        Hit = 3,
+        Death01 = 4,
+        Death02 = 5,
+        
+        
+        Attack1 = 20,//攻击1
+        Attack2 = 21,//攻击2
+        Attack3 = 22,//攻击3
+        Attack4 = 23,//攻击4
+        AttackShield01 = 24,//盾牌攻击1
+        AttackShield02 = 25,//盾牌攻击2
     }
 }

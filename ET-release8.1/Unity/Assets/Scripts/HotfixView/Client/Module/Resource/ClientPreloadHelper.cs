@@ -9,7 +9,7 @@ namespace ET.Client
     {
         public static async ETTask PreloadOnStartupAsync(Scene root)
         {
-            if (root == null)
+            if (root == null) 
             {
                 Log.Error("[ClientPreload] Root 为空");
                 return;
