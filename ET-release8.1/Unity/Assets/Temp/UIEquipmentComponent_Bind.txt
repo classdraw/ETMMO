@@ -13,6 +13,18 @@ namespace ET.Client
 	public class UIEquipmentComponent : Entity, IAwake, IDestroy
 	{
 		public GameObject m_goStateWindow;
+		public Text m_textStrValue;
+		public Text m_textAgiValue;
+		public Text m_textVitValue;
+		public Text m_textIntValue;
+		public Text m_textDexValue;
+		public Text m_textLukValue;
+		public Text m_textPhysicAttack;
+		public Text m_textPhysicDef;
+		public Text m_textMagicAttack;
+		public Text m_textMagicDef;
+		public Text m_textHit;
+		public Text m_textMiss;
 		public Button m_btnRightOption;
 		public Text m_textCName;
 		public Image m_imgCImage;
@@ -32,13 +44,25 @@ namespace ET.Client
 		{
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_goStateWindow = m_bindComponent.GetGameObject(0);
-			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(1);
+			self.m_textStrValue = m_bindComponent.GetComponent<Text>(1);
+			self.m_textAgiValue = m_bindComponent.GetComponent<Text>(2);
+			self.m_textVitValue = m_bindComponent.GetComponent<Text>(3);
+			self.m_textIntValue = m_bindComponent.GetComponent<Text>(4);
+			self.m_textDexValue = m_bindComponent.GetComponent<Text>(5);
+			self.m_textLukValue = m_bindComponent.GetComponent<Text>(6);
+			self.m_textPhysicAttack = m_bindComponent.GetComponent<Text>(7);
+			self.m_textPhysicDef = m_bindComponent.GetComponent<Text>(8);
+			self.m_textMagicAttack = m_bindComponent.GetComponent<Text>(9);
+			self.m_textMagicDef = m_bindComponent.GetComponent<Text>(10);
+			self.m_textHit = m_bindComponent.GetComponent<Text>(11);
+			self.m_textMiss = m_bindComponent.GetComponent<Text>(12);
+			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(13);
 			self.m_btnRightOption.onClick.AddListener(() => { self.OnRightOption(); });
-			self.m_textCName = m_bindComponent.GetComponent<Text>(2);
-			self.m_imgCImage = m_bindComponent.GetComponent<Image>(3);
-			self.m_btnClose = m_bindComponent.GetComponent<Button>(4);
+			self.m_textCName = m_bindComponent.GetComponent<Text>(14);
+			self.m_imgCImage = m_bindComponent.GetComponent<Image>(15);
+			self.m_btnClose = m_bindComponent.GetComponent<Button>(16);
 			self.m_btnClose.onClick.AddListener(() => { self.OnClose(); });
-			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(5);
+			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(17);
 			self.m_btnLeftOption.onClick.AddListener(() => { self.OnLeftOption(); });
 		}
 

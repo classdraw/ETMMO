@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &44284277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3937248037178273625, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+    type: 3}
+  m_PrefabInstance: {fileID: 5246895372840765054}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &348238826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,6 +277,19 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 499047880}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &539708533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 332e36893e7cf4a49b3c1f72f76cd5e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTarget: {fileID: 44284277}
 --- !u!1001 &567923382
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2253,6 +2278,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1414543109}
     m_Modifications:
+    - target: {fileID: 386117724577694803, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
     - target: {fileID: 1777522596676079999, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2353,11 +2383,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1805833682678082534, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 2420850740610735987, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 4342761652115853436, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
     - target: {fileID: 4458706518157352762, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
         type: 3}
       propertyPath: mLocalizeTarget
       value: 
       objectReference: {fileID: 2033702387}
+    - target: {fileID: 5832229314740080240, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
     - target: {fileID: 5863394224703702718, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
         type: 3}
       propertyPath: m_Name
@@ -2368,11 +2418,46 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6185851359599479353, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 7243746264766729959, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 7269952983422493055, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 7699747312114264920, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
     - target: {fileID: 7785709513620542004, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
         type: 3}
       propertyPath: mLocalizeTarget
       value: 
       objectReference: {fileID: 2033702387}
+    - target: {fileID: 8177758105270845660, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 8516828560573009926, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
+    - target: {fileID: 8522870660274128338, guid: 0039acb22b63f4f4a9cf0fa2efec2311,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 539708533}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

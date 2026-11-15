@@ -71,6 +71,114 @@ MonoBehaviour:
       - "\u72B6\u6001"
       Flags: 000000
       Languages_Touch: []
+    - Term: ui_EquipmentTextStr
+      TermType: 0
+      Description: 
+      Languages:
+      - STR
+      - "\u529B\u91CF"
+      - "\u529B\u91CF"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentTextAgi
+      TermType: 0
+      Description: 
+      Languages:
+      - AGI
+      - "\u654F\u6377"
+      - "\u654F\u6377"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentTextVit
+      TermType: 0
+      Description: 
+      Languages:
+      - VIT
+      - "\u4F53\u8D28"
+      - "\u4F53\u8D28"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentTextInt
+      TermType: 0
+      Description: 
+      Languages:
+      - INT
+      - "\u667A\u529B"
+      - "\u667A\u529B"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentTextDex
+      TermType: 0
+      Description: 
+      Languages:
+      - DEX
+      - "\u7075\u5DE7"
+      - "\u7075\u5DE7"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentTextLuk
+      TermType: 0
+      Description: 
+      Languages:
+      - LUK
+      - "\u5E78\u8FD0"
+      - "\u5E78\u8FD0"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentPhysicAttack
+      TermType: 0
+      Description: 
+      Languages:
+      - PhysicalAttack
+      - "\u7269\u7406\u653B\u51FB\u529B"
+      - "\u7269\u7406\u653B\u51FB\u529B"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentMagicAttack
+      TermType: 0
+      Description: 
+      Languages:
+      - MagicAttack
+      - "\u9B54\u6CD5\u653B\u51FB\u529B"
+      - "\u9B54\u6CD5\u653B\u51FB\u529B"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentPhysicDef
+      TermType: 0
+      Description: 
+      Languages:
+      - PhysicalDefense
+      - "\u7269\u7406\u9632\u5FA1"
+      - "\u7269\u7406\u9632\u5FA1"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentMagicDef
+      TermType: 0
+      Description: 
+      Languages:
+      - MagicDefense
+      - "\u9B54\u6CD5\u9632\u5FA1"
+      - "\u9B54\u6CD5\u9632\u5FA1"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentHit
+      TermType: 0
+      Description: 
+      Languages:
+      - Hit
+      - "\u547D\u4E2D"
+      - "\u547D\u4E2D"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentMiss
+      TermType: 0
+      Description: 
+      Languages:
+      - Miss
+      - "\u95EA\u907F"
+      - "\u95EA\u907F"
+      Flags: 000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 
