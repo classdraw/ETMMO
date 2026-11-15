@@ -26,7 +26,9 @@ namespace ET.Client
             self.m_sliderMP = m_bindComponent.GetComponent<Slider>(3);
             self.m_btnBag = m_bindComponent.GetComponent<Button>(4);
             self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
-            self.m_btnSkill = m_bindComponent.GetComponent<Button>(5);
+            self.m_btnEquipment = m_bindComponent.GetComponent<Button>(5);
+            self.m_btnEquipment.onClick.AddListener(() => { self.OnEquipment(); });
+            self.m_btnSkill = m_bindComponent.GetComponent<Button>(6);
             self.m_btnSkill.onClick.AddListener(() => { self.OnSkill(); });
 
             self.m_joystick = self.GetParent<UI>().GameObject.GetComponentInChildren<JoystickCtrl>(true);
@@ -148,6 +150,18 @@ namespace ET.Client
             // 先归零再赋值，否则仅改 max 时 FillRect 可能不刷新
             slider.value = 0;
             slider.value = targetValue;
+        }
+        
+        public static void OnEquipment(this UIMainComponent self)
+        {
+            Scene scene = self.Root().CurrentScene();
+            if (scene == null)
+            {
+                Log.Error("打开装备界面失败：未进入地图场景");
+                return;
+            }
+
+            UIEquipmentHelper.Open(scene);
         }
 
         public static void OnBag(this UIMainComponent self)

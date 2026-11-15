@@ -62,6 +62,15 @@ MonoBehaviour:
       - "\u6280\u80FD"
       Flags: 000000
       Languages_Touch: []
+    - Term: ui_EquipmentStateTitle
+      TermType: 0
+      Description: 
+      Languages:
+      - State
+      - "\u72B6\u6001"
+      - "\u72B6\u6001"
+      Flags: 000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

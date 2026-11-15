@@ -13,6 +13,7 @@ namespace ET.Client
         public Slider m_sliderHP;
         public Slider m_sliderMP;
         public Button m_btnBag;
+        public Button m_btnEquipment;
         public Button m_btnSkill;
         
         

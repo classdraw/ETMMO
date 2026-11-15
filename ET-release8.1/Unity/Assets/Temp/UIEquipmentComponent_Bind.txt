@@ -1,0 +1,62 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UIEquipmentComponent : Entity, IAwake, IDestroy
+	{
+		public GameObject m_goStateWindow;
+		public Button m_btnRightOption;
+		public Text m_textCName;
+		public Image m_imgCImage;
+		public Button m_btnClose;
+		public Button m_btnLeftOption;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UIEquipmentComponent))]
+	[FriendOf(typeof(UIEquipmentComponent))]
+	public static partial class UIEquipmentComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UIEquipmentComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_goStateWindow = m_bindComponent.GetGameObject(0);
+			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(1);
+			self.m_btnRightOption.onClick.AddListener(() => { self.OnRightOption(); });
+			self.m_textCName = m_bindComponent.GetComponent<Text>(2);
+			self.m_imgCImage = m_bindComponent.GetComponent<Image>(3);
+			self.m_btnClose = m_bindComponent.GetComponent<Button>(4);
+			self.m_btnClose.onClick.AddListener(() => { self.OnClose(); });
+			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(5);
+			self.m_btnLeftOption.onClick.AddListener(() => { self.OnLeftOption(); });
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnRightOption(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnClose(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnLeftOption(this UIEquipmentComponent self)
+		{
+		}
+	}
+}

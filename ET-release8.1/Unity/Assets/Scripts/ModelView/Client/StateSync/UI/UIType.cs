@@ -13,6 +13,7 @@ namespace ET.Client
 	    public const string UIMain = "UIMain";
 	    public const string UIBag = "UIBag";
 	    public const string UISkill = "UISkill";
+	    public const string UIEquipment = "UIEquipment";
 	    public const string UISessionError = "UISessionError";    
 			    
 	    public const int WINDOW_HIDE_LAYER = 2; // Ignore Raycast

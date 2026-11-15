@@ -1,5 +1,6 @@
 namespace ET.Client
 {
+    /// <summary>技能界面开关。仅与 <see cref="UIBagHelper"/> 互斥；装备等其它弹窗不受影响。</summary>
     public static class UISkillHelper
     {
         public static void Open(Scene scene)

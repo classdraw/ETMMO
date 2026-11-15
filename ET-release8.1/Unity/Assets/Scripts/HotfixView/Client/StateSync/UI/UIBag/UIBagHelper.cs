@@ -1,5 +1,6 @@
 namespace ET.Client
 {
+    /// <summary>背包开关。仅与 <see cref="UISkillHelper"/> 互斥；装备等其它弹窗不受影响。</summary>
     public static class UIBagHelper
     {
         public static void Open(Scene scene)
