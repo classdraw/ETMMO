@@ -179,6 +179,51 @@ MonoBehaviour:
       - "\u95EA\u907F"
       Flags: 000000
       Languages_Touch: []
+    - Term: ui_EquipmentNumber
+      TermType: 0
+      Description: 
+      Languages:
+      - Attribute
+      - "\u5C5E\u6027"
+      - "\u5C5E\u6027"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentNeedNumber
+      TermType: 0
+      Description: 
+      Languages:
+      - Required points
+      - "\u6240\u9700\u70B9\u6570"
+      - "\u6240\u9700\u70B9\u6570"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentLastPoints
+      TermType: 0
+      Description: 
+      Languages:
+      - 'Remaining points:'
+      - "\u5269\u4F59\u70B9\u6570\uFF1A"
+      - "\u5269\u4F59\u70B9\u6570\uFF1A"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentTitleEquip
+      TermType: 0
+      Description: 
+      Languages:
+      - Equip
+      - "\u88C5\u5907"
+      - "\u88C5\u5907"
+      Flags: 000000
+      Languages_Touch: []
+    - Term: ui_EquipmentLevel
+      TermType: 0
+      Description: 
+      Languages:
+      - Level:{0}
+      - "\u7B49\u7EA7\uFF1A{0}"
+      - "\u7B49\u7EA7\uFF1A{0}"
+      Flags: 000000
+      Languages_Touch: []
     CaseInsensitiveTerms: 0
     OnMissingTranslation: 1
     mTerm_AppName: 

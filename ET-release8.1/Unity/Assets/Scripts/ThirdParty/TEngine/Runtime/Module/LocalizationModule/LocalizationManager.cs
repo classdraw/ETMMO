@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Object = UnityEngine.Object;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -11,6 +12,7 @@ namespace TEngine
     /// 本地化组件。
     /// </summary>
     [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-100)]
     public sealed class LocalizationManager : MonoBehaviour, IResourceManager_Bundles
     {
         private string _defaultLanguage = "Chinese";
@@ -89,7 +91,28 @@ namespace TEngine
             _defaultLanguage = LocalizationUtility.GetLanguageStr(
                 rootModule.EditorLanguage != Language.Unspecified ? rootModule.EditorLanguage : SystemLanguage);
 
+            TrySyncBootstrapInnerCsv();
             AsyncInit().Forget();
+        }
+
+        /// <summary>先同步导入 Inner CSV 并设当前语言，避免 UI 早于 AsyncInit 取词。</summary>
+        private void TrySyncBootstrapInnerCsv()
+        {
+#if UNITY_EDITOR
+            if (!useRuntimeModule)
+            {
+                return;
+            }
+#endif
+            if (innerLocalizationCsv == null)
+            {
+                Log.Warning("Inner Localization Csv 未配置，无法加载多语言。");
+                return;
+            }
+
+            _sourceData.Awake();
+            UseLocalizationCSV(innerLocalizationCsv.text, false);
+            SetLanguage(ResolveLanguageNameForI2(_defaultLanguage));
         }
 
         private async UniTask<bool> AsyncInit()
@@ -188,8 +211,43 @@ namespace TEngine
             UseLocalizationCSV(assetTextAsset.text, !setCurrent);
             if (setCurrent)
             {
-                SetLanguage(language);
+                SetLanguage(ResolveLanguageNameForI2(language));
             }
+        }
+
+        /// <summary>
+        /// TEngine 默认语言名为 <c>Chinese</c>，I2 表列为 <c>Chinese (Simplified)</c>，启动时需对齐。
+        /// </summary>
+        private string ResolveLanguageNameForI2(string language)
+        {
+            if (string.IsNullOrEmpty(language))
+            {
+                return language;
+            }
+
+            UpdateAllLanguages();
+
+            if (allLanguage.Contains(language))
+            {
+                return language;
+            }
+
+            string supported = Localization.LocalizationManager.GetSupportedLanguage(language);
+            if (!string.IsNullOrEmpty(supported) && allLanguage.Contains(supported))
+            {
+                return supported;
+            }
+
+            foreach (string name in allLanguage)
+            {
+                if (name.StartsWith(language, StringComparison.OrdinalIgnoreCase)
+                    || name.IndexOf(language, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return name;
+                }
+            }
+
+            return allLanguage.Count > 0 ? allLanguage[0] : language;
         }
 
         private string GetLanguageAssetName(string language)
@@ -218,7 +276,22 @@ namespace TEngine
         /// <returns>是否已加载。</returns>
         public bool CheckLanguage(string language)
         {
-            return allLanguage.Contains(language);
+            if (string.IsNullOrEmpty(language))
+            {
+                return false;
+            }
+
+            if (allLanguage.Count == 0)
+            {
+                UpdateAllLanguages();
+            }
+
+            if (allLanguage.Contains(language))
+            {
+                return true;
+            }
+
+            return Localization.LocalizationManager.HasLanguage(language, Initialize: false, SkipDisabled: true);
         }
 
         /// <summary>
@@ -240,6 +313,9 @@ namespace TEngine
         /// <returns></returns>
         public bool SetLanguage(string language, bool load = false)
         {
+            language = ResolveLanguageNameForI2(language);
+            UpdateAllLanguages();
+
             if (!CheckLanguage(language))
             {
                 if (load)
@@ -248,11 +324,12 @@ namespace TEngine
                     return true;
                 }
 
-                Log.Warning($"当前没有这个语言无法切换到此语言 {language}");
+                Log.Warning($"当前没有这个语言无法切换到此语言 {language}（allLanguage={allLanguage.Count}）");
                 return false;
             }
 
-            if (_currentLanguage == language)
+            if (_currentLanguage == language
+                && string.Equals(Localization.LocalizationManager.CurrentLanguage, language, StringComparison.Ordinal))
             {
                 return true;
             }
@@ -260,6 +337,11 @@ namespace TEngine
             Log.Info($"设置当前语言 = {language}");
             Localization.LocalizationManager.CurrentLanguage = language;
             _currentLanguage = language;
+            if (!allLanguage.Contains(language))
+            {
+                allLanguage.Add(language);
+            }
+
             return true;
         }
 

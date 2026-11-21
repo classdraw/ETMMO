@@ -14,11 +14,24 @@ namespace ET.Client
 	{
 		public GameObject m_goStateWindow;
 		public Text m_textStrValue;
+		public Text m_textNeedStrValue;
+		public Button m_btnStrAdd;
 		public Text m_textAgiValue;
+		public Text m_textNeedAgiValue;
+		public Button m_btnAgiAdd;
 		public Text m_textVitValue;
+		public Text m_textNeedVitValue;
+		public Button m_btnVitAdd;
 		public Text m_textIntValue;
+		public Text m_textNeedIntValue;
+		public Button m_btnIntAdd;
 		public Text m_textDexValue;
+		public Text m_textNeedDexValue;
+		public Button m_btnDexAdd;
 		public Text m_textLukValue;
+		public Text m_textNeedLukValue;
+		public Button m_btnLukAdd;
+		public Text m_textPoint;
 		public Text m_textPhysicAttack;
 		public Text m_textPhysicDef;
 		public Text m_textMagicAttack;
@@ -27,6 +40,8 @@ namespace ET.Client
 		public Text m_textMiss;
 		public Button m_btnRightOption;
 		public Text m_textCName;
+		public Text m_textCLevel;
+		public Text m_textCJob;
 		public Image m_imgCImage;
 		public Button m_btnClose;
 		public Button m_btnLeftOption;
@@ -45,29 +60,74 @@ namespace ET.Client
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_goStateWindow = m_bindComponent.GetGameObject(0);
 			self.m_textStrValue = m_bindComponent.GetComponent<Text>(1);
-			self.m_textAgiValue = m_bindComponent.GetComponent<Text>(2);
-			self.m_textVitValue = m_bindComponent.GetComponent<Text>(3);
-			self.m_textIntValue = m_bindComponent.GetComponent<Text>(4);
-			self.m_textDexValue = m_bindComponent.GetComponent<Text>(5);
-			self.m_textLukValue = m_bindComponent.GetComponent<Text>(6);
-			self.m_textPhysicAttack = m_bindComponent.GetComponent<Text>(7);
-			self.m_textPhysicDef = m_bindComponent.GetComponent<Text>(8);
-			self.m_textMagicAttack = m_bindComponent.GetComponent<Text>(9);
-			self.m_textMagicDef = m_bindComponent.GetComponent<Text>(10);
-			self.m_textHit = m_bindComponent.GetComponent<Text>(11);
-			self.m_textMiss = m_bindComponent.GetComponent<Text>(12);
-			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(13);
+			self.m_textNeedStrValue = m_bindComponent.GetComponent<Text>(2);
+			self.m_btnStrAdd = m_bindComponent.GetComponent<Button>(3);
+			self.m_btnStrAdd.onClick.AddListener(() => { self.OnStrAdd(); });
+			self.m_textAgiValue = m_bindComponent.GetComponent<Text>(4);
+			self.m_textNeedAgiValue = m_bindComponent.GetComponent<Text>(5);
+			self.m_btnAgiAdd = m_bindComponent.GetComponent<Button>(6);
+			self.m_btnAgiAdd.onClick.AddListener(() => { self.OnAgiAdd(); });
+			self.m_textVitValue = m_bindComponent.GetComponent<Text>(7);
+			self.m_textNeedVitValue = m_bindComponent.GetComponent<Text>(8);
+			self.m_btnVitAdd = m_bindComponent.GetComponent<Button>(9);
+			self.m_btnVitAdd.onClick.AddListener(() => { self.OnVitAdd(); });
+			self.m_textIntValue = m_bindComponent.GetComponent<Text>(10);
+			self.m_textNeedIntValue = m_bindComponent.GetComponent<Text>(11);
+			self.m_btnIntAdd = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnIntAdd.onClick.AddListener(() => { self.OnIntAdd(); });
+			self.m_textDexValue = m_bindComponent.GetComponent<Text>(13);
+			self.m_textNeedDexValue = m_bindComponent.GetComponent<Text>(14);
+			self.m_btnDexAdd = m_bindComponent.GetComponent<Button>(15);
+			self.m_btnDexAdd.onClick.AddListener(() => { self.OnDexAdd(); });
+			self.m_textLukValue = m_bindComponent.GetComponent<Text>(16);
+			self.m_textNeedLukValue = m_bindComponent.GetComponent<Text>(17);
+			self.m_btnLukAdd = m_bindComponent.GetComponent<Button>(18);
+			self.m_btnLukAdd.onClick.AddListener(() => { self.OnLukAdd(); });
+			self.m_textPoint = m_bindComponent.GetComponent<Text>(19);
+			self.m_textPhysicAttack = m_bindComponent.GetComponent<Text>(20);
+			self.m_textPhysicDef = m_bindComponent.GetComponent<Text>(21);
+			self.m_textMagicAttack = m_bindComponent.GetComponent<Text>(22);
+			self.m_textMagicDef = m_bindComponent.GetComponent<Text>(23);
+			self.m_textHit = m_bindComponent.GetComponent<Text>(24);
+			self.m_textMiss = m_bindComponent.GetComponent<Text>(25);
+			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(26);
 			self.m_btnRightOption.onClick.AddListener(() => { self.OnRightOption(); });
-			self.m_textCName = m_bindComponent.GetComponent<Text>(14);
-			self.m_imgCImage = m_bindComponent.GetComponent<Image>(15);
-			self.m_btnClose = m_bindComponent.GetComponent<Button>(16);
+			self.m_textCName = m_bindComponent.GetComponent<Text>(27);
+			self.m_textCLevel = m_bindComponent.GetComponent<Text>(28);
+			self.m_textCJob = m_bindComponent.GetComponent<Text>(29);
+			self.m_imgCImage = m_bindComponent.GetComponent<Image>(30);
+			self.m_btnClose = m_bindComponent.GetComponent<Button>(31);
 			self.m_btnClose.onClick.AddListener(() => { self.OnClose(); });
-			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(17);
+			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(32);
 			self.m_btnLeftOption.onClick.AddListener(() => { self.OnLeftOption(); });
 		}
 
 		[EntitySystem]
 		private static void Destroy(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnStrAdd(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnAgiAdd(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnVitAdd(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnIntAdd(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnDexAdd(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnLukAdd(this UIEquipmentComponent self)
 		{
 		}
 

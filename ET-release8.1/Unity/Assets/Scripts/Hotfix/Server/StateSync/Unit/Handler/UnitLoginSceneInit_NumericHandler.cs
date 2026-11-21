@@ -19,7 +19,14 @@ namespace ET.Server
                 return;
             }
 
-            if (UnitLoginSceneSerializeDefaults.ResetTransientNumeric(numeric))
+            bool changed = UnitLoginSceneSerializeDefaults.ResetTransientNumeric(numeric);
+
+            if (unit.Type() == UnitType.Player && PlayerLevelHelper.EnsureLevelProgressPersisted(numeric))
+            {
+                changed = true;
+            }
+
+            if (changed)
             {
                 unit.GetComponent<UnitDBSaveComponent>()?.AddChange(typeof(NumericComponent));
             }

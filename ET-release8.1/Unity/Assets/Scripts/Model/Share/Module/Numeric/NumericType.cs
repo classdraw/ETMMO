@@ -166,5 +166,10 @@
 	    public const int ForbidSkill = 1050;//禁止施法技能状态
 	    public const int ForbidMove = 1051;//禁止移动
 	    public const int ForbidRotation = 1052;//禁止朝向 只是禁用移动转向
+	    
+
+	    public const int RemainingAttributePoints = 1100;//剩余属性点数
+	    public const int RemainingSkillPoints = 1101;//剩余技能点数
+	    public const int EXP = 1102;//当前经验
     }
 }

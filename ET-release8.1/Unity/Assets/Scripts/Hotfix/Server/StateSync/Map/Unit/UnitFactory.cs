@@ -235,6 +235,8 @@ namespace ET.Server
             numericComponent.Set(NumericType.Flee, NumericHelper.CalcPlayerFlee(level, agi));
             numericComponent.Set(NumericType.AtkSpeed, NumericHelper.CalcPlayerAtkSpeed(agi, dex));
             numericComponent.Set(NumericType.AtkRange, unitConfig.Range);
+
+            PlayerLevelHelper.InitLevelProgress(numericComponent, level);
         }
 
         private static void InitNumericFromMonsterConfig(NumericComponent numericComponent, MonsterConfig monsterConfig, UnitConfig unitConfig)

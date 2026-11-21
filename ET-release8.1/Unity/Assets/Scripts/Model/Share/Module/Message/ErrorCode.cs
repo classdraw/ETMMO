@@ -67,6 +67,8 @@ namespace ET
         public const int ERR_CastPreCoolDown = 200062;//施法技能cd中
         public const int ERR_CastPreSkillNotLearned = 200063;//技能未学习
         public const int ERR_GMSetSkillLevelError = 200064;//GM设置技能等级失败
+        public const int ERR_GMLevelUpError = 200069;//GM升级失败
+        public const int ERR_GMAddBaseExpError = 200070;//GM加经验失败
         public const int ERR_CastPreCheckFunc = 200065;//技能 CheckFunc 未通过
         public const int ERR_CastPreHpNotEnough = 200066;//技能释放血量不足
         public const int ERR_CastPreSpNotEnough = 200067;//技能释放蓝量不足

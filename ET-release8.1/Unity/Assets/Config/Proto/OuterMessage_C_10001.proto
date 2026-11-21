@@ -856,4 +856,31 @@ message M2C_GMSetHPSPFull // ILocationResponse
 	int32 Error = 2;
 	string Message = 3;
 }
+// ResponseType M2C_GMLevelUp
+message C2M_GMLevelUp // ILocationRequest
+{
+	int32 RpcId = 1;
+}
+
+message M2C_GMLevelUp // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int32 NewLevel = 4;
+}
+// ResponseType M2C_GMAddBaseExp
+message C2M_GMAddBaseExp // ILocationRequest
+{
+	int32 RpcId = 1;
+	int64 Exp = 2;
+}
+
+message M2C_GMAddBaseExp // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	int32 LevelsGained = 4;
+}
 //////////////////////相关GM///////////////////////////////////////////

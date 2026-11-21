@@ -1,4 +1,6 @@
+using TEngine;
 using UnityEngine;
+using I2Localization = TEngine.Localization.LocalizationManager;
 
 namespace ET.Client
 {
@@ -22,15 +24,54 @@ namespace ET.Client
             GameObject.DontDestroyOnLoad(gameEntry);
             gameEntry.name = "TEngineComponent(Object)";
             self.GameEntryObj = gameEntry;
+            ClientViewDebugSettings.TryApplyRootModuleLanguage(gameEntry);
             self.EngineGlobal = gameEntry.GetComponent<TEngineGlobal>();
+            // 先绑定 YooAsset 再 Start，LocalizationManager.Awake 需要 IResourceModuleET
+            self.EngineGlobal.SetResAgent(resLoader.ResourceAgent);
             await self.EngineGlobal.StartEngine();//框架初始化
-            self.EngineGlobal.SetResAgent(resLoader.ResourceAgent);//绑定资源加载器
+            await self.ApplyInitRuntimeLanguageAfterLocalizationReady();
             
             //ModuleSystem.GetModule<IResourceModuleET>()
             self.LoadSetting();
         }
-        
-        
+
+        private const int InitLanguageWaitMaxFrames = 600;
+
+        /// <summary>等待 I2 语言源就绪后再应用 Init 场景语言，避免 ModuleSystem 提前创建空 LocalizationModule。</summary>
+        private static async ETTask ApplyInitRuntimeLanguageAfterLocalizationReady(this TEngineComponent self)
+        {
+            if (ClientViewDebugSettings.RuntimeLanguage == Language.Unspecified || self.GameEntryObj == null)
+            {
+                return;
+            }
+
+            LocalizationManager localizationManager = self.GameEntryObj.GetComponentInChildren<LocalizationManager>(true);
+            if (localizationManager == null)
+            {
+                Log.Warning("Init 运行语言未应用：GameEntry 上未找到 LocalizationManager。");
+                return;
+            }
+
+            TimerComponent timer = self.Root().GetComponent<TimerComponent>();
+            const string probeTerm = UILocalizationHelper.EquipmentLevelTerm;
+            for (int i = 0; i < InitLanguageWaitMaxFrames; i++)
+            {
+                if (I2Localization.Sources != null && I2Localization.Sources.Count > 0)
+                {
+                    UILocalizationHelper.EnsureLocalizationReadyForInit(out _, out _);
+                    ClientViewDebugSettings.TryApplyOnLocalizationManager(localizationManager, load: false);
+                    ClientViewDebugSettings.TryForceI2CurrentLanguage();
+                    if (UILocalizationHelper.IsTermResolvable(probeTerm))
+                    {
+                        return;
+                    }
+                }
+
+                await timer.WaitFrameAsync();
+            }
+
+            Log.Warning("Init 运行语言未能应用：等待语言表/词条就绪超时。");
+        }
 
         private static async ETTask<GameObject> LoadGameObjectInstance(ResourcesLoaderComponent resLoader,string location)
         {

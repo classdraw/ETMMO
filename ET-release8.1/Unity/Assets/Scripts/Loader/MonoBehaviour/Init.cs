@@ -1,5 +1,6 @@
 using System;
 using CommandLine;
+using TEngine;
 using UnityEngine;
 
 namespace ET
@@ -7,6 +8,9 @@ namespace ET
 	public class Init: MonoBehaviour
 	{
 		[Header("客户端调试")]
+		[Tooltip("运行语言：编辑器 Play 与真机安装包均以此为准（打包前在 Init 场景设置）；Unspecified 则走 GameEntry RootModule / 系统语言")]
+		public Language runtimeLanguage = Language.ChineseSimplified;
+
 		[Tooltip("勾选后，所有 Unit 头顶名字显示阵营 Id；否则显示实际名字")]
 		public bool ReplaceUnitNameWithFaction;
 
@@ -23,6 +27,8 @@ namespace ET
 		private void SyncViewDebugSettings()
 		{
 			ClientViewDebugSettings.ReplaceUnitNameWithFaction = ReplaceUnitNameWithFaction;
+			ClientViewDebugSettings.RuntimeLanguage = runtimeLanguage;
+			ClientViewDebugSettings.ClearI2SavedLanguageWhenInitOverrides();
 		}
 
 		private void Start()

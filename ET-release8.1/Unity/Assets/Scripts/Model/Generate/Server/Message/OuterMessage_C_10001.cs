@@ -3840,6 +3840,136 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_GMLevelUp)]
+    [ResponseType(nameof(M2C_GMLevelUp))]
+    public partial class C2M_GMLevelUp : MessageObject, ILocationRequest
+    {
+        public static C2M_GMLevelUp Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_GMLevelUp), isFromPool) as C2M_GMLevelUp;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_GMLevelUp)]
+    public partial class M2C_GMLevelUp : MessageObject, ILocationResponse
+    {
+        public static M2C_GMLevelUp Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_GMLevelUp), isFromPool) as M2C_GMLevelUp;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public int NewLevel { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.NewLevel = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_GMAddBaseExp)]
+    [ResponseType(nameof(M2C_GMAddBaseExp))]
+    public partial class C2M_GMAddBaseExp : MessageObject, ILocationRequest
+    {
+        public static C2M_GMAddBaseExp Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_GMAddBaseExp), isFromPool) as C2M_GMAddBaseExp;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public long Exp { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Exp = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_GMAddBaseExp)]
+    public partial class M2C_GMAddBaseExp : MessageObject, ILocationResponse
+    {
+        public static M2C_GMAddBaseExp Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_GMAddBaseExp), isFromPool) as M2C_GMAddBaseExp;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        [MemoryPackOrder(3)]
+        public int LevelsGained { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+            this.LevelsGained = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     /// <summary>
     /// 相关GM///////////////////////////////////////////
     /// </summary>
@@ -3952,5 +4082,9 @@ namespace ET
         public const ushort M2C_GMSetSkillLevel = 10106;
         public const ushort C2M_GMSetHPSPFull = 10107;
         public const ushort M2C_GMSetHPSPFull = 10108;
+        public const ushort C2M_GMLevelUp = 10109;
+        public const ushort M2C_GMLevelUp = 10110;
+        public const ushort C2M_GMAddBaseExp = 10111;
+        public const ushort M2C_GMAddBaseExp = 10112;
     }
 }

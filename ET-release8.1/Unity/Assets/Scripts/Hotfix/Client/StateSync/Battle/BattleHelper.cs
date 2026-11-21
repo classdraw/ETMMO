@@ -131,6 +131,55 @@ namespace ET.Client
             }
         }
 
+        /// <summary>GM：升 1 个基础等级（发放属性点与技能点，不扣当前经验条）。</summary>
+        public static async ETTask GMLevelUp(Scene root)
+        {
+            C2M_GMLevelUp request = C2M_GMLevelUp.Create();
+            M2C_GMLevelUp response = await root.GetComponent<ClientSenderComponent>().Call(request) as M2C_GMLevelUp;
+            if (response == null)
+            {
+                Log.Warning("GMLevelUp 无响应");
+                return;
+            }
+
+            if (response.Error == ErrorCode.ERR_Success)
+            {
+                Log.Info(response.Message ?? $"升至 {response.NewLevel} 级");
+            }
+            else
+            {
+                Log.Info($"GM 升级失败 Error={response.Error} {response.Message}");
+            }
+        }
+
+        /// <summary>GM：增加当前等级经验条（可连续升级），<paramref name="exp"/> 为玩家输入数值。</summary>
+        public static async ETTask GMAddBaseExp(Scene root, long exp)
+        {
+            if (exp <= 0)
+            {
+                Log.Warning("GMAddBaseExp：经验须大于 0");
+                return;
+            }
+
+            C2M_GMAddBaseExp request = C2M_GMAddBaseExp.Create();
+            request.Exp = exp;
+            M2C_GMAddBaseExp response = await root.GetComponent<ClientSenderComponent>().Call(request) as M2C_GMAddBaseExp;
+            if (response == null)
+            {
+                Log.Warning("GMAddBaseExp 无响应");
+                return;
+            }
+
+            if (response.Error == ErrorCode.ERR_Success)
+            {
+                Log.Info(response.Message ?? $"升 {response.LevelsGained} 级");
+            }
+            else
+            {
+                Log.Info($"GM 加经验失败 Error={response.Error} {response.Message}");
+            }
+        }
+
         /// <summary>GM：入参 SkillConfig.Id，服务端按 CastId 写入等级，例如 1,5。</summary>
         public static async ETTask GMSetSkillLevel(Scene root, int skillConfigId, int level)
         {

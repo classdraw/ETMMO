@@ -110,6 +110,8 @@ namespace TEngine.Localization
                 EditorGUILayout.LabelField("路径", AssetDatabase.GetAssetPath(_languageAsset));
             }
 
+            DrawFileTabCsvSection();
+
             EditorGUILayout.Space(8);
             DrawTabSaveBar("保存文件页签", _fileTabDirty, SaveFileTab);
         }
