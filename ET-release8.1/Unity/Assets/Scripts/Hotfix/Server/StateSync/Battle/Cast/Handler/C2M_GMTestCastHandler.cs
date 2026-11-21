@@ -19,7 +19,8 @@ namespace ET.Server
                 return;
             }
 
-            response.Error = unit.CreateAndCastBySkill(skillConfigId, request.TargetId, request.InputPos, true, null, true);
+            // GM 测试施法不校验是否已学（正式 C2M_CastInput 仍校验）
+            response.Error = unit.CreateAndCastBySkill(skillConfigId, request.TargetId, request.InputPos, true, null, false);
             await ETTask.CompletedTask;
         }
     }

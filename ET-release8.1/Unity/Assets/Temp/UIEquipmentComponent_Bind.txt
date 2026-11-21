@@ -15,22 +15,28 @@ namespace ET.Client
 		public GameObject m_goStateWindow;
 		public Text m_textStrValue;
 		public Text m_textNeedStrValue;
-		public Button m_btnStrAdd;
+		public Button m_btnStrRight;
+		public Button m_btnStrLeft;
 		public Text m_textAgiValue;
 		public Text m_textNeedAgiValue;
-		public Button m_btnAgiAdd;
+		public Button m_btnAgiRight;
+		public Button m_btnAgiLeft;
 		public Text m_textVitValue;
 		public Text m_textNeedVitValue;
-		public Button m_btnVitAdd;
+		public Button m_btnVitRight;
+		public Button m_btnVitLeft;
 		public Text m_textIntValue;
 		public Text m_textNeedIntValue;
-		public Button m_btnIntAdd;
+		public Button m_btnIntRight;
+		public Button m_btnIntLeft;
 		public Text m_textDexValue;
 		public Text m_textNeedDexValue;
-		public Button m_btnDexAdd;
+		public Button m_btnDexRight;
+		public Button m_btnDexLeft;
 		public Text m_textLukValue;
 		public Text m_textNeedLukValue;
 		public Button m_btnLukAdd;
+		public Button m_btnLukLeft;
 		public Text m_textPoint;
 		public Text m_textPhysicAttack;
 		public Text m_textPhysicDef;
@@ -61,44 +67,56 @@ namespace ET.Client
 			self.m_goStateWindow = m_bindComponent.GetGameObject(0);
 			self.m_textStrValue = m_bindComponent.GetComponent<Text>(1);
 			self.m_textNeedStrValue = m_bindComponent.GetComponent<Text>(2);
-			self.m_btnStrAdd = m_bindComponent.GetComponent<Button>(3);
-			self.m_btnStrAdd.onClick.AddListener(() => { self.OnStrAdd(); });
-			self.m_textAgiValue = m_bindComponent.GetComponent<Text>(4);
-			self.m_textNeedAgiValue = m_bindComponent.GetComponent<Text>(5);
-			self.m_btnAgiAdd = m_bindComponent.GetComponent<Button>(6);
-			self.m_btnAgiAdd.onClick.AddListener(() => { self.OnAgiAdd(); });
-			self.m_textVitValue = m_bindComponent.GetComponent<Text>(7);
-			self.m_textNeedVitValue = m_bindComponent.GetComponent<Text>(8);
-			self.m_btnVitAdd = m_bindComponent.GetComponent<Button>(9);
-			self.m_btnVitAdd.onClick.AddListener(() => { self.OnVitAdd(); });
-			self.m_textIntValue = m_bindComponent.GetComponent<Text>(10);
-			self.m_textNeedIntValue = m_bindComponent.GetComponent<Text>(11);
-			self.m_btnIntAdd = m_bindComponent.GetComponent<Button>(12);
-			self.m_btnIntAdd.onClick.AddListener(() => { self.OnIntAdd(); });
-			self.m_textDexValue = m_bindComponent.GetComponent<Text>(13);
-			self.m_textNeedDexValue = m_bindComponent.GetComponent<Text>(14);
-			self.m_btnDexAdd = m_bindComponent.GetComponent<Button>(15);
-			self.m_btnDexAdd.onClick.AddListener(() => { self.OnDexAdd(); });
-			self.m_textLukValue = m_bindComponent.GetComponent<Text>(16);
-			self.m_textNeedLukValue = m_bindComponent.GetComponent<Text>(17);
-			self.m_btnLukAdd = m_bindComponent.GetComponent<Button>(18);
+			self.m_btnStrRight = m_bindComponent.GetComponent<Button>(3);
+			self.m_btnStrRight.onClick.AddListener(() => { self.OnStrRight(); });
+			self.m_btnStrLeft = m_bindComponent.GetComponent<Button>(4);
+			self.m_btnStrLeft.onClick.AddListener(() => { self.OnStrLeft(); });
+			self.m_textAgiValue = m_bindComponent.GetComponent<Text>(5);
+			self.m_textNeedAgiValue = m_bindComponent.GetComponent<Text>(6);
+			self.m_btnAgiRight = m_bindComponent.GetComponent<Button>(7);
+			self.m_btnAgiRight.onClick.AddListener(() => { self.OnAgiRight(); });
+			self.m_btnAgiLeft = m_bindComponent.GetComponent<Button>(8);
+			self.m_btnAgiLeft.onClick.AddListener(() => { self.OnAgiLeft(); });
+			self.m_textVitValue = m_bindComponent.GetComponent<Text>(9);
+			self.m_textNeedVitValue = m_bindComponent.GetComponent<Text>(10);
+			self.m_btnVitRight = m_bindComponent.GetComponent<Button>(11);
+			self.m_btnVitRight.onClick.AddListener(() => { self.OnVitRight(); });
+			self.m_btnVitLeft = m_bindComponent.GetComponent<Button>(12);
+			self.m_btnVitLeft.onClick.AddListener(() => { self.OnVitLeft(); });
+			self.m_textIntValue = m_bindComponent.GetComponent<Text>(13);
+			self.m_textNeedIntValue = m_bindComponent.GetComponent<Text>(14);
+			self.m_btnIntRight = m_bindComponent.GetComponent<Button>(15);
+			self.m_btnIntRight.onClick.AddListener(() => { self.OnIntRight(); });
+			self.m_btnIntLeft = m_bindComponent.GetComponent<Button>(16);
+			self.m_btnIntLeft.onClick.AddListener(() => { self.OnIntLeft(); });
+			self.m_textDexValue = m_bindComponent.GetComponent<Text>(17);
+			self.m_textNeedDexValue = m_bindComponent.GetComponent<Text>(18);
+			self.m_btnDexRight = m_bindComponent.GetComponent<Button>(19);
+			self.m_btnDexRight.onClick.AddListener(() => { self.OnDexRight(); });
+			self.m_btnDexLeft = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnDexLeft.onClick.AddListener(() => { self.OnDexLeft(); });
+			self.m_textLukValue = m_bindComponent.GetComponent<Text>(21);
+			self.m_textNeedLukValue = m_bindComponent.GetComponent<Text>(22);
+			self.m_btnLukAdd = m_bindComponent.GetComponent<Button>(23);
 			self.m_btnLukAdd.onClick.AddListener(() => { self.OnLukAdd(); });
-			self.m_textPoint = m_bindComponent.GetComponent<Text>(19);
-			self.m_textPhysicAttack = m_bindComponent.GetComponent<Text>(20);
-			self.m_textPhysicDef = m_bindComponent.GetComponent<Text>(21);
-			self.m_textMagicAttack = m_bindComponent.GetComponent<Text>(22);
-			self.m_textMagicDef = m_bindComponent.GetComponent<Text>(23);
-			self.m_textHit = m_bindComponent.GetComponent<Text>(24);
-			self.m_textMiss = m_bindComponent.GetComponent<Text>(25);
-			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(26);
+			self.m_btnLukLeft = m_bindComponent.GetComponent<Button>(24);
+			self.m_btnLukLeft.onClick.AddListener(() => { self.OnLukLeft(); });
+			self.m_textPoint = m_bindComponent.GetComponent<Text>(25);
+			self.m_textPhysicAttack = m_bindComponent.GetComponent<Text>(26);
+			self.m_textPhysicDef = m_bindComponent.GetComponent<Text>(27);
+			self.m_textMagicAttack = m_bindComponent.GetComponent<Text>(28);
+			self.m_textMagicDef = m_bindComponent.GetComponent<Text>(29);
+			self.m_textHit = m_bindComponent.GetComponent<Text>(30);
+			self.m_textMiss = m_bindComponent.GetComponent<Text>(31);
+			self.m_btnRightOption = m_bindComponent.GetComponent<Button>(32);
 			self.m_btnRightOption.onClick.AddListener(() => { self.OnRightOption(); });
-			self.m_textCName = m_bindComponent.GetComponent<Text>(27);
-			self.m_textCLevel = m_bindComponent.GetComponent<Text>(28);
-			self.m_textCJob = m_bindComponent.GetComponent<Text>(29);
-			self.m_imgCImage = m_bindComponent.GetComponent<Image>(30);
-			self.m_btnClose = m_bindComponent.GetComponent<Button>(31);
+			self.m_textCName = m_bindComponent.GetComponent<Text>(33);
+			self.m_textCLevel = m_bindComponent.GetComponent<Text>(34);
+			self.m_textCJob = m_bindComponent.GetComponent<Text>(35);
+			self.m_imgCImage = m_bindComponent.GetComponent<Image>(36);
+			self.m_btnClose = m_bindComponent.GetComponent<Button>(37);
 			self.m_btnClose.onClick.AddListener(() => { self.OnClose(); });
-			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(32);
+			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(38);
 			self.m_btnLeftOption.onClick.AddListener(() => { self.OnLeftOption(); });
 		}
 
@@ -107,27 +125,51 @@ namespace ET.Client
 		{
 		}
 
-		public static void OnStrAdd(this UIEquipmentComponent self)
+		public static void OnStrRight(this UIEquipmentComponent self)
 		{
 		}
 
-		public static void OnAgiAdd(this UIEquipmentComponent self)
+		public static void OnStrLeft(this UIEquipmentComponent self)
 		{
 		}
 
-		public static void OnVitAdd(this UIEquipmentComponent self)
+		public static void OnAgiRight(this UIEquipmentComponent self)
 		{
 		}
 
-		public static void OnIntAdd(this UIEquipmentComponent self)
+		public static void OnAgiLeft(this UIEquipmentComponent self)
 		{
 		}
 
-		public static void OnDexAdd(this UIEquipmentComponent self)
+		public static void OnVitRight(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnVitLeft(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnIntRight(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnIntLeft(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnDexRight(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnDexLeft(this UIEquipmentComponent self)
 		{
 		}
 
 		public static void OnLukAdd(this UIEquipmentComponent self)
+		{
+		}
+
+		public static void OnLukLeft(this UIEquipmentComponent self)
 		{
 		}
 

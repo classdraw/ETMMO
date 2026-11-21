@@ -16,6 +16,7 @@ namespace ET.Client
     public static class UILocalizationHelper
     {
         public const string EquipmentLevelTerm = "ui_EquipmentLevel";
+        public const string EquipmentLastPointsTerm = "ui_EquipmentLastPoints";
 
         /// <summary>手动调试：Console 搜 UIL10n。</summary>
         public static void LogTermDiagnostics(string term, params object[] formatArgs)

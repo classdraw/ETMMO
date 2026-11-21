@@ -15,7 +15,7 @@ namespace ET.Client
         [EntitySystem]
 		private static void Awake(this UIHelpComponent self)
 		{
-						UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_goPanel = m_bindComponent.GetGameObject(0);
 			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
 			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
@@ -51,15 +51,19 @@ namespace ET.Client
 			self.m_btnP2SetSkillLevel.onClick.AddListener(() => { self.OnP2SetSkillLevel(); });
 			self.m_btnP2SetHPSPFull = m_bindComponent.GetComponent<Button>(19);
 			self.m_btnP2SetHPSPFull.onClick.AddListener(() => { self.OnP2SetHPSPFull(); });
-			self.m_goP3 = m_bindComponent.GetGameObject(20);
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnP2AddExp = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnP2AddExp.onClick.AddListener(() => { self.OnP2AddExp(); });
+			self.m_btnP2AddLevel = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnP2AddLevel.onClick.AddListener(() => { self.OnP2AddLevel(); });
+			self.m_goP3 = m_bindComponent.GetGameObject(22);
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(23);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(22);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(24);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(23);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(25);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetGameObject(24);
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(25);
+			self.m_goP4 = m_bindComponent.GetGameObject(26);
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(27);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 		
 			self.m_GOs.Clear();
@@ -268,6 +272,44 @@ namespace ET.Client
 		public static void OnP2SetHPSPFull(this UIHelpComponent self)
 		{
 			BattleHelper.GMSetHPSPFull(self.Root()).Coroutine();
+		}
+		
+		// 加经验：输入栏填增加的经验值（当前等级经验条），可连续升级
+		public static void OnP2AddExp(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				Log.Warning("GM 加经验：请在输入栏填写经验数值");
+				return;
+			}
+
+			if (!long.TryParse(val.Trim(), out long exp) || exp <= 0)
+			{
+				Log.Warning("GM 加经验：须为大于 0 的整数");
+				return;
+			}
+
+			BattleHelper.GMAddBaseExp(self.Root(), exp).Coroutine();
+		}
+
+		// 升级：输入栏填升级次数（不扣经验条）
+		public static void OnP2AddLevel(this UIHelpComponent self)
+		{
+			var val = self.m_inputAll.text;
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				Log.Warning("GM 升级：请在输入栏填写升级次数");
+				return;
+			}
+
+			if (!int.TryParse(val.Trim(), out int count) || count <= 0)
+			{
+				Log.Warning("GM 升级：须为大于 0 的整数");
+				return;
+			}
+
+			BattleHelper.GMLevelUp(self.Root(), count).Coroutine();
 		}
 
 		#endregion

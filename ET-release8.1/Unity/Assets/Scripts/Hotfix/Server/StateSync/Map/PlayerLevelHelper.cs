@@ -151,19 +151,7 @@ namespace ET.Server
 
         private static void RefreshPlayerLevelDerived(Unit unit, NumericComponent numeric, int level)
         {
-            UnitConfig unitConfig = unit.Config();
-            int vit = numeric.GetAsInt(NumericType.VIT);
-            int intell = numeric.GetAsInt(NumericType.INT);
-            int agi = numeric.GetAsInt(NumericType.AGI);
-            int dex = numeric.GetAsInt(NumericType.DEX);
-
-            int hp = NumericHelper.CalcHpResult(level, vit, unitConfig.JobHp / 1000f);
-            int sp = NumericHelper.CalcSpResult(level, intell, unitConfig.JobSp / 1000f);
-            numeric.Set(NumericType.MaxHpBase, hp);
-            numeric.Set(NumericType.MaxSpBase, sp);
-
-            numeric.Set(NumericType.Hit, NumericHelper.CalcPlayerHit(level, dex));
-            numeric.Set(NumericType.Flee, NumericHelper.CalcPlayerFlee(level, agi));
+            PlayerAttributeHelper.RefreshPrimaryDerivedCombatStats(unit, numeric);
         }
     }
 }

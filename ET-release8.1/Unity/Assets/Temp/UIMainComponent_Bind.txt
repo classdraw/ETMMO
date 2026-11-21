@@ -14,6 +14,7 @@ namespace ET.Client
 	{
 		public Slider m_sliderHeadHP;
 		public Slider m_sliderHeadMP;
+		public Slider m_sliderExp;
 		public Slider m_sliderHP;
 		public Slider m_sliderMP;
 		public Button m_btnBag;
@@ -34,13 +35,14 @@ namespace ET.Client
 			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
 			self.m_sliderHeadHP = m_bindComponent.GetComponent<Slider>(0);
 			self.m_sliderHeadMP = m_bindComponent.GetComponent<Slider>(1);
-			self.m_sliderHP = m_bindComponent.GetComponent<Slider>(2);
-			self.m_sliderMP = m_bindComponent.GetComponent<Slider>(3);
-			self.m_btnBag = m_bindComponent.GetComponent<Button>(4);
+			self.m_sliderExp = m_bindComponent.GetComponent<Slider>(2);
+			self.m_sliderHP = m_bindComponent.GetComponent<Slider>(3);
+			self.m_sliderMP = m_bindComponent.GetComponent<Slider>(4);
+			self.m_btnBag = m_bindComponent.GetComponent<Button>(5);
 			self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
-			self.m_btnEquipment = m_bindComponent.GetComponent<Button>(5);
+			self.m_btnEquipment = m_bindComponent.GetComponent<Button>(6);
 			self.m_btnEquipment.onClick.AddListener(() => { self.OnEquipment(); });
-			self.m_btnSkill = m_bindComponent.GetComponent<Button>(6);
+			self.m_btnSkill = m_bindComponent.GetComponent<Button>(7);
 			self.m_btnSkill.onClick.AddListener(() => { self.OnSkill(); });
 		}
 

@@ -131,10 +131,17 @@ namespace ET.Client
             }
         }
 
-        /// <summary>GM：升 1 个基础等级（发放属性点与技能点，不扣当前经验条）。</summary>
-        public static async ETTask GMLevelUp(Scene root)
+        /// <summary>GM：升 <paramref name="count"/> 个基础等级（发放属性点与技能点，不扣当前经验条）。</summary>
+        public static async ETTask GMLevelUp(Scene root, int count)
         {
+            if (count <= 0)
+            {
+                Log.Warning("GMLevelUp：升级次数须大于 0");
+                return;
+            }
+
             C2M_GMLevelUp request = C2M_GMLevelUp.Create();
+            request.Count = count;
             M2C_GMLevelUp response = await root.GetComponent<ClientSenderComponent>().Call(request) as M2C_GMLevelUp;
             if (response == null)
             {

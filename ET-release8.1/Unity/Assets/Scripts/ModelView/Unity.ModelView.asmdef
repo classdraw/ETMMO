@@ -11,7 +11,8 @@
         "Unity.CustomFrame",
         "Unity.TEngine",
         "UniTask",
-        "Cinemachine"
+        "Cinemachine",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

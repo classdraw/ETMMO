@@ -3853,6 +3853,9 @@ namespace ET
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
 
+        [MemoryPackOrder(1)]
+        public int Count { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -3861,6 +3864,7 @@ namespace ET
             }
 
             this.RpcId = default;
+            this.Count = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -3965,6 +3969,89 @@ namespace ET
             this.Error = default;
             this.Message = default;
             this.LevelsGained = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.C2M_CommitAttributePoints)]
+    [ResponseType(nameof(M2C_CommitAttributePoints))]
+    public partial class C2M_CommitAttributePoints : MessageObject, ILocationRequest
+    {
+        public static C2M_CommitAttributePoints Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(C2M_CommitAttributePoints), isFromPool) as C2M_CommitAttributePoints;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int DeltaStr { get; set; }
+
+        [MemoryPackOrder(2)]
+        public int DeltaAgi { get; set; }
+
+        [MemoryPackOrder(3)]
+        public int DeltaVit { get; set; }
+
+        [MemoryPackOrder(4)]
+        public int DeltaInt { get; set; }
+
+        [MemoryPackOrder(5)]
+        public int DeltaDex { get; set; }
+
+        [MemoryPackOrder(6)]
+        public int DeltaLuk { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.DeltaStr = default;
+            this.DeltaAgi = default;
+            this.DeltaVit = default;
+            this.DeltaInt = default;
+            this.DeltaDex = default;
+            this.DeltaLuk = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(OuterMessage.M2C_CommitAttributePoints)]
+    public partial class M2C_CommitAttributePoints : MessageObject, ILocationResponse
+    {
+        public static M2C_CommitAttributePoints Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2C_CommitAttributePoints), isFromPool) as M2C_CommitAttributePoints;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -4086,5 +4173,7 @@ namespace ET
         public const ushort M2C_GMLevelUp = 10110;
         public const ushort C2M_GMAddBaseExp = 10111;
         public const ushort M2C_GMAddBaseExp = 10112;
+        public const ushort C2M_CommitAttributePoints = 10113;
+        public const ushort M2C_CommitAttributePoints = 10114;
     }
 }

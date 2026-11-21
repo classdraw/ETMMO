@@ -21,8 +21,15 @@ namespace ET.Server
 
             bool changed = UnitLoginSceneSerializeDefaults.ResetTransientNumeric(numeric);
 
-            if (unit.Type() == UnitType.Player && PlayerLevelHelper.EnsureLevelProgressPersisted(numeric))
+            if (unit.Type() == UnitType.Player)
             {
+                if (PlayerLevelHelper.EnsureLevelProgressPersisted(numeric))
+                {
+                    changed = true;
+                }
+
+                // 补算攻防：历史存档可能只改了 Base 六维而未刷新派生战斗属性
+                PlayerAttributeHelper.RefreshPrimaryDerivedCombatStats(unit, numeric);
                 changed = true;
             }
 

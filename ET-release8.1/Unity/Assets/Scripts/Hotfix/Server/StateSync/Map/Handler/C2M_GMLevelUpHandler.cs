@@ -13,8 +13,26 @@ namespace ET.Server
                 return;
             }
 
+            if (request.Count <= 0)
+            {
+                response.Error = ErrorCode.ERR_GMLevelUpError;
+                response.Message = "升级次数须大于 0";
+                return;
+            }
+
             int levelBefore = numeric.GetAsInt(NumericType.Level);
-            int gained = PlayerLevelHelper.GmLevelUpOnce(unit);
+            int gained = 0;
+            for (int i = 0; i < request.Count; i++)
+            {
+                int once = PlayerLevelHelper.GmLevelUpOnce(unit);
+                if (once <= 0)
+                {
+                    break;
+                }
+
+                gained += once;
+            }
+
             if (gained <= 0)
             {
                 response.Error = ErrorCode.ERR_GMLevelUpError;
@@ -25,7 +43,7 @@ namespace ET.Server
             int newLevel = numeric.GetAsInt(NumericType.Level);
             response.NewLevel = newLevel;
             response.Message =
-                $"升至 {newLevel} 级；可用属性点={numeric.GetAsInt(NumericType.RemainingAttributePoints)}，可用技能点={numeric.GetAsInt(NumericType.RemainingSkillPoints)}";
+                $"升 {gained} 级，当前 {newLevel} 级；可用属性点={numeric.GetAsInt(NumericType.RemainingAttributePoints)}，可用技能点={numeric.GetAsInt(NumericType.RemainingSkillPoints)}";
             await ETTask.CompletedTask;
         }
     }

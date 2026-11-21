@@ -2,6 +2,7 @@ using ET;
 using UnityEngine;
 using UnityEngine.UI;
 using XEngine.UI;
+using TMPro;
 
 namespace ET.Client
 {
@@ -10,6 +11,7 @@ namespace ET.Client
     {
         public Slider m_sliderHeadHP;
         public Slider m_sliderHeadMP;
+        public Slider m_sliderExp;
         public Slider m_sliderHP;
         public Slider m_sliderMP;
         public Button m_btnBag;

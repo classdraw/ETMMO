@@ -14,29 +14,27 @@ namespace ET
         /// <summary>1 级角色初始未消耗技能点。</summary>
         public const int InitialSkillPoints = 1;
 
-        /// <summary>从当前 <paramref name="currentLevel"/> 升到下一级所需端游 Base EXP（rAthena pre-re BaseExp 表）。</summary>
-        /// <summary>rAthena pre-re <c>BaseExp</c>：下标 <c>L-1</c> 表示 L 级→L+1 级所需端游经验（当前上限 30 级，用到 L=1..29）。</summary>
-        [StaticField]
-        private static readonly int[] BaseExpToNextLevel =
-        {
-            9, 16, 25, 36, 77, 112, 153, 200, 253, 320,
-            385, 490, 585, 700, 830, 970, 1120, 1260, 1420, 1620,
-            1860, 1990, 2240, 2504, 2950, 3426, 3934, 4474, 6889,
-        };
-
+        /// <summary>配置表 <see cref="ExpConfig"/> 的 Id 与当前等级一致，表示该级升到下一级所需端游 Base EXP。</summary>
         public static bool CanLevelUp(int currentLevel)
         {
-            return currentLevel >= 1 && currentLevel < MaxBaseLevel && currentLevel <= BaseExpToNextLevel.Length;
+            if (currentLevel < 1 || currentLevel >= MaxBaseLevel)
+            {
+                return false;
+            }
+
+            ExpConfigCategory category = ExpConfigCategory.Instance;
+            return category != null && category.Contain(currentLevel);
         }
 
         public static int GetClassicBaseExpToNext(int currentLevel)
         {
-            if (currentLevel < 1 || currentLevel > BaseExpToNextLevel.Length)
+            ExpConfigCategory category = ExpConfigCategory.Instance;
+            if (category == null || !category.Contain(currentLevel))
             {
                 return int.MaxValue;
             }
 
-            return BaseExpToNextLevel[currentLevel - 1];
+            return category.Get(currentLevel).NeedExp;
         }
 
         /// <summary>本项目：从 <paramref name="currentLevel"/> 升到 <c>currentLevel+1</c> 所需经验。</summary>
@@ -61,6 +59,41 @@ namespace ET
         public static int GetSkillPointsOnReachLevel(int newLevel)
         {
             return newLevel >= 2 ? 1 : 0;
+        }
+
+        /// <summary>RO 经典：属性当前值为 <paramref name="currentStatValue"/> 时再 +1 所需属性点（⌊(V-1)/10⌋+2）。</summary>
+        public static int GetAttributePointCostToIncrease(int currentStatValue)
+        {
+            if (currentStatValue < 1)
+            {
+                currentStatValue = 1;
+            }
+
+            return (currentStatValue - 1) / 10 + 2;
+        }
+
+        /// <summary>从 <paramref name="statAtStart"/> 起连续加 <paramref name="increaseCount"/> 点属性所消耗的总属性点。</summary>
+        public static int ComputeAttributePointCostForIncreaseRange(int statAtStart, int increaseCount)
+        {
+            if (increaseCount <= 0)
+            {
+                return 0;
+            }
+
+            if (statAtStart < 1)
+            {
+                statAtStart = 1;
+            }
+
+            int total = 0;
+            int value = statAtStart;
+            for (int i = 0; i < increaseCount; i++)
+            {
+                total += GetAttributePointCostToIncrease(value);
+                value++;
+            }
+
+            return total;
         }
 
         /// <summary>创角 / 补档：假定从未分配属性点时，<paramref name="level"/> 级应有的剩余属性点。</summary>

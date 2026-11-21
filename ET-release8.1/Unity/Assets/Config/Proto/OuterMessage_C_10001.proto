@@ -860,6 +860,7 @@ message M2C_GMSetHPSPFull // ILocationResponse
 message C2M_GMLevelUp // ILocationRequest
 {
 	int32 RpcId = 1;
+	int32 Count = 2;
 }
 
 message M2C_GMLevelUp // ILocationResponse
@@ -882,5 +883,23 @@ message M2C_GMAddBaseExp // ILocationResponse
 	int32 Error = 2;
 	string Message = 3;
 	int32 LevelsGained = 4;
+}
+// ResponseType M2C_CommitAttributePoints
+message C2M_CommitAttributePoints // ILocationRequest
+{
+	int32 RpcId = 1;
+	int32 DeltaStr = 2;
+	int32 DeltaAgi = 3;
+	int32 DeltaVit = 4;
+	int32 DeltaInt = 5;
+	int32 DeltaDex = 6;
+	int32 DeltaLuk = 7;
+}
+
+message M2C_CommitAttributePoints // ILocationResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
 }
 //////////////////////相关GM///////////////////////////////////////////

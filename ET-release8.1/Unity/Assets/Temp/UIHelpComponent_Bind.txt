@@ -32,6 +32,8 @@ namespace ET.Client
 		public GameObject m_goP2;
 		public Button m_btnP2SetSkillLevel;
 		public Button m_btnP2SetHPSPFull;
+		public Button m_btnP2AddExp;
+		public Button m_btnP2AddLevel;
 		public GameObject m_goP3;
 		public Button m_btnP3bag;
 		public Button m_btnP3addItem;
@@ -86,15 +88,19 @@ namespace ET.Client
 			self.m_btnP2SetSkillLevel.onClick.AddListener(() => { self.OnP2SetSkillLevel(); });
 			self.m_btnP2SetHPSPFull = m_bindComponent.GetComponent<Button>(19);
 			self.m_btnP2SetHPSPFull.onClick.AddListener(() => { self.OnP2SetHPSPFull(); });
-			self.m_goP3 = m_bindComponent.GetGameObject(20);
-			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnP2AddExp = m_bindComponent.GetComponent<Button>(20);
+			self.m_btnP2AddExp.onClick.AddListener(() => { self.OnP2AddExp(); });
+			self.m_btnP2AddLevel = m_bindComponent.GetComponent<Button>(21);
+			self.m_btnP2AddLevel.onClick.AddListener(() => { self.OnP2AddLevel(); });
+			self.m_goP3 = m_bindComponent.GetGameObject(22);
+			self.m_btnP3bag = m_bindComponent.GetComponent<Button>(23);
 			self.m_btnP3bag.onClick.AddListener(() => { self.OnP3bag(); });
-			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(22);
+			self.m_btnP3addItem = m_bindComponent.GetComponent<Button>(24);
 			self.m_btnP3addItem.onClick.AddListener(() => { self.OnP3addItem(); });
-			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(23);
+			self.m_btnP3removeItem = m_bindComponent.GetComponent<Button>(25);
 			self.m_btnP3removeItem.onClick.AddListener(() => { self.OnP3removeItem(); });
-			self.m_goP4 = m_bindComponent.GetGameObject(24);
-			self.m_btnGM = m_bindComponent.GetComponent<Button>(25);
+			self.m_goP4 = m_bindComponent.GetGameObject(26);
+			self.m_btnGM = m_bindComponent.GetComponent<Button>(27);
 			self.m_btnGM.onClick.AddListener(() => { self.OnGM(); });
 		}
 
@@ -160,6 +166,14 @@ namespace ET.Client
 		}
 
 		public static void OnP2SetHPSPFull(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnP2AddExp(this UIHelpComponent self)
+		{
+		}
+
+		public static void OnP2AddLevel(this UIHelpComponent self)
 		{
 		}
 

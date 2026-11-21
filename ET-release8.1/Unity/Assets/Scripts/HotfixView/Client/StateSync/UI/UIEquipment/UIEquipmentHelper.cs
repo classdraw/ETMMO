@@ -17,9 +17,19 @@ namespace ET.Client
             }
 
             UIComponent uiComponent = scene.GetComponent<UIComponent>();
-            if (uiComponent?.Get(UIType.UIEquipment) != null)
+            UI existing = uiComponent?.Get(UIType.UIEquipment);
+            if (existing != null)
             {
-                await UIHelper.Remove(scene, UIType.UIEquipment);
+                UIEquipmentComponent equipment = existing.GetComponent<UIEquipmentComponent>();
+                if (equipment != null)
+                {
+                    await equipment.RequestCloseAsync();
+                }
+                else
+                {
+                    await UIHelper.Remove(scene, UIType.UIEquipment);
+                }
+
                 return;
             }
 

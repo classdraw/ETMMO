@@ -22,13 +22,14 @@ namespace ET.Client
             UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
             self.m_sliderHeadHP = m_bindComponent.GetComponent<Slider>(0);
             self.m_sliderHeadMP = m_bindComponent.GetComponent<Slider>(1);
-            self.m_sliderHP = m_bindComponent.GetComponent<Slider>(2);
-            self.m_sliderMP = m_bindComponent.GetComponent<Slider>(3);
-            self.m_btnBag = m_bindComponent.GetComponent<Button>(4);
+            self.m_sliderExp = m_bindComponent.GetComponent<Slider>(2);
+            self.m_sliderHP = m_bindComponent.GetComponent<Slider>(3);
+            self.m_sliderMP = m_bindComponent.GetComponent<Slider>(4);
+            self.m_btnBag = m_bindComponent.GetComponent<Button>(5);
             self.m_btnBag.onClick.AddListener(() => { self.OnBag(); });
-            self.m_btnEquipment = m_bindComponent.GetComponent<Button>(5);
+            self.m_btnEquipment = m_bindComponent.GetComponent<Button>(6);
             self.m_btnEquipment.onClick.AddListener(() => { self.OnEquipment(); });
-            self.m_btnSkill = m_bindComponent.GetComponent<Button>(6);
+            self.m_btnSkill = m_bindComponent.GetComponent<Button>(7);
             self.m_btnSkill.onClick.AddListener(() => { self.OnSkill(); });
 
             self.m_joystick = self.GetParent<UI>().GameObject.GetComponentInChildren<JoystickCtrl>(true);
@@ -89,7 +90,10 @@ namespace ET.Client
             long sp = numericComponent[NumericType.Sp];
             long maxHp = GetDisplayMax(numericComponent, NumericType.MaxHp, NumericType.MaxHpBase, hp);
             long maxSp = GetDisplayMax(numericComponent, NumericType.MaxSp, NumericType.MaxSpBase, sp);
+            int level = numericComponent.GetAsInt(NumericType.Level);
+            long exp = numericComponent[NumericType.EXP];
             ApplyHpAndSpToSliders(self, hp, sp, maxHp, maxSp);
+            ApplyExpToSlider(self, level, exp);
         }
 
         public static void RefreshHpMpSlider(this UIMainComponent self) => self.RefreshHpAndSp();
@@ -102,6 +106,18 @@ namespace ET.Client
             SetRatioSlider(self.m_sliderHeadMP, spRatio);
             SetResourceSlider(self.m_sliderHP, hp, maxHp);
             SetResourceSlider(self.m_sliderMP, sp, maxSp);
+        }
+
+        private static void ApplyExpToSlider(UIMainComponent self, int level, long exp)
+        {
+            if (!RoClassicLevelHelper.CanLevelUp(level))
+            {
+                SetRatioSlider(self.m_sliderExp, 1f);
+                return;
+            }
+
+            int need = RoClassicLevelHelper.GetNeedExpToNext(level);
+            SetResourceSlider(self.m_sliderExp, exp, need);
         }
 
         private static void SetRatioSlider(Slider slider, float ratio)

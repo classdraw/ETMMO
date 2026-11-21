@@ -61,4 +61,22 @@ namespace ET.Client
             UIMainHpMpNumericWatcherHelper.RefreshIfMyUnit(unit);
         }
     }
+
+    [NumericWatcher(SceneType.Current, NumericType.EXP)]
+    public class NumericWatcher_UIMain_Exp : INumericWatcher
+    {
+        public void Run(Unit unit, NumbericChange args)
+        {
+            UIMainHpMpNumericWatcherHelper.RefreshIfMyUnit(unit);
+        }
+    }
+
+    [NumericWatcher(SceneType.Current, NumericType.Level)]
+    public class NumericWatcher_UIMain_Level : INumericWatcher
+    {
+        public void Run(Unit unit, NumbericChange args)
+        {
+            UIMainHpMpNumericWatcherHelper.RefreshIfMyUnit(unit);
+        }
+    }
 }
