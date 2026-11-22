@@ -60,9 +60,7 @@ Shader "Custom/SR_Character"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "../../Scripts/ThirdParty/FakeLight/ShaderLibrary/FakeLightEnv.hlsl"
 
-            #if defined(_SSCS_RECEIVE)
-                #include "SR_CloudShadowsIntegration.hlsl"
-            #endif
+            #include "SR_CloudShadowsIntegration.hlsl"
             #include "SR_CharacterCommon.hlsl"
             #include "SR_RealtimeSceneShadowLighting.hlsl"
 
@@ -110,9 +108,7 @@ Shader "Custom/SR_Character"
                 color.rgb = SR_ApplySpriteRealtimeLighting(color.rgb, mainLight, normalWS, bakedGI);
                 color.rgb += GetFakeLight(input.positionWS, normalWS);
 
-                #if defined(_SSCS_RECEIVE)
-                    color.rgb = ApplySSCSCloudShadow(color.rgb, input.positionWS, normalWS);
-                #endif
+                color.rgb = ApplySSCSCloudShadow(color.rgb, input.positionWS, normalWS);
 
                 color.rgb = SR_ApplySceneShadowOnLit(
                     color.rgb,

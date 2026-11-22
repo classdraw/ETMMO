@@ -23,6 +23,11 @@ public static class UnityEditorInspectorDrawHelper
 
     static void UpdateBindButtons()
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            return;
+        }
+
         // 获取所有Inspector窗口
         var inspectorWindows = Resources.FindObjectsOfTypeAll<EditorWindow>()
             .Where(w => w.GetType().Name == "InspectorWindow")

@@ -86,6 +86,7 @@ namespace SSCS {
             public static int BlendDst = Shader.PropertyToID("_BlendDst");
 
             public static int BoundsData = Shader.PropertyToID("_BoundsData");
+            public static int ReceiveActive = Shader.PropertyToID("_SSCS_ReceiveActive");
 
             public const string SKW_CLOUDS_THICK = "_CLOUDS_THICK";
             public const string SKW_CLOUDS_ANISOTROPY = "_CLOUDS_ANISOTROPY";
@@ -109,6 +110,11 @@ namespace SSCS {
 
         public static bool HasActiveInstances => s_ActiveInstances.Count > 0;
 
+        /// <summary>
+        /// Orthographic Game cameras draw cloud overlays in URP (after ProPixelizer). Keeps endCameraRendering for Scene View.
+        /// </summary>
+        public static bool DrawOverlayViaRenderFeature = true;
+
         [NonSerialized]
         public Color32[] maskColors;
         [NonSerialized]
@@ -117,6 +123,15 @@ namespace SSCS {
         private void OnValidate() {
             UpdateMaterialProperties();
             SyncFeatureKeywords();
+        }
+
+        private void Update() {
+            if (!Application.isPlaying || !isActiveAndEnabled || profile == null) {
+                return;
+            }
+
+            SyncGlobalShaderProperties();
+            SyncGlobalLightAndWind(true);
         }
 
         private void OnEnable() {
@@ -141,6 +156,7 @@ namespace SSCS {
             Shader.DisableKeyword(ShaderParams.SKW_RECEIVE);
             Shader.DisableKeyword(ShaderParams.SKW_SHOW_CLOUDS);
             Shader.DisableKeyword(ShaderParams.SKW_SHOW_SHADOWS);
+            Shader.SetGlobalFloat(ShaderParams.ReceiveActive, 0f);
             RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
             RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
             Camera.onPreCull -= OnPreCullBuiltIn;
@@ -148,34 +164,41 @@ namespace SSCS {
         }
 
         private void OnBeginCameraRendering(ScriptableRenderContext context, Camera cam) {
-            RenderForCamera(cam, afterCamera: false);
+            RenderForCamera(cam, afterCamera: false, cmd: null);
         }
 
         private void OnEndCameraRendering(ScriptableRenderContext context, Camera cam) {
-            RenderForCamera(cam, afterCamera: true);
+            if (DrawOverlayViaRenderFeature
+                && GraphicsSettings.currentRenderPipeline != null
+                && cam.orthographic
+                && cam.cameraType == CameraType.Game) {
+                return;
+            }
+            RenderForCamera(cam, afterCamera: true, cmd: null);
         }
 
         private void OnPreCullBuiltIn(Camera cam) {
             if (GraphicsSettings.currentRenderPipeline != null) {
                 return;
             }
-            RenderForCamera(cam, afterCamera: false);
+            RenderForCamera(cam, afterCamera: false, cmd: null);
         }
 
         private void OnPostRenderBuiltIn(Camera cam) {
             if (GraphicsSettings.currentRenderPipeline != null) {
                 return;
             }
-            RenderForCamera(cam, afterCamera: true);
+            RenderForCamera(cam, afterCamera: true, cmd: null);
         }
 
         internal static void RenderAllForCamera(Camera cam, CommandBuffer cmd) {
+            bool afterCamera = cam.orthographic;
             for (int i = 0; i < s_ActiveInstances.Count; i++) {
-                s_ActiveInstances[i].RenderForCamera(cam, afterCamera: cam.orthographic);
+                s_ActiveInstances[i].RenderForCamera(cam, afterCamera, cmd);
             }
         }
 
-        void RenderForCamera(Camera cam, bool afterCamera) {
+        void RenderForCamera(Camera cam, bool afterCamera, CommandBuffer cmd) {
             if (profile == null) return;
             if (cam.targetTexture != null && cam.targetTexture.format == RenderTextureFormat.Depth) return;
             if ((cameraLayerMask & (1 << cam.gameObject.layer)) == 0) return;
@@ -210,7 +233,7 @@ namespace SSCS {
                     layer = gameObject.layer,
                     worldBounds = globalBounds
                 };
-                RenderEffect(cam, matShadows, ref m, ref rp, isCloudsPass: false);
+                RenderEffect(cam, matShadows, ref m, ref rp, isCloudsPass: false, cmd);
             }
             if (profile.showClouds && profile.coverage > 0 && matClouds != null) {
                 RenderParams rp = new RenderParams(matClouds) {
@@ -218,7 +241,7 @@ namespace SSCS {
                     layer = gameObject.layer,
                     worldBounds = globalBounds
                 };
-                RenderEffect(cam, matClouds, ref m, ref rp, isCloudsPass: true);
+                RenderEffect(cam, matClouds, ref m, ref rp, isCloudsPass: true, cmd);
             }
         }
 
@@ -236,7 +259,7 @@ namespace SSCS {
             }
         }
 
-        void RenderEffect(Camera cam, Material mat, ref Matrix4x4 m, ref RenderParams rp, bool isCloudsPass) {
+        void RenderEffect(Camera cam, Material mat, ref Matrix4x4 m, ref RenderParams rp, bool isCloudsPass, CommandBuffer cmd) {
 
             if (mat == null) return;
 
@@ -277,7 +300,12 @@ namespace SSCS {
             windOffset1.w = 1f + profile.contrast;
             Shader.SetGlobalVector(ShaderParams.Layer1CloudsData2, windOffset1);
 
-            Graphics.RenderMesh(rp, fullscreenMesh, 0, m);
+            if (cmd != null) {
+                cmd.SetViewProjectionMatrices(cam.worldToCameraMatrix, cam.projectionMatrix);
+                cmd.DrawMesh(fullscreenMesh, m, mat, 0);
+            } else {
+                Graphics.RenderMesh(rp, fullscreenMesh, 0, m);
+            }
         }
 
         void SyncGlobalLightAndWind(bool animateWind) {
@@ -540,6 +568,7 @@ namespace SSCS {
                 Shader.DisableKeyword(ShaderParams.SKW_RECEIVE);
                 Shader.DisableKeyword(ShaderParams.SKW_SHOW_CLOUDS);
                 Shader.DisableKeyword(ShaderParams.SKW_SHOW_SHADOWS);
+                Shader.SetGlobalFloat(ShaderParams.ReceiveActive, 0f);
                 return;
             }
 
@@ -552,6 +581,7 @@ namespace SSCS {
             bool shaderIntegrationShadows = showShadows
                 && shadowApplication == CloudShadowApplication.ShaderIntegration;
             SetGlobalKeyword(ShaderParams.SKW_RECEIVE, shaderIntegrationShadows);
+            Shader.SetGlobalFloat(ShaderParams.ReceiveActive, shaderIntegrationShadows ? 1f : 0f);
         }
 
         static void SetGlobalKeyword(string keyword, bool enabled) {

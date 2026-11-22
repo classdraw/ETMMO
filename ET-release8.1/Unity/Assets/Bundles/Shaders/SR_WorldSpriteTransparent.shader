@@ -49,9 +49,7 @@ Shader "Custom/SR_WorldSpriteTransparent"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "../../Scripts/ThirdParty/FakeLight/ShaderLibrary/FakeLightEnv.hlsl"
 
-            #if defined(_SSCS_RECEIVE)
-                #include "SR_CloudShadowsIntegration.hlsl"
-            #endif
+            #include "SR_CloudShadowsIntegration.hlsl"
             #include "SR_RealtimeSceneShadowLighting.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
@@ -133,9 +131,7 @@ Shader "Custom/SR_WorldSpriteTransparent"
                 half3 litColor = SR_ApplySpriteRealtimeLighting(albedo, mainLight, normalWS, bakedGI);
                 litColor += GetFakeLight(input.positionWS, normalWS);
 
-                #if defined(_SSCS_RECEIVE)
-                    litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
-                #endif
+                litColor = ApplySSCSCloudShadow(litColor, input.positionWS, normalWS);
 
                 litColor = SR_ApplySceneShadowOnLit(
                     litColor,

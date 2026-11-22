@@ -1,6 +1,8 @@
 #ifndef SSCS_INPUT
 #define SSCS_INPUT
 
+    float _SSCS_ReceiveActive;
+
     float3 _SSCS_LightDir;
     #define LIGHT_DIR _SSCS_LightDir
 

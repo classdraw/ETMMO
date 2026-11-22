@@ -28,17 +28,17 @@ MonoBehaviour:
   shadowTintColor: {r: 0, g: 0, b: 0, a: 1}
   shadowOpacity: 1.42
   topDownOnly: 1
-  improvedNormalReconstruction: 1
+  improvedNormalReconstruction: 0
   normalBias: 0.3
   shadowMinAltitude: -10000
   preserveDirectionalShadows: 0
-  altitude: 5
-  scale: 3
+  altitude: 12
+  scale: 7.66
   offset: {x: 0.34, y: 0}
-  contrast: 1.18
-  edgeNoise: 0.671
-  edgeAnimationSpeed: 2
-  windSpeed: {x: 0.05, y: 0, z: 0.1}
+  contrast: 0.53
+  edgeNoise: 0.6
+  edgeAnimationSpeed: 1
+  windSpeed: {x: 0.02, y: 0, z: 0.04}
   clouds2Texture: {fileID: 2800000, guid: 024c8f47df13a4764a8bce082bbbc7e1, type: 3}
   cloudsTexture: {fileID: 2800000, guid: 024c8f47df13a4764a8bce082bbbc7e1, type: 3}
   cloudsBumpMap: {fileID: 2800000, guid: 69ab017f085d94a82852efbea9277c6e, type: 3}

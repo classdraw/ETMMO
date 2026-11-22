@@ -7,6 +7,7 @@
 #include "../../Art/ProPixelizer/SRP/ShaderLibrary/PixelUtils.hlsl"
 #include "SB_ProPixelizerColorGrade.hlsl"
 #include "SR_RealtimeSceneShadowLighting.hlsl"
+#include "SR_CloudShadowsIntegration.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/Shaders/Terrain/TerrainLitPasses.hlsl"
 
 struct SBVaryings
@@ -107,6 +108,7 @@ void ProPixelizerTerrainFragment(
     SBVaryings sbInput = SB_BuildVaryingsFromTerrain(IN, inputData);
     half3 specColor = lerp(half3(0.04h, 0.04h, 0.04h), albedo, metallic);
     half3 color = SB_ShadeProPixelizer(sbInput, albedo, inputData.normalWS, half3(0, 0, 0), smoothness, specColor);
+    color = ApplySSCSCloudShadow(color, sbInput.positionWS, inputData.normalWS);
 
     float alphaOut;
     float2 ditherUV;

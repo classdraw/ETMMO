@@ -6,6 +6,7 @@
 #include "SB_ProPixelizerColorGrade.hlsl"
 #include "SB_ProPixelizerUberInput.hlsl"
 #include "SR_RealtimeSceneShadowLighting.hlsl"
+#include "SR_CloudShadowsIntegration.hlsl"
 
 half SB_SampleMaterialAlpha(float2 uv, half4 baseSample)
 {
@@ -103,6 +104,7 @@ half4 SB_Frag(SBVaryings input) : SV_Target
     emission += input.color.rgb * _EmissiveVertexColorWeight * _EmissionColor.rgb;
 
     half3 color = SB_ShadeProPixelizer(input, albedo, normalWS, emission, smoothness, specColor);
+    color = ApplySSCSCloudShadow(color, input.positionWS, normalWS);
 
     float alphaOut;
     float2 ditherUV;

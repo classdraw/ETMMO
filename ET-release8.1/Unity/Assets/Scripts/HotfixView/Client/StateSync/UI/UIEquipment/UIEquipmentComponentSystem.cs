@@ -49,8 +49,8 @@ namespace ET.Client
 			self.m_btnDexLeft.onClick.AddListener(() => { self.OnDexLeft(); });
 			self.m_textLukValue = m_bindComponent.GetComponent<Text>(21);
 			self.m_textNeedLukValue = m_bindComponent.GetComponent<Text>(22);
-			self.m_btnLukAdd = m_bindComponent.GetComponent<Button>(23);
-			self.m_btnLukAdd.onClick.AddListener(() => { self.OnLukRight(); });
+            self.m_btnLukRight = m_bindComponent.GetComponent<Button>(23);
+            self.m_btnLukRight.onClick.AddListener(() => { self.OnLukRight(); });
 			self.m_btnLukLeft = m_bindComponent.GetComponent<Button>(24);
 			self.m_btnLukLeft.onClick.AddListener(() => { self.OnLukLeft(); });
 			self.m_textPoint = m_bindComponent.GetComponent<Text>(25);
@@ -70,6 +70,8 @@ namespace ET.Client
 			self.m_btnClose.onClick.AddListener(() => { self.OnClose(); });
 			self.m_btnLeftOption = m_bindComponent.GetComponent<Button>(38);
 			self.m_btnLeftOption.onClick.AddListener(() => { self.OnLeftOption(); });
+
+            self.EnsureStatAdjustButtonsVisible();
 			
             self.ClearPendingAllocation();
             self.SetStateWindowExpanded(true);
@@ -308,7 +310,7 @@ namespace ET.Client
                 RoClassicLevelHelper.GetAttributePointCostToIncrease(intell + self.PendingInt), allocatableRemaining);
             SetStatAdjustButtons(self.m_btnDexLeft, self.m_btnDexRight, self.PendingDex,
                 RoClassicLevelHelper.GetAttributePointCostToIncrease(dex + self.PendingDex), allocatableRemaining);
-            SetStatAdjustButtons(self.m_btnLukLeft, self.m_btnLukAdd, self.PendingLuk,
+            SetStatAdjustButtons(self.m_btnLukLeft, self.m_btnLukRight, self.PendingLuk,
                 RoClassicLevelHelper.GetAttributePointCostToIncrease(luk + self.PendingLuk), allocatableRemaining);
 
             RefreshDerivedCombatDisplay(self, myUnit, numericComponent);
@@ -386,16 +388,42 @@ namespace ET.Client
             text.text = value.ToString();
         }
 
+        private static void EnsureStatAdjustButtonsVisible(this UIEquipmentComponent self)
+        {
+            EnsureButtonVisible(self.m_btnStrLeft);
+            EnsureButtonVisible(self.m_btnStrRight);
+            EnsureButtonVisible(self.m_btnAgiLeft);
+            EnsureButtonVisible(self.m_btnAgiRight);
+            EnsureButtonVisible(self.m_btnVitLeft);
+            EnsureButtonVisible(self.m_btnVitRight);
+            EnsureButtonVisible(self.m_btnIntLeft);
+            EnsureButtonVisible(self.m_btnIntRight);
+            EnsureButtonVisible(self.m_btnDexLeft);
+            EnsureButtonVisible(self.m_btnDexRight);
+            EnsureButtonVisible(self.m_btnLukLeft);
+            EnsureButtonVisible(self.m_btnLukRight);
+        }
+
+        private static void EnsureButtonVisible(Button button)
+        {
+            if (button != null && !button.gameObject.activeSelf)
+            {
+                button.gameObject.SetActive(true);
+            }
+        }
+
         private static void SetStatAdjustButtons(
             Button leftButton, Button rightButton, int pendingDelta, int nextCost, int allocatableRemaining)
         {
             if (leftButton != null)
             {
+                EnsureButtonVisible(leftButton);
                 leftButton.interactable = pendingDelta > 0;
             }
 
             if (rightButton != null)
             {
+                EnsureButtonVisible(rightButton);
                 rightButton.interactable = allocatableRemaining >= nextCost;
             }
         }

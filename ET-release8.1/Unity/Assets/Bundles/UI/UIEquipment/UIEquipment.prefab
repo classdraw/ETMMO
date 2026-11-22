@@ -7466,7 +7466,7 @@ GameObject:
   - component: {fileID: 3486488233185264063}
   - component: {fileID: 9094342210376451210}
   m_Layer: 5
-  m_Name: m_btnLukAdd
+  m_Name: m_btnLukRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

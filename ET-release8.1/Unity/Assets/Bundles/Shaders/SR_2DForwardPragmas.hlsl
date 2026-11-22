@@ -4,7 +4,7 @@
 // 2D Forward：实时光（主光 + ShadowMap）与 Scene Shadow RT 叠加；云阴影 / FakeLight 可选。
 #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
 #pragma multi_compile_fragment _ _SHADOWS_SOFT
-#pragma multi_compile _ _SSCS_RECEIVE
+// Cloud shadows: controlled at runtime via global _SSCS_ReceiveActive (see SR_CloudShadowsIntegration.hlsl).
 #pragma multi_compile _ _FAKE_ADDITIONAL_LIGHTS
 #pragma shader_feature_local _ _RECEIVE_SHADOWS_OFF
 

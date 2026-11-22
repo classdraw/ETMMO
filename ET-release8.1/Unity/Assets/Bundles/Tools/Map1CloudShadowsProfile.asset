@@ -24,16 +24,16 @@ MonoBehaviour:
   cloudsOpacity: 0.9
   distanceFade: 2500
   showShadows: 1
-  shadowCoverage: 0.4
+  shadowCoverage: 0.52
   shadowTintColor: {r: 0, g: 0, b: 0, a: 1}
-  shadowOpacity: 0.85
+  shadowOpacity: 1.1
   topDownOnly: 1
   improvedNormalReconstruction: 0
   normalBias: 0.3
   shadowMinAltitude: -10000
   preserveDirectionalShadows: 0
-  altitude: 8
-  scale: 1
+  altitude: 12
+  scale: 2.5
   offset: {x: 0.3, y: 0}
   contrast: 1.5
   edgeNoise: 0.3

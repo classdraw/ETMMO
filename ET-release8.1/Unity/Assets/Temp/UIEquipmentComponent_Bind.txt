@@ -35,7 +35,7 @@ namespace ET.Client
 		public Button m_btnDexLeft;
 		public Text m_textLukValue;
 		public Text m_textNeedLukValue;
-		public Button m_btnLukAdd;
+		public Button m_btnLukRight;
 		public Button m_btnLukLeft;
 		public Text m_textPoint;
 		public Text m_textPhysicAttack;
@@ -97,8 +97,8 @@ namespace ET.Client
 			self.m_btnDexLeft.onClick.AddListener(() => { self.OnDexLeft(); });
 			self.m_textLukValue = m_bindComponent.GetComponent<Text>(21);
 			self.m_textNeedLukValue = m_bindComponent.GetComponent<Text>(22);
-			self.m_btnLukAdd = m_bindComponent.GetComponent<Button>(23);
-			self.m_btnLukAdd.onClick.AddListener(() => { self.OnLukAdd(); });
+			self.m_btnLukRight = m_bindComponent.GetComponent<Button>(23);
+			self.m_btnLukRight.onClick.AddListener(() => { self.OnLukRight(); });
 			self.m_btnLukLeft = m_bindComponent.GetComponent<Button>(24);
 			self.m_btnLukLeft.onClick.AddListener(() => { self.OnLukLeft(); });
 			self.m_textPoint = m_bindComponent.GetComponent<Text>(25);
@@ -165,7 +165,7 @@ namespace ET.Client
 		{
 		}
 
-		public static void OnLukAdd(this UIEquipmentComponent self)
+		public static void OnLukRight(this UIEquipmentComponent self)
 		{
 		}
 

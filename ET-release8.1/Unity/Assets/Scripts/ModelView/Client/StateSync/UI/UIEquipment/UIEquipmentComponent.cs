@@ -31,7 +31,7 @@ namespace ET.Client
         public Button m_btnDexLeft;
         public Text m_textLukValue;
         public Text m_textNeedLukValue;
-        public Button m_btnLukAdd;
+        public Button m_btnLukRight;
         public Button m_btnLukLeft;
         public Text m_textPoint;
         public Text m_textPhysicAttack;
