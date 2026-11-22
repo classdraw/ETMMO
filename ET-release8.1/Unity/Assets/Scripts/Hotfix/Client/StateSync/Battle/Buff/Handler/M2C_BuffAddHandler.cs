@@ -10,7 +10,11 @@ namespace ET.Client
                 return;
             }
 
-            Log.Console($" 玩家 {message.UnitId} 新增buff Id {message.BuffData.Id} ConfigId {message.BuffData.ConfigId} ");
+            if (StateSyncDebugLog.BuffEnabled)
+            {
+                StateSyncDebugLog.LogBuff(
+                    $" 玩家 {message.UnitId} 新增buff Id {message.BuffData.Id} ConfigId {message.BuffData.ConfigId} ");
+            }
             Scene currentScene = root.CurrentScene();
             UnitComponent unitComponent = currentScene?.GetComponent<UnitComponent>();
             if (unitComponent == null)

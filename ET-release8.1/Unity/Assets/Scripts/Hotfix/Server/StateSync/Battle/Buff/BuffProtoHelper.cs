@@ -20,6 +20,7 @@ namespace ET.Server
             {
                 AddUnitId = buff.AddUnitId,
                 AddCastConfigId = buff.AddCastConfigId,
+                ConfigLevel = buff.ConfigLevel,
                 TickTime = buff.TickTime,
                 TickBeginTime = buff.TickBeginTime,
                 Layer = buff.Layer,

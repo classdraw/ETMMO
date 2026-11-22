@@ -5,7 +5,11 @@ namespace ET.Client
     {
         protected override async ETTask Run(Scene root, M2C_BuffUpdate message)
         {
-            Log.Console($" 玩家 {message.UnitId} buffUpdate Id {message.BuffData.Id} ConfigId {message.BuffData.ConfigId} ");
+            if (StateSyncDebugLog.BuffEnabled)
+            {
+                StateSyncDebugLog.LogBuff(
+                    $" 玩家 {message.UnitId} buffUpdate Id {message.BuffData.Id} ConfigId {message.BuffData.ConfigId} ");
+            }
             UnitComponent unitComponent = root.GetComponent<UnitComponent>();
             if (unitComponent==null)
             {

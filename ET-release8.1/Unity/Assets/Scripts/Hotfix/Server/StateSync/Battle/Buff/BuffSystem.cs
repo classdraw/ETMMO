@@ -65,6 +65,7 @@ namespace ET.Server
             self.Owner = null;
             self.AddUnitId = 0;
             self.AddCastConfigId = 0;
+            self.ConfigLevel = 0;
             self.CreateTime = 0;
             self.TickTime = 0;
             self.TickBeginTime = 0;
@@ -86,6 +87,11 @@ namespace ET.Server
         {
             self.AddComponent<ActionsTempComponent>();
             self.Owner = self.GetParent<BuffComponent>()?.GetParent<Unit>();
+            if (self.ConfigLevel <= 0)
+            {
+                self.ConfigLevel = SkillStatusComponentSystem.DefaultSkillLevel;
+            }
+
             if (self.ExpireTime > 0)
             {
                 self.SetExpireTime(self.ExpireTime);
@@ -105,7 +111,8 @@ namespace ET.Server
             self.TickBeginTime = 0;
             self.Layer = ClampLayer(firstAddLayer, self.Config.LayerLimit);
             self.SetTickTime(self.Config.TickTime);
-            self.SetExpireTime(self.Config.TotalTime > 0 ? now + self.Config.TotalTime : 0);
+            int durationMs = BuffConfigHelper.CalcTotalTimeMs(self.Config, self.ConfigLevel);
+            self.SetExpireTime(durationMs > 0 ? now + durationMs : 0);
         }
 
         /// <summary>
@@ -186,6 +193,7 @@ namespace ET.Server
             {
                 AddUnitId = self.AddUnitId,
                 AddCastConfigId = self.AddCastConfigId,
+                ConfigLevel = self.ConfigLevel,
                 TickTime = self.TickTime,
                 TickBeginTime = self.TickBeginTime,
                 Layer = self.Layer,
@@ -199,6 +207,7 @@ namespace ET.Server
             {
                 self.AddUnitId = 0;
                 self.AddCastConfigId = 0;
+                self.ConfigLevel = SkillStatusComponentSystem.DefaultSkillLevel;
                 self.TickTime = 0;
                 self.TickBeginTime = 0;
                 self.Layer = 0;
@@ -208,6 +217,9 @@ namespace ET.Server
             BuffExtraData extraData = MongoHelper.Deserialize<BuffExtraData>(bytes);
             self.AddUnitId = extraData.AddUnitId;
             self.AddCastConfigId = extraData.AddCastConfigId;
+            self.ConfigLevel = extraData.ConfigLevel > 0
+                ? extraData.ConfigLevel
+                : SkillStatusComponentSystem.DefaultSkillLevel;
             self.TickTime = extraData.TickTime;
             self.TickBeginTime = extraData.TickBeginTime;
             self.Layer = extraData.Layer;

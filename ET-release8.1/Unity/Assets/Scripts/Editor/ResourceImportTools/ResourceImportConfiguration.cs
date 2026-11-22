@@ -5,6 +5,19 @@ using UnityEngine;
 
 namespace ET
 {
+    public enum ImportPathMatchKind
+    {
+        FilenameStartsWith,
+        FilenameContains,
+        FilenameEndsWith,
+        DirectoryContains,
+        PathRegex,
+        FilenameEqual,
+        DirectoryStartsWith,
+        DirectoryEndsWith,
+        DirectoryEqual
+    }
+
     [Serializable]
     public class ImagePlatformOverride
     {
@@ -15,10 +28,24 @@ namespace ET
     }
 
     [Serializable]
+    public class ImageImportSpecialRule
+    {
+        public ImportPathMatchKind matchKind = ImportPathMatchKind.DirectoryContains;
+        public string pattern = string.Empty;
+        public ImageImportFieldApplyMask applyMask = new ImageImportFieldApplyMask();
+        public ImageImportTemplate settings = new ImageImportTemplate();
+    }
+
+    [Serializable]
     public class ImageImportTemplate
     {
-        public string name = "新模板";
+        public int applyMaskVersion = 1;
+        public ImageImportFieldApplyMask applyMask = new ImageImportFieldApplyMask();
+
+        public string name = "新组";
         public string[] folders = Array.Empty<string>();
+        public string[] ignoreFolders = Array.Empty<string>();
+        public ImageImportSpecialRule[] specialRules = Array.Empty<ImageImportSpecialRule>();
 
         public TextureImporterType textureType = TextureImporterType.Default;
         public TextureImporterShape textureShape = TextureImporterShape.Texture2D;
@@ -66,19 +93,71 @@ namespace ET
         };
     }
 
+    [Serializable]
+    public class ImageImportResolveResult
+    {
+        public ImageImportTemplate group;
+        public ImageImportSpecialRule matchedRule;
+    }
+
     [TEngine.Editor.FilePath("ProjectSettings/ResourceImportConfiguration.asset")]
     public class ResourceImportConfiguration : EditorScriptableSingleton<ResourceImportConfiguration>
     {
         public bool enableAutoApply = true;
+        public bool saveOnClose = true;
+        public string pathWhitelist = "DontProcess,Standard Assets,Plugins";
+
         public ImageImportTemplate[] imageTemplates = { CreateDefaultTemplate() };
 
         public static ImageImportTemplate CreateDefaultTemplate()
         {
             return new ImageImportTemplate
             {
+                applyMaskVersion = 1,
+                applyMask = new ImageImportFieldApplyMask(),
                 name = "默认图片",
-                folders = Array.Empty<string>()
+                folders = Array.Empty<string>(),
+                ignoreFolders = Array.Empty<string>(),
+                specialRules = Array.Empty<ImageImportSpecialRule>()
             };
+        }
+
+        public static ImageImportSpecialRule CreateDefaultSpecialRule()
+        {
+            return new ImageImportSpecialRule
+            {
+                matchKind = ImportPathMatchKind.DirectoryContains,
+                pattern = string.Empty,
+                settings = CreateRuleSettingsStub()
+            };
+        }
+
+        public static ImageImportTemplate CreateRuleSettingsStub()
+        {
+            var t = CreateDefaultTemplate();
+            t.folders = Array.Empty<string>();
+            t.ignoreFolders = Array.Empty<string>();
+            t.specialRules = Array.Empty<ImageImportSpecialRule>();
+            t.applyMask = new ImageImportFieldApplyMask();
+            t.applyMaskVersion = 1;
+            return t;
+        }
+
+        public static void MigrateApplyMask(ImageImportTemplate template)
+        {
+            if (template == null)
+            {
+                return;
+            }
+
+            template.applyMask ??= new ImageImportFieldApplyMask();
+            if (template.applyMaskVersion != 0)
+            {
+                return;
+            }
+
+            template.applyMask.SetAll(true);
+            template.applyMaskVersion = 1;
         }
     }
 
@@ -93,7 +172,11 @@ namespace ET
 
         private static void OnEditorQuitting()
         {
-            ResourceImportConfiguration.Save(true);
+            var config = ResourceImportConfiguration.Instance;
+            if (config != null && config.saveOnClose)
+            {
+                ResourceImportConfiguration.Save(true);
+            }
         }
     }
 }

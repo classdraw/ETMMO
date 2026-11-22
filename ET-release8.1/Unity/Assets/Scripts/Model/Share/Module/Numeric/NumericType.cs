@@ -162,11 +162,13 @@
 	    public const int MAtkRandom = 1030;//魔法攻击随机浮动
 	    public const int MDefRandom = 1031;//魔法防御随机浮动
 
-
+	    /////////////////////////////////1050开始都是禁止逻辑////////////////////////////////////////
 	    public const int ForbidSkill = 1050;//禁止施法技能状态
 	    public const int ForbidMove = 1051;//禁止移动
 	    public const int ForbidRotation = 1052;//禁止朝向 只是禁用移动转向
-	    
+	    /////////////////////////////////1070开始都是debuff////////////////////////////////////////
+	    public const int Dizziness = 1070;//晕眩
+	    public const int Frozen = 1071;//冰冻
 
 	    public const int RemainingAttributePoints = 1100;//剩余属性点数
 	    public const int RemainingSkillPoints = 1101;//剩余技能点数

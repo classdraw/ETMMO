@@ -9,17 +9,18 @@ namespace ET.Server
 			int breakErr = unit.TryBreakCastingBeforeCast();
 			if (breakErr != ErrorCode.ERR_Success)
 			{
-				Log.Console($"[Move] 玩家 {unit.Id} 移动被拒绝，Error={breakErr}");
+				MoveLogHelper.LogMoveRejected(unit, breakErr);
 				unit.SendStop(breakErr);
 				return;
 			}
 
 			if (unit.IsForbidMove())
 			{
-				//某些状态禁止移动
+				MoveLogHelper.LogForbidMove(unit);
 				return;
 			}
 
+			MoveLogHelper.LogPathRequest(unit, message.Position);
 			unit.FindPathMoveToAsync(message.Position).Coroutine();
 			await ETTask.CompletedTask;
 		}

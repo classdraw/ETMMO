@@ -47,8 +47,29 @@ namespace ET.Server
             buffCreateInfo.ConfigId = configId;
             buffCreateInfo.AddUnitId = addUnitId;
             buffCreateInfo.AddCastConfigId = addCastConfigId;
+            buffCreateInfo.ConfigLevel = ResolveCastConfigLevel(self, addUnitId, addCastConfigId);
             buffCreateInfo.FirstLayer = firstLayer;
             return buffCreateInfo;
+        }
+
+        private static int ResolveCastConfigLevel(BuffComponent self, long addUnitId, int addCastConfigId)
+        {
+            if (addCastConfigId <= 0 || addUnitId <= 0)
+            {
+                return SkillStatusComponentSystem.DefaultSkillLevel;
+            }
+
+            Unit addUnit = self.Scene().GetComponent<UnitComponent>()?.Get(addUnitId);
+            SkillStatusComponent skillStatus = addUnit?.GetComponent<SkillStatusComponent>();
+            if (skillStatus == null || skillStatus.IsDisposed)
+            {
+                return SkillStatusComponentSystem.DefaultSkillLevel;
+            }
+
+            int level = skillStatus.GetSkillLevel(addCastConfigId);
+            return level >= SkillStatusComponentSystem.DefaultSkillLevel
+                ? level
+                : SkillStatusComponentSystem.DefaultSkillLevel;
         }
 
         public static bool CreateAndAdd(this ET.Server.BuffComponent self, int configId, long addUnitId, int addCastConfigId, int firstLayer = 0)
@@ -102,7 +123,7 @@ namespace ET.Server
             handledBuff = null;
             BuffConfig buffConfig = BuffConfigCategory.Instance.Get(buffCreateInfo.ConfigId);
             int configId = buffCreateInfo.ConfigId;
-            int totalTime = buffConfig.TotalTime;
+            int totalTime = BuffConfigHelper.CalcTotalTimeMs(buffConfig, buffCreateInfo.ConfigLevel);
             BuffCoverType coverType = (BuffCoverType)buffConfig.ConverType;
             Buff oldBuff = self.FindCoverTarget(configId, coverType, buffCreateInfo);
 
@@ -292,7 +313,13 @@ namespace ET.Server
 
         private static void NotifyBuffUpdate(this BuffComponent self, Buff buff)
         {
-            BuffNoticeHelper.SendBuffUpdate(buff.Owner, buff);
+            Unit owner = buff?.Owner;
+            if (owner != null && !owner.IsDisposed)
+            {
+                BuffLogHelper.LogUpdate(buff, owner);
+            }
+
+            BuffNoticeHelper.SendBuffUpdate(owner, buff);
         }
 
         private static void RegisterBuff(this BuffComponent self, Buff buff)
@@ -307,8 +334,7 @@ namespace ET.Server
             if (owner!=null&&!owner.IsDisposed)
             {
                 BuffNoticeHelper.SendBuffAdd(owner, buff);
-                //处理buff实体添加具体行为逻辑
-                      
+                BuffLogHelper.LogAdd(buff, owner);
                 buff.AddActions();//增加buff时行为处理
             }
         }
@@ -328,10 +354,9 @@ namespace ET.Server
                 Unit owner = buff.Owner;
                 if (owner!=null&&!owner.IsDisposed)
                 {
+                    BuffLogHelper.LogRemove(buff, owner);
                     BuffNoticeHelper.SendBuffRemove(owner, buff);
-                    //处理buff实体移除具体行为逻辑
                     buff.RemoveActions();
-                    
                 }
                 buff.Dispose();
             }
@@ -348,6 +373,9 @@ namespace ET.Server
             buff.Owner = owner;
             buff.AddUnitId = buffCreateInfo.AddUnitId;
             buff.AddCastConfigId = buffCreateInfo.AddCastConfigId;
+            buff.ConfigLevel = buffCreateInfo.ConfigLevel > 0
+                ? buffCreateInfo.ConfigLevel
+                : SkillStatusComponentSystem.DefaultSkillLevel;
             buff.Init(self.GetFirstAddLayer(buffCreateInfo,buffConfig));
             self.RegisterBuff(buff);
             return buff;

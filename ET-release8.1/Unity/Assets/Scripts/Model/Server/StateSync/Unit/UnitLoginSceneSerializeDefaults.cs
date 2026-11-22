@@ -2,7 +2,7 @@ namespace ET.Server
 {
     /// <summary>
     /// 登录进场景时，对带 <see cref="IUnitCache"/> 的组件中不应持久化的运行时字段恢复默认值。
-    /// <para>Final 禁止类：见 <see cref="TransientNumerics"/>。</para>
+    /// <para>Final 禁止类 + Debuff 计数（不落库）：见 <see cref="TransientNumerics"/>。</para>
     /// <para>各属性 Temp 分量（Final×100+6~+9）：见 <see cref="ResetTransientNumeric"/> 内 <see cref="NumericComponentSystem.ResetAllTempComponents"/>。</para>
     /// </summary>
     [FriendOfAttribute(typeof(ET.Server.SkillStatusComponent))]    
@@ -14,10 +14,12 @@ namespace ET.Server
             (NumericType.ForbidSkill, 0),
             (NumericType.ForbidMove, 0),
             (NumericType.ForbidRotation, 0),
+            (NumericType.Dizziness, 0),
+            (NumericType.Frozen, 0),
         };
 
         /// <summary>
-        /// 重置不应落库的运行时数值：Forbid* + 全部 TempAdd/TempPct/TempFinalAdd/TempFinalPct（+6~+9）。
+        /// 重置不应落库的运行时数值：Forbid*、Debuff 计数 + 全部 TempAdd/TempPct/TempFinalAdd/TempFinalPct（+6~+9）。
         /// </summary>
         public static bool ResetTransientNumeric(NumericComponent numeric)
         {

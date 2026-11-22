@@ -2,6 +2,7 @@ namespace ET.Server
 {
     [Actions(ActionsType.NumericChange)]
     [FriendOf(typeof(Actions))]
+    [FriendOf(typeof(Buff))]
     public class Actions_NumericChange : IActions
     {
         public void Run(Actions actions, ActionsRunType actionsRunType)
@@ -15,39 +16,36 @@ namespace ET.Server
 
             int numericType = config.ActionsParam[0];
             int numericValue = config.ActionsParam[1];
+            bool subtract = actionsRunType == ActionsRunType.BuffRemove;
 
             using (ListComponent<Unit> targets = ListComponent<Unit>.Create())
             {
                 actions.CollectActionTargets(actionsRunType, targets);
                 foreach (Unit owner in targets)
                 {
-                    ApplyNumericChange(owner, actionsRunType, numericType, numericValue);
-                }
-            }
-        }
+                    NumericComponent numeric = owner.GetComponent<NumericComponent>();
+                    if (numeric == null)
+                    {
+                        continue;
+                    }
 
-        private static void ApplyNumericChange(Unit owner, ActionsRunType actionsRunType, int numericType, int numericValue)
-        {
-            NumericComponent numericComponent = owner.GetComponent<NumericComponent>();
-            if (numericComponent == null)
-            {
-                return;
-            }
-
-            switch (actionsRunType)
-            {
-                case ActionsRunType.CastHit:
-                case ActionsRunType.BuffAdd:
-                {
-                    numericComponent[numericType] += numericValue;
-                    break;
-                }
-                case ActionsRunType.BuffRemove:
-                {
-                    numericComponent[numericType] -= numericValue;
-                    break;
+                    if (actionsRunType == ActionsRunType.BuffAdd || actionsRunType == ActionsRunType.BuffRemove)
+                    {
+                        Buff buff = actions.BuffSelf;
+                        long before = numeric[numericType];
+                        UnitControlHelper.ApplyNumericRef(numeric, numericType, numericValue, subtract);
+                        long after = numeric[numericType];
+                        if (buff != null && !buff.IsDisposed)
+                        {
+                            BuffLogHelper.LogNumericChange(buff, owner, config.Id, numericType, before, after, actionsRunType);
+                        }
+                    }
+                    else
+                    {
+                        numeric[numericType] += numericValue;
+                    }
                 }
             }
         }
     }
-}
+}

@@ -39,26 +39,26 @@ namespace ET.Client
                 self.Test1().Coroutine();
             }
 
-            /*    
+             
             if (Input.GetKeyDown(KeyCode.W))
             {
                 self.Test2().Coroutine();
             }
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                self.Test3().Coroutine();
-            }
-
             if (Input.GetKeyDown(KeyCode.R))
             {
-                self.Test4().Coroutine();
+                BattleHelper.GMSetHPSPFull(self.Root()).Coroutine();
             }
+            /*
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            self.Test3().Coroutine();
+                        }
 
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                self.Test5().Coroutine();
-            }*/
+                        if (Input.GetKeyDown(KeyCode.Y))
+                        {
+                            self.Test5().Coroutine();
+                        }*/
 
             if (Input.GetKeyDown(KeyCode.T))
             {
@@ -123,7 +123,7 @@ namespace ET.Client
         /// <summary>Q：GM 施法，入参为 <see cref="SkillConfig"/> Id（1 → Cast 66001）。</summary>
         private static async ETTask Test1(this OperaComponent self)
         {
-            await BattleHelper.GMCastSimple(self.Root(), 2); 
+            await BattleHelper.GMCastSimple(self.Root(), 1); 
         }
             
         private static async ETTask Test2(this OperaComponent self)

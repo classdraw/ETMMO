@@ -93,6 +93,7 @@ namespace ET.Server
         // error: 0表示协程走完正常停止
         public static void SendStop(this Unit unit, int error)
         {
+            MoveLogHelper.LogStop(unit, error);
             M2C_Stop m2CStop = M2C_Stop.Create();
             m2CStop.Error = error;
             m2CStop.Id = unit.Id;

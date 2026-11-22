@@ -12,11 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61664f32bc08a5c4aa110218b5bdde8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableAutoApply: 1
+  enableAutoApply: 0
+  saveOnClose: 1
+  pathWhitelist: DontProcess,Standard Assets,Plugins
   imageTemplates:
-  - name: "\u89D2\u8272\u76F8\u5173"
+  - applyMaskVersion: 1
+    applyMask:
+      textureType: 0
+      textureShape: 0
+      sRGBTexture: 0
+      alphaSource: 0
+      alphaIsTransparency: 0
+      npotScale: 0
+      isReadable: 0
+      streamingMipmaps: 0
+      mipmapEnabled: 0
+      borderMipmap: 0
+      mipMapsPreserveCoverage: 0
+      fadeout: 0
+      filterMode: 0
+      anisoLevel: 0
+      wrapMode: 0
+      spriteImportMode: 0
+      spritePixelsPerUnit: 0
+      spriteMeshType: 0
+      spriteExtrude: 0
+      maxTextureSize: 0
+      textureCompression: 0
+      crunchedCompression: 0
+      compressionQuality: 0
+      android: 0
+      iOS: 0
+      standalone: 0
+      webGL: 0
+    name: "\u89D2\u8272\u76F8\u5173"
     folders:
     - Assets/Art/2D
+    ignoreFolders: []
+    specialRules: []
     textureType: 0
     textureShape: 1
     sRGBTexture: 1
@@ -53,6 +86,82 @@ MonoBehaviour:
     standalone:
       overridden: 1
       maxTextureSize: 1024
+      format: -1
+      compressionQuality: 50
+    webGL:
+      overridden: 0
+      maxTextureSize: 2048
+      format: 50
+      compressionQuality: 50
+  - applyMaskVersion: 1
+    applyMask:
+      textureType: 0
+      textureShape: 0
+      sRGBTexture: 0
+      alphaSource: 0
+      alphaIsTransparency: 0
+      npotScale: 0
+      isReadable: 0
+      streamingMipmaps: 0
+      mipmapEnabled: 0
+      borderMipmap: 0
+      mipMapsPreserveCoverage: 0
+      fadeout: 0
+      filterMode: 0
+      anisoLevel: 0
+      wrapMode: 0
+      spriteImportMode: 0
+      spritePixelsPerUnit: 0
+      spriteMeshType: 0
+      spriteExtrude: 0
+      maxTextureSize: 0
+      textureCompression: 0
+      crunchedCompression: 0
+      compressionQuality: 0
+      android: 0
+      iOS: 0
+      standalone: 0
+      webGL: 0
+    name: UI
+    folders: []
+    ignoreFolders: []
+    specialRules: []
+    textureType: 0
+    textureShape: 1
+    sRGBTexture: 1
+    alphaSource: 1
+    alphaIsTransparency: 1
+    npotScale: 1
+    isReadable: 0
+    streamingMipmaps: 0
+    mipmapEnabled: 0
+    borderMipmap: 0
+    mipMapsPreserveCoverage: 0
+    fadeout: 0
+    filterMode: 1
+    anisoLevel: 1
+    wrapMode: 0
+    spriteImportMode: 1
+    spritePixelsPerUnit: 100
+    spriteMeshType: 0
+    spriteExtrude: 1
+    maxTextureSize: 2048
+    textureCompression: 1
+    crunchedCompression: 0
+    compressionQuality: 50
+    android:
+      overridden: 1
+      maxTextureSize: 2048
+      format: 50
+      compressionQuality: 50
+    iOS:
+      overridden: 0
+      maxTextureSize: 2048
+      format: 50
+      compressionQuality: 50
+    standalone:
+      overridden: 0
+      maxTextureSize: 2048
       format: -1
       compressionQuality: 50
     webGL:

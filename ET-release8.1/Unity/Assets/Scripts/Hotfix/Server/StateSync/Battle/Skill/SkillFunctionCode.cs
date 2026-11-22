@@ -13,7 +13,7 @@ namespace ET.Server
         /// 消耗：args[1]+L 点血；长度≥4 时再扣 args[2]+args[3]*L 蓝。先校验血蓝均够，再一并扣除；任一不够则不扣并返回对应 ErrorCode。
         /// SkillConfig的1的ConsumeFunc
         /// </summary>
-        public static int Function100(Unit unit, int castId, float[] args)
+        public static int Function100(Unit unit, int castId, float[] args, bool applyConsume = true)
         {
             if (args == null || args.Length < 2)
             {
@@ -58,12 +58,11 @@ namespace ET.Server
                 return ErrorCode.ERR_CastPreSpNotEnough;
             }
 
-            if (hpCost <= 0 && (!consumeSp || spCost <= 0))
+            if (!applyConsume || (hpCost <= 0 && (!consumeSp || spCost <= 0)))
             {
                 return ErrorCode.ERR_Success;
             }
 
-            // 再扣除：仅当上述校验全部通过
             if (hpCost > 0)
             {
                 numeric[NumericType.HpBase] = Math.Clamp(curHp - hpCost, 0, maxHp);
@@ -83,7 +82,7 @@ namespace ET.Server
         /// 技能未配 ConsumeFunc（空表或首项≤0）时由 <see cref="SkillFunctionHelper"/> 跳过，不会进入本方法。
         /// SkillConfig 的 ConsumeFunc
         /// </summary>
-        public static int Function101(Unit unit, int castId, float[] args)
+        public static int Function101(Unit unit, int castId, float[] args, bool applyConsume = true)
         {
             if (args == null || args.Length < 3)
             {
@@ -116,7 +115,14 @@ namespace ET.Server
 
             if (curSp < spCost)
             {
+                Log.Console(
+                    $"[Skill] 蓝量不足 castId={castId} level={level} need={spCost} cur={curSp} (Function101 仅校验，未扣蓝)");
                 return ErrorCode.ERR_CastPreSpNotEnough;
+            }
+
+            if (!applyConsume)
+            {
+                return ErrorCode.ERR_Success;
             }
 
             numeric[NumericType.SpBase] = Math.Clamp(curSp - spCost, 0, maxSp);
@@ -167,17 +173,11 @@ namespace ET.Server
         /// ActionsConfig的77001的ActionsParam
         /// ActionsConfig的77002的ActionsParam
         /// </summary>
-        public static int Function500(Unit unit, int castId, int[] args)
+        public static int Function500(Unit unit, int castId, int[] args, int castConfigLevel = 0)
         {
             if (args == null || args.Length < 5)
             {
                 Log.Warning($"[SkillFunction] Function500 参数不足 castId={castId}");
-                return 0;
-            }
-
-            SkillStatusComponent skillStatus = unit.GetComponent<SkillStatusComponent>();
-            if (skillStatus == null || skillStatus.IsDisposed)
-            {
                 return 0;
             }
 
@@ -187,7 +187,21 @@ namespace ET.Server
                 return 0;
             }
 
-            int level = skillStatus.GetSkillLevel(castId);
+            int level;
+            if (castConfigLevel >= SkillStatusComponentSystem.DefaultSkillLevel)
+            {
+                level = castConfigLevel;
+            }
+            else
+            {
+                SkillStatusComponent skillStatus = unit.GetComponent<SkillStatusComponent>();
+                if (skillStatus == null || skillStatus.IsDisposed)
+                {
+                    return 0;
+                }
+
+                level = skillStatus.GetSkillLevel(castId);
+            }
             int atk = numeric.GetAsInt(NumericType.Atk);
             int percent = args[3] + args[4] * level;
             return (int)(atk * (percent / 100d)) * -1;

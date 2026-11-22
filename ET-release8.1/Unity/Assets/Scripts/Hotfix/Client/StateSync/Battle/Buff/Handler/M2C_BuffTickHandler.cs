@@ -5,7 +5,10 @@ namespace ET.Client
     {
         protected override async ETTask Run(Scene root, M2C_BuffTick message)
         {
-            Log.Console($" 玩家 {message.UnitId} buffTick Id {message.BuffId} ");
+            if (StateSyncDebugLog.BuffEnabled)
+            {
+                StateSyncDebugLog.LogBuff($" 玩家 {message.UnitId} buffTick Id {message.BuffId} ");
+            }
             Scene currentScene = root.CurrentScene();
             UnitComponent unitComponent = currentScene?.GetComponent<UnitComponent>();
             if (unitComponent == null)

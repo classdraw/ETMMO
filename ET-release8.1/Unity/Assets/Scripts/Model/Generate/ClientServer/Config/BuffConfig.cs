@@ -74,7 +74,18 @@ namespace ET
 		/// <summary>层数最大限制</summary>
 		public int LayerLimit { get; set; }
 		/// <summary>总时长(毫秒)</summary>
-		public int TotalTime { get; set; }
+		public int[] _TotalTime;
+		
+		[BsonIgnore]
+		public int[] TotalTime
+		{
+			get
+			{
+				if(_TotalTime == null)
+					_TotalTime = new int[] { };
+				return _TotalTime;
+			}
+		}
 		/// <summary>效果</summary>
 		public int[] _AddAction;
 		

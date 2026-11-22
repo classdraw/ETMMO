@@ -1,3 +1,5 @@
 {"dict": [
 [77001, {"_t":"ActionsConfig","_id":77001,"Type":2,"_ActionsParam":[0.0,0.0,500.0,130.0,35.0]}],
+[77002, {"_t":"ActionsConfig","_id":77002,"Type":2,"_ActionsParam":[0.0,0.0,500.0,100.0,30.0]}],
+[77003, {"_t":"ActionsConfig","_id":77003,"Type":1,"_ActionsParam":[1070.0,1.0]}],
 ]}

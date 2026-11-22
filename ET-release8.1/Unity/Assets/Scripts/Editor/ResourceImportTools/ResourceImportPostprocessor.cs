@@ -4,7 +4,7 @@ namespace ET
 {
     public class ResourceImportPostprocessor : AssetPostprocessor
     {
-        internal static ImageImportTemplate ForceTemplate;
+        internal static ImageImportTemplate LimitToGroup;
 
         private void OnPreprocessTexture()
         {
@@ -13,22 +13,29 @@ namespace ET
                 return;
             }
 
-            ImageImportTemplate template = ForceTemplate;
-            if (template == null)
+            var config = ResourceImportConfiguration.Instance;
+            bool manualReimport = LimitToGroup != null;
+            if (!manualReimport && (config == null || !config.enableAutoApply))
             {
-                var config = ResourceImportConfiguration.Instance;
-                if (config == null || !config.enableAutoApply)
-                {
-                    return;
-                }
-
-                if (!ResourceImportApplier.TryFindTemplate(assetPath, out template))
-                {
-                    return;
-                }
+                return;
             }
 
-            ResourceImportApplier.Apply(assetImporter as TextureImporter, template);
+            if (!ResourceImportApplier.TryResolve(assetPath, out var result) || result?.group == null)
+            {
+                return;
+            }
+
+            if (LimitToGroup != null && result.group != LimitToGroup)
+            {
+                return;
+            }
+
+            if (!ResourceImportApplier.ShouldManageTexture(result))
+            {
+                return;
+            }
+
+            ResourceImportApplier.Apply(assetImporter as TextureImporter, result);
         }
     }
 }

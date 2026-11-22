@@ -171,15 +171,6 @@ namespace ET.Server
                 }
             }
 
-            if (SkillFunctionHelper.IsFuncConfigured(skillConfig.ConsumeFunc))
-            {
-                err = SkillFunctionHelper.ApplyConsumeFunc(caster, castConfigId, skillConfig.ConsumeFunc);
-                if (err != ErrorCode.ERR_Success)
-                {
-                    return err;
-                }
-            }
-
             int coolDownMs = CastConfigCategory.Instance.Get(castConfigId).CoolDown;
 
             Cast cast = caster.Create(castConfigId, inputUnitId, inputPos);
@@ -193,14 +184,39 @@ namespace ET.Server
                 cast.Targets.AddRange(targets);
             }
 
+            err = cast.RefreshTargets();
+            if (err != ErrorCode.ERR_Success)
+            {
+                cast.Dispose();
+                return err;
+            }
+
+            if (SkillFunctionHelper.IsFuncConfigured(skillConfig.ConsumeFunc))
+            {
+                err = SkillFunctionHelper.ValidateConsumeFunc(caster, castConfigId, skillConfig.ConsumeFunc);
+                if (err != ErrorCode.ERR_Success)
+                {
+                    cast.Dispose();
+                    return err;
+                }
+
+                err = SkillFunctionHelper.ApplyConsumeFunc(caster, castConfigId, skillConfig.ConsumeFunc);
+                if (err != ErrorCode.ERR_Success)
+                {
+                    cast.Dispose();
+                    return err;
+                }
+            }
+
             if (needStop)
             {
                 caster.Stop(1);
             }
 
-            err = cast.Cast();
+            err = cast.Cast(refreshTargets: false);
             if (err != ErrorCode.ERR_Success)
             {
+                cast.Dispose();
                 return err;
             }
 

@@ -22,7 +22,7 @@ namespace ET.Server
             }
 
             int castId = GetCastConfigId(actions);
-            int damage = CalcDamage(attacker, castId, param);
+            int damage = CalcDamage(attacker, castId, param, actions);
             if (damage == 0)
             {
                 return;
@@ -87,9 +87,16 @@ namespace ET.Server
         /// 伤害 ActionsParam：A 属性，B <see cref="DamageAttackType"/>，C Func 编号，其后为 Func 参数。A/B/C 必填。
         /// 整段参数作为 args 传入，函数编号取下标 2。返回 int 即伤害，负数扣血。
         /// </summary>
-        private static int CalcDamage(Unit attacker, int castId, int[] param)
+        private static int CalcDamage(Unit attacker, int castId, int[] param, Actions actions)
         {
-            return SkillFunctionHelper.RunFunc(attacker, castId, param, DamageFuncKeyIndex);
+            int castConfigLevel = 0;
+            Buff buff = actions?.BuffSelf;
+            if (buff != null && buff.AddCastConfigId == castId)
+            {
+                castConfigLevel = buff.ConfigLevel;
+            }
+
+            return SkillFunctionHelper.RunFunc(attacker, castId, param, DamageFuncKeyIndex, castConfigLevel);
         }
 
         /// <summary>

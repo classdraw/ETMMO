@@ -33,13 +33,16 @@ namespace ET.Server
         /// <summary>
         /// 释放技能
         /// </summary>
-        public static int Cast(this Cast cast)
+        public static int Cast(this Cast cast, bool refreshTargets = true)
         {
-            int err = cast.RefreshTargets();
-            if (err != ErrorCode.ERR_Success)
+            if (refreshTargets)
             {
-                cast.Dispose();
-                return err;
+                int err = cast.RefreshTargets();
+                if (err != ErrorCode.ERR_Success)
+                {
+                    cast.Dispose();
+                    return err;
+                }
             }
 
             cast.StartTime = TimeInfo.Instance.ServerFrameTime();

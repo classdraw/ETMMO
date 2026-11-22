@@ -225,7 +225,15 @@ namespace ET.Client
             }
             else
             {
-                Log.Info($"测试施法失败 {m2CGmTestCast.Error}!!!");
+                string errHint = m2CGmTestCast.Error switch
+                {
+                    ErrorCode.ERR_CastPreSpNotEnough => "（蓝量不足 200067，先 GM 回满或降低技能等级）",
+                    ErrorCode.ERR_CastPreSkillNotLearned => "（未学习 200063，先 GM 设技能等级）",
+                    ErrorCode.ERR_CastNoTargetError => "（无目标 200055，附近需有怪）",
+                    ErrorCode.ERR_CastOutOfRangeError => "（超出施法距离 200056）",
+                    _ => string.Empty,
+                };
+                Log.Info($"测试施法失败 {m2CGmTestCast.Error}{errHint}!!!");
                 EventSystem.Instance.Publish(root.CurrentScene(), new CastError() { CasterId = playerUnit.Id });
             }
         }

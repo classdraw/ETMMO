@@ -14,12 +14,17 @@ namespace ET
 
         private static bool ShouldSkipAtlasProcess(string assetPath)
         {
-            if (!ResourceImportApplier.TryFindTemplate(assetPath, out var template) || template == null)
+            if (!ResourceImportApplier.TryResolve(assetPath, out var result))
             {
                 return false;
             }
 
-            return template.textureType != TextureImporterType.Sprite;
+            if (!ResourceImportApplier.TryGetEffectiveTextureType(result, out var textureType))
+            {
+                return false;
+            }
+
+            return textureType != TextureImporterType.Sprite;
         }
     }
 }
