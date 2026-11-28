@@ -38,6 +38,9 @@ namespace ET
         private string jsonHelperTypeName = "TEngine.DefaultJsonHelper";
 
         [SerializeField]
+        private string tweenHelperTypeName = "TEngine.DefaultTweenHelper";
+
+        [SerializeField]
         private int frameRate = 120;
 
         [SerializeField]
@@ -125,6 +128,7 @@ namespace ET
             InitTextHelper();
             InitLogHelper();
             InitJsonHelper();
+            InitTweenHelper();
 
             Application.targetFrameRate = frameRate;
             Time.timeScale = gameSpeed;
@@ -216,6 +220,32 @@ namespace ET
             }
 
             Utility.Json.SetJsonHelper(jsonHelper);
+        }
+
+        private void InitTweenHelper()
+        {
+            if (string.IsNullOrEmpty(tweenHelperTypeName))
+            {
+                TweenHelperBootstrap.EnsureInitialized();
+                return;
+            }
+
+            Type tweenHelperType = Utility.Assembly.GetType(tweenHelperTypeName);
+            if (tweenHelperType == null)
+            {
+                TweenHelperBootstrap.EnsureInitialized();
+                return;
+            }
+
+            Utility.Tween.ITweenHelper tweenHelper = (Utility.Tween.ITweenHelper)Activator.CreateInstance(tweenHelperType);
+            if (tweenHelper == null)
+            {
+                TweenHelperBootstrap.EnsureInitialized();
+                return;
+            }
+
+            TweenDriver.EnsureExists();
+            Utility.Tween.SetTweenHelper(tweenHelper);
         }
         
     }

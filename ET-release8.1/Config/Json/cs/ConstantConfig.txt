@@ -1,4 +1,6 @@
 {"dict": [
-[90001, {"_t":"ConstantConfig","_id":90001,"Name":"","StringValue":"","IntValue":30}],
-[90002, {"_t":"ConstantConfig","_id":90002,"Name":"","StringValue":"","IntValue":10001}],
+[90001, {"_t":"ConstantConfig","_id":90001,"Name":"","Desc":"背包格子上限","StringValue":"","IntValue":30}],
+[90002, {"_t":"ConstantConfig","_id":90002,"Name":"","Desc":"默认地图","StringValue":"","IntValue":10001}],
+[90003, {"_t":"ConstantConfig","_id":90003,"Name":"PlayerMaxBaseLevel","Desc":"玩家基础等级上限","StringValue":"","IntValue":99}],
+[90004, {"_t":"ConstantConfig","_id":90004,"Name":"PlayerMaxPrimaryStat","Desc":"单项主属性上限","StringValue":"","IntValue":99}],
 ]}

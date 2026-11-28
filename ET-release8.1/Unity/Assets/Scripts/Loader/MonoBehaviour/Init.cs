@@ -17,6 +17,7 @@ namespace ET
 		private void Awake()
 		{
 			SyncViewDebugSettings();
+			TweenHelperBootstrap.EnsureInitialized();
 		}
 
 		private void OnValidate()

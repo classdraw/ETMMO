@@ -1,0 +1,76 @@
+﻿//----------------------------------------------------------
+// UIBindComponent 生成 — 文本预览，可复制到工程中使用
+//----------------------------------------------------------
+
+using ET;
+using GameLogic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace ET.Client
+{
+	[ComponentOf(typeof(UI))]
+	public class UIQuickGMComponent : Entity, IAwake, IDestroy
+	{
+		public GameObject m_goPanel;
+		public Button m_btnTap1;
+		public Button m_btnTap2;
+		public GameObject m_goP1;
+		public Button m_btnP1SetHPSPFull;
+		public GameObject m_goP2;
+		public Button m_btnClickOpen;
+		public Button m_btnClickClose;
+	}
+}
+
+namespace ET.Client
+{
+	[EntitySystemOf(typeof(UIQuickGMComponent))]
+	[FriendOf(typeof(UIQuickGMComponent))]
+	public static partial class UIQuickGMComponentSystem
+	{
+		[EntitySystem]
+		private static void Awake(this UIQuickGMComponent self)
+		{
+			UIBindComponent m_bindComponent = self.GetParent<UI>().GameObject.GetComponent<UIBindComponent>();
+			self.m_goPanel = m_bindComponent.GetGameObject(0);
+			self.m_btnTap1 = m_bindComponent.GetComponent<Button>(1);
+			self.m_btnTap1.onClick.AddListener(() => { self.OnTap1(); });
+			self.m_btnTap2 = m_bindComponent.GetComponent<Button>(2);
+			self.m_btnTap2.onClick.AddListener(() => { self.OnTap2(); });
+			self.m_goP1 = m_bindComponent.GetGameObject(3);
+			self.m_btnP1SetHPSPFull = m_bindComponent.GetComponent<Button>(4);
+			self.m_btnP1SetHPSPFull.onClick.AddListener(() => { self.OnP1SetHPSPFull(); });
+			self.m_goP2 = m_bindComponent.GetGameObject(5);
+			self.m_btnClickOpen = m_bindComponent.GetComponent<Button>(6);
+			self.m_btnClickOpen.onClick.AddListener(() => { self.OnClickOpen(); });
+			self.m_btnClickClose = m_bindComponent.GetComponent<Button>(7);
+			self.m_btnClickClose.onClick.AddListener(() => { self.OnClickClose(); });
+		}
+
+		[EntitySystem]
+		private static void Destroy(this UIQuickGMComponent self)
+		{
+		}
+
+		public static void OnTap1(this UIQuickGMComponent self)
+		{
+		}
+
+		public static void OnTap2(this UIQuickGMComponent self)
+		{
+		}
+
+		public static void OnP1SetHPSPFull(this UIQuickGMComponent self)
+		{
+		}
+
+		public static void OnClickOpen(this UIQuickGMComponent self)
+		{
+		}
+
+		public static void OnClickClose(this UIQuickGMComponent self)
+		{
+		}
+	}
+}
