@@ -1,12 +1,15 @@
 namespace ET
 {
     /// <summary>
-    /// RO 经典版 Base Level 经验与升级可用点（见策划 <c>RO经典版战斗数值公式.md</c> §10、§11）。
+    /// RO 经典 Base 等级：经验条 <see cref="NumericType.EXP"/>、升级属性点、每级技能点（无 Job 等级/Job 经验）。
     /// </summary>
     public static class RoClassicLevelHelper
     {
-        /// <summary>本项目基础等级上限（一转阶段）。</summary>
-        public const int MaxBaseLevel = 30;
+        /// <summary>未配表时玩家基础等级上限回退值。</summary>
+        public const int DefaultMaxPlayerBaseLevel = 99;
+
+        /// <summary>未配表时单项主属性上限回退值。</summary>
+        public const int DefaultMaxPrimaryStatValue = 99;
 
         /// <summary>相对端游 Base 经验的难度倍率。</summary>
         public const int ExpDifficultyMultiplier = 3;
@@ -14,10 +17,35 @@ namespace ET
         /// <summary>1 级角色初始未消耗技能点。</summary>
         public const int InitialSkillPoints = 1;
 
+        /// <summary>玩家基础等级上限，来自 <see cref="ConstantConfigKeys.PlayerMaxBaseLevelConfigId"/>。</summary>
+        public static int GetMaxPlayerBaseLevel()
+        {
+            return GetConstantIntValue(ConstantConfigKeys.PlayerMaxBaseLevelConfigId, DefaultMaxPlayerBaseLevel);
+        }
+
+        /// <summary>单项主属性加点上限，来自 <see cref="ConstantConfigKeys.PlayerMaxPrimaryStatConfigId"/>。</summary>
+        public static int GetMaxPrimaryStatValue()
+        {
+            return GetConstantIntValue(ConstantConfigKeys.PlayerMaxPrimaryStatConfigId, DefaultMaxPrimaryStatValue);
+        }
+
+        static int GetConstantIntValue(int configId, int fallback)
+        {
+            ConstantConfigCategory category = ConstantConfigCategory.Instance;
+            if (category == null || !category.Contain(configId))
+            {
+                return fallback;
+            }
+
+            int value = category.Get(configId).IntValue;
+            return value > 0 ? value : fallback;
+        }
+
         /// <summary>配置表 <see cref="ExpConfig"/> 的 Id 与当前等级一致，表示该级升到下一级所需端游 Base EXP。</summary>
         public static bool CanLevelUp(int currentLevel)
         {
-            if (currentLevel < 1 || currentLevel >= MaxBaseLevel)
+            int maxLevel = GetMaxPlayerBaseLevel();
+            if (currentLevel < 1 || currentLevel >= maxLevel)
             {
                 return false;
             }

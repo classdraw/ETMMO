@@ -17,6 +17,13 @@ namespace ET
             return (int)self.GetByKey(numericType);
         }
 
+        /// <summary>六项主属性分配的 Base 值（加点费用与提交仅以此为准，不含装备/Buff 的 Add）。</summary>
+        public static int GetPrimaryStatBase(this NumericComponent self, int finalNumericType)
+        {
+            int baseKey = NumericType.ToComponentKey(finalNumericType, NumericType.ComponentIndexBase);
+            return self.GetAsInt(baseKey);
+        }
+
         public static long GetAsLong(this NumericComponent self, int numericType)
         {
             return self.GetByKey(numericType);

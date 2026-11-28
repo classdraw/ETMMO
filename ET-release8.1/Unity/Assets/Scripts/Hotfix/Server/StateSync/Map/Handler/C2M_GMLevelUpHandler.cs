@@ -36,7 +36,7 @@ namespace ET.Server
             if (gained <= 0)
             {
                 response.Error = ErrorCode.ERR_GMLevelUpError;
-                response.Message = levelBefore >= RoClassicLevelHelper.MaxBaseLevel ? "已达等级上限" : "升级失败";
+                response.Message = levelBefore >= RoClassicLevelHelper.GetMaxPlayerBaseLevel() ? "已达等级上限" : "升级失败";
                 return;
             }
 

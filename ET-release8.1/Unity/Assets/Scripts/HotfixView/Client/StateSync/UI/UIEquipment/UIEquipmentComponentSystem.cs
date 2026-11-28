@@ -269,12 +269,12 @@ namespace ET.Client
                 self.m_textCLevel.text = UILocalizationHelper.GetTerm(UILocalizationHelper.EquipmentLevelTerm, "Level:{0}", level);
             }
 
-            int str = numericComponent.GetAsInt(NumericType.STR);
-            int agi = numericComponent.GetAsInt(NumericType.AGI);
-            int vit = numericComponent.GetAsInt(NumericType.VIT);
-            int intell = numericComponent.GetAsInt(NumericType.INT);
-            int dex = numericComponent.GetAsInt(NumericType.DEX);
-            int luk = numericComponent.GetAsInt(NumericType.LUK);
+            int str = numericComponent.GetPrimaryStatBase(NumericType.STR);
+            int agi = numericComponent.GetPrimaryStatBase(NumericType.AGI);
+            int vit = numericComponent.GetPrimaryStatBase(NumericType.VIT);
+            int intell = numericComponent.GetPrimaryStatBase(NumericType.INT);
+            int dex = numericComponent.GetPrimaryStatBase(NumericType.DEX);
+            int luk = numericComponent.GetPrimaryStatBase(NumericType.LUK);
             int serverRemaining = numericComponent.GetAsInt(NumericType.RemainingAttributePoints);
 
             int pendingSpent = ComputePendingPointsSpent(self, str, agi, vit, intell, dex, luk);
@@ -331,6 +331,11 @@ namespace ET.Client
 
         private static bool TryIncreasePending(this UIEquipmentComponent self, ref int pending, int baseValue, int allocatableRemaining)
         {
+            if (baseValue + pending >= RoClassicLevelHelper.GetMaxPrimaryStatValue())
+            {
+                return false;
+            }
+
             int nextCost = RoClassicLevelHelper.GetAttributePointCostToIncrease(baseValue + pending);
             if (allocatableRemaining < nextCost)
             {
@@ -362,20 +367,18 @@ namespace ET.Client
                 return;
             }
 
-            int total = numeric.GetAsInt(finalType);
-            int addKey = NumericType.ToComponentKey(finalType, NumericType.ComponentIndexAdd);
-            int tempAddKey = NumericType.ToComponentKey(finalType, NumericType.ComponentIndexTempAdd);
-            int extra = numeric.GetAsInt(addKey) + numeric.GetAsInt(tempAddKey);
-            string bonusPart = extra != 0 ? $"({extra})" : string.Empty;
+            int baseVal = numeric.GetPrimaryStatBase(finalType);
+            int equipBonus = numeric.GetAsInt(finalType) - baseVal;
+            string bonusPart = equipBonus != 0 ? $"({equipBonus})" : string.Empty;
 
             if (pendingPoints <= 0)
             {
-                text.text = $"{total}{bonusPart}";
+                text.text = $"{baseVal}{bonusPart}";
                 return;
             }
 
             text.supportRichText = true;
-            text.text = $"{total}{bonusPart}+<color={PendingStatColor}>{pendingPoints}</color>";
+            text.text = $"{baseVal}{bonusPart}+<color={PendingStatColor}>{pendingPoints}</color>";
         }
 
         private static void SetStatText(Text text, int value)
@@ -536,12 +539,12 @@ namespace ET.Client
                 return;
             }
 
-            int str = numeric.GetAsInt(NumericType.STR);
-            int agi = numeric.GetAsInt(NumericType.AGI);
-            int vit = numeric.GetAsInt(NumericType.VIT);
-            int intell = numeric.GetAsInt(NumericType.INT);
-            int dex = numeric.GetAsInt(NumericType.DEX);
-            int luk = numeric.GetAsInt(NumericType.LUK);
+            int str = numeric.GetPrimaryStatBase(NumericType.STR);
+            int agi = numeric.GetPrimaryStatBase(NumericType.AGI);
+            int vit = numeric.GetPrimaryStatBase(NumericType.VIT);
+            int intell = numeric.GetPrimaryStatBase(NumericType.INT);
+            int dex = numeric.GetPrimaryStatBase(NumericType.DEX);
+            int luk = numeric.GetPrimaryStatBase(NumericType.LUK);
             int serverRemaining = numeric.GetAsInt(NumericType.RemainingAttributePoints);
             int allocatableRemaining = serverRemaining - ComputePendingPointsSpent(self, str, agi, vit, intell, dex, luk);
 

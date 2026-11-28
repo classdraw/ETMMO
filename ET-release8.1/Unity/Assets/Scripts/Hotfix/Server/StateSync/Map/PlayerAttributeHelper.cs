@@ -33,12 +33,20 @@ namespace ET.Server
                 return false;
             }
 
-            int str = numeric.GetAsInt(NumericType.STR);
-            int agi = numeric.GetAsInt(NumericType.AGI);
-            int vit = numeric.GetAsInt(NumericType.VIT);
-            int intell = numeric.GetAsInt(NumericType.INT);
-            int dex = numeric.GetAsInt(NumericType.DEX);
-            int luk = numeric.GetAsInt(NumericType.LUK);
+            int str = numeric.GetPrimaryStatBase(NumericType.STR);
+            int agi = numeric.GetPrimaryStatBase(NumericType.AGI);
+            int vit = numeric.GetPrimaryStatBase(NumericType.VIT);
+            int intell = numeric.GetPrimaryStatBase(NumericType.INT);
+            int dex = numeric.GetPrimaryStatBase(NumericType.DEX);
+            int luk = numeric.GetPrimaryStatBase(NumericType.LUK);
+
+            int maxStat = RoClassicLevelHelper.GetMaxPrimaryStatValue();
+            if (str + deltaStr > maxStat || agi + deltaAgi > maxStat || vit + deltaVit > maxStat ||
+                intell + deltaInt > maxStat || dex + deltaDex > maxStat || luk + deltaLuk > maxStat)
+            {
+                message = $"单项属性不能超过 {maxStat}";
+                return false;
+            }
 
             int totalCost = 0;
             totalCost += RoClassicLevelHelper.ComputeAttributePointCostForIncreaseRange(str, deltaStr);
